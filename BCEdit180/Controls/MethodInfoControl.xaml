@@ -1,0 +1,14 @@
+﻿<UserControl x:Class="BCEdit180.Controls.MethodInfoControl"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
+             xmlns:local="clr-namespace:BCEdit180.Controls" 
+             xmlns:viewmodels="clr-namespace:BCEdit180.ViewModels" 
+             d:DataContext="{d:DesignInstance Type=viewmodels:MethodInfoViewModel}"
+             mc:Ignorable="d" 
+             d:DesignHeight="40" d:DesignWidth="250">
+    <Grid>
+        <local:DoubleClickEditBox Text="{Binding MethodName, UpdateSourceTrigger=PropertyChanged}"/>
+    </Grid>
+</UserControl>

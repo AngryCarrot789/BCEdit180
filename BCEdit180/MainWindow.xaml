@@ -1,0 +1,100 @@
+﻿<Window x:Class="BCEdit180.MainWindow"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        xmlns:local="clr-namespace:BCEdit180"
+        xmlns:viewModels="clr-namespace:BCEdit180.ViewModels"
+        xmlns:controls="clr-namespace:BCEdit180.Controls"
+        mc:Ignorable="d"
+        Title="MainWindow" Width="1280" Height="720" d:DataContext="{d:DesignInstance viewModels:ClassViewModel}">
+    <Grid>
+        <Menu VerticalAlignment="Top">
+            <MenuItem Header="File"/>
+        </Menu>
+        <TabControl Margin="0,18,0,24" Background="#FFFAFAFA">
+            <TabItem Header="Class" DataContext="{Binding ClassInfo}">
+                <Grid>
+                    <TextBlock Width="125" HorizontalAlignment="Left" TextWrapping="NoWrap" Text="Minor Version:" VerticalAlignment="Top" Padding="5" TextDecorations="{x:Null}" FontWeight="Bold"/>
+                    <TextBlock Width="125" HorizontalAlignment="Left" TextWrapping="NoWrap" Text="Major Version" VerticalAlignment="Top" Padding="5" Margin="0,26,0,0" TextDecorations="{x:Null}" FontWeight="Bold"/>
+                    <TextBlock Width="125" HorizontalAlignment="Left" TextWrapping="NoWrap" Text="Constant Pool Size" VerticalAlignment="Top" Padding="5" Margin="0,52,0,0" TextDecorations="{x:Null}" FontWeight="Bold" />
+                    <TextBlock Width="125" HorizontalAlignment="Left" TextWrapping="NoWrap" Text="Access Flags" VerticalAlignment="Top" Padding="5" Margin="0,78,0,0" TextDecorations="{x:Null}" FontWeight="Bold"/>
+                    <TextBlock Width="125" HorizontalAlignment="Left" TextWrapping="NoWrap" Text="This Class" VerticalAlignment="Top" Padding="5" Margin="0,104,0,0" TextDecorations="{x:Null}" FontWeight="Bold"/>
+                    <TextBlock Width="125" HorizontalAlignment="Left" TextWrapping="NoWrap" Text="Super Class" VerticalAlignment="Top" Padding="5" Margin="0,130,0,0" TextDecorations="{x:Null}" FontWeight="Bold"/>
+                    <TextBlock Width="125" HorizontalAlignment="Left" TextWrapping="NoWrap" Text="Interfaces Count" VerticalAlignment="Top" Padding="5" Margin="0,156,0,0" TextDecorations="{x:Null}" FontWeight="Bold"/>
+                    <TextBlock Width="125" HorizontalAlignment="Left" TextWrapping="NoWrap" Text="Field Count" VerticalAlignment="Top" Padding="5" Margin="0,182,0,0" TextDecorations="{x:Null}" FontWeight="Bold"/>
+                    <TextBlock Width="125" HorizontalAlignment="Left" TextWrapping="NoWrap" Text="Method Count" VerticalAlignment="Top" Padding="5" Margin="0,208,0,0" TextDecorations="{x:Null}" FontWeight="Bold"/>
+                    <TextBlock Width="125" HorizontalAlignment="Left" TextWrapping="NoWrap" Text="Attribute Count" VerticalAlignment="Top" Padding="5" Margin="0,234,0,0" TextDecorations="{x:Null}" FontWeight="Bold"/>
+                    <TextBox Text="{Binding MinorVersion, UpdateSourceTrigger=PropertyChanged}"   HorizontalAlignment="Stretch" TextWrapping="NoWrap" VerticalAlignment="Top" Padding="5" Margin="125,0,0,0" BorderThickness="0" Foreground="#FF9C0404" FontWeight="Bold" FontStyle="Italic" TextDecorations="{x:Null}"/>
+                    <TextBox Text="{Binding MajorVersion, UpdateSourceTrigger=PropertyChanged}"   HorizontalAlignment="Stretch" TextWrapping="NoWrap" VerticalAlignment="Top" Padding="5" Margin="125,26,0,0" BorderThickness="0" Foreground="#FF9C0404" FontWeight="Bold" FontStyle="Italic" TextDecorations="{x:Null}"/>
+                    <TextBox Text="(Not implemented yet)"                                         HorizontalAlignment="Stretch" TextWrapping="NoWrap" VerticalAlignment="Top" Padding="5" Margin="125,52,0,0" BorderThickness="0" Foreground="#FF9C0404" FontWeight="Bold" FontStyle="Italic" TextDecorations="{x:Null}"/>
+                    <TextBox Text="{Binding AccessFlags, UpdateSourceTrigger=PropertyChanged}"    HorizontalAlignment="Stretch" TextWrapping="NoWrap" VerticalAlignment="Top" Padding="5" Margin="125,78,0,0" BorderThickness="0" Foreground="#FF9C0404" FontWeight="Bold" FontStyle="Italic" TextDecorations="{x:Null}"/>
+                    <TextBox Text="{Binding ClassName, UpdateSourceTrigger=PropertyChanged}"      HorizontalAlignment="Stretch" TextWrapping="NoWrap" VerticalAlignment="Top" Padding="5" Margin="125,104,0,0" BorderThickness="0" Foreground="#FF9C0404" FontWeight="Bold" FontStyle="Italic" TextDecorations="{x:Null}"/>
+                    <TextBox Text="{Binding SuperName, UpdateSourceTrigger=PropertyChanged}"      HorizontalAlignment="Stretch" TextWrapping="NoWrap" VerticalAlignment="Top" Padding="5" Margin="125,130,0,0" BorderThickness="0" Foreground="#FF9C0404" FontWeight="Bold" FontStyle="Italic" TextDecorations="{x:Null}"/>
+                    <TextBox Text="{Binding InterfaceCount, UpdateSourceTrigger=PropertyChanged}" HorizontalAlignment="Stretch" TextWrapping="NoWrap" VerticalAlignment="Top" Padding="5" Margin="125,156,0,0" BorderThickness="0" Foreground="#FF9C0404" FontWeight="Bold" FontStyle="Italic" TextDecorations="{x:Null}"/>
+                    <TextBox Text="{Binding FieldCount, UpdateSourceTrigger=PropertyChanged}"     HorizontalAlignment="Stretch" TextWrapping="NoWrap" VerticalAlignment="Top" Padding="5" Margin="125,182,0,0" BorderThickness="0" Foreground="#FF9C0404" FontWeight="Bold" FontStyle="Italic" TextDecorations="{x:Null}"/>
+                    <TextBox Text="{Binding MethodCount, UpdateSourceTrigger=PropertyChanged}"    HorizontalAlignment="Stretch" TextWrapping="NoWrap" VerticalAlignment="Top" Padding="5" Margin="125,208,0,0" BorderThickness="0" Foreground="#FF9C0404" FontWeight="Bold" FontStyle="Italic" TextDecorations="{x:Null}"/>
+                    <TextBox Text="{Binding AttributeCount, UpdateSourceTrigger=PropertyChanged}" HorizontalAlignment="Stretch" TextWrapping="NoWrap" VerticalAlignment="Top" Padding="5" Margin="125,234,0,0" BorderThickness="0" Foreground="#FF9C0404" FontWeight="Bold" FontStyle="Italic" TextDecorations="{x:Null}"/>
+
+                </Grid>
+            </TabItem>
+            <TabItem Header="Constant Pool" IsEnabled="False"/>
+            <TabItem Header="Methods" DataContext="{Binding MethodList}">
+                <Grid>
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="196*"/>
+                        <ColumnDefinition Width="5"/>
+                        <ColumnDefinition Width="587*"/>
+                    </Grid.ColumnDefinitions>
+                    <ListBox ItemsSource="{Binding Methods}" x:Name="MethodList" Margin="-2,0,0,0" BorderThickness="1 1 1 1">
+                        <ListBox.ItemTemplate>
+                            <DataTemplate>
+                                <controls:MethodInfoControl DataContext="{Binding}"/>
+                            </DataTemplate>
+                        </ListBox.ItemTemplate>
+                    </ListBox>
+                    <GridSplitter Background="Transparent" HorizontalAlignment="Stretch" VerticalAlignment="Stretch" Grid.Column="1" BorderThickness="0 0 0 0" BorderBrush="#FFABADB3"/>
+                    <Border Background="#FFFAFAFA" BorderBrush="#FFABADB3" BorderThickness="0 0 0 0" Grid.Column="2">
+                        <TabControl DataContext="{Binding ElementName=MethodList, Path=SelectedItem}" d:DataContext="{d:DesignInstance viewModels:MethodInfoViewModel}">
+                            <TabItem Header="General Info">
+                                <Grid>
+                                    <TextBlock Text="Method Name" Width="100" HorizontalAlignment="Left" TextWrapping="NoWrap" VerticalAlignment="Top" Padding="5" FontWeight="Bold"/>
+                                    <TextBlock Text="Descriptor" Width="100" HorizontalAlignment="Left" TextWrapping="NoWrap" VerticalAlignment="Top" Padding="5" FontWeight="Bold" Margin="0,26,0,0"/>
+                                    <TextBlock Text="Access Flags" Width="100" HorizontalAlignment="Left" TextWrapping="NoWrap" VerticalAlignment="Top" Padding="5" FontWeight="Bold" Margin="0,52,0,0"/>
+                                    <TextBox Text="{Binding MethodName, UpdateSourceTrigger=PropertyChanged}"   HorizontalAlignment="Stretch" TextWrapping="NoWrap" VerticalAlignment="Top" Padding="5" Margin="100,0,0,0" BorderThickness="0" Foreground="#FF9C0404" FontWeight="Bold" FontStyle="Italic" TextDecorations="{x:Null}"/>
+                                    <TextBox Text="{Binding Descriptor, UpdateSourceTrigger=PropertyChanged}"   HorizontalAlignment="Stretch" TextWrapping="NoWrap" VerticalAlignment="Top" Padding="5" Margin="100,26,100,0" BorderThickness="0" Foreground="#FF9C0404" FontWeight="Bold" FontStyle="Italic" TextDecorations="{x:Null}"/>
+                                    <TextBox Text="{Binding Access, UpdateSourceTrigger=PropertyChanged}"   HorizontalAlignment="Stretch" TextWrapping="NoWrap" VerticalAlignment="Top" Padding="5" Margin="100,52,100,0" BorderThickness="0" Foreground="#FF9C0404" FontWeight="Bold" FontStyle="Italic" TextDecorations="{x:Null}"/>
+                                    <Button Margin="0,28,0,0" Content="Edit" Height="22" VerticalAlignment="Top" HorizontalAlignment="Right" Width="100"/>
+                                    <Button Margin="0,54,0,0" Content="Edit" Height="22" VerticalAlignment="Top" HorizontalAlignment="Right" Width="100"/>
+                                </Grid>
+                            </TabItem>
+                        </TabControl>
+                    </Border>
+                </Grid>
+            </TabItem>
+            <TabItem Header="Fields" DataContext="{Binding FieldList}">
+                <Grid>
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="196*"/>
+                        <ColumnDefinition Width="5"/>
+                        <ColumnDefinition Width="587*"/>
+                    </Grid.ColumnDefinitions>
+                    <ListBox ItemsSource="{Binding Fields}" x:Name="FieldList" Margin="-2,0,0,0" BorderThickness="1 1 1 1">
+                        <ListBox.ItemTemplate>
+                            <DataTemplate>
+                                <controls:MethodInfoControl DataContext="{Binding}"/>
+                            </DataTemplate>
+                        </ListBox.ItemTemplate>
+                    </ListBox>
+                    <GridSplitter HorizontalAlignment="Stretch" VerticalAlignment="Stretch" Grid.Column="1" BorderThickness="0 1" BorderBrush="#FFABADB3"/>
+                    <Border Background="#FFFAFAFA" BorderBrush="#FFABADB3" BorderThickness="1 1 1 1" Grid.Column="2">
+                        <Grid DataContext="{Binding ElementName=FieldList, Path=DataContext}"/>
+                    </Border>
+                </Grid>
+            </TabItem>
+        </TabControl>
+        <Grid VerticalAlignment="Bottom" Height="24">
+
+        </Grid>
+    </Grid>
+</Window>
