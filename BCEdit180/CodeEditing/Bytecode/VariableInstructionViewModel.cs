@@ -1,4 +1,4 @@
-﻿using JavaAsm.Instructions;
+using JavaAsm.Instructions;
 using JavaAsm.Instructions.Types;
 
 namespace BCEdit180.CodeEditing.Bytecode {
