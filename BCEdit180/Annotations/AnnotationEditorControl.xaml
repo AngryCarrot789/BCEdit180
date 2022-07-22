@@ -3,16 +3,68 @@
              xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
-             xmlns:local="clr-namespace:BCEdit180.Annotations"
+             xmlns:local="clr-namespace:BCEdit180.Annotations" xmlns:controls="clr-namespace:BCEdit180.Controls"
+             xmlns:entries="clr-namespace:BCEdit180.Annotations.Entries"
+             d:DataContext="{d:DesignInstance Type=local:AnnotationEditorViewModel}"
              mc:Ignorable="d" 
              d:DesignHeight="450" d:DesignWidth="800">
     <Grid>
-        <ListBox HorizontalAlignment="Left" Width="200">
+        <Grid.ColumnDefinitions>
+            <ColumnDefinition Width="25*"/>
+            <ColumnDefinition Width="5"/>
+            <ColumnDefinition Width="75*"/>
+        </Grid.ColumnDefinitions>
+        <ListBox x:Name="AnnotationListBox" ItemsSource="{Binding Annotations}">
             <ListBox.ItemTemplate>
                 <DataTemplate>
-                    
+                    <local:AnnotationItemControl DataContext="{Binding}"/>
                 </DataTemplate>
             </ListBox.ItemTemplate>
         </ListBox>
+        <GridSplitter HorizontalAlignment="Stretch" VerticalAlignment="Stretch" Grid.Column="1" BorderThickness="0 1" BorderBrush="#FFABADB3"/>
+        <Border Background="#FFFAFAFA" BorderBrush="#FFABADB3" BorderThickness="1 1 1 1" Grid.Column="2">
+            <Grid DataContext="{Binding ElementName=AnnotationListBox, Path=SelectedItem}" d:DataContext="{d:DesignInstance local:AnnotationViewModel}">
+                <TextBlock Text="Type" Width="100" HorizontalAlignment="Left" TextWrapping="NoWrap" VerticalAlignment="Top" Padding="5" FontWeight="Bold"/>
+                <TextBlock Text="Array Depth" Width="100" HorizontalAlignment="Left" TextWrapping="NoWrap" VerticalAlignment="Top" Padding="5" FontWeight="Bold" Margin="0,26,0,0"/>
+                <TextBlock Text="Size on Stack" Width="100" HorizontalAlignment="Left" TextWrapping="NoWrap" VerticalAlignment="Top" Padding="5" FontWeight="Bold" Margin="0,52,0,0"/>
+                <TextBox Background="Transparent" Text="{Binding FullTypeName, UpdateSourceTrigger=PropertyChanged}" HorizontalAlignment="Stretch" TextWrapping="NoWrap" VerticalAlignment="Top" Padding="5" Margin="100,0,0,0" BorderThickness="0" Foreground="#FF9C0404" FontWeight="Bold" FontFamily="Consolas" Height="26"/>
+                <TextBox IsReadOnly="True" Background="Transparent" Text="{Binding ArrayDepth, UpdateSourceTrigger=PropertyChanged}"   HorizontalAlignment="Stretch" TextWrapping="NoWrap" VerticalAlignment="Top" Padding="5" Margin="100,26,0,0" BorderThickness="0" Foreground="#FF9C0404" FontWeight="Bold" FontFamily="Consolas" Height="26"/>
+                <TextBox IsReadOnly="True" Background="Transparent" Text="{Binding SizeOnStack, UpdateSourceTrigger=PropertyChanged}"  HorizontalAlignment="Stretch" TextWrapping="NoWrap" VerticalAlignment="Top" Padding="5" Margin="100,52,0,0" BorderThickness="0" Foreground="#FF9C0404" FontWeight="Bold" FontFamily="Consolas" Height="26"/>
+                <Grid Margin="0,84,0,0">
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="25*"/>
+                        <ColumnDefinition Width="5"/>
+                        <ColumnDefinition Width="75*"/>
+                    </Grid.ColumnDefinitions>
+                    <TextBox Text="{Binding Entries.Count, UpdateSourceTrigger=PropertyChanged, StringFormat={}Entries ({0}), Mode=OneWay, FallbackValue=Entries (0)}" Padding="5" VerticalAlignment="Top" HorizontalContentAlignment="Center" Background="White" BorderBrush="#FFABADB3" BorderThickness="0 1 1 0" FontWeight="Bold"/>
+                    <ListBox x:Name="AnnotationEntryListBox" ItemsSource="{Binding Entries}" BorderThickness="0 1 1 0" Margin="0,26,0,0">
+                        <ListBox.ItemTemplate>
+                            <DataTemplate>
+                                <controls:DoubleClickEditBox DataContext="{Binding}" Text="{Binding EntryName, UpdateSourceTrigger=PropertyChanged}"/>
+                            </DataTemplate>
+                        </ListBox.ItemTemplate>
+                    </ListBox>
+                    <GridSplitter HorizontalAlignment="Stretch" VerticalAlignment="Stretch" Grid.Column="1" BorderThickness="0 1 0 0" BorderBrush="#FFABADB3"/>
+                    <Border Background="#FFFAFAFA" BorderBrush="#FFABADB3" BorderThickness="1 1 0 0" Grid.Column="2">
+                        <Grid DataContext="{Binding ElementName=AnnotationEntryListBox, Path=SelectedItem}" d:DataContext="{d:DesignInstance entries:BaseAnnotationEntryViewModel}">
+                            <TextBlock Text="Element Name" Width="100" HorizontalAlignment="Left" TextWrapping="NoWrap" VerticalAlignment="Top" Padding="5" FontWeight="Bold"/>
+                            <TextBox Background="Transparent" Text="{Binding Path=EntryName, UpdateSourceTrigger=PropertyChanged}" HorizontalAlignment="Stretch" TextWrapping="NoWrap" VerticalAlignment="Top" Padding="5" Margin="100,0,0,0" BorderThickness="0" Foreground="#FF9C0404" FontWeight="Bold" FontFamily="Consolas" Height="26"/>
+                            <ContentPresenter Margin="0,52,0,0">
+                                <ContentPresenter.Resources>
+                                    <DataTemplate DataType="{x:Type entries:BooleanValueAnnotationEntryViewModel}">
+                                        <CheckBox Content="{Binding EntryName}" IsChecked="{Binding State}"/>
+                                    </DataTemplate>
+                                    <DataTemplate DataType="{x:Type entries:StringValueAnnotationEntryViewModel}">
+                                        <CheckBox Content="{Binding EntryName}" IsChecked="{Binding EntryValue}"/>
+                                    </DataTemplate>
+                                </ContentPresenter.Resources>
+                            </ContentPresenter>
+                            <TextBlock Width="100" HorizontalAlignment="Left" TextWrapping="NoWrap" VerticalAlignment="Top" Padding="5" FontWeight="Bold" Margin="0,26,0,0"><Run Text="Value "/><Run Text="Tag "/><Run Text="Type"/></TextBlock>
+                            <TextBox Background="Transparent" Text="{Binding ValueTag, UpdateSourceTrigger=PropertyChanged}" HorizontalAlignment="Stretch" TextWrapping="NoWrap" VerticalAlignment="Top" Padding="5" Margin="100,26,0,0" BorderThickness="0" Foreground="#FF9C0404" FontWeight="Bold" FontFamily="Consolas" Height="26"/>
+                        </Grid>
+                    </Border>
+                </Grid>
+            </Grid>
+        </Border>
     </Grid>
 </UserControl>

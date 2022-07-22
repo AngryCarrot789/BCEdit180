@@ -4,11 +4,15 @@
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
              xmlns:local="clr-namespace:BCEdit180.Controls" 
-             xmlns:viewmodels="clr-namespace:BCEdit180.ViewModels" 
+             xmlns:viewmodels="clr-namespace:BCEdit180.ViewModels" xmlns:converters="clr-namespace:BCEdit180.Converters"
              d:DataContext="{d:DesignInstance Type=viewmodels:MethodInfoViewModel}"
              mc:Ignorable="d" 
-             d:DesignHeight="40" d:DesignWidth="250">
-    <Grid>
-        <local:DoubleClickEditBox Text="{Binding MethodName, UpdateSourceTrigger=PropertyChanged}"/>
-    </Grid>
+             d:DesignHeight="50" d:DesignWidth="250">
+    <UserControl.Resources>
+        <converters:BooleanToVisibilityConverter x:Key="VisibilityConverter"/>
+    </UserControl.Resources>
+    <StackPanel>
+        <local:DoubleClickEditBox Text="{Binding MethodName, UpdateSourceTrigger=PropertyChanged}" FontSize="14" FontFamily="Consolas"/>
+        <Label Visibility="{Binding IsDeprecated, Converter={StaticResource VisibilityConverter}}" HorizontalContentAlignment="Center" Content="Deprecated" FontStyle="Italic" Background="#7FDE0707" Padding="0 2" Foreground="#FFE0E0E0"/>
+    </StackPanel>
 </UserControl>

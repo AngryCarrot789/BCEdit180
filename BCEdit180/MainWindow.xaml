@@ -6,16 +6,23 @@
         xmlns:local="clr-namespace:BCEdit180"
         xmlns:viewModels="clr-namespace:BCEdit180.ViewModels"
         xmlns:controls="clr-namespace:BCEdit180.Controls"
+        xmlns:converters="clr-namespace:BCEdit180.Converters" xmlns:annotations="clr-namespace:BCEdit180.Annotations" xmlns:codeediting="clr-namespace:BCEdit180.CodeEditing"
         mc:Ignorable="d"
         Title="MainWindow" Width="1280" Height="720" d:DataContext="{d:DesignInstance viewModels:ClassViewModel}">
     <Grid>
         <Menu VerticalAlignment="Top">
-            <MenuItem Header="File"/>
+            <MenuItem Header="File">
+                <MenuItem Header="Open class file..." Command="{Binding OpenFileCommand}"   InputGestureText="Ctrl + O"/>
+                <MenuItem Header="Save class"         Command="{Binding SaveFileCommand}"   InputGestureText="Ctrl + S"/>
+                <MenuItem Header="Save class As..."   Command="{Binding SaveFileAsCommand}" InputGestureText="Ctrl + Shift + S"/>
+                <Separator/>
+                <MenuItem Header="Exit"               Command="{Binding ExitCommand}"       InputGestureText="Alt + F4"/>
+            </MenuItem>
         </Menu>
         <TabControl Margin="0,18,0,24" Background="#FFFAFAFA">
-            <TabItem Header="Class" DataContext="{Binding ClassInfo}">
+            <TabItem Header="Class Info" DataContext="{Binding ClassInfo}">
                 <Grid>
-                    <TextBlock Width="125" HorizontalAlignment="Left" TextWrapping="NoWrap" Text="Minor Version:" VerticalAlignment="Top" Padding="5" TextDecorations="{x:Null}" FontWeight="Bold"/>
+                    <TextBlock Width="125" HorizontalAlignment="Left" TextWrapping="NoWrap" Text="Minor Version" VerticalAlignment="Top" Padding="5" TextDecorations="{x:Null}" FontWeight="Bold"/>
                     <TextBlock Width="125" HorizontalAlignment="Left" TextWrapping="NoWrap" Text="Major Version" VerticalAlignment="Top" Padding="5" Margin="0,26,0,0" TextDecorations="{x:Null}" FontWeight="Bold"/>
                     <TextBlock Width="125" HorizontalAlignment="Left" TextWrapping="NoWrap" Text="Constant Pool Size" VerticalAlignment="Top" Padding="5" Margin="0,52,0,0" TextDecorations="{x:Null}" FontWeight="Bold" />
                     <TextBlock Width="125" HorizontalAlignment="Left" TextWrapping="NoWrap" Text="Access Flags" VerticalAlignment="Top" Padding="5" Margin="0,78,0,0" TextDecorations="{x:Null}" FontWeight="Bold"/>
@@ -27,18 +34,16 @@
                     <TextBlock Width="125" HorizontalAlignment="Left" TextWrapping="NoWrap" Text="Attribute Count" VerticalAlignment="Top" Padding="5" Margin="0,234,0,0" TextDecorations="{x:Null}" FontWeight="Bold"/>
                     <TextBox Text="{Binding MinorVersion, UpdateSourceTrigger=PropertyChanged}"   HorizontalAlignment="Stretch" TextWrapping="NoWrap" VerticalAlignment="Top" Padding="5" Margin="125,0,0,0" BorderThickness="0" Foreground="#FF9C0404" FontWeight="Bold" FontStyle="Italic" TextDecorations="{x:Null}"/>
                     <TextBox Text="{Binding MajorVersion, UpdateSourceTrigger=PropertyChanged}"   HorizontalAlignment="Stretch" TextWrapping="NoWrap" VerticalAlignment="Top" Padding="5" Margin="125,26,0,0" BorderThickness="0" Foreground="#FF9C0404" FontWeight="Bold" FontStyle="Italic" TextDecorations="{x:Null}"/>
-                    <TextBox Text="(Not implemented yet)"                                         HorizontalAlignment="Stretch" TextWrapping="NoWrap" VerticalAlignment="Top" Padding="5" Margin="125,52,0,0" BorderThickness="0" Foreground="#FF9C0404" FontWeight="Bold" FontStyle="Italic" TextDecorations="{x:Null}"/>
+                    <TextBox IsReadOnly="True" Text="(Not implemented yet)"                                         HorizontalAlignment="Stretch" TextWrapping="NoWrap" VerticalAlignment="Top" Padding="5" Margin="125,52,0,0" BorderThickness="0" Foreground="#FF9C0404" FontWeight="Bold" FontStyle="Italic" TextDecorations="{x:Null}"/>
                     <TextBox Text="{Binding AccessFlags, UpdateSourceTrigger=PropertyChanged}"    HorizontalAlignment="Stretch" TextWrapping="NoWrap" VerticalAlignment="Top" Padding="5" Margin="125,78,0,0" BorderThickness="0" Foreground="#FF9C0404" FontWeight="Bold" FontStyle="Italic" TextDecorations="{x:Null}"/>
                     <TextBox Text="{Binding ClassName, UpdateSourceTrigger=PropertyChanged}"      HorizontalAlignment="Stretch" TextWrapping="NoWrap" VerticalAlignment="Top" Padding="5" Margin="125,104,0,0" BorderThickness="0" Foreground="#FF9C0404" FontWeight="Bold" FontStyle="Italic" TextDecorations="{x:Null}"/>
                     <TextBox Text="{Binding SuperName, UpdateSourceTrigger=PropertyChanged}"      HorizontalAlignment="Stretch" TextWrapping="NoWrap" VerticalAlignment="Top" Padding="5" Margin="125,130,0,0" BorderThickness="0" Foreground="#FF9C0404" FontWeight="Bold" FontStyle="Italic" TextDecorations="{x:Null}"/>
-                    <TextBox Text="{Binding InterfaceCount, UpdateSourceTrigger=PropertyChanged}" HorizontalAlignment="Stretch" TextWrapping="NoWrap" VerticalAlignment="Top" Padding="5" Margin="125,156,0,0" BorderThickness="0" Foreground="#FF9C0404" FontWeight="Bold" FontStyle="Italic" TextDecorations="{x:Null}"/>
-                    <TextBox Text="{Binding FieldCount, UpdateSourceTrigger=PropertyChanged}"     HorizontalAlignment="Stretch" TextWrapping="NoWrap" VerticalAlignment="Top" Padding="5" Margin="125,182,0,0" BorderThickness="0" Foreground="#FF9C0404" FontWeight="Bold" FontStyle="Italic" TextDecorations="{x:Null}"/>
-                    <TextBox Text="{Binding MethodCount, UpdateSourceTrigger=PropertyChanged}"    HorizontalAlignment="Stretch" TextWrapping="NoWrap" VerticalAlignment="Top" Padding="5" Margin="125,208,0,0" BorderThickness="0" Foreground="#FF9C0404" FontWeight="Bold" FontStyle="Italic" TextDecorations="{x:Null}"/>
-                    <TextBox Text="{Binding AttributeCount, UpdateSourceTrigger=PropertyChanged}" HorizontalAlignment="Stretch" TextWrapping="NoWrap" VerticalAlignment="Top" Padding="5" Margin="125,234,0,0" BorderThickness="0" Foreground="#FF9C0404" FontWeight="Bold" FontStyle="Italic" TextDecorations="{x:Null}"/>
-
+                    <TextBox IsReadOnly="True" Text="{Binding InterfaceCount, UpdateSourceTrigger=PropertyChanged}" HorizontalAlignment="Stretch" TextWrapping="NoWrap" VerticalAlignment="Top" Padding="5" Margin="125,156,0,0" BorderThickness="0" Foreground="#FF9C0404" FontWeight="Bold" FontStyle="Italic" TextDecorations="{x:Null}"/>
+                    <TextBox IsReadOnly="True" Text="{Binding FieldCount, UpdateSourceTrigger=PropertyChanged}"     HorizontalAlignment="Stretch" TextWrapping="NoWrap" VerticalAlignment="Top" Padding="5" Margin="125,182,0,0" BorderThickness="0" Foreground="#FF9C0404" FontWeight="Bold" FontStyle="Italic" TextDecorations="{x:Null}"/>
+                    <TextBox IsReadOnly="True" Text="{Binding MethodCount, UpdateSourceTrigger=PropertyChanged}"    HorizontalAlignment="Stretch" TextWrapping="NoWrap" VerticalAlignment="Top" Padding="5" Margin="125,208,0,0" BorderThickness="0" Foreground="#FF9C0404" FontWeight="Bold" FontStyle="Italic" TextDecorations="{x:Null}"/>
+                    <TextBox IsReadOnly="True" Text="{Binding AttributeCount, UpdateSourceTrigger=PropertyChanged}" HorizontalAlignment="Stretch" TextWrapping="NoWrap" VerticalAlignment="Top" Padding="5" Margin="125,234,0,0" BorderThickness="0" Foreground="#FF9C0404" FontWeight="Bold" FontStyle="Italic" TextDecorations="{x:Null}"/>
                 </Grid>
             </TabItem>
-            <TabItem Header="Constant Pool" IsEnabled="False"/>
             <TabItem Header="Methods" DataContext="{Binding MethodList}">
                 <Grid>
                     <Grid.ColumnDefinitions>
@@ -46,7 +51,11 @@
                         <ColumnDefinition Width="5"/>
                         <ColumnDefinition Width="587*"/>
                     </Grid.ColumnDefinitions>
-                    <ListBox ItemsSource="{Binding Methods}" x:Name="MethodList" Margin="-2,0,0,0" BorderThickness="1 1 1 1">
+                    <ListBox ItemsSource="{Binding Methods}" x:Name="MethodList" Margin="-2,0,0,0" 
+                             BorderThickness="0 1 1 1"
+                             HorizontalContentAlignment="Stretch" 
+                             ScrollViewer.CanContentScroll="False"
+                             Background="Transparent">
                         <ListBox.ItemTemplate>
                             <DataTemplate>
                                 <controls:MethodInfoControl DataContext="{Binding}"/>
@@ -58,15 +67,104 @@
                         <TabControl DataContext="{Binding ElementName=MethodList, Path=SelectedItem}" d:DataContext="{d:DesignInstance viewModels:MethodInfoViewModel}">
                             <TabItem Header="General Info">
                                 <Grid>
+                                    <Grid.Resources>
+                                        <converters:MethodDescriptorToStringConverter x:Key="DescriptorConverter"/>
+                                    </Grid.Resources>
                                     <TextBlock Text="Method Name" Width="100" HorizontalAlignment="Left" TextWrapping="NoWrap" VerticalAlignment="Top" Padding="5" FontWeight="Bold"/>
                                     <TextBlock Text="Descriptor" Width="100" HorizontalAlignment="Left" TextWrapping="NoWrap" VerticalAlignment="Top" Padding="5" FontWeight="Bold" Margin="0,26,0,0"/>
-                                    <TextBlock Text="Access Flags" Width="100" HorizontalAlignment="Left" TextWrapping="NoWrap" VerticalAlignment="Top" Padding="5" FontWeight="Bold" Margin="0,52,0,0"/>
-                                    <TextBox Text="{Binding MethodName, UpdateSourceTrigger=PropertyChanged}"   HorizontalAlignment="Stretch" TextWrapping="NoWrap" VerticalAlignment="Top" Padding="5" Margin="100,0,0,0" BorderThickness="0" Foreground="#FF9C0404" FontWeight="Bold" FontStyle="Italic" TextDecorations="{x:Null}"/>
-                                    <TextBox Text="{Binding Descriptor, UpdateSourceTrigger=PropertyChanged}"   HorizontalAlignment="Stretch" TextWrapping="NoWrap" VerticalAlignment="Top" Padding="5" Margin="100,26,100,0" BorderThickness="0" Foreground="#FF9C0404" FontWeight="Bold" FontStyle="Italic" TextDecorations="{x:Null}"/>
-                                    <TextBox Text="{Binding Access, UpdateSourceTrigger=PropertyChanged}"   HorizontalAlignment="Stretch" TextWrapping="NoWrap" VerticalAlignment="Top" Padding="5" Margin="100,52,100,0" BorderThickness="0" Foreground="#FF9C0404" FontWeight="Bold" FontStyle="Italic" TextDecorations="{x:Null}"/>
-                                    <Button Margin="0,28,0,0" Content="Edit" Height="22" VerticalAlignment="Top" HorizontalAlignment="Right" Width="100"/>
-                                    <Button Margin="0,54,0,0" Content="Edit" Height="22" VerticalAlignment="Top" HorizontalAlignment="Right" Width="100"/>
+                                    <TextBlock Text="Signature" Width="100" HorizontalAlignment="Left" TextWrapping="NoWrap" VerticalAlignment="Top" Padding="5" FontWeight="Bold" Margin="0,52,0,0"/>
+                                    <TextBlock Text="Access Flags" Width="100" HorizontalAlignment="Left" TextWrapping="NoWrap" VerticalAlignment="Top" Padding="5" FontWeight="Bold" Margin="0,78,0,0"/>
+                                    <TextBlock Text="Max Stack Size" Width="100" HorizontalAlignment="Left" TextWrapping="NoWrap" VerticalAlignment="Top" Padding="5" FontWeight="Bold" Margin="0,104,0,0"/>
+                                    <TextBlock Text="Max Local Vars" Width="100" HorizontalAlignment="Left" TextWrapping="NoWrap" VerticalAlignment="Top" Padding="5" FontWeight="Bold" Margin="0,130,0,0"/>
+                                    <TextBlock Text="Instructions" Width="100" HorizontalAlignment="Left" TextWrapping="NoWrap" VerticalAlignment="Top" Padding="5" FontWeight="Bold" Margin="0,156,0,0"/>
+                                    <TextBlock Text="Annotations" Width="100" HorizontalAlignment="Left" TextWrapping="NoWrap" VerticalAlignment="Top" Padding="5" FontWeight="Bold" Margin="0,182,0,0"/>
+                                    <TextBlock Text="Visible:" Width="85" HorizontalAlignment="Left" TextWrapping="NoWrap" VerticalAlignment="Top" Padding="5" FontWeight="Bold" Margin="15,208,0,0"/>
+                                    <TextBlock Text="Invisible" Width="85" HorizontalAlignment="Left" TextWrapping="NoWrap" VerticalAlignment="Top" Padding="5" FontWeight="Bold" Margin="15,234,0,0"/>
+                                    <TextBox Text="{Binding MethodName, UpdateSourceTrigger=PropertyChanged}"          HorizontalAlignment="Stretch" TextWrapping="NoWrap" VerticalAlignment="Top" Padding="5" Margin="100,0,0,0" BorderThickness="0" Foreground="#FF9C0404" FontWeight="Bold" FontFamily="Consolas"/>
+                                    <TextBox Text="{Binding Descriptor, UpdateSourceTrigger=PropertyChanged,           Converter={StaticResource DescriptorConverter}}"   HorizontalAlignment="Stretch" TextWrapping="NoWrap" VerticalAlignment="Top" Padding="5" Margin="100,26,100,0" BorderThickness="0" Foreground="#FF9C0404" FontWeight="Bold" FontStyle="Italic" FontFamily="Consolas" TextDecorations="{x:Null}"/>
+                                    <TextBox Text="{Binding Signature, UpdateSourceTrigger=PropertyChanged}"           HorizontalAlignment="Stretch" TextWrapping="NoWrap" VerticalAlignment="Top" Padding="5" Margin="100,52,0,0" BorderThickness="0" Foreground="#FF9C0404" FontWeight="Bold" FontStyle="Italic" TextDecorations="{x:Null}" FontFamily="Consolas"/>
+                                    <TextBox Text="{Binding Access, UpdateSourceTrigger=PropertyChanged}"              HorizontalAlignment="Stretch" TextWrapping="NoWrap" VerticalAlignment="Top" Padding="5" Margin="100,78,100,0" BorderThickness="0" Foreground="#FF9C0404" FontWeight="Bold" FontStyle="Italic" TextDecorations="{x:Null}"/>
+                                    <TextBox Text="{Binding MaxStack, UpdateSourceTrigger=PropertyChanged}"            IsReadOnly="True"  HorizontalAlignment="Stretch" TextWrapping="NoWrap" VerticalAlignment="Top" Padding="5" Margin="100,104,100,0" BorderThickness="0" Foreground="#FF9C0404" FontWeight="Bold" FontStyle="Italic" TextDecorations="{x:Null}"/>
+                                    <TextBox Text="{Binding MaxLocals, UpdateSourceTrigger=PropertyChanged}"           IsReadOnly="True"   HorizontalAlignment="Stretch" TextWrapping="NoWrap" VerticalAlignment="Top" Padding="5" Margin="100,130,100,0" BorderThickness="0" Foreground="#FF9C0404" FontWeight="Bold" FontStyle="Italic" TextDecorations="{x:Null}"/>
+                                    <TextBox Text="{Binding Instructions.Count, UpdateSourceTrigger=PropertyChanged, Mode=OneWay}"  IsReadOnly="True"   HorizontalAlignment="Stretch" TextWrapping="NoWrap" VerticalAlignment="Top" Padding="5" Margin="100,156,100,0" BorderThickness="0" Foreground="#FF9C0404" FontWeight="Bold" FontStyle="Italic" TextDecorations="{x:Null}"/>
+                                    <TextBox DataContext="{Binding VisibleAnnotationEditor}"   Text="{Binding Annotations.Count, UpdateSourceTrigger=PropertyChanged, Mode=OneWay}"  IsReadOnly="True"   HorizontalAlignment="Stretch" TextWrapping="NoWrap" VerticalAlignment="Top" Padding="5" Margin="100,208,100,0" BorderThickness="0" Foreground="#FF9C0404" FontWeight="Bold" FontStyle="Italic" TextDecorations="{x:Null}"/>
+                                    <TextBox DataContext="{Binding InvisibleAnnotationEditor}" Text="{Binding Annotations.Count, UpdateSourceTrigger=PropertyChanged, Mode=OneWay}"  IsReadOnly="True"   HorizontalAlignment="Stretch" TextWrapping="NoWrap" VerticalAlignment="Top" Padding="5" Margin="100,234,100,0" BorderThickness="0" Foreground="#FF9C0404" FontWeight="Bold" FontStyle="Italic" TextDecorations="{x:Null}"/>
+                                    <Button Command="{Binding EditSignatureCommand, Mode=OneTime}" Margin="0,28,0,0" Content="Edit Descriptor" Height="22" VerticalAlignment="Top" HorizontalAlignment="Right" Width="100"/>
+                                    <Button Command="{Binding EditAccessCommand, Mode=OneTime}" Margin="0,80,0,0" Content="Edit Access" Height="22" VerticalAlignment="Top" HorizontalAlignment="Right" Width="100"/>
+                                    <GroupBox Header="Annotations" Margin="5,265,5,5">
+                                        <TabControl TabStripPlacement="Bottom">
+                                            <TabItem>
+                                                <TabItem.Header>
+                                                    <StackPanel Orientation="Horizontal">
+                                                        <TextBlock Text="Visible Annotations"/>
+                                                        <TextBlock Text="{Binding VisibleAnnotationEditor.Annotations.Count, UpdateSourceTrigger=PropertyChanged, StringFormat={}({0})}" Padding="2 0 0 0"/>
+                                                    </StackPanel>
+                                                </TabItem.Header>
+                                                <annotations:AnnotationEditorControl DataContext="{Binding VisibleAnnotationEditor}"/>
+                                            </TabItem>
+                                            <TabItem>
+                                                <TabItem.Header>
+                                                    <StackPanel Orientation="Horizontal">
+                                                        <TextBlock Text="Hidden Annotations"/>
+                                                        <TextBlock Text="{Binding InvisibleAnnotationEditor.Annotations.Count, UpdateSourceTrigger=PropertyChanged, StringFormat={}({0})}" Padding="2 0 0 0"/>
+                                                    </StackPanel>
+                                                </TabItem.Header>
+                                                <annotations:AnnotationEditorControl DataContext="{Binding InvisibleAnnotationEditor}"/>
+                                            </TabItem>
+                                        </TabControl>
+                                    </GroupBox>
                                 </Grid>
+                            </TabItem>
+                            <TabItem Header="Code Editor">
+                                <Grid DataContext="{Binding CodeEditor}">
+                                    <TabControl>
+                                        <TabItem Header="Bytecode Editor (Very WIP, no editing currently)" DataContext="{Binding ByteCodeEditor}">
+                                            <codeediting:BytecodeEditorControl />
+                                        </TabItem>
+                                        <TabItem Header="Exception Table" DataContext="{Binding ExceptionEditor}">
+                                            <ListView ItemsSource="{Binding TryCatchBlocks}">
+                                                <ListView.View>
+                                                    <GridView>
+                                                        <GridView.Columns>
+                                                            <GridViewColumn Header="Start" Width="100"          DisplayMemberBinding="{Binding StartIndex, UpdateSourceTrigger=PropertyChanged}"/>
+                                                            <GridViewColumn Header="End" Width="100"            DisplayMemberBinding="{Binding EndIndex, UpdateSourceTrigger=PropertyChanged}"/>
+                                                            <GridViewColumn Header="Handler" Width="100"        DisplayMemberBinding="{Binding HandlerIndex, UpdateSourceTrigger=PropertyChanged}"/>
+                                                            <GridViewColumn Header="Exception Type" Width="400">
+                                                                <GridViewColumn.CellTemplate>
+                                                                    <DataTemplate>
+                                                                        <controls:DoubleClickEditBox Text="{Binding HandlerType, UpdateSourceTrigger=PropertyChanged}" FontFamily="Consolas"/>
+                                                                    </DataTemplate>
+                                                                </GridViewColumn.CellTemplate>
+                                                            </GridViewColumn>
+                                                        </GridView.Columns>
+                                                    </GridView>
+                                                </ListView.View>
+                                            </ListView>
+                                        </TabItem>
+                                    </TabControl>
+                                </Grid>
+                            </TabItem>
+                            <TabItem Header="Annotations">
+                                <TabControl TabStripPlacement="Bottom">
+                                    <TabItem>
+                                        <TabItem.Header>
+                                            <StackPanel Orientation="Horizontal">
+                                                <TextBlock Text="Visible Annotations"/>
+                                                <TextBlock Text="{Binding VisibleAnnotationEditor.Annotations.Count, UpdateSourceTrigger=PropertyChanged, StringFormat={}({0})}" Padding="2 0 0 0"/>
+                                            </StackPanel>
+                                        </TabItem.Header>
+                                        <annotations:AnnotationEditorControl DataContext="{Binding VisibleAnnotationEditor}"/>
+                                    </TabItem>
+                                    <TabItem>
+                                        <TabItem.Header>
+                                            <StackPanel Orientation="Horizontal">
+                                                <TextBlock Text="Hidden Annotations"/>
+                                                <TextBlock Text="{Binding InvisibleAnnotationEditor.Annotations.Count, UpdateSourceTrigger=PropertyChanged, StringFormat={}({0})}" Padding="2 0 0 0"/>
+                                            </StackPanel>
+                                        </TabItem.Header>
+                                        <annotations:AnnotationEditorControl DataContext="{Binding InvisibleAnnotationEditor}"/>
+                                    </TabItem>
+                                </TabControl>
                             </TabItem>
                         </TabControl>
                     </Border>
@@ -82,13 +180,49 @@
                     <ListBox ItemsSource="{Binding Fields}" x:Name="FieldList" Margin="-2,0,0,0" BorderThickness="1 1 1 1">
                         <ListBox.ItemTemplate>
                             <DataTemplate>
-                                <controls:MethodInfoControl DataContext="{Binding}"/>
+                                <controls:FieldInfoControl DataContext="{Binding}"/>
                             </DataTemplate>
                         </ListBox.ItemTemplate>
                     </ListBox>
                     <GridSplitter HorizontalAlignment="Stretch" VerticalAlignment="Stretch" Grid.Column="1" BorderThickness="0 1" BorderBrush="#FFABADB3"/>
                     <Border Background="#FFFAFAFA" BorderBrush="#FFABADB3" BorderThickness="1 1 1 1" Grid.Column="2">
-                        <Grid DataContext="{Binding ElementName=FieldList, Path=DataContext}"/>
+                        <Grid DataContext="{Binding ElementName=FieldList, Path=SelectedItem}" d:DataContext="{d:DesignInstance viewModels:FieldInfoViewModel}">
+                            <Grid.Resources>
+                                <converters:MethodDescriptorToStringConverter x:Key="DescriptorConverter"/>
+                            </Grid.Resources>
+                            <TextBlock Text="Method Name" Width="100" HorizontalAlignment="Left" TextWrapping="NoWrap" VerticalAlignment="Top" Padding="5" FontWeight="Bold"/>
+                            <TextBlock Text="Descriptor" Width="100" HorizontalAlignment="Left" TextWrapping="NoWrap" VerticalAlignment="Top" Padding="5" FontWeight="Bold" Margin="0,26,0,0"/>
+                            <TextBlock Text="Signature" Width="100" HorizontalAlignment="Left" TextWrapping="NoWrap" VerticalAlignment="Top" Padding="5" FontWeight="Bold" Margin="0,52,0,0"/>
+                            <TextBlock Text="Access Flags" Width="100" HorizontalAlignment="Left" TextWrapping="NoWrap" VerticalAlignment="Top" Padding="5" FontWeight="Bold" Margin="0,78,0,0"/>
+                            <TextBox Background="Transparent" Text="{Binding FieldName, UpdateSourceTrigger=PropertyChanged}"          HorizontalAlignment="Stretch" TextWrapping="NoWrap" VerticalAlignment="Top" Padding="5" Margin="100,0,0,0" BorderThickness="0" Foreground="#FF9C0404" FontWeight="Bold" FontFamily="Consolas" Height="26"/>
+                            <TextBox Background="Transparent" Text="{Binding Descriptor, UpdateSourceTrigger=PropertyChanged,           Converter={StaticResource DescriptorConverter}}"   HorizontalAlignment="Stretch" TextWrapping="NoWrap" VerticalAlignment="Top" Padding="5" Margin="100,26,100,0" BorderThickness="0" Foreground="#FF9C0404" FontWeight="Bold" FontStyle="Italic" FontFamily="Consolas" TextDecorations="{x:Null}" Height="26"/>
+                            <TextBox Background="Transparent" Text="{Binding Signature, UpdateSourceTrigger=PropertyChanged}"           HorizontalAlignment="Stretch" TextWrapping="NoWrap" VerticalAlignment="Top" Padding="5" Margin="100,52,0,0" BorderThickness="0" Foreground="#FF9C0404" FontWeight="Bold" FontStyle="Italic" TextDecorations="{x:Null}" FontFamily="Consolas" Height="26"/>
+                            <TextBox Background="Transparent" Text="{Binding Access, UpdateSourceTrigger=PropertyChanged}"              HorizontalAlignment="Stretch" TextWrapping="NoWrap" VerticalAlignment="Top" Padding="5" Margin="100,78,100,0" BorderThickness="0" Foreground="#FF9C0404" FontWeight="Bold" FontStyle="Italic" TextDecorations="{x:Null}"/>
+                            <Button Command="{Binding EditSignatureCommand, Mode=OneTime}" Margin="0,26,0,0" Content="Edit Descriptor" BorderThickness="1 1 0 1" Height="26" VerticalAlignment="Top" HorizontalAlignment="Right" Width="100" BorderBrush="#FFABADB3"/>
+                            <Button Command="{Binding EditAccessCommand, Mode=OneTime}"    Margin="0,78,0,0" Content="Edit Access"     BorderThickness="1 1 0 1" Height="26" VerticalAlignment="Top" HorizontalAlignment="Right" Width="100" BorderBrush="#FFABADB3"/>
+                            <GroupBox Header="Annotations" Margin="5,109,5,5">
+                                <TabControl TabStripPlacement="Bottom">
+                                    <TabItem>
+                                        <TabItem.Header>
+                                            <StackPanel Orientation="Horizontal">
+                                                <TextBlock Text="Visible Annotations"/>
+                                                <TextBlock Text="{Binding VisibleAnnotationEditor.Annotations.Count, UpdateSourceTrigger=PropertyChanged, StringFormat={}({0})}" Padding="2 0 0 0"/>
+                                            </StackPanel>
+                                        </TabItem.Header>
+                                        <annotations:AnnotationEditorControl DataContext="{Binding VisibleAnnotationEditor}"/>
+                                    </TabItem>
+                                    <TabItem>
+                                        <TabItem.Header>
+                                            <StackPanel Orientation="Horizontal">
+                                                <TextBlock Text="Hidden Annotations"/>
+                                                <TextBlock Text="{Binding InvisibleAnnotationEditor.Annotations.Count, UpdateSourceTrigger=PropertyChanged, StringFormat={}({0})}" Padding="2 0 0 0"/>
+                                            </StackPanel>
+                                        </TabItem.Header>
+                                        <annotations:AnnotationEditorControl DataContext="{Binding InvisibleAnnotationEditor}"/>
+                                    </TabItem>
+                                </TabControl>
+                            </GroupBox>
+                        </Grid>
                     </Border>
                 </Grid>
             </TabItem>

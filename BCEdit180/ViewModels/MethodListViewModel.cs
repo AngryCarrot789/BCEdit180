@@ -10,7 +10,7 @@ namespace BCEdit180.ViewModels {
             this.Methods = new ObservableCollection<MethodInfoViewModel>();
         }
 
-        public void Update(ClassNode clazz) {
+        public void Load(ClassNode clazz) {
             this.Methods.Clear();
             foreach (MethodNode method in clazz.Methods) {
                 this.Methods.Add(new MethodInfoViewModel(method));

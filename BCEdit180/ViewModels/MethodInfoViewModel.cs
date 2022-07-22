@@ -1,8 +1,13 @@
 ﻿using System.Collections.Generic;
+using System.Linq;
 using System.Windows.Input;
+using BCEdit180.Annotations;
+using BCEdit180.CodeEditing;
+using BCEdit180.Utils;
 using JavaAsm;
 using JavaAsm.CustomAttributes.Annotation;
 using JavaAsm.Instructions;
+using REghZy.MVVM.Commands;
 using REghZy.MVVM.ViewModels;
 
 namespace BCEdit180.ViewModels {
@@ -10,19 +15,17 @@ namespace BCEdit180.ViewModels {
         private MethodNode method;
 
         private ClassNode owner;
-        private MethodAccessModifiers access;
-        private string methodName;
-        private MethodDescriptor descriptor;
-        private List<AttributeNode> attributes;
-        private string signature;
-        private ushort maxStack;
-        private ushort maxLocals;
+        private MethodAccessModifiers access;       // done
+        private string methodName;                  // done
+        private MethodDescriptor descriptor;        // done
+        private List<AttributeNode> attributes;     // bruh what
+        private string signature;                   // done
+        private ushort maxStack;                    // done
+        private ushort maxLocals;                   // done
         private List<TryCatchNode> tryCatches;
         private InstructionList instructions;
         private List<AttributeNode> codeAttributes;
-        private List<AnnotationNode> invisibleAnnotations;
-        private List<AnnotationNode> visibleAnnotations;
-        private bool isDeprecated;
+        private bool isDeprecated;                  // done
         private List<ClassName> throws;
         private ElementValue annotationDefaultValue;
 
@@ -81,15 +84,11 @@ namespace BCEdit180.ViewModels {
             set => RaisePropertyChanged(ref this.codeAttributes, value);
         }
 
-        public List<AnnotationNode> InvisibleAnnotations {
-            get => this.invisibleAnnotations;
-            set => RaisePropertyChanged(ref this.invisibleAnnotations, value);
-        }
+        public AnnotationEditorViewModel VisibleAnnotationEditor { get; }
 
-        public List<AnnotationNode> VisibleAnnotations {
-            get => this.visibleAnnotations;
-            set => RaisePropertyChanged(ref this.visibleAnnotations, value);
-        }
+        public AnnotationEditorViewModel InvisibleAnnotationEditor { get; }
+
+        public CodeEditorViewModel CodeEditor { get; }
 
         public bool IsDeprecated {
             get => this.isDeprecated;
@@ -112,15 +111,53 @@ namespace BCEdit180.ViewModels {
 
         public MethodInfoViewModel(MethodNode method) {
             this.method = method;
+            this.EditAccessCommand = new RelayCommand(() => ViewManager.ShowAccessEditor(this));
+            this.VisibleAnnotationEditor = new AnnotationEditorViewModel();
+            this.InvisibleAnnotationEditor = new AnnotationEditorViewModel();
+            this.CodeEditor = new CodeEditorViewModel();
             Load(method);
         }
 
         public void Load(MethodNode node) {
             this.MethodName = node.Name;
+            this.Access = node.Access;
+            this.MethodName = node.Name;
+            this.Descriptor = node.Descriptor;
+            this.Attributes = node.Attributes;
+            this.Signature = node.Signature;
+            this.MaxStack = node.MaxStack;
+            this.MaxLocals = node.MaxLocals;
+            this.TryCatches = node.TryCatches;
+            this.Instructions = node.Instructions;
+            this.CodeAttributes = node.CodeAttributes;
+            this.VisibleAnnotationEditor.Annotations.Clear();
+            this.VisibleAnnotationEditor.Annotations.AddAll(node.VisibleAnnotations.Select(a => new AnnotationViewModel(a)));
+            this.InvisibleAnnotationEditor.Annotations.Clear();
+            this.InvisibleAnnotationEditor.Annotations.AddAll(node.InvisibleAnnotations.Select(a => new AnnotationViewModel(a)));
+            this.IsDeprecated = node.IsDeprecated;
+            this.Throws = node.Throws;
+            this.AnnotationDefaultValue = node.AnnotationDefaultValue;
+            this.CodeEditor.Load(node);
         }
 
         public void Save(MethodNode node) {
             node.Name = this.MethodName;
+            node.Access = this.Access;
+            node.Name = this.MethodName;
+            node.Descriptor = this.Descriptor;
+            node.Attributes = this.Attributes;
+            node.Signature = this.Signature;
+            node.MaxStack = this.MaxStack;
+            node.MaxLocals = this.MaxLocals;
+            node.TryCatches = this.TryCatches;
+            node.Instructions = this.Instructions;
+            node.CodeAttributes = this.CodeAttributes;
+            node.VisibleAnnotations = new List<AnnotationNode>(this.VisibleAnnotationEditor.Annotations.Select(a => a.Node));
+            node.InvisibleAnnotations = new List<AnnotationNode>(this.InvisibleAnnotationEditor.Annotations.Select(a => a.Node));
+            node.IsDeprecated = this.IsDeprecated;
+            node.Throws = this.Throws;
+            node.AnnotationDefaultValue = this.AnnotationDefaultValue;
+            this.CodeEditor.Save(node);
         }
     }
 }

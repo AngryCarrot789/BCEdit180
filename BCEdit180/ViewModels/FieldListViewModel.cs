@@ -10,7 +10,7 @@ namespace BCEdit180.ViewModels {
             this.Fields = new ObservableCollection<FieldInfoViewModel>();
         }
 
-        public void Update(ClassNode clazz) {
+        public void Load(ClassNode clazz) {
             this.Fields.Clear();
             foreach (FieldNode field in clazz.Fields) {
                 this.Fields.Add(new FieldInfoViewModel(field));

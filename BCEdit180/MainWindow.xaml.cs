@@ -11,12 +11,20 @@ namespace BCEdit180 {
     public partial class MainWindow : Window {
         public MainWindow() {
             InitializeComponent();
-            string path = "F:\\IJProjects\\CarrotTools\\out\\production\\CarrotTools\\reghzy\\carrottools\\playerdata\\results\\custom\\tileentity\\TileEntityTimingResult.class";
+
+            // string path = "F:\\IJProjects\\CarrotTools\\out\\production\\CarrotTools\\reghzy\\carrottools\\playerdata\\results\\custom\\tileentity\\TileEntityTimingResult.class";
+            // string path = "F:\\MinecraftUtils\\server\\tekkitmain-1.6.4\\CarrotClassSplicer\\World.class";
+            string path = @"F:\IJProjects\CarrotTools\out\production\CarrotTools\reghzy\carrottools\playerdata\results\custom\BlockLookupResult.class";
             using (BufferedStream stream = new BufferedStream(File.OpenRead(path))) {
                 ClassNode node = ClassFile.ParseClass(stream);
-                this.DataContext = new ClassViewModel(node);
+                this.DataContext = new ClassViewModel(node) {
+                    FilePath = path
+                };
             }
 
+            // was planning on using a java server to process classfiles, because the asm-all library is pretty good
+            // but then i found java-asm, which seems like the exact same as asm-all, except in c# :))
+            // (you can download my fork of it, which i downgraded to .NET standard 2.0)
 
             // Socket server = new Socket(SocketType.Stream, ProtocolType.Tcp);
             // server.Bind(new IPEndPoint(IPAddress.Any, 12944));
@@ -39,6 +47,7 @@ namespace BCEdit180 {
             // system.ProcessSendQueue();
             // system.Connection.Disconnect();
             // server.Close();
+
         }
     }
 }

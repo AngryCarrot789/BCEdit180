@@ -21,19 +21,16 @@ namespace BCEdit180.FlagEditor {
 
         public long Bit { get; }
 
-        public int BitIndex { get; }
-
         private Action<FlagItemViewModel> OnStateChanged { get; }
 
-        public FlagItemViewModel(string name, long bit, int bitIndex, Action<FlagItemViewModel> onStateChanged) {
+        public FlagItemViewModel(string name, long bit, Action<FlagItemViewModel> onStateChanged) {
             this.Name = name;
             this.Bit = bit;
-            this.BitIndex = bitIndex;
             this.OnStateChanged = onStateChanged;
         }
 
         public override string ToString() {
-            return $"FlagItemViewModel({this.Name} @ {this.Bit} ({this.BitIndex}) -> {this.IsChecked})";
+            return $"FlagItemViewModel({this.Name} @ {this.Bit} -> {this.IsChecked})";
         }
     }
 }

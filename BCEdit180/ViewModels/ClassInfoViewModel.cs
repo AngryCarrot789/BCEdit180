@@ -62,7 +62,7 @@ namespace BCEdit180.ViewModels {
             set => RaisePropertyChanged(ref this.attributeCount, value);
         }
 
-        public void Update(ClassNode node) {
+        public void Load(ClassNode node) {
             this.classNode = node;
             this.MinorVersion = node.MinorVersion;
             this.MajorVersion = node.MajorVersion;
@@ -79,7 +79,7 @@ namespace BCEdit180.ViewModels {
             using (BufferedStream stream = new BufferedStream(File.OpenRead(filePath))) {
                 ClassNode node = ClassFile.ParseClass(stream);
                 ClassInfoViewModel vm = new ClassInfoViewModel();
-                vm.Update(node);
+                vm.Load(node);
                 return vm;
             }
         }

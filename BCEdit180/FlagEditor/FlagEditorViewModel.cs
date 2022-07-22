@@ -7,7 +7,8 @@ namespace BCEdit180.FlagEditor {
     public class FlagEditorViewModel : BaseViewModel {
         public ObservableCollection<FlagItemViewModel> FlagItems { get; }
 
-        private object enumValue;
+        private readonly Dictionary<long, FlagItemViewModel> bitToFlag;
+
         private long bitMask;
 
         public long BitMask {
@@ -28,6 +29,7 @@ namespace BCEdit180.FlagEditor {
         public FlagEditorViewModel(Func<long, Enum> maskToEnum) {
             this.FlagItems = new ObservableCollection<FlagItemViewModel>();
             this.MaskToEnum = maskToEnum;
+            this.bitToFlag = new Dictionary<long, FlagItemViewModel>();
         }
 
         public void OnFlagChanged(FlagItemViewModel flagItem) {
@@ -42,51 +44,38 @@ namespace BCEdit180.FlagEditor {
         }
 
         public void UpdateEnumPreview() {
-            this.PreviewEnumValue = this.MaskToEnum(this.BitMask);
+            this.PreviewEnumValue = GetEnumValue();
         }
 
         public void InvokeEnumCallback() {
             this.UpdateEnumCallback?.Invoke(GetEnumValue());
         }
 
-        public void UpdateFlagItemsWithBitMask(long mask, Func<TEnum, long> toLong) where TEnum : Enum {
-            for (int index = 0; index < 64; index++) {
-                long bit = index & mask;
-                if (bit )
-            }
-
-            foreach (FlagItemViewModel flagItem in this.FlagItems) {
-                long value = (i++ & mask);
-                flagItem.IsChecked = value != 0;
-            }
-
-            Enum.
-
-            UpdateEnumPreview();
-        }
-
         public void LoadFlags<TEnum>(Func<TEnum, long> enumToBit) where TEnum : Enum {
             Type type = typeof(TEnum);
             this.FlagItems.Clear();
 
-            int GetBitIndex(long value) {
-                int i = 0;
-                while (value > 0) {
-                    value >>= 1;
-                    i++;
-                }
-
-                return i;
-            }
-
             foreach (TEnum value in type.GetEnumValues()) {
-                long val = enumToBit(value);
-                this.FlagItems.Add(new FlagItemViewModel(Enum.GetName(type, value), val, GetBitIndex(val), OnFlagChanged));
+                FlagItemViewModel flag = new FlagItemViewModel(Enum.GetName(type, value), enumToBit(value), OnFlagChanged);
+                this.FlagItems.Add(flag);
+                this.bitToFlag[flag.Bit] = flag;
             }
         }
 
         public object GetEnumValue() {
             return this.MaskToEnum(this.BitMask);
+        }
+
+        public void UpdateFlagItemsWithBitMask<TEnum>(long bitMask) where TEnum : Enum {
+            long j = 1;
+            for (int i = 0; i <= bitMask; j = 1 << ++i) {
+                if (this.bitToFlag.TryGetValue(j, out FlagItemViewModel flag)) {
+                    flag.IsChecked = (bitMask & j) != 0;
+                }
+            }
+
+            // go through each bit of bitMask, check if the specific bit part exists
+            // and update it
         }
     }
 }

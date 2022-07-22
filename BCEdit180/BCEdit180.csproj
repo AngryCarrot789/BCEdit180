@@ -103,24 +103,85 @@
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </ApplicationDefinition>
+    <Compile Include="Annotations\AnnotationEditorControl.xaml.cs">
+      <DependentUpon>AnnotationEditorControl.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Annotations\AnnotationEditorViewModel.cs" />
+    <Compile Include="Annotations\AnnotationItemControl.xaml.cs">
+      <DependentUpon>AnnotationItemControl.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Annotations\Entries\BaseAnnotationEntryViewModel.cs" />
+    <Compile Include="Annotations\Entries\BooleanValueAnnotationEntryViewModel.cs" />
+    <Compile Include="Annotations\Entries\StringValueAnnotationEntryViewModel.cs" />
+    <Compile Include="CodeEditing\BytecodeEditorControl.xaml.cs">
+      <DependentUpon>BytecodeEditorControl.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="CodeEditing\BytecodeEditorViewModel.cs" />
+    <Compile Include="CodeEditing\Bytecode\BaseInstructionViewModel.cs" />
+    <Compile Include="CodeEditing\Bytecode\Controls\VariableInstructionControl.xaml.cs">
+      <DependentUpon>VariableInstructionControl.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="CodeEditing\Bytecode\VariableInstructionViewModel.cs" />
+    <Compile Include="CodeEditing\CodeEditorViewModel.cs" />
+    <Compile Include="CodeEditing\ExceptionTableViewModel.cs" />
+    <Compile Include="CodeEditing\TryCatchBlockViewModel.cs" />
     <Compile Include="Controls\DoubleClickEditBox.xaml.cs">
       <DependentUpon>DoubleClickEditBox.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Controls\FieldInfoControl.xaml.cs">
+      <DependentUpon>FieldInfoControl.xaml</DependentUpon>
     </Compile>
     <Compile Include="Controls\MethodInfoControl.xaml.cs">
       <DependentUpon>MethodInfoControl.xaml</DependentUpon>
     </Compile>
+    <Compile Include="Converters\BooleanToVisibilityConverter.cs" />
+    <Compile Include="Converters\MethodDescriptorToStringConverter.cs" />
     <Compile Include="FlagEditor\FlagEditorViewModel.cs" />
+    <Compile Include="FlagEditor\FlagEditorWindow.xaml.cs">
+      <DependentUpon>FlagEditorWindow.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="FlagEditor\FlagItemViewModel.cs" />
+    <Compile Include="TypeEditor\TypeDescriptorEditorWindow.xaml.cs">
+      <DependentUpon>TypeDescriptorEditorWindow.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Utils\CollectionUtils.cs" />
+    <Compile Include="ViewManager.cs" />
+    <Compile Include="Annotations\AnnotationViewModel.cs" />
     <Compile Include="ViewModels\ClassInfoViewModel.cs" />
     <Compile Include="ViewModels\ClassViewModel.cs" />
     <Compile Include="ViewModels\FieldInfoViewModel.cs" />
     <Compile Include="ViewModels\MethodInfoViewModel.cs" />
     <Compile Include="ViewModels\FieldListViewModel.cs" />
     <Compile Include="ViewModels\MethodListViewModel.cs" />
+    <Page Include="Annotations\AnnotationEditorControl.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Annotations\AnnotationItemControl.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="CodeEditing\BytecodeEditorControl.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="CodeEditing\Bytecode\Controls\VariableInstructionControl.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
     <Page Include="Controls\DoubleClickEditBox.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
+    <Page Include="Controls\FieldInfoControl.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
     <Page Include="Controls\MethodInfoControl.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="FlagEditor\FlagEditorWindow.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
@@ -136,6 +197,10 @@
       <DependentUpon>MainWindow.xaml</DependentUpon>
       <SubType>Code</SubType>
     </Compile>
+    <Page Include="TypeEditor\TypeDescriptorEditorWindow.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Properties\AssemblyInfo.cs">
@@ -163,6 +228,9 @@
   </ItemGroup>
   <ItemGroup>
     <None Include="App.config" />
+  </ItemGroup>
+  <ItemGroup>
+    <Folder Include="EnumEditor\" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>

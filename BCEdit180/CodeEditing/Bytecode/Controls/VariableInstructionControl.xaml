@@ -1,0 +1,15 @@
+﻿<UserControl x:Class="BCEdit180.CodeEditing.Bytecode.Controls.VariableInstructionControl"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
+             xmlns:local="clr-namespace:BCEdit180.CodeEditing.Bytecode.Controls"
+             xmlns:bytecode="clr-namespace:BCEdit180.CodeEditing.Bytecode" 
+             d:DataContext="{d:DesignInstance Type=bytecode:VariableInstructionViewModel}"
+             mc:Ignorable="d" 
+             d:DesignHeight="20" d:DesignWidth="400">
+    <StackPanel Orientation="Horizontal">
+        <TextBlock Text="{Binding Opcode, UpdateSourceTrigger=PropertyChanged}" VerticalAlignment="Center" Padding="0 0 3 0"/>
+        <TextBlock Text="{Binding VarIndex, UpdateSourceTrigger=PropertyChanged}" VerticalAlignment="Center" Padding="0 0 2 0"/>
+    </StackPanel>
+</UserControl>
