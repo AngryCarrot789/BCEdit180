@@ -24,7 +24,12 @@ namespace BCEdit180.Converters {
         }
 
         public object ConvertBack(object value, Type targetType, object parameter, CultureInfo culture) {
-            throw new NotImplementedException();
+            try {
+                return MethodDescriptor.Parse(value == null ? "()V" : value.ToString());
+            }
+            catch {
+                return DependencyProperty.UnsetValue;
+            }
         }
     }
 }

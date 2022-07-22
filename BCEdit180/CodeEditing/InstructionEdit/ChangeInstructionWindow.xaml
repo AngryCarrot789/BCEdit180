@@ -4,19 +4,37 @@
         xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:BCEdit180.CodeEditing.InstructionEdit" 
+        xmlns:asm="clr-namespace:JavaAsm;assembly=JavaAsm" 
+        xmlns:asmi="clr-namespace:JavaAsm.Instructions;assembly=JavaAsm" xmlns:converters="clr-namespace:BCEdit180.Converters"
         d:DataContext="{d:DesignInstance Type=local:ChangeInstructionViewModel}"
         mc:Ignorable="d"
-        Title="ChangeInstructionWindow" Height="350" Width="250"
+        Title="Replace Opcode" Height="325" Width="450"
         Style="{DynamicResource CustomWindowStyle}" Background="{DynamicResource AREghZyBrush.Deep.3.Background.Static}">
     <Grid Margin="10">
-        <TextBlock Text="Select a new instruction" Padding="5" Margin="0,0,0,0" VerticalAlignment="Top"/>
+        <TextBlock Text="Select a new instruction" Padding="10" Margin="0,0,0,0" VerticalAlignment="Top"/>
         <ListBox ItemsSource="{Binding AvailableOpCodes}" 
                  SelectedItem="{Binding SelectedOpcode, UpdateSourceTrigger=PropertyChanged}" 
                  SelectedIndex="{Binding SelectedIndex, UpdateSourceTrigger=PropertyChanged}" 
-                 Margin="0,26,0,29" Background="{DynamicResource AREghZyBrush.Deep.2.Background.Static}">
-            
+                 FontFamily="Consolas" FontSize="16"
+                 Margin="0,36,0,0" Background="{DynamicResource AREghZyBrush.Deep.2.Background.Static}" 
+                 HorizontalAlignment="Left" Width="170"
+                 x:Name="InstructionListBox">
         </ListBox>
-        <Button Command="{Binding ApplyChangesCommand,Mode=OneTime}" Content="Okay" HorizontalAlignment="Right" Margin="0,0,79,0" VerticalAlignment="Bottom" Width="74" Background="#FF79D43A" Height="24" Click="OkayClick"/>
-        <Button Content="Cancel" HorizontalAlignment="Right" VerticalAlignment="Bottom" Width="74" Height="24" Click="CancelClick"/>
+        <Grid Margin="175,36,0,34">
+            <Grid.Resources>
+                <converters:OpCodeToDescriptionConverter x:Key="DescriptionConverter"/>
+            </Grid.Resources>
+            <TextBlock Text="{Binding ElementName=InstructionListBox, Path=SelectedItem, Converter={StaticResource DescriptionConverter}, FallbackValue=No description}" Padding="2" FontStyle="Italic" FontSize="14"/>
+        </Grid>
+        <Grid Height="29" VerticalAlignment="Bottom" Margin="175,0,0,0">
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="86*"/>
+                <ColumnDefinition Width="5"/>
+                <ColumnDefinition Width="81*"/>
+            </Grid.ColumnDefinitions>
+            <Button Command="{Binding ApplyChangesCommand, Mode=OneTime}" Content="Okay" Background="#FF79D43A" Click="OkayClick"/>
+            <Button Content="Cancel" Click="CancelClick" Grid.Column="2"/>
+
+        </Grid>
     </Grid>
 </Window>

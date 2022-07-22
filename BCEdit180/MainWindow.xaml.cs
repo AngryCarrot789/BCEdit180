@@ -1,4 +1,5 @@
-﻿using System.IO;
+﻿using System.Diagnostics;
+using System.IO;
 using System.Windows;
 using BCEdit180.ViewModels;
 using JavaAsm;
@@ -48,6 +49,20 @@ namespace BCEdit180 {
             // system.Connection.Disconnect();
             // server.Close();
 
+        }
+
+        private void MenuItem_Click(object sender, RoutedEventArgs e) {
+            ClassViewModel vm = (ClassViewModel) this.DataContext;
+
+            if (File.Exists(vm.FilePath)) {
+                string folder = Path.GetDirectoryName(vm.FilePath);
+                if (folder == null) {
+                    return;
+                }
+                else {
+                    Process.Start("explorer.exe", @"/select, """ + vm.FilePath + "\"");
+                }
+            }
         }
     }
 }

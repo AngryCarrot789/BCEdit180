@@ -1,3 +1,4 @@
+using System.Collections.Generic;
 using JavaAsm.Instructions;
 using JavaAsm.Instructions.Types;
 
@@ -8,6 +9,8 @@ namespace BCEdit180.CodeEditing.Bytecode {
             get => this.value;
             set => RaisePropertyChanged(ref this.value, value);
         }
+
+        public override IEnumerable<Opcode> AvailableOpcodes => new[] { Opcode.BIPUSH, Opcode.SIPUSH};
 
         public IntegerPushInstructionViewModel(Instruction instruction) : base(instruction) {
 

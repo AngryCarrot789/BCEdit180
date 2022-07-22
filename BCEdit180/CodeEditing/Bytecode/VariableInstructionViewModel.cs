@@ -1,3 +1,4 @@
+using System.Collections.Generic;
 using JavaAsm.Instructions;
 using JavaAsm.Instructions.Types;
 
@@ -8,6 +9,8 @@ namespace BCEdit180.CodeEditing.Bytecode {
             get => this.varIndex;
             set => RaisePropertyChanged(ref this.varIndex, value);
         }
+
+        public override IEnumerable<Opcode> AvailableOpcodes => new[] { Opcode.ILOAD, Opcode.LLOAD, Opcode.FLOAD, Opcode.DLOAD, Opcode.ALOAD, Opcode.ISTORE, Opcode.LSTORE, Opcode.FSTORE, Opcode.DSTORE, Opcode.ASTORE, Opcode.RET };
 
         public VariableInstructionViewModel(Instruction instruction) : base(instruction) {
 

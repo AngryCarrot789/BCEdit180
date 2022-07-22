@@ -2,6 +2,7 @@ using System;
 using System.Collections.Generic;
 using System.Reflection;
 using BCEdit180.CodeEditing.InstructionEdit;
+using BCEdit180.Descriptors;
 using BCEdit180.FlagEditor;
 using BCEdit180.ViewModels;
 using JavaAsm;
@@ -51,8 +52,26 @@ namespace BCEdit180 {
             window.ShowDialog();
         }
 
-        public static void ShowDescriptorEditor(TypeDescriptor descriptor) {
+        internal static void ShowDescriptorEditor(FieldInfoViewModel field) {
+            ShowDescriptorEditor(field.Descriptor, (c, t, a) => {
+                if (t.HasValue) {
+                    field.Descriptor = new TypeDescriptor(t.Value, a);
+                }
+                else {
+                    field.Descriptor = new TypeDescriptor(new ClassName(c), a);
+                }
+            });
+        }
 
+        public static void ShowDescriptorEditor(TypeDescriptor descriptor, Action<string, PrimitiveType?, int> callback) {
+            TypeDescriptorEditorWindow window = new TypeDescriptorEditorWindow();
+            TypeDescriptorEditorViewModel vm = new TypeDescriptorEditorViewModel();
+            vm.Callback = callback;
+            vm.SetPrimitiveType(descriptor.PrimitiveType);
+            vm.ClassName = descriptor.ClassName.Name;
+            vm.ArrayDepth = descriptor.ArrayDepth;
+            window.DataContext = vm;
+            window.ShowDialog();
         }
 
         public static void ShowEditInstructionView(IEnumerable<Opcode> opcodes, Action<Opcode> callback) {

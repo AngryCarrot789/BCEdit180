@@ -1,3 +1,4 @@
+using System.Collections.Generic;
 using JavaAsm.Instructions;
 using JavaAsm.Instructions.Types;
 
@@ -8,6 +9,8 @@ namespace BCEdit180.CodeEditing.Bytecode {
             get => this.target;
             set => RaisePropertyChanged(ref this.target, value);
         }
+
+        public override IEnumerable<Opcode> AvailableOpcodes => new[] { Opcode.IFEQ, Opcode.IFNE, Opcode.IFLT, Opcode.IFGE, Opcode.IFGT, Opcode.IFLE, Opcode.IF_ICMPEQ, Opcode.IF_ICMPNE, Opcode.IF_ICMPLT, Opcode.IF_ICMPGE, Opcode.IF_ICMPGT, Opcode.IF_ICMPLE, Opcode.IF_ACMPEQ, Opcode.IF_ACMPNE, Opcode.GOTO, Opcode.JSR, Opcode.IFNULL, Opcode.IFNONNULL};
 
         public JumpInstructionViewModel(Instruction instruction) : base(instruction) {
 

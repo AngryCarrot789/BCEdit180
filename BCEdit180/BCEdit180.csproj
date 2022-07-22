@@ -118,10 +118,27 @@
       <DependentUpon>BytecodeEditorControl.xaml</DependentUpon>
     </Compile>
     <Compile Include="CodeEditing\BytecodeEditorViewModel.cs" />
-    <Compile Include="CodeEditing\Bytecode\BaseInstructionViewModel.cs" />
-    <Compile Include="CodeEditing\Bytecode\Controls\VariableInstructionControl.xaml.cs">
-      <DependentUpon>VariableInstructionControl.xaml</DependentUpon>
+    <Compile Include="CodeEditing\Bytecode\Controls\FieldInstructionEditorControl.xaml.cs">
+      <DependentUpon>FieldInstructionEditorControl.xaml</DependentUpon>
     </Compile>
+    <Compile Include="CodeEditing\Bytecode\Controls\LdcInstructionEditorControl.xaml.cs">
+      <DependentUpon>LdcInstructionEditorControl.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="CodeEditing\Bytecode\Controls\MethodInstructionEditorControl.xaml.cs">
+      <DependentUpon>MethodInstructionEditorControl.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="CodeEditing\Bytecode\Editor\FieldInstructionControl.xaml.cs">
+      <DependentUpon>FieldInstructionControl.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="CodeEditing\Bytecode\FieldInstructionViewModel.cs" />
+    <Compile Include="CodeEditing\Bytecode\IncrementInstructionViewModel.cs" />
+    <Compile Include="CodeEditing\Bytecode\InstructionViewModel.cs" />
+    <Compile Include="CodeEditing\Bytecode\IntegerPushInstructionViewModel.cs" />
+    <Compile Include="CodeEditing\Bytecode\InvokeDynamicInstructionViewModel.cs" />
+    <Compile Include="CodeEditing\Bytecode\JumpInstructionViewModel.cs" />
+    <Compile Include="CodeEditing\Bytecode\LdcInstructionViewModel.cs" />
+    <Compile Include="CodeEditing\Bytecode\MethodInstructionViewModel.cs" />
+    <Compile Include="CodeEditing\Bytecode\TypeInstructionViewModel.cs" />
     <Compile Include="CodeEditing\Bytecode\VariableInstructionViewModel.cs" />
     <Compile Include="CodeEditing\CodeEditorViewModel.cs" />
     <Compile Include="CodeEditing\ExceptionTableViewModel.cs" />
@@ -129,6 +146,7 @@
     <Compile Include="CodeEditing\InstructionEdit\ChangeInstructionWindow.xaml.cs">
       <DependentUpon>ChangeInstructionWindow.xaml</DependentUpon>
     </Compile>
+    <Compile Include="CodeEditing\InstructionEdit\InstructionDescriptionRegistry.cs" />
     <Compile Include="CodeEditing\TryCatchBlockViewModel.cs" />
     <Compile Include="Controls\DoubleClickEditBox.xaml.cs">
       <DependentUpon>DoubleClickEditBox.xaml</DependentUpon>
@@ -140,7 +158,18 @@
       <DependentUpon>MethodInfoControl.xaml</DependentUpon>
     </Compile>
     <Compile Include="Converters\BooleanToVisibilityConverter.cs" />
+    <Compile Include="Converters\EnumBooleanConverter.cs" />
     <Compile Include="Converters\MethodDescriptorToStringConverter.cs" />
+    <Compile Include="Converters\OpCodeToDescriptionConverter.cs" />
+    <Compile Include="Descriptors\MethodDescriptorEditorViewModel.cs" />
+    <Compile Include="Descriptors\MethodDescriptorEditorWindow.xaml.cs">
+      <DependentUpon>MethodDescriptorEditorWindow.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Descriptors\TypeDescriptorEditorViewModel.cs" />
+    <Compile Include="Descriptors\TypeDescriptorEditorWindow.xaml.cs">
+      <DependentUpon>TypeDescriptorEditorWindow.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Dialogs\Dialog.cs" />
     <Compile Include="FlagEditor\FlagEditorViewModel.cs" />
     <Compile Include="FlagEditor\FlagEditorWindow.xaml.cs">
       <DependentUpon>FlagEditorWindow.xaml</DependentUpon>
@@ -178,7 +207,19 @@
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
-    <Page Include="CodeEditing\Bytecode\Controls\VariableInstructionControl.xaml">
+    <Page Include="CodeEditing\Bytecode\Controls\FieldInstructionEditorControl.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="CodeEditing\Bytecode\Controls\LdcInstructionEditorControl.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="CodeEditing\Bytecode\Controls\MethodInstructionEditorControl.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="CodeEditing\Bytecode\Editor\FieldInstructionControl.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
@@ -198,6 +239,11 @@
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
+    <Page Include="Descriptors\MethodDescriptorEditorWindow.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Descriptors\TypeDescriptorEditorWindow.xaml" />
     <Page Include="FlagEditor\FlagEditorWindow.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>

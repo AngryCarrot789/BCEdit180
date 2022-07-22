@@ -1,3 +1,4 @@
+using System.Collections.Generic;
 using JavaAsm;
 using JavaAsm.Instructions;
 using JavaAsm.Instructions.Types;
@@ -9,6 +10,8 @@ namespace BCEdit180.CodeEditing.Bytecode {
             get => this.type;
             set => RaisePropertyChanged(ref this.type, value);
         }
+
+        public override IEnumerable<Opcode> AvailableOpcodes => new[] { Opcode.NEW, Opcode.ANEWARRAY, Opcode.CHECKCAST, Opcode.INSTANCEOF };
 
         public TypeInstructionViewModel(Instruction instruction) : base(instruction) {
 

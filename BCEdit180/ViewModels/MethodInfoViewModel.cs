@@ -93,7 +93,7 @@ namespace BCEdit180.ViewModels {
             set => RaisePropertyChanged(ref this.annotationDefaultValue, value);
         }
 
-        public ICommand EditSignatureCommand { get; }
+        public ICommand EditDescriptorCommand { get; }
 
         public ICommand EditAccessCommand { get; }
 

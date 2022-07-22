@@ -59,13 +59,14 @@ namespace BCEdit180.ViewModels {
             set => RaisePropertyChanged(ref this.constantValue, value);
         }
 
-        public ICommand EditSignatureCommand { get; }
+        public ICommand EditDescriptorCommand { get; }
 
         public ICommand EditAccessCommand { get; }
 
         public FieldInfoViewModel(FieldNode node) {
             this.Node = node;
             this.EditAccessCommand = new RelayCommand(() => ViewManager.ShowAccessEditor(this));
+            this.EditDescriptorCommand = new RelayCommand(() => ViewManager.ShowDescriptorEditor(this));
             this.VisibleAnnotationEditor = new AnnotationEditorViewModel();
             this.InvisibleAnnotationEditor = new AnnotationEditorViewModel();
             Load(node);

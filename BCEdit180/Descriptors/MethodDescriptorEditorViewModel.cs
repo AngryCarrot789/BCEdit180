@@ -1,13 +1,15 @@
-using System;
-using System.Windows.Input;
-using System.Windows.Media;
-using BCEdit180.Dialogs;
+﻿using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Text;
+using System.Threading.Tasks;
 using JavaAsm;
 using REghZy.MVVM.Commands;
+using System.Windows.Input;
 using REghZy.MVVM.ViewModels;
 
 namespace BCEdit180.Descriptors {
-    public class TypeDescriptorEditorViewModel : BaseViewModel {
+    public class MethodDescriptorEditorViewModel : BaseViewModel {
         private string signature;
 
         public string Signature {
@@ -126,7 +128,7 @@ namespace BCEdit180.Descriptors {
 
         public ICommand ApplyChanges { get; }
 
-        public TypeDescriptorEditorViewModel() {
+        public MethodDescriptorEditorViewModel() {
             this.ApplyChanges = new RelayCommand(ApplyChange);
         }
 
@@ -168,16 +170,16 @@ namespace BCEdit180.Descriptors {
 
         public void SetPrimitiveType(PrimitiveType? type) {
             switch (type) {
-                case PrimitiveType.Boolean:   this.IsCheckedBoolean = true; break;
-                case PrimitiveType.Byte:      this.IsCheckedByte = true; break;
+                case PrimitiveType.Boolean: this.IsCheckedBoolean = true; break;
+                case PrimitiveType.Byte: this.IsCheckedByte = true; break;
                 case PrimitiveType.Character: this.IsCheckedCharacter = true; break;
-                case PrimitiveType.Double:    this.IsCheckedDouble = true; break;
-                case PrimitiveType.Float:     this.IsCheckedFloat = true; break;
-                case PrimitiveType.Integer:   this.IsCheckedInteger = true; break;
-                case PrimitiveType.Long:      this.IsCheckedLong = true; break;
-                case PrimitiveType.Short:     this.IsCheckedShort = true; break;
-                case PrimitiveType.Void:      this.IsCheckedVoid = true; break;
-                case null:                    this.IsCheckedObject = true; break;
+                case PrimitiveType.Double: this.IsCheckedDouble = true; break;
+                case PrimitiveType.Float: this.IsCheckedFloat = true; break;
+                case PrimitiveType.Integer: this.IsCheckedInteger = true; break;
+                case PrimitiveType.Long: this.IsCheckedLong = true; break;
+                case PrimitiveType.Short: this.IsCheckedShort = true; break;
+                case PrimitiveType.Void: this.IsCheckedVoid = true; break;
+                case null: this.IsCheckedObject = true; break;
                 default: throw new ArgumentOutOfRangeException(nameof(type), type, null);
             }
         }

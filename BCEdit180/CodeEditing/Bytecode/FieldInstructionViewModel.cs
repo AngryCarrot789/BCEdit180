@@ -1,3 +1,4 @@
+using System.Collections.Generic;
 using JavaAsm;
 using JavaAsm.Instructions;
 using JavaAsm.Instructions.Types;
@@ -21,6 +22,8 @@ namespace BCEdit180.CodeEditing.Bytecode {
             get => this.fieldDescriptor;
             set => RaisePropertyChanged(ref this.fieldDescriptor, value);
         }
+
+        public override IEnumerable<Opcode> AvailableOpcodes => new[] {Opcode.GETFIELD, Opcode.GETSTATIC, Opcode.PUTFIELD, Opcode.PUTSTATIC};
 
         public FieldInstructionViewModel(Instruction instruction) : base(instruction) {
 
