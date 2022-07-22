@@ -1,7 +1,11 @@
+using System;
+using System.Collections.Generic;
 using System.Reflection;
+using BCEdit180.CodeEditing.InstructionEdit;
 using BCEdit180.FlagEditor;
 using BCEdit180.ViewModels;
 using JavaAsm;
+using JavaAsm.Instructions;
 
 namespace BCEdit180 {
     public class ViewManager {
@@ -44,6 +48,20 @@ namespace BCEdit180 {
             // ClassInfoFlagEditorVM.UpdateFlagItemsWithBitMask((long) model.Access);
             // ClassInfoFlagEditorVM.UpdateEnumCallback = (e) => model.Access = (MethodAccessModifiers) e;
             window.DataContext = ClassInfoFlagEditorVM;
+            window.ShowDialog();
+        }
+
+        public static void ShowDescriptorEditor(TypeDescriptor descriptor) {
+
+        }
+
+        public static void ShowEditInstructionView(IEnumerable<Opcode> opcodes, Action<Opcode> callback) {
+            ChangeInstructionWindow window = new ChangeInstructionWindow();
+            ChangeInstructionViewModel vm = new ChangeInstructionViewModel();
+            vm.SetOpcodeCallback = callback;
+            vm.SetAvailableInstructions(opcodes);
+            window.DataContext = vm;
+            window.Title = "Replace Opcode";
             window.ShowDialog();
         }
     }

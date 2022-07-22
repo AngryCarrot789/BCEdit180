@@ -44,10 +44,25 @@ namespace BCEdit180.ViewModels {
             LoadClass(this.node);
         }
 
+        public void ReadClassFile(string path) {
+            using (BufferedStream input = new BufferedStream(File.OpenRead(path))) {
+                this.node = ClassFile.ParseClass(input);
+            }
+
+            this.FilePath = path;
+            LoadClass(this.node);
+        }
+
         public void LoadClass(ClassNode node) {
             this.ClassInfo.Load(node);
             this.MethodList.Load(node);
             this.FieldList.Load(node);
+        }
+
+        public void SaveClass(ClassNode node) {
+            this.ClassInfo.Save(node);
+            this.MethodList.Save(node);
+            this.FieldList.Save(node);
         }
 
         public void OpenFile() {
@@ -57,12 +72,7 @@ namespace BCEdit180.ViewModels {
             if (dialog.ShowDialog() == true) {
                 string path = dialog.FileName;
                 if (File.Exists(path)) {
-                    using (BufferedStream input = new BufferedStream(File.OpenRead(path))) {
-                        this.node = ClassFile.ParseClass(input);
-                    }
-
-                    this.FilePath = path;
-                    LoadClass(this.node);
+                    ReadClassFile(path);
                 }
                 else {
                     MessageBox.Show("File does not exist: " + path, "No such file");
@@ -73,12 +83,22 @@ namespace BCEdit180.ViewModels {
         public void Save() {
             try {
                 if (File.Exists(this.FilePath)) {
-                    File.Copy(this.FilePath, Path.Combine(Path.GetDirectoryName(this.FilePath) ?? "", "backup_" + Path.GetFileName(this.FilePath)));
+                    string backupPath = Path.Combine(Path.GetDirectoryName(this.FilePath) ?? "", "backup_" + Path.GetFileName(this.FilePath));
+                    if (File.Exists(backupPath)) {
+                        File.Delete(backupPath);
+                    }
+
+                    File.Copy(this.FilePath, backupPath);
                 }
 
+                SaveClass(this.node);
                 using (BufferedStream output = new BufferedStream(File.OpenWrite(this.FilePath))) {
                     ClassFile.WriteClass(output, this.node);
                 }
+
+                // ClassFile.WriteClass mutates ClassNode's attributes,
+                // so reloading will fix
+                ReadClassFile(this.FilePath);
             }
             catch (Exception e) {
                 MessageBox.Show("Failed to save file: " + e, "Failed to save");
@@ -96,12 +116,29 @@ namespace BCEdit180.ViewModels {
 
                     try {
                         if (File.Exists(this.FilePath)) {
-                            File.Copy(this.FilePath, Path.Combine(Path.GetDirectoryName(this.FilePath) ?? "", "backup_" + Path.GetFileName(this.FilePath)));
+                            string backupPath = Path.Combine(Path.GetDirectoryName(this.FilePath) ?? "", "backup_" + Path.GetFileName(this.FilePath));
+                            if (File.Exists(backupPath)) {
+                                File.Delete(backupPath);
+                            }
+
+                            File.Copy(this.FilePath, backupPath);
+                        }
+
+                        try {
+                            SaveClass(this.node);
+                        }
+                        catch (Exception e) {
+                            MessageBox.Show("Failed to process/save class before writing to file: " + e, "Failed to process class");
+                            return;
                         }
 
                         using (BufferedStream output = new BufferedStream(File.OpenWrite(this.FilePath))) {
                             ClassFile.WriteClass(output, this.node);
                         }
+
+                        // ClassFile.WriteClass mutates ClassNode's attributes,
+                        // so reloading will fix
+                        ReadClassFile(this.FilePath);
                     }
                     catch (Exception e) {
                         MessageBox.Show("Failed to save file: " + e, "Failed to save");

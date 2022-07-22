@@ -2,6 +2,7 @@
 using REghZy.MVVM.ViewModels;
 
 namespace BCEdit180.CodeEditing.Bytecode {
+    // non-abstract, so that opcodes can fall back to the base class and get ToString()'d instead of custom layouts
     public class BaseInstructionViewModel : BaseViewModel {
         public Instruction Instruction { get; protected set; }
 
@@ -13,7 +14,6 @@ namespace BCEdit180.CodeEditing.Bytecode {
 
         public BaseInstructionViewModel(Instruction instruction) {
             this.Instruction = instruction;
-            Load(instruction);
         }
 
         public virtual void Load(Instruction instruction) {
@@ -21,8 +21,7 @@ namespace BCEdit180.CodeEditing.Bytecode {
         }
 
         public virtual void Save(Instruction instruction) {
-            // bruuuh why cant this be edited :'(
-            // instruction.Opcode = this.Opcode;
+            instruction.Opcode = this.Opcode;
         }
     }
 }

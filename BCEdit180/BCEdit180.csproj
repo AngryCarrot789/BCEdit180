@@ -42,6 +42,7 @@
       <SpecificVersion>False</SpecificVersion>
       <HintPath>.\JavaAsm.dll</HintPath>
     </Reference>
+    <Reference Include="PresentationFramework.Aero2" />
     <Reference Include="REghZy.Collections">
       <HintPath>..\..\REghZy\DLL\REghZy.Collections.dll</HintPath>
     </Reference>
@@ -124,6 +125,10 @@
     <Compile Include="CodeEditing\Bytecode\VariableInstructionViewModel.cs" />
     <Compile Include="CodeEditing\CodeEditorViewModel.cs" />
     <Compile Include="CodeEditing\ExceptionTableViewModel.cs" />
+    <Compile Include="CodeEditing\InstructionEdit\ChangeInstructionViewModel.cs" />
+    <Compile Include="CodeEditing\InstructionEdit\ChangeInstructionWindow.xaml.cs">
+      <DependentUpon>ChangeInstructionWindow.xaml</DependentUpon>
+    </Compile>
     <Compile Include="CodeEditing\TryCatchBlockViewModel.cs" />
     <Compile Include="Controls\DoubleClickEditBox.xaml.cs">
       <DependentUpon>DoubleClickEditBox.xaml</DependentUpon>
@@ -141,6 +146,13 @@
       <DependentUpon>FlagEditorWindow.xaml</DependentUpon>
     </Compile>
     <Compile Include="FlagEditor\FlagItemViewModel.cs" />
+    <Compile Include="Themes\Controls.xaml.cs">
+      <DependentUpon>Controls.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Themes\ThemesController.cs" />
+    <Compile Include="Themes\ThemeTypes.cs" />
+    <Compile Include="TypeEditor\DescriptorEditorViewModel.cs" />
+    <Compile Include="TypeEditor\PrimitiveSelectorViewModel.cs" />
     <Compile Include="TypeEditor\TypeDescriptorEditorWindow.xaml.cs">
       <DependentUpon>TypeDescriptorEditorWindow.xaml</DependentUpon>
     </Compile>
@@ -153,6 +165,7 @@
     <Compile Include="ViewModels\MethodInfoViewModel.cs" />
     <Compile Include="ViewModels\FieldListViewModel.cs" />
     <Compile Include="ViewModels\MethodListViewModel.cs" />
+    <Compile Include="ViewModels\ReferenceObjectViewModel.cs" />
     <Page Include="Annotations\AnnotationEditorControl.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
@@ -166,6 +179,10 @@
       <Generator>MSBuild:Compile</Generator>
     </Page>
     <Page Include="CodeEditing\Bytecode\Controls\VariableInstructionControl.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="CodeEditing\InstructionEdit\ChangeInstructionWindow.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
@@ -197,6 +214,30 @@
       <DependentUpon>MainWindow.xaml</DependentUpon>
       <SubType>Code</SubType>
     </Compile>
+    <Page Include="Themes\ControlColours.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
+    </Page>
+    <Page Include="Themes\Controls.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
+    </Page>
+    <Page Include="Themes\DeepDark.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
+    </Page>
+    <Page Include="Themes\RedBlackTheme.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
+    </Page>
+    <Page Include="Themes\SoftDark.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
+    </Page>
+    <Page Include="Themes\VeryDarkTheme.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
+    </Page>
     <Page Include="TypeEditor\TypeDescriptorEditorWindow.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>

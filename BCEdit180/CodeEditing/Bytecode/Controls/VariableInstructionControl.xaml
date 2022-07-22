@@ -9,7 +9,7 @@
              mc:Ignorable="d" 
              d:DesignHeight="20" d:DesignWidth="400">
     <StackPanel Orientation="Horizontal">
-        <TextBlock Text="{Binding Opcode, UpdateSourceTrigger=PropertyChanged}" VerticalAlignment="Center" Padding="0 0 3 0"/>
+        <Label MouseDoubleClick="Label_MouseDoubleClick" Content="{Binding Opcode, UpdateSourceTrigger=PropertyChanged}" VerticalAlignment="Center" Padding="0 0 3 0"/>
         <TextBlock Text="{Binding VarIndex, UpdateSourceTrigger=PropertyChanged}" VerticalAlignment="Center" Padding="0 0 2 0"/>
     </StackPanel>
 </UserControl>

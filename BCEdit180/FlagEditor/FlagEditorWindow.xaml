@@ -6,7 +6,7 @@
         xmlns:local="clr-namespace:BCEdit180.FlagEditor" 
         d:DataContext="{d:DesignInstance Type=local:FlagEditorViewModel}"
         mc:Ignorable="d"
-        Title="FlagEditorWindow" Height="450" Width="250">
+        Title="FlagEditorWindow" Height="450" Width="250" Style="{DynamicResource CustomWindowStyle}">
     <Grid>
         <TextBlock Text="{Binding PreviewEnumValue}" VerticalAlignment="Top" Padding="2" Margin="10,10,10,0"/>
         <ListBox ItemsSource="{Binding FlagItems}" Margin="10,35,10,39" BorderThickness="0">

@@ -1,4 +1,10 @@
-﻿using System.IO;
+﻿using System.Collections.Generic;
+using System.Collections.ObjectModel;
+using System.IO;
+using System.Linq;
+using System.Runtime.Remoting.Messaging;
+using System.Threading;
+using BCEdit180.Utils;
 using JavaAsm;
 using JavaAsm.IO;
 using REghZy.MVVM.ViewModels;
@@ -42,10 +48,7 @@ namespace BCEdit180.ViewModels {
             set => RaisePropertyChanged(ref this.superName, value);
         }
 
-        public int InterfaceCount {
-            get => this.interfaceCount;
-            set => RaisePropertyChanged(ref this.interfaceCount, value);
-        }
+        public ObservableCollection<ReferenceObjectViewModel> Interfaces { get; }
 
         public int FieldCount {
             get => this.fieldCount;
@@ -62,6 +65,10 @@ namespace BCEdit180.ViewModels {
             set => RaisePropertyChanged(ref this.attributeCount, value);
         }
 
+        public ClassInfoViewModel() {
+            this.Interfaces = new ObservableCollection<ReferenceObjectViewModel>();
+        }
+
         public void Load(ClassNode node) {
             this.classNode = node;
             this.MinorVersion = node.MinorVersion;
@@ -69,19 +76,20 @@ namespace BCEdit180.ViewModels {
             this.AccessFlags = node.Access;
             this.ClassName = node.Name.Name;
             this.SuperName = node.SuperName.Name;
-            this.InterfaceCount = node.Interfaces.Count;
+            this.Interfaces.Clear();
+            this.Interfaces.AddAll(node.Interfaces.Select(c => new ReferenceObjectViewModel(c.Name)));
             this.FieldCount = node.Fields.Count;
             this.MethodCount = node.Methods.Count;
             this.AttributeCount = node.Attributes.Count;
         }
 
-        public static ClassInfoViewModel FromFile(string filePath) {
-            using (BufferedStream stream = new BufferedStream(File.OpenRead(filePath))) {
-                ClassNode node = ClassFile.ParseClass(stream);
-                ClassInfoViewModel vm = new ClassInfoViewModel();
-                vm.Load(node);
-                return vm;
-            }
+        public void Save(ClassNode node) {
+            node.MinorVersion = (ushort) this.MinorVersion;
+            node.MajorVersion = this.MajorVersion;
+            node.Access = this.AccessFlags;
+            node.Name = new ClassName(this.ClassName);
+            node.SuperName = new ClassName(this.SuperName);
+            node.Interfaces = new List<ClassName>(this.Interfaces.Select(c => new ClassName((string) c.Value)));
         }
     }
 }

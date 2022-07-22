@@ -39,7 +39,10 @@ namespace BCEdit180.CodeEditing {
             this.StartIndex = node.Start.Index;
             this.EndIndex = node.End.Index;
             this.HandlerIndex = node.Handler.Index;
-            this.HandlerType = node.ExceptionClassName.Name;
+            // this actually can be null in some very rare cases
+            // and im 100.1% sure it's only when a classfile is externally
+            // modified... e.g via this program or any other program or asm library
+            this.HandlerType = node.ExceptionClassName?.Name ?? "[Null Exception Name]";
         }
 
         public void Save(TryCatchNode node) {

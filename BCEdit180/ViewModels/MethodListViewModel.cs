@@ -16,5 +16,11 @@ namespace BCEdit180.ViewModels {
                 this.Methods.Add(new MethodInfoViewModel(method));
             }
         }
+
+        public void Save(ClassNode node) {
+            foreach (MethodInfoViewModel method in this.Methods) {
+                method.Save(method.Node);
+            }
+        }
     }
 }

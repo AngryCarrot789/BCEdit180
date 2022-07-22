@@ -5,6 +5,8 @@ using REghZy.MVVM.ViewModels;
 
 namespace BCEdit180.FlagEditor {
     public class FlagEditorViewModel : BaseViewModel {
+        private bool ignoreFlagChanges;
+
         public ObservableCollection<FlagItemViewModel> FlagItems { get; }
 
         private readonly Dictionary<long, FlagItemViewModel> bitToFlag;
@@ -33,6 +35,10 @@ namespace BCEdit180.FlagEditor {
         }
 
         public void OnFlagChanged(FlagItemViewModel flagItem) {
+            if (this.ignoreFlagChanges) {
+                return;
+            }
+
             if (flagItem.IsChecked) {
                 this.BitMask |= flagItem.Bit;
             }
@@ -67,6 +73,13 @@ namespace BCEdit180.FlagEditor {
         }
 
         public void UpdateFlagItemsWithBitMask<TEnum>(long bitMask) where TEnum : Enum {
+            this.ignoreFlagChanges = true;
+            foreach (FlagItemViewModel flag in this.FlagItems) {
+                flag.IsChecked = false;
+            }
+
+            this.ignoreFlagChanges = false;
+
             long j = 1;
             for (int i = 0; i <= bitMask; j = 1 << ++i) {
                 if (this.bitToFlag.TryGetValue(j, out FlagItemViewModel flag)) {

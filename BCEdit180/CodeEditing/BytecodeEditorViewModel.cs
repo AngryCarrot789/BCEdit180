@@ -1,4 +1,5 @@
 ﻿using System.Collections.ObjectModel;
+using System.Windows;
 using BCEdit180.CodeEditing.Bytecode;
 using JavaAsm;
 using JavaAsm.Instructions;
@@ -24,15 +25,27 @@ namespace BCEdit180.CodeEditing {
         }
 
         public void Save(MethodNode node) {
-
+            foreach (BaseInstructionViewModel instruction in this.Instructions) {
+                instruction.Save(instruction.Instruction);
+            }
         }
 
         public void LoadInstruction(Instruction instruction) {
+            BaseInstructionViewModel vm = null;
+
             if (instruction is VariableInstruction) {
-                this.Instructions.Add(new VariableInstructionViewModel(instruction));
+                vm = new VariableInstructionViewModel(instruction);
             }
             else {
-                this.Instructions.Add(new BaseInstructionViewModel(instruction));
+                vm = new BaseInstructionViewModel(instruction);
+            }
+
+            if (vm == null) {
+                MessageBox.Show("Unknown instruction: " + instruction);
+            }
+            else {
+                vm.Load(instruction);
+                this.Instructions.Add(vm);
             }
 
             // if (instruction is FieldInstruction) {

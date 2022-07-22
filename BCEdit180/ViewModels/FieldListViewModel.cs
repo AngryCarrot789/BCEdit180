@@ -16,5 +16,11 @@ namespace BCEdit180.ViewModels {
                 this.Fields.Add(new FieldInfoViewModel(field));
             }
         }
+
+        public void Save(ClassNode node) {
+            foreach (FieldInfoViewModel field in this.Fields) {
+                field.Save(field.Node);
+            }
+        }
     }
 }

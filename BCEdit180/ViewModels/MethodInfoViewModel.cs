@@ -12,8 +12,6 @@ using REghZy.MVVM.ViewModels;
 
 namespace BCEdit180.ViewModels {
     public class MethodInfoViewModel : BaseViewModel {
-        private MethodNode method;
-
         private ClassNode owner;
         private MethodAccessModifiers access;       // done
         private string methodName;                  // done
@@ -69,16 +67,6 @@ namespace BCEdit180.ViewModels {
             set => RaisePropertyChanged(ref this.maxLocals, value);
         }
 
-        public List<TryCatchNode> TryCatches {
-            get => this.tryCatches;
-            set => RaisePropertyChanged(ref this.tryCatches, value);
-        }
-
-        public InstructionList Instructions {
-            get => this.instructions;
-            set => RaisePropertyChanged(ref this.instructions, value);
-        }
-
         public List<AttributeNode> CodeAttributes {
             get => this.codeAttributes;
             set => RaisePropertyChanged(ref this.codeAttributes, value);
@@ -109,13 +97,15 @@ namespace BCEdit180.ViewModels {
 
         public ICommand EditAccessCommand { get; }
 
-        public MethodInfoViewModel(MethodNode method) {
-            this.method = method;
+        public MethodNode Node { get; }
+
+        public MethodInfoViewModel(MethodNode node) {
+            this.Node = node;
             this.EditAccessCommand = new RelayCommand(() => ViewManager.ShowAccessEditor(this));
             this.VisibleAnnotationEditor = new AnnotationEditorViewModel();
             this.InvisibleAnnotationEditor = new AnnotationEditorViewModel();
-            this.CodeEditor = new CodeEditorViewModel();
-            Load(method);
+            this.CodeEditor = new CodeEditorViewModel(node);
+            Load(node);
         }
 
         public void Load(MethodNode node) {
@@ -127,8 +117,6 @@ namespace BCEdit180.ViewModels {
             this.Signature = node.Signature;
             this.MaxStack = node.MaxStack;
             this.MaxLocals = node.MaxLocals;
-            this.TryCatches = node.TryCatches;
-            this.Instructions = node.Instructions;
             this.CodeAttributes = node.CodeAttributes;
             this.VisibleAnnotationEditor.Annotations.Clear();
             this.VisibleAnnotationEditor.Annotations.AddAll(node.VisibleAnnotations.Select(a => new AnnotationViewModel(a)));
@@ -149,8 +137,6 @@ namespace BCEdit180.ViewModels {
             node.Signature = this.Signature;
             node.MaxStack = this.MaxStack;
             node.MaxLocals = this.MaxLocals;
-            node.TryCatches = this.TryCatches;
-            node.Instructions = this.Instructions;
             node.CodeAttributes = this.CodeAttributes;
             node.VisibleAnnotations = new List<AnnotationNode>(this.VisibleAnnotationEditor.Annotations.Select(a => a.Node));
             node.InvisibleAnnotations = new List<AnnotationNode>(this.InvisibleAnnotationEditor.Annotations.Select(a => a.Node));
