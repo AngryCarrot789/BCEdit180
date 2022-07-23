@@ -2,7 +2,7 @@ using System.Collections.Generic;
 using JavaAsm.Instructions;
 using JavaAsm.Instructions.Types;
 
-namespace BCEdit180.CodeEditing.Bytecode {
+namespace BCEdit180.CodeEditing.Bytecode.Instructions {
     public class IntegerPushInstructionViewModel : BaseInstructionViewModel {
         private ushort value;
         public ushort Value {
@@ -10,11 +10,7 @@ namespace BCEdit180.CodeEditing.Bytecode {
             set => RaisePropertyChanged(ref this.value, value);
         }
 
-        public override IEnumerable<Opcode> AvailableOpcodes => new[] { Opcode.BIPUSH, Opcode.SIPUSH};
-
-        public IntegerPushInstructionViewModel(Instruction instruction) : base(instruction) {
-
-        }
+        public override IEnumerable<Opcode> AvailableOpCodes => new Opcode[] {Opcode.BIPUSH, Opcode.SIPUSH};
 
         public override void Load(Instruction instruction) {
             base.Load(instruction);

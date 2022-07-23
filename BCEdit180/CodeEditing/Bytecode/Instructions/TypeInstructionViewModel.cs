@@ -3,7 +3,7 @@ using JavaAsm;
 using JavaAsm.Instructions;
 using JavaAsm.Instructions.Types;
 
-namespace BCEdit180.CodeEditing.Bytecode {
+namespace BCEdit180.CodeEditing.Bytecode.Instructions {
     public class TypeInstructionViewModel : BaseInstructionViewModel {
         private string type;
         public string Type {
@@ -11,11 +11,7 @@ namespace BCEdit180.CodeEditing.Bytecode {
             set => RaisePropertyChanged(ref this.type, value);
         }
 
-        public override IEnumerable<Opcode> AvailableOpcodes => new[] { Opcode.NEW, Opcode.ANEWARRAY, Opcode.CHECKCAST, Opcode.INSTANCEOF };
-
-        public TypeInstructionViewModel(Instruction instruction) : base(instruction) {
-
-        }
+        public override IEnumerable<Opcode> AvailableOpCodes => new Opcode[] {Opcode.NEW, Opcode.ANEWARRAY, Opcode.CHECKCAST, Opcode.INSTANCEOF};
 
         public override void Load(Instruction instruction) {
             base.Load(instruction);

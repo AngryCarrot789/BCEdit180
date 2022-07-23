@@ -2,7 +2,7 @@ using System.Collections.Generic;
 using JavaAsm.Instructions;
 using JavaAsm.Instructions.Types;
 
-namespace BCEdit180.CodeEditing.Bytecode {
+namespace BCEdit180.CodeEditing.Bytecode.Instructions {
     public class IncrementInstructionViewModel : BaseInstructionViewModel {
         private ushort varIndex;
         public ushort VarIndex {
@@ -16,11 +16,7 @@ namespace BCEdit180.CodeEditing.Bytecode {
             set => RaisePropertyChanged(ref this.value, value);
         }
 
-        public override IEnumerable<Opcode> AvailableOpcodes => new[] {Opcode.IINC};
-
-        public IncrementInstructionViewModel(Instruction instruction) : base(instruction) {
-
-        }
+        public override IEnumerable<Opcode> AvailableOpCodes => new Opcode[] {Opcode.IINC};
 
         public override void Load(Instruction instruction) {
             base.Load(instruction);

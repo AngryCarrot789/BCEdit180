@@ -3,7 +3,7 @@ using JavaAsm;
 using JavaAsm.Instructions;
 using JavaAsm.Instructions.Types;
 
-namespace BCEdit180.CodeEditing.Bytecode {
+namespace BCEdit180.CodeEditing.Bytecode.Instructions {
     public class MethodInstructionViewModel : BaseInstructionViewModel {
         private string methodOwner;
         public string MethodOwner {
@@ -23,11 +23,7 @@ namespace BCEdit180.CodeEditing.Bytecode {
             set => RaisePropertyChanged(ref this.methodDescriptor, value);
         }
 
-        public override IEnumerable<Opcode> AvailableOpcodes => new[] { Opcode.INVOKESTATIC, Opcode.INVOKEVIRTUAL, Opcode.INVOKEINTERFACE, Opcode.INVOKESPECIAL };
-
-        public MethodInstructionViewModel(Instruction instruction) : base(instruction) {
-
-        }
+        public override IEnumerable<Opcode> AvailableOpCodes => new Opcode[] {Opcode.INVOKESTATIC, Opcode.INVOKEVIRTUAL, Opcode.INVOKEINTERFACE, Opcode.INVOKESPECIAL};
 
         public override void Load(Instruction instruction) {
             base.Load(instruction);

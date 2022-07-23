@@ -3,7 +3,7 @@ using JavaAsm;
 using JavaAsm.Instructions;
 using JavaAsm.Instructions.Types;
 
-namespace BCEdit180.CodeEditing.Bytecode {
+namespace BCEdit180.CodeEditing.Bytecode.Instructions {
     public class FieldInstructionViewModel : BaseInstructionViewModel {
         private string fieldOwner;
         public string FieldOwner {
@@ -23,11 +23,7 @@ namespace BCEdit180.CodeEditing.Bytecode {
             set => RaisePropertyChanged(ref this.fieldDescriptor, value);
         }
 
-        public override IEnumerable<Opcode> AvailableOpcodes => new[] {Opcode.GETFIELD, Opcode.GETSTATIC, Opcode.PUTFIELD, Opcode.PUTSTATIC};
-
-        public FieldInstructionViewModel(Instruction instruction) : base(instruction) {
-
-        }
+        public override IEnumerable<Opcode> AvailableOpCodes => new Opcode[] {Opcode.GETFIELD, Opcode.GETSTATIC, Opcode.PUTFIELD, Opcode.PUTSTATIC};
 
         public override void Load(Instruction instruction) {
             base.Load(instruction);
@@ -42,7 +38,7 @@ namespace BCEdit180.CodeEditing.Bytecode {
             FieldInstruction field = (FieldInstruction) instruction;
             field.Owner = new ClassName(this.FieldOwner);
             field.Name = this.FieldName;
-            field.Descriptor = TypeDescriptor.Parse(this.FieldDescriptor, false);
+            field.Descriptor = TypeDescriptor.Parse(this.FieldDescriptor);
         }
     }
 }

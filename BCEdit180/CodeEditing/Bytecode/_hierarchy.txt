@@ -1,0 +1,17 @@
+FieldInstruction           -> FieldInstructionViewModel           + FieldInstructionItemControl
+IncrementInstruction       -> IncrementInstructionViewModel       + IncrementInstructionItemControl
+IntegerPushInstruction     -> IntegerPushInstructionViewModel     + IntegerPushInstructionItemControl
+InvokeDynamicInstruction   -> InvokeDynamicInstructionViewModel   + InvokeDynamicInstructionItemControl
+JumpInstruction            -> JumpInstructionViewModel            + JumpInstructionItemControl
+Label                      -> LabelViewModel                      + LabelItemControl
+LdcInstruction             -> LdcInstructionViewModel             + LdcInstructionItemControl
+LineNumber                 -> LineNumberViewModel                 + LineNumberItemControl
+LookupSwitchInstruction    -> LookupSwitchInstructionViewModel    + LookupSwitchInstructionItemControl
+MethodInstruction          -> MethodInstructionViewModel          + MethodInstructionItemControl
+MultiANewArrayInstruction  -> MultiANewArrayInstructionViewModel  + MultiANewArrayInstructionItemControl
+NewArrayInstruction        -> NewArrayInstructionViewModel        + NewArrayInstructionItemControl
+SimpleInstruction          -> SimpleInstructionViewModel          + SimpleInstructionItemControl
+StackMapFrame              -> StackMapFrameViewModel              + StackMapFrameItemControl
+TableSwitchInstruction     -> TableSwitchInstructionViewModel     + TableSwitchInstructionItemControl
+TypeInstruction            -> TypeInstructionViewModel            + TypeInstructionItemControl
+VariableInstruction        -> VariableInstructionViewModel        + VariableInstructionItemControl

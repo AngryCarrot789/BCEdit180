@@ -3,7 +3,7 @@ using JavaAsm;
 using JavaAsm.Instructions;
 using JavaAsm.Instructions.Types;
 
-namespace BCEdit180.CodeEditing.Bytecode {
+namespace BCEdit180.CodeEditing.Bytecode.Instructions {
     public class InvokeDynamicInstructionViewModel : BaseInstructionViewModel {
         private string name;
         public string Name {
@@ -17,11 +17,7 @@ namespace BCEdit180.CodeEditing.Bytecode {
             set => RaisePropertyChanged(ref this.descriptor, value);
         }
 
-        public override IEnumerable<Opcode> AvailableOpcodes => new[] { Opcode.INVOKEDYNAMIC};
-
-        public InvokeDynamicInstructionViewModel(Instruction instruction) : base(instruction) {
-
-        }
+        public override IEnumerable<Opcode> AvailableOpCodes => new Opcode[] {Opcode.INVOKEDYNAMIC};
 
         public override void Load(Instruction instruction) {
             base.Load(instruction);
