@@ -40,12 +40,11 @@ namespace BCEdit180.FlagEditor {
         }
 
         public void ApplyChange() {
-            this.Model.InvokeEnumCallback();
+            this.Model.ApplyChange();
         }
 
         // too lazy to use command bindings
         private void Okay_Click(object sender, RoutedEventArgs e) {
-            ApplyChange();
             Close();
         }
 

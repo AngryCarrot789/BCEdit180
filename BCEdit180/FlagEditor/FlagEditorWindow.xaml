@@ -16,7 +16,7 @@
                 </DataTemplate>
             </ListBox.ItemTemplate>
         </ListBox>
-        <Button Content="Okay" HorizontalAlignment="Right" Margin="0,0,89,10" VerticalAlignment="Bottom" Width="74" Background="#FF79D43A" Height="24" Click="Okay_Click"/>
-        <Button Content="Cancel" HorizontalAlignment="Right" Margin="0,0,10,10" VerticalAlignment="Bottom" Width="74" Height="24" Click="Cancel_Click"/>
+        <Button Focusable="False" Content="Okay" Command="{Binding ApplyChangesCommand}" HorizontalAlignment="Right" Margin="0,0,89,10" VerticalAlignment="Bottom" Width="74" Background="#FF79D43A" Height="24" Click="Okay_Click"/>
+        <Button Focusable="False" Content="Cancel" HorizontalAlignment="Right" Margin="0,0,10,10" VerticalAlignment="Bottom" Width="74" Height="24" Click="Cancel_Click"/>
     </Grid>
 </Window>

@@ -1,6 +1,8 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
+using System.Windows.Input;
+using REghZy.MVVM.Commands;
 using REghZy.MVVM.ViewModels;
 
 namespace BCEdit180.FlagEditor {
@@ -28,10 +30,13 @@ namespace BCEdit180.FlagEditor {
 
         public Action<object> UpdateEnumCallback { get; set; }
 
+        public ICommand ApplyChangesCommand { get; }
+
         public FlagEditorViewModel(Func<long, Enum> maskToEnum) {
             this.FlagItems = new ObservableCollection<FlagItemViewModel>();
             this.MaskToEnum = maskToEnum;
             this.bitToFlag = new Dictionary<long, FlagItemViewModel>();
+            this.ApplyChangesCommand = new RelayCommand(this.ApplyChange);
         }
 
         public void OnFlagChanged(FlagItemViewModel flagItem) {
@@ -53,7 +58,7 @@ namespace BCEdit180.FlagEditor {
             this.PreviewEnumValue = GetEnumValue();
         }
 
-        public void InvokeEnumCallback() {
+        public void ApplyChange() {
             this.UpdateEnumCallback?.Invoke(GetEnumValue());
         }
 

@@ -175,5 +175,20 @@ namespace BCEdit180 {
         private void Window_PreviewKeyDown(object sender, System.Windows.Input.KeyEventArgs e) {
 
         }
+
+        private void AddedMethodList_GotFocus(object sender, RoutedEventArgs e) {
+            this.RemovedMethodList.SelectedItem = null;
+            this.MethodList.SelectedItem = null;
+        }
+
+        private void RemovedMethodList_GotFocus(object sender, RoutedEventArgs e) {
+            this.AddedMethodList.SelectedItem = null;
+            this.MethodList.SelectedItem = null;
+        }
+
+        private void MethodList_GotFocus(object sender, RoutedEventArgs e) {
+            this.AddedMethodList.SelectedItem = null;
+            this.RemovedMethodList.SelectedItem = null;
+        }
     }
 }

@@ -179,25 +179,26 @@
     <Compile Include="Converters\EnumToStringConverter.cs" />
     <Compile Include="Converters\TypeDescriptorToStringConverter.cs" />
     <Compile Include="Converters\OpCodeToDescriptionConverter.cs" />
-    <Compile Include="Descriptors\MethodDescriptorEditorViewModel.cs" />
-    <Compile Include="Descriptors\MethodDescriptorEditorWindow.xaml.cs">
-      <DependentUpon>MethodDescriptorEditorWindow.xaml</DependentUpon>
-    </Compile>
-    <Compile Include="Descriptors\TypeDescriptorEditorViewModel.cs" />
-    <Compile Include="Descriptors\TypeDescriptorEditorWindow.xaml.cs">
-      <DependentUpon>TypeDescriptorEditorWindow.xaml</DependentUpon>
-    </Compile>
     <Compile Include="Dialogs\Dialog.cs" />
     <Compile Include="FlagEditor\FlagEditorViewModel.cs" />
     <Compile Include="FlagEditor\FlagEditorWindow.xaml.cs">
       <DependentUpon>FlagEditorWindow.xaml</DependentUpon>
     </Compile>
     <Compile Include="FlagEditor\FlagItemViewModel.cs" />
+    <Compile Include="MethodCreator\MethodEditorViewModel.cs" />
+    <Compile Include="MethodCreator\MethodEditorWindow.xaml.cs">
+      <DependentUpon>MethodEditorWindow.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="MethodCreator\TypeDescriptorViewModel.cs" />
     <Compile Include="Themes\Controls.xaml.cs">
       <DependentUpon>Controls.xaml</DependentUpon>
     </Compile>
     <Compile Include="Themes\ThemesController.cs" />
     <Compile Include="Themes\ThemeTypes.cs" />
+    <Compile Include="TypeEditor\TypeEditorViewModel.cs" />
+    <Compile Include="TypeEditor\TypeEditorWindow.xaml.cs">
+      <DependentUpon>TypeEditorWindow.xaml</DependentUpon>
+    </Compile>
     <Compile Include="Utils\CollectionUtils.cs" />
     <Compile Include="ViewManager.cs" />
     <Compile Include="Annotations\AnnotationViewModel.cs" />
@@ -261,11 +262,6 @@
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
-    <Page Include="Descriptors\MethodDescriptorEditorWindow.xaml">
-      <SubType>Designer</SubType>
-      <Generator>MSBuild:Compile</Generator>
-    </Page>
-    <Page Include="Descriptors\TypeDescriptorEditorWindow.xaml" />
     <Page Include="FlagEditor\FlagEditorWindow.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
@@ -282,6 +278,10 @@
       <DependentUpon>MainWindow.xaml</DependentUpon>
       <SubType>Code</SubType>
     </Compile>
+    <Page Include="MethodCreator\MethodEditorWindow.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
     <Page Include="Themes\ControlColours.xaml">
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
@@ -305,6 +305,10 @@
     <Page Include="Themes\VeryDarkTheme.xaml">
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
+    </Page>
+    <Page Include="TypeEditor\TypeEditorWindow.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
     </Page>
   </ItemGroup>
   <ItemGroup>

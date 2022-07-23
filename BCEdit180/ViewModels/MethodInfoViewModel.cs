@@ -105,6 +105,9 @@ namespace BCEdit180.ViewModels {
             this.MethodList = methodList;
             this.Node = node;
             this.EditAccessCommand = new RelayCommand(() => ViewManager.ShowAccessEditor(this));
+            this.EditDescriptorCommand = new RelayCommand(() => ViewManager.ShowEditMethodDesc((desc) => {
+                this.Descriptor = desc;
+            }, this.Descriptor?.ReturnType, this.Descriptor?.ArgumentTypes));
             this.VisibleAnnotationEditor = new AnnotationEditorViewModel();
             this.InvisibleAnnotationEditor = new AnnotationEditorViewModel();
             this.CodeEditor = new CodeEditorViewModel(this);

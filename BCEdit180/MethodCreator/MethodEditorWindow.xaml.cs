@@ -23,7 +23,6 @@ namespace BCEdit180.MethodCreator {
 
         // easy solution
         private void Okay_Click(object sender, RoutedEventArgs e) {
-            ((MethodEditorViewModel) this.DataContext).ApplyChanges();
             this.Close();
         }
 

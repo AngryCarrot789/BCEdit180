@@ -30,9 +30,15 @@ namespace BCEdit180.TypeEditor {
             set => RaisePropertyChanged(ref this.isPrimitive, value);
         }
 
+        private ushort arrayDepth;
+        public ushort ArrayDepth {
+            get => this.arrayDepth;
+            set => RaisePropertyChanged(ref this.arrayDepth, value);
+        }
+
         public ICommand ApplyChangesCommand { get; }
 
-        public Action<PrimitiveType?, string> Callback { get; set; }
+        public Action<PrimitiveType?, string, int> Callback { get; set; }
 
         public TypeEditorViewModel() {
             this.ApplyChangesCommand = new RelayCommand(this.ApplyChange);
@@ -40,10 +46,10 @@ namespace BCEdit180.TypeEditor {
 
         public void ApplyChange() {
             if (this.IsPrimitive) {
-                this.Callback?.Invoke(this.SelectedPrimitive, null);
+                this.Callback?.Invoke(this.SelectedPrimitive, null, this.ArrayDepth);
             }
-            else if (this.ClassName != null && this.ClassName.Length > 0) {
-                this.Callback?.Invoke(null, this.ClassName);
+            else if (!string.IsNullOrEmpty(this.ClassName)) {
+                this.Callback?.Invoke(null, this.ClassName, this.ArrayDepth);
             }
         }
     }

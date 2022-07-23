@@ -23,11 +23,11 @@ namespace BCEdit180.CodeEditing.InstructionEdit {
         }
 
         // easy solution
-        private void OkayClick(object sender, RoutedEventArgs e) {
+        private void Okay_Click(object sender, RoutedEventArgs e) {
             this.Close();
         }
 
-        private void CancelClick(object sender, RoutedEventArgs e) {
+        private void Cancel_Click(object sender, RoutedEventArgs e) {
             this.Close();
         }
     }

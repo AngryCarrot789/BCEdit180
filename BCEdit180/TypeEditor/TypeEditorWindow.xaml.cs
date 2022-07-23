@@ -15,7 +15,7 @@ namespace BCEdit180.TypeEditor {
             base.OnKeyDown(e);
 
             if (e.Key == Key.Enter) {
-                ((ChangeInstructionViewModel) this.DataContext).ApplyChanges();
+                ((TypeEditorViewModel) this.DataContext).ApplyChange();
                 Close();
             }
             else if (e.Key == Key.Escape) {
@@ -25,7 +25,6 @@ namespace BCEdit180.TypeEditor {
 
         // easy solution
         private void Okay_Click(object sender, RoutedEventArgs e) {
-            ((ChangeInstructionViewModel) this.DataContext).ApplyChanges();
             this.Close();
         }
 

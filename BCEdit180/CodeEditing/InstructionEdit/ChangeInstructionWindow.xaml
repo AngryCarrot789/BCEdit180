@@ -32,8 +32,8 @@
                 <ColumnDefinition Width="5"/>
                 <ColumnDefinition Width="81*"/>
             </Grid.ColumnDefinitions>
-            <Button Focusable="True" Command="{Binding ApplyChangesCommand, Mode=OneTime}" Content="Okay" Background="#FF79D43A" Click="OkayClick"/>
-            <Button Focusable="False" Content="Cancel" Click="CancelClick" Grid.Column="2"/>
+            <Button Focusable="False" Command="{Binding ApplyChangesCommand, Mode=OneTime}" Content="Okay" Background="#FF79D43A" Click="Okay_Click"/>
+            <Button Focusable="False" Content="Cancel" Click="Cancel_Click" Grid.Column="2"/>
 
         </Grid>
     </Grid>
