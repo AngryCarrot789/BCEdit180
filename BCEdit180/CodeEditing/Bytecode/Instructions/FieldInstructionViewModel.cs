@@ -17,8 +17,8 @@ namespace BCEdit180.CodeEditing.Bytecode.Instructions {
             set => RaisePropertyChanged(ref this.fieldName, value);
         }
 
-        private string fieldDescriptor;
-        public string FieldDescriptor {
+        private TypeDescriptor fieldDescriptor;
+        public TypeDescriptor FieldDescriptor {
             get => this.fieldDescriptor;
             set => RaisePropertyChanged(ref this.fieldDescriptor, value);
         }
@@ -30,15 +30,15 @@ namespace BCEdit180.CodeEditing.Bytecode.Instructions {
             FieldInstruction field = (FieldInstruction) instruction;
             this.FieldOwner = field.Owner.Name;
             this.FieldName = field.Name;
-            this.FieldDescriptor = field.Descriptor.ToString();
+            this.FieldDescriptor = field.Descriptor;
         }
 
         public override void Save(Instruction instruction) {
             base.Save(instruction);
             FieldInstruction field = (FieldInstruction) instruction;
+            field.Descriptor = this.FieldDescriptor;
             field.Owner = new ClassName(this.FieldOwner);
             field.Name = this.FieldName;
-            field.Descriptor = TypeDescriptor.Parse(this.FieldDescriptor);
         }
     }
 }

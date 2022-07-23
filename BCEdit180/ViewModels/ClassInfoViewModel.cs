@@ -18,9 +18,6 @@ namespace BCEdit180.ViewModels {
         private ClassAccessModifiers accessFlags;
         private string className;
         private string superName;
-        private int interfaceCount;
-        private int fieldCount;
-        private int methodCount;
         private int attributeCount;
 
         public ClassViewModel Class { get; }

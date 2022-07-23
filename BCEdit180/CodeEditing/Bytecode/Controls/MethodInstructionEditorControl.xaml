@@ -3,18 +3,23 @@
              xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
-             xmlns:local="clr-namespace:BCEdit180.CodeEditing.Bytecode.Controls"
+             xmlns:local="clr-namespace:BCEdit180.CodeEditing.Bytecode.Controls" 
+             xmlns:instructions="clr-namespace:BCEdit180.CodeEditing.Bytecode.Instructions"
+             xmlns:converters="clr-namespace:BCEdit180.Converters"
+             d:DataContext="{d:DesignInstance Type=instructions:MethodInstructionViewModel}"
              mc:Ignorable="d" 
              d:DesignHeight="450" d:DesignWidth="800">
+    <UserControl.Resources>
+        <converters:TypeDescriptorToStringConverter x:Key="TypeDescConverter"/>
+    </UserControl.Resources>
     <Grid>
-        <TextBlock Width="100" HorizontalAlignment="Left" TextWrapping="NoWrap" VerticalAlignment="Top" Padding="5" TextDecorations="{x:Null}" FontWeight="Bold" Text="Opcode"/>
-        <TextBlock Width="100" HorizontalAlignment="Left" TextWrapping="NoWrap" VerticalAlignment="Top" Padding="5" TextDecorations="{x:Null}" FontWeight="Bold" Margin="0,26,0,0"><Run Text="Method"/><Run Text=" Name"/></TextBlock>
-        <TextBlock Width="100" HorizontalAlignment="Left" TextWrapping="NoWrap" VerticalAlignment="Top" Padding="5" TextDecorations="{x:Null}" FontWeight="Bold" Margin="0,52,0,0"><Run Text="Method"/><Run Text=" Owner"/></TextBlock>
-        <TextBlock Width="100" HorizontalAlignment="Left" TextWrapping="NoWrap" Text="Descriptor" VerticalAlignment="Top" Padding="5" TextDecorations="{x:Null}" FontWeight="Bold" Margin="0,78,0,0"/>
-        <TextBox Text="{Binding Opcode, UpdateSourceTrigger=PropertyChanged}" Background="Transparent" HorizontalAlignment="Stretch" TextWrapping="NoWrap" VerticalAlignment="Top" Padding="5" Margin="100,0,75,0" BorderThickness="0"  FontWeight="Bold" FontStyle="Italic" TextDecorations="{x:Null}"/>
-        <TextBox Text="{Binding MethodName, UpdateSourceTrigger=PropertyChanged}" Background="Transparent" HorizontalAlignment="Stretch" TextWrapping="NoWrap" VerticalAlignment="Top" Padding="5" Margin="100,26,0,0" BorderThickness="0"  FontWeight="Bold" FontStyle="Italic" TextDecorations="{x:Null}"/>
-        <TextBox Text="{Binding MethodOwner, UpdateSourceTrigger=PropertyChanged}" Background="Transparent" HorizontalAlignment="Stretch" TextWrapping="NoWrap" VerticalAlignment="Top" Padding="5" Margin="100,52,0,0" BorderThickness="0"  FontWeight="Bold" FontStyle="Italic" TextDecorations="{x:Null}"/>
-        <TextBox Text="{Binding MethodDescriptor, UpdateSourceTrigger=PropertyChanged}" Background="Transparent" HorizontalAlignment="Stretch" TextWrapping="NoWrap" VerticalAlignment="Top" Padding="5" Margin="100,78,0,0" BorderThickness="0"  FontWeight="Bold" FontStyle="Italic" TextDecorations="{x:Null}"/>
-        <Button Command="{Binding EditOpcodeCommand, Mode=OneTime}" HorizontalAlignment="Right" VerticalAlignment="Top" Width="75" Height="26" Content="Change"/>
+        <TextBlock Width="100" HorizontalAlignment="Left" TextWrapping="NoWrap" VerticalAlignment="Top" Padding="5"  FontWeight="Bold" Text="Opcode"/>
+        <TextBlock Width="100" HorizontalAlignment="Left" TextWrapping="NoWrap" VerticalAlignment="Top" Padding="5"  FontWeight="Bold" Margin="0,26,0,0" Text="Method Name"/>
+        <TextBlock Width="100" HorizontalAlignment="Left" TextWrapping="NoWrap" VerticalAlignment="Top" Padding="5"  FontWeight="Bold" Margin="0,52,0,0" Text="Method Owner"/>
+        <TextBlock Width="100" HorizontalAlignment="Left" TextWrapping="NoWrap" Text="Descriptor" VerticalAlignment="Top" Padding="5"  FontWeight="Bold" Margin="0,78,0,0"/>
+        <TextBox Text="{Binding Opcode, UpdateSourceTrigger=PropertyChanged}" Background="Transparent" HorizontalAlignment="Stretch" TextWrapping="NoWrap" VerticalAlignment="Top" Padding="5" Margin="100,0,0,0" BorderThickness="0"  FontWeight="Bold" FontStyle="Italic" />
+        <TextBox Text="{Binding MethodName, UpdateSourceTrigger=PropertyChanged}" Background="Transparent" HorizontalAlignment="Stretch" TextWrapping="NoWrap" VerticalAlignment="Top" Padding="5" Margin="100,26,0,0" BorderThickness="0"  FontWeight="Bold" FontStyle="Italic" />
+        <TextBox Text="{Binding MethodOwner, UpdateSourceTrigger=PropertyChanged}" Background="Transparent" HorizontalAlignment="Stretch" TextWrapping="NoWrap" VerticalAlignment="Top" Padding="5" Margin="100,52,0,0" BorderThickness="0"  FontWeight="Bold" FontStyle="Italic" />
+        <TextBox Text="{Binding MethodDescriptor, UpdateSourceTrigger=PropertyChanged, Converter={StaticResource TypeDescConverter}}" Background="Transparent" HorizontalAlignment="Stretch" TextWrapping="NoWrap" VerticalAlignment="Top" Padding="5" Margin="100,78,0,0" BorderThickness="0"  FontWeight="Bold" FontStyle="Italic" />
     </Grid>
 </UserControl>

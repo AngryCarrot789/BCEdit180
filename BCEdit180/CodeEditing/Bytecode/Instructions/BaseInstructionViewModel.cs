@@ -33,7 +33,10 @@ namespace BCEdit180.CodeEditing.Bytecode.Instructions {
         }
 
         public static BaseInstructionViewModel ForInstruction(Instruction instruction) {
-            if (instruction is FieldInstruction) {
+            if (instruction == null) {
+                throw new NullReferenceException("Instruction cannot be null");
+            }
+            else if (instruction is FieldInstruction) {
                 return new FieldInstructionViewModel();
             }
             else if (instruction is IncrementInstruction) {
@@ -85,12 +88,7 @@ namespace BCEdit180.CodeEditing.Bytecode.Instructions {
                 return new VariableInstructionViewModel();
             }
             else {
-                if (instruction == null) {
-                    throw new NullReferenceException("Instruction cannot be null");
-                }
-                else {
-                    throw new ArgumentException("Unexpected instruction: " + instruction.GetType() + " -> " + instruction);
-                }
+                throw new ArgumentException("Unexpected instruction: " + instruction.GetType() + " -> " + instruction);
             }
         }
 
@@ -100,14 +98,9 @@ namespace BCEdit180.CodeEditing.Bytecode.Instructions {
         }
 
         public virtual void Save(Instruction instruction) {
-            if (this.Opcode != Opcode.None) {
+            if (this.CanEditOpCode) {
                 instruction.Opcode = this.Opcode;
             }
-
-            // predict if set will throw
-            //else if (!this.AvailableOpCodes.Contains(Opcode.None)) {
-            //    instruction.Opcode = Opcode.None;
-            //}
         }
 
         public override string ToString() {

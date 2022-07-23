@@ -1,7 +1,7 @@
 ﻿using JavaAsm;
 using REghZy.MVVM.ViewModels;
 
-namespace BCEdit180.CodeEditing.Bytecode.Tables {
+namespace BCEdit180.CodeEditing.Bytecode.Locals {
     public class LocalVariableViewModel : BaseViewModel {
         private ushort startPc;
         private ushort length;

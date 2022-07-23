@@ -2,7 +2,7 @@
 using System.Windows;
 using System.Windows.Media;
 
-namespace REghZyFramework.Themes {
+namespace BCEdit180.Themes {
     public static class ThemesController {
         public static ThemeType CurrentTheme { get; set; }
 

@@ -1,9 +1,13 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Collections.ObjectModel;
+using System.Security.Cryptography;
+using System.Windows.Input;
 using BCEdit180.CodeEditing.Bytecode.Instructions;
 using JavaAsm;
 using JavaAsm.Instructions;
 using JavaAsm.Instructions.Types;
+using REghZy.MVVM.Commands;
 using REghZy.MVVM.ViewModels;
 
 namespace BCEdit180.CodeEditing {
@@ -12,16 +16,31 @@ namespace BCEdit180.CodeEditing {
 
         public ObservableCollection<BaseInstructionViewModel> Instructions { get; }
 
-        private BaseInstructionViewModel selectedInstruction;
+        private int selectedInstructionIndex;
 
+        public int SelectedInstructionIndex {
+            get => this.selectedInstructionIndex;
+            set => RaisePropertyChanged(ref this.selectedInstructionIndex, value);
+        }
+
+        private BaseInstructionViewModel selectedInstruction;
         public BaseInstructionViewModel SelectedInstruction {
             get => this.selectedInstruction;
             set => RaisePropertyChanged(ref this.selectedInstruction, value);
         }
 
+        private string searchText;
+        public string SearchText {
+            get => this.searchText;
+            set => RaisePropertyChanged(ref this.searchText, value);
+        }
+
+        public ICommand FindNextInstructionCommand { get; }
+
         public BytecodeEditorViewModel(CodeEditorViewModel codeEditor) {
             this.CodeEditor = codeEditor;
             this.Instructions = new ObservableCollection<BaseInstructionViewModel>();
+            this.FindNextInstructionCommand = new RelayCommand(SearchNextElement);
         }
 
         public void Load(MethodNode node) {
@@ -43,8 +62,45 @@ namespace BCEdit180.CodeEditing {
             this.Instructions.Add(vm);
         }
 
-        public void LoadVariableInstruction(VariableInstruction instruction) {
+        private bool doExtendedSearch;
 
+        public void SearchNextElement() {
+            int start = this.SelectedInstructionIndex + 1;
+            if (start < 0 || start >= this.Instructions.Count) {
+                start = this.SelectedInstructionIndex = 0;
+            }
+
+            for (int i = start, size = this.Instructions.Count; i < size; i++) {
+                BaseInstructionViewModel instruction = this.Instructions[i];
+                if (MatchInstruction(instruction, this.SearchText)) {
+                    this.SelectedInstructionIndex = i;
+                    break;
+                }
+            }
+
+            // Semi-recursive
+            if (!this.doExtendedSearch) {
+                this.doExtendedSearch = true;
+                SearchNextElement();
+            }
+            else {
+                this.doExtendedSearch = false;
+            }
+        }
+
+        public static BaseInstructionViewModel FindInstruction(IEnumerable<BaseInstructionViewModel> instructions, string search) {
+            foreach (BaseInstructionViewModel instruction in instructions) {
+                if (MatchInstruction(instruction, search)) {
+                    return instruction;
+                }
+            }
+
+            return null;
+        }
+
+        public static bool MatchInstruction(BaseInstructionViewModel instruction, string search) {
+            string tostr = instruction.Instruction.ToString();
+            return tostr.ToLower().Contains(search.ToLower());
         }
 
         public static Type GetInstructionTypeForOpCode(Opcode opcode) {

@@ -30,8 +30,8 @@ namespace BCEdit180.CodeEditing.Bytecode.Instructions {
         public override void Save(Instruction instruction) {
             base.Save(instruction);
             IncrementInstruction increment = (IncrementInstruction) instruction;
-            increment.VariableIndex = (ushort) this.VarIndex;
-            increment.Value = (short) this.Value;
+            increment.VariableIndex = this.VarIndex;
+            increment.Value = this.Value;
         }
     }
 }

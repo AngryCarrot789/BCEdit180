@@ -12,6 +12,8 @@
         xmlns:controls1="clr-namespace:BCEdit180.CodeEditing.Bytecode.Controls"
         xmlns:vm="clr-namespace:BCEdit180.CodeEditing.Bytecode"
         xmlns:instructions="clr-namespace:BCEdit180.CodeEditing.Bytecode.Instructions" xmlns:listcontrols="clr-namespace:BCEdit180.CodeEditing.Bytecode.Instructions.ListControls"
+        xmlns:attachedProperties="clr-namespace:BCEdit180.AttachedProperties"
+        xmlns:locals="clr-namespace:BCEdit180.CodeEditing.Bytecode.Locals"
         mc:Ignorable="d"
         Title="MainWindow" Width="1280" Height="720" 
         d:DataContext="{d:DesignInstance viewModels:ClassViewModel}"
@@ -19,11 +21,12 @@
         Background="{DynamicResource AREghZyBrush.Deep.3.Background.Static}" 
         BorderBrush="{DynamicResource AREghZyBrush.Primary.4.Border.Static}"
         AllowDrop="True"
-        PreviewDrop="Window_PreviewDrop">
+        PreviewDrop="Window_PreviewDrop"
+        PreviewKeyDown="Window_PreviewKeyDown">
     <Grid>
         <Grid.Resources>
             <converters:EnumToStringConverter x:Key="EnumToString"/>
-            <converters:MethodDescriptorToStringConverter x:Key="DescriptorConverter"/>
+            <converters:TypeDescriptorToStringConverter x:Key="TypeDescConverter"/>
         </Grid.Resources>
         <Menu VerticalAlignment="Top">
             <MenuItem Header="File">
@@ -37,86 +40,157 @@
         <TabControl Margin="0,18,0,24">
             <TabItem Header="Class Info" DataContext="{Binding ClassInfo}">
                 <Grid>
-                    <TextBlock Width="125" HorizontalAlignment="Left" TextWrapping="NoWrap" Text="Minor Version" VerticalAlignment="Top" Padding="5" TextDecorations="{x:Null}" FontWeight="Bold"/>
-                    <TextBlock Width="125" HorizontalAlignment="Left" TextWrapping="NoWrap" Text="Major Version" VerticalAlignment="Top" Padding="5" Margin="0,26,0,0" TextDecorations="{x:Null}" FontWeight="Bold"/>
-                    <TextBlock Width="125" HorizontalAlignment="Left" TextWrapping="NoWrap" Text="Constant Pool Size" VerticalAlignment="Top" Padding="5" Margin="0,52,0,0" TextDecorations="{x:Null}" FontWeight="Bold" />
-                    <TextBlock Width="125" HorizontalAlignment="Left" TextWrapping="NoWrap" Text="Access Flags" VerticalAlignment="Top" Padding="5" Margin="0,78,0,0" TextDecorations="{x:Null}" FontWeight="Bold"/>
-                    <TextBlock Width="125" HorizontalAlignment="Left" TextWrapping="NoWrap" Text="This Class" VerticalAlignment="Top" Padding="5" Margin="0,104,0,0" TextDecorations="{x:Null}" FontWeight="Bold"/>
-                    <TextBlock Width="125" HorizontalAlignment="Left" TextWrapping="NoWrap" Text="Super Class" VerticalAlignment="Top" Padding="5" Margin="0,130,0,0" TextDecorations="{x:Null}" FontWeight="Bold"/>
-                    <TextBlock Width="125" HorizontalAlignment="Left" TextWrapping="NoWrap" Text="Interfaces Count" VerticalAlignment="Top" Padding="5" Margin="0,156,0,0" TextDecorations="{x:Null}" FontWeight="Bold"/>
-                    <TextBlock Width="125" HorizontalAlignment="Left" TextWrapping="NoWrap" Text="Field Count" VerticalAlignment="Top" Padding="5" Margin="0,182,0,0" TextDecorations="{x:Null}" FontWeight="Bold"/>
-                    <TextBlock Width="125" HorizontalAlignment="Left" TextWrapping="NoWrap" Text="Method Count" VerticalAlignment="Top" Padding="5" Margin="0,208,0,0" TextDecorations="{x:Null}" FontWeight="Bold"/>
-                    <TextBlock Width="125" HorizontalAlignment="Left" TextWrapping="NoWrap" Text="Attribute Count" VerticalAlignment="Top" Padding="5" Margin="0,234,0,0" TextDecorations="{x:Null}" FontWeight="Bold"/>
-                    <TextBox AutoWordSelection="False" Text="{Binding MinorVersion, UpdateSourceTrigger=PropertyChanged}"   HorizontalAlignment="Stretch" TextWrapping="NoWrap" VerticalAlignment="Top" Padding="5" Margin="125,0,0,0" BorderThickness="0"  FontWeight="Bold" FontStyle="Italic" TextDecorations="{x:Null}"   Foreground="{DynamicResource AREghZyBrush.ColourfulGlyph.Static}"/>
-                    <TextBox AutoWordSelection="False" Text="{Binding MajorVersion, UpdateSourceTrigger=PropertyChanged}"   HorizontalAlignment="Stretch" TextWrapping="NoWrap" VerticalAlignment="Top" Padding="5" Margin="125,26,0,0" BorderThickness="0"  FontWeight="Bold" FontStyle="Italic" TextDecorations="{x:Null}"  Foreground="{DynamicResource AREghZyBrush.ColourfulGlyph.Static}"/>
-                    <TextBox AutoWordSelection="False" IsReadOnly="True" Text="(Not implemented yet)"                       HorizontalAlignment="Stretch" TextWrapping="NoWrap" VerticalAlignment="Top" Padding="5" Margin="125,52,0,0" BorderThickness="0"  FontWeight="Bold" FontStyle="Italic" TextDecorations="{x:Null}"  Foreground="{DynamicResource AREghZyBrush.ColourfulGlyph.Static}"/>
-                    <TextBox AutoWordSelection="False" Text="{Binding AccessFlags, UpdateSourceTrigger=PropertyChanged, Converter={StaticResource EnumToString}}"    HorizontalAlignment="Stretch" TextWrapping="NoWrap" VerticalAlignment="Top" Padding="5" Margin="125,78,100,0" BorderThickness="0"  FontWeight="Bold" FontStyle="Italic" TextDecorations="{x:Null}"  Foreground="{DynamicResource AREghZyBrush.ColourfulGlyph.Static}"/>
-                    <TextBox AutoWordSelection="False" Text="{Binding ClassName, UpdateSourceTrigger=PropertyChanged}"      HorizontalAlignment="Stretch" TextWrapping="NoWrap" VerticalAlignment="Top" Padding="5" Margin="125,104,0,0" BorderThickness="0"  FontWeight="Bold" FontStyle="Italic" TextDecorations="{x:Null}" Foreground="{DynamicResource AREghZyBrush.ColourfulGlyph.Static}"/>
-                    <TextBox AutoWordSelection="False" Text="{Binding SuperName, UpdateSourceTrigger=PropertyChanged}"      HorizontalAlignment="Stretch" TextWrapping="NoWrap" VerticalAlignment="Top" Padding="5" Margin="125,130,0,0" BorderThickness="0"  FontWeight="Bold" FontStyle="Italic" TextDecorations="{x:Null}" Foreground="{DynamicResource AREghZyBrush.ColourfulGlyph.Static}"/>
-                    <TextBox AutoWordSelection="False" IsReadOnly="True" Text="{Binding Interfaces.Count, UpdateSourceTrigger=PropertyChanged, Mode=OneWay}"  HorizontalAlignment="Stretch" TextWrapping="NoWrap" VerticalAlignment="Top" Padding="5" Margin="125,156,0,0" BorderThickness="0"  FontWeight="Bold" FontStyle="Italic" TextDecorations="{x:Null}" Foreground="{DynamicResource AREghZyBrush.ColourfulGlyph.Static}"/>
-                    <TextBox AutoWordSelection="False" IsReadOnly="True" Text="{Binding Class.FieldList.Fields.Count, UpdateSourceTrigger=PropertyChanged, Mode=OneWay}"   HorizontalAlignment="Stretch" TextWrapping="NoWrap" VerticalAlignment="Top" Padding="5" Margin="125,182,0,0" BorderThickness="0"  FontWeight="Bold" FontStyle="Italic" TextDecorations="{x:Null}"                Foreground="{DynamicResource AREghZyBrush.ColourfulGlyph.Static}"/>
-                    <TextBox AutoWordSelection="False" IsReadOnly="True" Text="{Binding Class.MethodList.Methods.Count, UpdateSourceTrigger=PropertyChanged, Mode=OneWay}" HorizontalAlignment="Stretch" TextWrapping="NoWrap" VerticalAlignment="Top" Padding="5" Margin="125,208,0,0" BorderThickness="0"  FontWeight="Bold" FontStyle="Italic" TextDecorations="{x:Null}"                Foreground="{DynamicResource AREghZyBrush.ColourfulGlyph.Static}"/>
-                    <TextBox AutoWordSelection="False" IsReadOnly="True" Text="{Binding AttributeCount, UpdateSourceTrigger=PropertyChanged}" HorizontalAlignment="Stretch" TextWrapping="NoWrap" VerticalAlignment="Top" Padding="5" Margin="125,234,0,0" BorderThickness="0"  FontWeight="Bold" FontStyle="Italic" TextDecorations="{x:Null}"                Foreground="{DynamicResource AREghZyBrush.ColourfulGlyph.Static}"/>
+                    <TextBlock Width="125" HorizontalAlignment="Left" TextWrapping="NoWrap" Text="Minor Version" VerticalAlignment="Top" Padding="5"  FontWeight="Bold"/>
+                    <TextBlock Width="125" HorizontalAlignment="Left" TextWrapping="NoWrap" Text="Major Version" VerticalAlignment="Top" Padding="5" Margin="0,26,0,0"  FontWeight="Bold"/>
+                    <TextBlock Width="125" HorizontalAlignment="Left" TextWrapping="NoWrap" Text="Constant Pool Size" VerticalAlignment="Top" Padding="5" Margin="0,52,0,0"  FontWeight="Bold" />
+                    <TextBlock Width="125" HorizontalAlignment="Left" TextWrapping="NoWrap" Text="Access Flags" VerticalAlignment="Top" Padding="5" Margin="0,78,0,0"  FontWeight="Bold"/>
+                    <TextBlock Width="125" HorizontalAlignment="Left" TextWrapping="NoWrap" Text="This Class" VerticalAlignment="Top" Padding="5" Margin="0,104,0,0"  FontWeight="Bold"/>
+                    <TextBlock Width="125" HorizontalAlignment="Left" TextWrapping="NoWrap" Text="Super Class" VerticalAlignment="Top" Padding="5" Margin="0,130,0,0"  FontWeight="Bold"/>
+                    <TextBlock Width="125" HorizontalAlignment="Left" TextWrapping="NoWrap" Text="Interfaces Count" VerticalAlignment="Top" Padding="5" Margin="0,156,0,0"  FontWeight="Bold"/>
+                    <TextBlock Width="125" HorizontalAlignment="Left" TextWrapping="NoWrap" Text="Field Count" VerticalAlignment="Top" Padding="5" Margin="0,182,0,0"  FontWeight="Bold"/>
+                    <TextBlock Width="125" HorizontalAlignment="Left" TextWrapping="NoWrap" Text="Method Count" VerticalAlignment="Top" Padding="5" Margin="0,208,0,0"  FontWeight="Bold"/>
+                    <TextBlock Width="125" HorizontalAlignment="Left" TextWrapping="NoWrap" Text="Attribute Count" VerticalAlignment="Top" Padding="5" Margin="0,234,0,0"  FontWeight="Bold"/>
+                    <TextBox AutoWordSelection="False" Text="{Binding MinorVersion, UpdateSourceTrigger=PropertyChanged}"   HorizontalAlignment="Stretch" TextWrapping="NoWrap" VerticalAlignment="Top" Padding="5" Margin="125,0,0,0" BorderThickness="0"  FontWeight="Bold" FontStyle="Italic"    Foreground="{DynamicResource AREghZyBrush.ColourfulGlyph.Static}"/>
+                    <TextBox AutoWordSelection="False" Text="{Binding MajorVersion, UpdateSourceTrigger=PropertyChanged}"   HorizontalAlignment="Stretch" TextWrapping="NoWrap" VerticalAlignment="Top" Padding="5" Margin="125,26,0,0" BorderThickness="0"  FontWeight="Bold" FontStyle="Italic"   Foreground="{DynamicResource AREghZyBrush.ColourfulGlyph.Static}"/>
+                    <TextBox AutoWordSelection="False" IsReadOnly="True" Text="(Not implemented yet)"                       HorizontalAlignment="Stretch" TextWrapping="NoWrap" VerticalAlignment="Top" Padding="5" Margin="125,52,0,0" BorderThickness="0"  FontWeight="Bold" FontStyle="Italic"   Foreground="{DynamicResource AREghZyBrush.ColourfulGlyph.Static}"/>
+                    <TextBox AutoWordSelection="False" Text="{Binding AccessFlags, UpdateSourceTrigger=PropertyChanged, Converter={StaticResource EnumToString}}"    HorizontalAlignment="Stretch" TextWrapping="NoWrap" VerticalAlignment="Top" Padding="5" Margin="125,78,100,0" BorderThickness="0"  FontWeight="Bold" FontStyle="Italic"   Foreground="{DynamicResource AREghZyBrush.ColourfulGlyph.Static}"/>
+                    <TextBox AutoWordSelection="False" Text="{Binding ClassName, UpdateSourceTrigger=PropertyChanged}"      HorizontalAlignment="Stretch" TextWrapping="NoWrap" VerticalAlignment="Top" Padding="5" Margin="125,104,0,0" BorderThickness="0"  FontWeight="Bold" FontStyle="Italic"  Foreground="{DynamicResource AREghZyBrush.ColourfulGlyph.Static}"/>
+                    <TextBox AutoWordSelection="False" Text="{Binding SuperName, UpdateSourceTrigger=PropertyChanged}"      HorizontalAlignment="Stretch" TextWrapping="NoWrap" VerticalAlignment="Top" Padding="5" Margin="125,130,0,0" BorderThickness="0"  FontWeight="Bold" FontStyle="Italic"  Foreground="{DynamicResource AREghZyBrush.ColourfulGlyph.Static}"/>
+                    <TextBox AutoWordSelection="False" IsReadOnly="True" Text="{Binding Interfaces.Count, UpdateSourceTrigger=PropertyChanged, Mode=OneWay}"  HorizontalAlignment="Stretch" TextWrapping="NoWrap" VerticalAlignment="Top" Padding="5" Margin="125,156,0,0" BorderThickness="0"  FontWeight="Bold" FontStyle="Italic"  Foreground="{DynamicResource AREghZyBrush.ColourfulGlyph.Static}"/>
+                    <TextBox AutoWordSelection="False" IsReadOnly="True" Text="{Binding Class.FieldList.Fields.Count, UpdateSourceTrigger=PropertyChanged, Mode=OneWay}"   HorizontalAlignment="Stretch" TextWrapping="NoWrap" VerticalAlignment="Top" Padding="5" Margin="125,182,0,0" BorderThickness="0"  FontWeight="Bold" FontStyle="Italic"                 Foreground="{DynamicResource AREghZyBrush.ColourfulGlyph.Static}"/>
+                    <TextBox AutoWordSelection="False" IsReadOnly="True" Text="{Binding Class.MethodList.Methods.Count, UpdateSourceTrigger=PropertyChanged, Mode=OneWay}" HorizontalAlignment="Stretch" TextWrapping="NoWrap" VerticalAlignment="Top" Padding="5" Margin="125,208,0,0" BorderThickness="0"  FontWeight="Bold" FontStyle="Italic"                 Foreground="{DynamicResource AREghZyBrush.ColourfulGlyph.Static}"/>
+                    <TextBox AutoWordSelection="False" IsReadOnly="True" Text="{Binding AttributeCount, UpdateSourceTrigger=PropertyChanged}" HorizontalAlignment="Stretch" TextWrapping="NoWrap" VerticalAlignment="Top" Padding="5" Margin="125,234,0,0" BorderThickness="0"  FontWeight="Bold" FontStyle="Italic"                 Foreground="{DynamicResource AREghZyBrush.ColourfulGlyph.Static}"/>
                     <Button Command="{Binding EditAccessCommand}" Margin="0,78,0,0" Content="Edit Access" Height="26" VerticalAlignment="Top" HorizontalAlignment="Right" Width="100"/>
-                    <ListBox ItemsSource="{Binding Interfaces}" Margin="0,289,0,0" Background="{DynamicResource AREghZyBrush.Deep.3.Background.Static}" BorderBrush="{DynamicResource AREghZyBrush.Deep.3.Border.Static}">
-                        <ListBox.ItemTemplate>
-                            <DataTemplate>
-                                <controls:DoubleClickEditBox Text="{Binding Value, UpdateSourceTrigger=PropertyChanged}" FontSize="14" FontFamily="Consolas"/>
-                            </DataTemplate>
-                        </ListBox.ItemTemplate>
-                    </ListBox>
-                    <Border Margin="0,260,0,0" VerticalAlignment="Top" HorizontalAlignment="Left" Background="{DynamicResource AREghZyBrush.Deep.3.Background.Static}" BorderBrush="{DynamicResource AREghZyBrush.Deep.3.Border.Static}" BorderThickness="1 1 1 0" Height="30" Width="252">
-                        <TextBlock Text="{Binding Interfaces.Count, Mode=OneWay, UpdateSourceTrigger=PropertyChanged, StringFormat={}Interfaces ({0}), FallbackValue=Interfaces}" HorizontalAlignment="Center" Padding="5" FontWeight="Bold" VerticalAlignment="Center"/>
-                    </Border>
+                    <TabControl Margin="0,260,0,0">
+                        <TabItem>
+                            <TabItem.Header>
+                                <TextBlock Text="{Binding Interfaces.Count, Mode=OneWay, UpdateSourceTrigger=PropertyChanged, StringFormat={}Interfaces ({0}), FallbackValue=Interfaces}" HorizontalAlignment="Center" Padding="3" FontWeight="Bold" VerticalAlignment="Center"/>
+                            </TabItem.Header>
+                            <ListBox ItemsSource="{Binding Interfaces}" Background="Transparent" BorderThickness="0">
+                                <ListBox.ItemTemplate>
+                                    <DataTemplate>
+                                        <controls:DoubleClickEditBox Text="{Binding Value, UpdateSourceTrigger=PropertyChanged}" FontSize="14" FontFamily="Consolas"/>
+                                    </DataTemplate>
+                                </ListBox.ItemTemplate>
+                            </ListBox>
+                        </TabItem>
+                        <TabItem Header="Attributes">
+                            
+                        </TabItem>
+                    </TabControl>
                 </Grid>
             </TabItem>
-            <TabItem Header="Methods" DataContext="{Binding MethodList}">
+            <TabItem DataContext="{Binding MethodList}">
+                <TabItem.Header>
+                    <TextBlock Text="{Binding Methods.Count, StringFormat={}Methods ({0})}" Padding="2"/>
+                </TabItem.Header>
                 <Grid>
                     <Grid.ColumnDefinitions>
                         <ColumnDefinition Width="196*"/>
                         <ColumnDefinition Width="5"/>
                         <ColumnDefinition Width="587*"/>
                     </Grid.ColumnDefinitions>
-                    <ListBox ItemsSource="{Binding Methods}" x:Name="MethodList" Margin="-2,0,0,0" 
-                             BorderThickness="0 1 1 1"
-                             HorizontalContentAlignment="Stretch" 
-                             ScrollViewer.CanContentScroll="False"
-                             Background="Transparent"
-                             SelectedItem="{Binding SelectedMethod, UpdateSourceTrigger=PropertyChanged}">
-                        <ListBox.ItemTemplate>
-                            <DataTemplate>
-                                <controls:MethodInfoControl DataContext="{Binding}"/>
-                            </DataTemplate>
-                        </ListBox.ItemTemplate>
-                    </ListBox>
+                    <Grid Margin="0,0,0,0">
+                        <Grid.RowDefinitions>
+                            <RowDefinition Height="30*"/>
+                            <RowDefinition Height="11"/>
+                            <RowDefinition Height="10*"/>
+                            <RowDefinition Height="11"/>
+                            <RowDefinition Height="10*"/>
+                        </Grid.RowDefinitions>
+                        <ListBox ItemsSource="{Binding Methods}" x:Name="MethodList"
+                                 BorderThickness="1 1 1 1"
+                                 SelectionMode="Extended"
+                                 HorizontalContentAlignment="Stretch"
+                                 ScrollViewer.CanContentScroll="False"
+                                 Background="Transparent"
+                                 SelectedItem="{Binding SelectedMethod, UpdateSourceTrigger=PropertyChanged}" 
+                                 BorderBrush="{DynamicResource AREghZyBrush.Primary.3.Border.Static}">
+                            <ListBox.ItemTemplate>
+                                <DataTemplate>
+                                    <controls:MethodInfoControl DataContext="{Binding}">
+                                        <controls:MethodInfoControl.ContextMenu>
+                                            <ContextMenu>
+                                                <MenuItem Header="Remove method(s)" Click="RemoveSelectedMethodsClick"/>
+                                            </ContextMenu>
+                                        </controls:MethodInfoControl.ContextMenu>
+                                    </controls:MethodInfoControl>
+                                </DataTemplate>
+                            </ListBox.ItemTemplate>
+                        </ListBox>
+                        <GridSplitter HorizontalAlignment="Stretch" VerticalAlignment="Stretch" Grid.Row="1" BorderThickness="0 5" Background="{DynamicResource AREghZyBrush.Primary.4.Border.Static}" Margin="-2,0,-5,0" BorderBrush="{DynamicResource AREghZyBrush.Primary.1.Background.Static}"/>
+                        <Label Height="18" VerticalAlignment="Top" Grid.Row="2" Padding="5 1" VerticalContentAlignment="Center">
+                            <TextBlock Text="{Binding AddedMethods.Count, StringFormat={}New Methods ({0})}"/>
+                        </Label>
+                        <ListBox ItemsSource="{Binding AddedMethods}" x:Name="AddedMethodList"
+                                 BorderThickness="1 1 1 1"
+                                 SelectionMode="Extended"
+                                 HorizontalContentAlignment="Stretch"
+                                 ScrollViewer.CanContentScroll="False"
+                                 Background="Transparent"
+                                 SelectedItem="{Binding SelectedMethod, UpdateSourceTrigger=PropertyChanged}" Grid.Row="2" Margin="0,23,0,0"
+                                 BorderBrush="{DynamicResource AREghZyBrush.Primary.3.Border.Static}">
+                            <ListBox.ItemTemplate>
+                                <DataTemplate>
+                                    <controls:MethodInfoControl DataContext="{Binding}">
+                                        <controls:MethodInfoControl.ContextMenu>
+                                            <ContextMenu>
+                                                <MenuItem Header="Remove newly added Method(s)" Click="RemoveAddedMethod"/>
+                                            </ContextMenu>
+                                        </controls:MethodInfoControl.ContextMenu>
+                                    </controls:MethodInfoControl>
+                                </DataTemplate>
+                            </ListBox.ItemTemplate>
+                        </ListBox>
+
+                        <GridSplitter HorizontalAlignment="Stretch" VerticalAlignment="Stretch" Grid.Row="3" BorderThickness="0 5" Background="{DynamicResource AREghZyBrush.Primary.4.Border.Static}" BorderBrush="{DynamicResource AREghZyBrush.Primary.1.Background.Static}" Margin="-2,0,-5,0"/>
+                        <Label Height="18" VerticalAlignment="Top" Grid.Row="4" Padding="5 1" VerticalContentAlignment="Center">
+                            <TextBlock Text="{Binding RemovedMethods.Count, StringFormat={}Removed Methods ({0})}"/>
+                        </Label>
+                        <ListBox ItemsSource="{Binding RemovedMethods}" x:Name="RemovedMethodList"
+                                 BorderThickness="1 1 1 1"
+                                 SelectionMode="Extended"
+                                 HorizontalContentAlignment="Stretch"
+                                 ScrollViewer.CanContentScroll="False"
+                                 Background="Transparent"
+                                 SelectedItem="{Binding SelectedMethod, UpdateSourceTrigger=PropertyChanged}" Grid.Row="4" Margin="0,23,0,0"
+                                 BorderBrush="{DynamicResource AREghZyBrush.Primary.3.Border.Static}">
+                            <ListBox.ItemTemplate>
+                                <DataTemplate>
+                                    <controls:MethodInfoControl DataContext="{Binding}">
+                                        <controls:MethodInfoControl.ContextMenu>
+                                            <ContextMenu>
+                                                <MenuItem Header="Add back Method(s)" Click="UndoRemoveMethod"/>
+                                            </ContextMenu>
+                                        </controls:MethodInfoControl.ContextMenu>
+                                    </controls:MethodInfoControl>
+                                </DataTemplate>
+                            </ListBox.ItemTemplate>
+                        </ListBox>
+                    </Grid>
                     <GridSplitter Background="Transparent" HorizontalAlignment="Stretch" VerticalAlignment="Stretch" Grid.Column="1" BorderThickness="0 0 0 0"/>
                     <Border BorderThickness="0 0 0 0" Grid.Column="2">
                         <TabControl DataContext="{Binding SelectedMethod, UpdateSourceTrigger=PropertyChanged}">
-                            <TabItem Header="General Info">
+                            <TabItem Header="General Method Information">
                                 <Grid>
-                                    <TextBlock Text="Method Name" Width="100" HorizontalAlignment="Left" TextWrapping="NoWrap" VerticalAlignment="Top" Padding="5" FontWeight="Bold"/>
-                                    <TextBlock Text="Descriptor" Width="100" HorizontalAlignment="Left" TextWrapping="NoWrap" VerticalAlignment="Top" Padding="5" FontWeight="Bold" Margin="0,26,0,0"/>
-                                    <TextBlock Text="Signature" Width="100" HorizontalAlignment="Left" TextWrapping="NoWrap" VerticalAlignment="Top" Padding="5" FontWeight="Bold" Margin="0,52,0,0"/>
+                                    <TextBlock Text="Method Name" Width="100" HorizontalAlignment="Left" TextWrapping="NoWrap" VerticalAlignment="Top" Padding="5" FontWeight="Bold" ToolTip="The name of this method (duh)"/>
+                                    <TextBlock Text="Descriptor" Width="100" HorizontalAlignment="Left" TextWrapping="NoWrap" VerticalAlignment="Top" Padding="5" FontWeight="Bold" Margin="0,26,0,0" ToolTip="The method's descriptor, which shows the method parameters and return type"/>
+                                    <TextBlock Text="Signature" Width="100" HorizontalAlignment="Left" TextWrapping="NoWrap" VerticalAlignment="Top" Padding="5" FontWeight="Bold" Margin="0,52,0,0" ToolTip="The method's signature, which is similar to the descriptor but also contains generic types too (e.g for an ArrayList element types)"/>
                                     <TextBlock Text="Access Flags" Width="100" HorizontalAlignment="Left" TextWrapping="NoWrap" VerticalAlignment="Top" Padding="5" FontWeight="Bold" Margin="0,78,0,0"/>
-                                    <TextBlock Text="Max Stack Size" Width="100" HorizontalAlignment="Left" TextWrapping="NoWrap" VerticalAlignment="Top" Padding="5" FontWeight="Bold" Margin="0,104,0,0"/>
-                                    <TextBlock Text="Max Local Vars" Width="100" HorizontalAlignment="Left" TextWrapping="NoWrap" VerticalAlignment="Top" Padding="5" FontWeight="Bold" Margin="0,130,0,0"/>
-                                    <TextBlock Text="Instructions" Width="100" HorizontalAlignment="Left" TextWrapping="NoWrap" VerticalAlignment="Top" Padding="5" FontWeight="Bold" Margin="0,156,0,0"/>
-                                    <TextBlock Text="Annotations" Width="100" HorizontalAlignment="Left" TextWrapping="NoWrap" VerticalAlignment="Top" Padding="5" FontWeight="Bold" Margin="0,182,0,0"/>
-                                    <TextBlock Text="Visible:" Width="85" HorizontalAlignment="Left" TextWrapping="NoWrap" VerticalAlignment="Top" Padding="5" FontWeight="Bold" Margin="15,208,0,0"/>
-                                    <TextBlock Text="Invisible" Width="85" HorizontalAlignment="Left" TextWrapping="NoWrap" VerticalAlignment="Top" Padding="5" FontWeight="Bold" Margin="15,234,0,0"/>
-                                    <TextBox Foreground="{DynamicResource AREghZyBrush.ColourfulGlyph.Static}" Text="{Binding MethodName, UpdateSourceTrigger=PropertyChanged}"          HorizontalAlignment="Stretch" TextWrapping="NoWrap" VerticalAlignment="Top" Padding="5" Margin="100,0,0,0" BorderThickness="0"  FontWeight="Bold" FontFamily="Consolas"/>
-                                    <TextBox Foreground="{DynamicResource AREghZyBrush.ColourfulGlyph.Static}" Text="{Binding Descriptor, UpdateSourceTrigger=PropertyChanged,           Converter={StaticResource DescriptorConverter}}"   HorizontalAlignment="Stretch" TextWrapping="NoWrap" VerticalAlignment="Top" Padding="5" Margin="100,26,100,0" BorderThickness="0"  FontWeight="Bold" FontStyle="Italic" FontFamily="Consolas" TextDecorations="{x:Null}"/>
-                                    <TextBox Foreground="{DynamicResource AREghZyBrush.ColourfulGlyph.Static}" Text="{Binding Signature, UpdateSourceTrigger=PropertyChanged}"           HorizontalAlignment="Stretch" TextWrapping="NoWrap" VerticalAlignment="Top" Padding="5" Margin="100,52,0,0" BorderThickness="0"  FontWeight="Bold" FontStyle="Italic" TextDecorations="{x:Null}" FontFamily="Consolas"/>
-                                    <TextBox Foreground="{DynamicResource AREghZyBrush.ColourfulGlyph.Static}" Text="{Binding Access, UpdateSourceTrigger=PropertyChanged, Converter={StaticResource EnumToString}}"              HorizontalAlignment="Stretch" TextWrapping="NoWrap" VerticalAlignment="Top" Padding="5" Margin="100,78,100,0" BorderThickness="0"  FontWeight="Bold" FontStyle="Italic" TextDecorations="{x:Null}"/>
-                                    <TextBox Foreground="{DynamicResource AREghZyBrush.ColourfulGlyph.Static}" Text="{Binding MaxStack, UpdateSourceTrigger=PropertyChanged}"            IsReadOnly="True"  HorizontalAlignment="Stretch" TextWrapping="NoWrap" VerticalAlignment="Top" Padding="5" Margin="100,104,100,0" BorderThickness="0"  FontWeight="Bold" FontStyle="Italic" TextDecorations="{x:Null}"/>
-                                    <TextBox Foreground="{DynamicResource AREghZyBrush.ColourfulGlyph.Static}" Text="{Binding MaxLocals, UpdateSourceTrigger=PropertyChanged}"           IsReadOnly="True"   HorizontalAlignment="Stretch" TextWrapping="NoWrap" VerticalAlignment="Top" Padding="5" Margin="100,130,100,0" BorderThickness="0"  FontWeight="Bold" FontStyle="Italic" TextDecorations="{x:Null}"/>
-                                    <TextBox Foreground="{DynamicResource AREghZyBrush.ColourfulGlyph.Static}" Text="{Binding CodeEditor.ByteCodeEditor.Instructions.Count, UpdateSourceTrigger=PropertyChanged, Mode=OneWay}"  IsReadOnly="True"   HorizontalAlignment="Stretch" TextWrapping="NoWrap" VerticalAlignment="Top" Padding="5" Margin="100,156,100,0" BorderThickness="0"  FontWeight="Bold" FontStyle="Italic" TextDecorations="{x:Null}"/>
-                                    <TextBox Foreground="{DynamicResource AREghZyBrush.ColourfulGlyph.Static}" DataContext="{Binding VisibleAnnotationEditor}"   Text="{Binding Annotations.Count, UpdateSourceTrigger=PropertyChanged, Mode=OneWay}"  IsReadOnly="True"   HorizontalAlignment="Stretch" TextWrapping="NoWrap" VerticalAlignment="Top" Padding="5" Margin="100,208,100,0" BorderThickness="0"  FontWeight="Bold" FontStyle="Italic" TextDecorations="{x:Null}"/>
-                                    <TextBox Foreground="{DynamicResource AREghZyBrush.ColourfulGlyph.Static}" DataContext="{Binding InvisibleAnnotationEditor}" Text="{Binding Annotations.Count, UpdateSourceTrigger=PropertyChanged, Mode=OneWay}"  IsReadOnly="True"   HorizontalAlignment="Stretch" TextWrapping="NoWrap" VerticalAlignment="Top" Padding="5" Margin="100,234,100,0" BorderThickness="0"  FontWeight="Bold" FontStyle="Italic" TextDecorations="{x:Null}"/>
+                                    <TextBlock Text="Max Stack Size" Width="100" HorizontalAlignment="Left" TextWrapping="NoWrap" VerticalAlignment="Top" Padding="5" FontWeight="Bold" Margin="0,104,0,0" ToolTip="The maximum number of element on the method's operand stack at one time"/>
+                                    <TextBlock Text="Max Local Vars" Width="100" HorizontalAlignment="Left" TextWrapping="NoWrap" VerticalAlignment="Top" Padding="5" FontWeight="Bold" Margin="0,130,0,0" ToolTip="The maximum number of local variables the method has ('this' (if non-static), parameters and local variables, and possibly others?)"/>
+                                    <TextBlock Text="Instructions" Width="100" HorizontalAlignment="Left" TextWrapping="NoWrap" VerticalAlignment="Top" Padding="5" FontWeight="Bold" Margin="0,156,0,0" ToolTip="The number of instruction nodes this method has"/>
+                                    <TextBox Foreground="{DynamicResource AREghZyBrush.ColourfulGlyph.Static}" Text="{Binding MethodName, UpdateSourceTrigger=PropertyChanged}" HorizontalAlignment="Stretch" TextWrapping="NoWrap" VerticalAlignment="Top" Padding="5" Margin="100,0,0,0" BorderThickness="0"  FontWeight="Bold" FontFamily="Consolas"/>
+                                    <TextBox Foreground="{DynamicResource AREghZyBrush.ColourfulGlyph.Static}" Text="{Binding Descriptor, UpdateSourceTrigger=PropertyChanged, Converter={StaticResource TypeDescConverter}}" HorizontalAlignment="Stretch" TextWrapping="NoWrap" VerticalAlignment="Top" Padding="5" Margin="100,26,100,0" BorderThickness="0"  FontWeight="Bold" FontFamily="Consolas"  FontStyle="Italic"/>
+                                    <TextBox Foreground="{DynamicResource AREghZyBrush.ColourfulGlyph.Static}" Text="{Binding Signature, UpdateSourceTrigger=PropertyChanged}" HorizontalAlignment="Stretch" TextWrapping="NoWrap" VerticalAlignment="Top" Padding="5" Margin="100,52,0,0" BorderThickness="0"  FontWeight="Bold"  FontFamily="Consolas" FontStyle="Italic"/>
+                                    <TextBox Foreground="{DynamicResource AREghZyBrush.ColourfulGlyph.Static}" Text="{Binding Access, UpdateSourceTrigger=PropertyChanged, Converter={StaticResource EnumToString}}" IsReadOnly="True" HorizontalAlignment="Stretch" TextWrapping="NoWrap" VerticalAlignment="Top" Padding="5" Margin="100,78,100,0" BorderThickness="0"  FontWeight="Bold" />
+                                    <controls:DoubleClickEditBox Foreground="{DynamicResource AREghZyBrush.ColourfulGlyph.Static}" Text="{Binding MaxStack, UpdateSourceTrigger=PropertyChanged}" HorizontalAlignment="Stretch" TextWrapping="NoWrap" VerticalAlignment="Top" Padding="0 5 0 5" Margin="100,104,100,0" BorderThickness="0"  FontWeight="Bold"/>
+                                    <controls:DoubleClickEditBox Foreground="{DynamicResource AREghZyBrush.ColourfulGlyph.Static}" Text="{Binding MaxLocals, UpdateSourceTrigger=PropertyChanged}" HorizontalAlignment="Stretch" TextWrapping="NoWrap" VerticalAlignment="Top" Padding="0 5 0 5" Margin="100,130,100,0" BorderThickness="0"  FontWeight="Bold"/>
+                                    <TextBox Foreground="{DynamicResource AREghZyBrush.ColourfulGlyph.Static}" Text="{Binding CodeEditor.ByteCodeEditor.Instructions.Count, UpdateSourceTrigger=PropertyChanged, Mode=OneWay}" IsReadOnly="True"   HorizontalAlignment="Stretch" TextWrapping="NoWrap" VerticalAlignment="Top" Padding="5" Margin="100,156,100,0" BorderThickness="0"  FontWeight="Bold" />
                                     <Button IsEnabled="False" Command="{Binding EditDescriptorCommand}" Margin="0,26,0,0" Content="Edit Descriptor" Height="26" VerticalAlignment="Top" HorizontalAlignment="Right" Width="100"/>
                                     <Button Command="{Binding EditAccessCommand}" Margin="0,78,0,0" Content="Edit Access" Height="26" VerticalAlignment="Top" HorizontalAlignment="Right" Width="100"/>
-                                    <GroupBox Header="Annotations" Margin="5,265,5,5">
-                                        <TabControl TabStripPlacement="Bottom">
+                                    <GroupBox Header="Annotations" Margin="5,187,5,5">
+                                        <TabControl TabStripPlacement="Top">
                                             <TabItem>
                                                 <TabItem.Header>
                                                     <StackPanel Orientation="Horizontal">
@@ -124,7 +198,7 @@
                                                         <TextBlock Text="{Binding VisibleAnnotationEditor.Annotations.Count, UpdateSourceTrigger=PropertyChanged, StringFormat={}({0})}" Padding="2 0 0 0"/>
                                                     </StackPanel>
                                                 </TabItem.Header>
-                                                <annotations:AnnotationEditorControl DataContext="{Binding VisibleAnnotationEditor}"/>
+                                                <annotations:AnnotationEditorControl Margin="2" DataContext="{Binding VisibleAnnotationEditor}"/>
                                             </TabItem>
                                             <TabItem>
                                                 <TabItem.Header>
@@ -133,7 +207,7 @@
                                                         <TextBlock Text="{Binding InvisibleAnnotationEditor.Annotations.Count, UpdateSourceTrigger=PropertyChanged, StringFormat={}({0})}" Padding="2 0 0 0"/>
                                                     </StackPanel>
                                                 </TabItem.Header>
-                                                <annotations:AnnotationEditorControl DataContext="{Binding InvisibleAnnotationEditor}"/>
+                                                <annotations:AnnotationEditorControl Margin="2" DataContext="{Binding InvisibleAnnotationEditor}"/>
                                             </TabItem>
                                         </TabControl>
                                     </GroupBox>
@@ -141,15 +215,18 @@
                             </TabItem>
                             <TabItem Header="Code Editor">
                                 <Grid DataContext="{Binding CodeEditor}">
-                                    <TabControl>
-                                        <TabItem Header="Bytecode Editor (Very WIP, no editing currently)" DataContext="{Binding ByteCodeEditor}">
+                                    <TabControl BorderBrush="{DynamicResource AREghZyBrush.Primary.4.Border.Static}">
+                                        <TabItem Header="Bytecode Editor" DataContext="{Binding ByteCodeEditor}">
                                             <Grid>
                                                 <Grid.RowDefinitions>
-                                                    <RowDefinition Height="35*"/>
+                                                    <RowDefinition Height="36*"/>
                                                     <RowDefinition Height="5"/>
-                                                    <RowDefinition Height="12*"/>
+                                                    <RowDefinition Height="16*"/>
                                                 </Grid.RowDefinitions>
-                                                <ListBox ItemsSource="{Binding Instructions}" SelectedItem="{Binding SelectedInstruction, UpdateSourceTrigger=PropertyChanged}" FontFamily="Consolas" BorderThickness="0">
+                                                <ListBox ItemsSource="{Binding Instructions}" 
+                                                         SelectedItem="{Binding SelectedInstruction, UpdateSourceTrigger=PropertyChanged}" 
+                                                         SelectedIndex="{Binding SelectedInstructionIndex, UpdateSourceTrigger=PropertyChanged}"
+                                                         FontFamily="Consolas" BorderThickness="0" Margin="0,0,0,26">
                                                     <ListBox.Resources>
                                                         <DataTemplate DataType="{x:Type instructions:FieldInstructionViewModel}">
                                                             <listcontrols:FieldInstructionItemControl DataContext="{Binding}"/>
@@ -159,18 +236,24 @@
                                                         </DataTemplate>
                                                     </ListBox.Resources>
                                                 </ListBox>
-                                                <GridSplitter HorizontalAlignment="Stretch" VerticalAlignment="Stretch" Grid.Row="1" BorderBrush="{DynamicResource AREghZyBrush.Primary.1.Border.Static}" BorderThickness="1 1 1 0" Background="Transparent"/>
-                                                <Border Grid.Row="2" Background="{DynamicResource AREghZyBrush.Primary.1.Background.Static}" BorderBrush="{DynamicResource AREghZyBrush.Primary.1.Border.Static}" BorderThickness="1 0 1 1">
+                                                <TextBox Style="{DynamicResource HintedTextBox}" Tag="Search for anything in this instruction list" AutoWordSelection="False" ToolTip="Searches the instructions for the given string of text" Text="{Binding SearchText, UpdateSourceTrigger=PropertyChanged}" VerticalContentAlignment="Center" Padding="3 1" VerticalAlignment="Bottom" Height="24" Margin="-2,0,60,0" BorderThickness="0 1 0 0" BorderBrush="{DynamicResource AREghZyBrush.Primary.4.Border.Static}" attachedProperties:TextBoxAP.ClearOnClickEsc="True">
+                                                    <TextBox.InputBindings>
+                                                        <KeyBinding Key="Enter" Command="{Binding FindNextInstructionCommand}"/>
+                                                    </TextBox.InputBindings>
+                                                </TextBox>
+                                                <Button Command="{Binding FindNextInstructionCommand}" VerticalAlignment="Bottom" Height="24" Margin="872,0,-2,0" BorderThickness="1 1 0 0" BorderBrush="{DynamicResource AREghZyBrush.Primary.3.Border.Static}" Content="Search"/>
+                                                <GridSplitter HorizontalAlignment="Stretch" VerticalAlignment="Stretch" Grid.Row="1" BorderBrush="{DynamicResource AREghZyBrush.Primary.4.Border.Static}" BorderThickness="0 1" Background="{DynamicResource AREghZyBrush.Primary.1.Background.Static}" Margin="-3,0"/>
+                                                <Border Grid.Row="2" Background="{DynamicResource AREghZyBrush.Primary.1.Background.Static}" BorderBrush="{DynamicResource AREghZyBrush.Primary.1.Border.Static}" BorderThickness="0 0 0 0" Margin="0,2,0,0">
                                                     <Border.Resources>
                                                         <BooleanToVisibilityConverter x:Key="VisibilityConverter"/>
                                                     </Border.Resources>
-                                                    <GroupBox DataContext="{Binding SelectedInstruction, UpdateSourceTrigger=PropertyChanged}">
+                                                    <GroupBox DataContext="{Binding SelectedInstruction, UpdateSourceTrigger=PropertyChanged}" Style="{DynamicResource FreeHeaderGroupBox}" Background="{DynamicResource AREghZyBrush.Deep.3.Background.Static}">
                                                         <GroupBox.Header>
-                                                            <StackPanel HorizontalAlignment="Stretch" Orientation="Horizontal">
-                                                                <TextBlock TextWrapping="NoWrap" Text="Opcode:" Padding="5" TextDecorations="{x:Null}" FontWeight="Bold" Margin="0 -1 0 0"/>
-                                                                <TextBox Text="{Binding Opcode, UpdateSourceTrigger=PropertyChanged}" Background="Transparent" TextWrapping="NoWrap" Padding="5"  BorderThickness="0"  FontWeight="Bold" FontStyle="Italic" TextDecorations="{x:Null}" Margin="0 -1 0 0"/>
-                                                                <Button Command="{Binding EditOpcodeCommand}" HorizontalAlignment="Right" VerticalAlignment="Center" Width="75" Height="22" Content="Change" Margin="0 -1 0 0"/>
-                                                            </StackPanel>
+                                                            <Grid HorizontalAlignment="Stretch">
+                                                                <TextBlock HorizontalAlignment="Left" VerticalAlignment="Center" TextWrapping="NoWrap" Text="Opcode:" Padding="5"  FontWeight="Bold" Margin="0 -1 0 0"/>
+                                                                <TextBox HorizontalAlignment="Left" VerticalAlignment="Center" Text="{Binding Opcode, UpdateSourceTrigger=PropertyChanged}" Background="Transparent" TextWrapping="NoWrap" Padding="5"  BorderThickness="0"  FontWeight="Bold" FontStyle="Italic"  Margin="57,-1,0,0"/>
+                                                                <Button IsEnabled="{Binding CanEditOpCode}" Command="{Binding EditOpcodeCommand}" HorizontalAlignment="Right" VerticalAlignment="Center" Width="75" Height="22" Content="Change" Margin="0,4,-3,5"/>
+                                                            </Grid>
                                                         </GroupBox.Header>
                                                         <ScrollViewer VerticalScrollBarVisibility="Auto" HorizontalScrollBarVisibility="Auto">
                                                             <ContentPresenter Content="{Binding}">
@@ -180,6 +263,12 @@
                                                                     </DataTemplate>
                                                                     <DataTemplate DataType="{x:Type instructions:MethodInstructionViewModel}">
                                                                         <controls1:MethodInstructionEditorControl DataContext="{Binding}"/>
+                                                                    </DataTemplate>
+                                                                    <DataTemplate DataType="{x:Type instructions:LdcInstructionViewModel}">
+                                                                        <controls1:LdcInstructionEditorControl DataContext="{Binding}"/>
+                                                                    </DataTemplate>
+                                                                    <DataTemplate DataType="{x:Type instructions:InvokeDynamicInstructionViewModel}">
+                                                                        <controls1:InvokeDynamicInstructionEditorControl DataContext="{Binding}"/>
                                                                     </DataTemplate>
                                                                     <DataTemplate DataType="{x:Type instructions:BaseInstructionViewModel}">
                                                                         <Grid>
@@ -192,8 +281,8 @@
                                                 </Border>
                                             </Grid>
                                         </TabItem>
-                                        <TabItem Header="Exception Table" DataContext="{Binding ExceptionEditor}">
-                                            <ListView ItemsSource="{Binding TryCatchBlocks}">
+                                        <TabItem Header="Exceptions" DataContext="{Binding ExceptionEditor}">
+                                            <ListView ItemsSource="{Binding TryCatchBlocks}" BorderBrush="{DynamicResource AREghZyBrush.Primary.4.Border.Static}">
                                                 <ListView.View>
                                                     <GridView>
                                                         <GridView.Columns>
@@ -212,60 +301,74 @@
                                                 </ListView.View>
                                             </ListView>
                                         </TabItem>
+                                        <TabItem Header="Local Variables" DataContext="{Binding LocalVariableTable}">
+                                            <ListView ItemsSource="{Binding LocalVariables}" BorderBrush="{DynamicResource AREghZyBrush.Primary.4.Border.Static}">
+                                                <ListView.View>
+                                                    <GridView>
+                                                        <GridView.Columns>
+                                                            <GridViewColumn Header="Index" Width="75" DisplayMemberBinding="{Binding Index, UpdateSourceTrigger=PropertyChanged}"/>
+                                                            <GridViewColumn Header="Start PC" Width="75" DisplayMemberBinding="{Binding StartPC, UpdateSourceTrigger=PropertyChanged}"/>
+                                                            <GridViewColumn Header="Length" Width="75" DisplayMemberBinding="{Binding Length, UpdateSourceTrigger=PropertyChanged}"/>
+                                                            <GridViewColumn Header="Variable Name" Width="150">
+                                                                <GridViewColumn.CellTemplate>
+                                                                    <DataTemplate>
+                                                                        <controls:DoubleClickEditBox DataContext="{Binding}" Text="{Binding VariableName, UpdateSourceTrigger=PropertyChanged}" d:DataContext="{d:DesignInstance locals:LocalVariableViewModel}"/>
+                                                                    </DataTemplate>
+                                                                </GridViewColumn.CellTemplate>
+                                                            </GridViewColumn>
+                                                            <GridViewColumn Header="Descriptor" Width="320">
+                                                                <GridViewColumn.CellTemplate>
+                                                                    <DataTemplate>
+                                                                        <controls:DoubleClickEditBox DataContext="{Binding}" Text="{Binding Descriptor, UpdateSourceTrigger=PropertyChanged}" d:DataContext="{d:DesignInstance locals:LocalVariableViewModel}"/>
+                                                                    </DataTemplate>
+                                                                </GridViewColumn.CellTemplate>
+                                                            </GridViewColumn>
+                                                        </GridView.Columns>
+                                                    </GridView>
+                                                </ListView.View>
+                                            </ListView>
+                                        </TabItem>
                                     </TabControl>
                                 </Grid>
-                            </TabItem>
-                            <TabItem Header="Annotations">
-                                <TabControl TabStripPlacement="Bottom">
-                                    <TabItem>
-                                        <TabItem.Header>
-                                            <StackPanel Orientation="Horizontal">
-                                                <TextBlock Text="Visible Annotations"/>
-                                                <TextBlock Text="{Binding VisibleAnnotationEditor.Annotations.Count, UpdateSourceTrigger=PropertyChanged, StringFormat={}({0})}" Padding="2 0 0 0"/>
-                                            </StackPanel>
-                                        </TabItem.Header>
-                                        <annotations:AnnotationEditorControl DataContext="{Binding VisibleAnnotationEditor}"/>
-                                    </TabItem>
-                                    <TabItem>
-                                        <TabItem.Header>
-                                            <StackPanel Orientation="Horizontal">
-                                                <TextBlock Text="Hidden Annotations"/>
-                                                <TextBlock Text="{Binding InvisibleAnnotationEditor.Annotations.Count, UpdateSourceTrigger=PropertyChanged, StringFormat={}({0})}" Padding="2 0 0 0"/>
-                                            </StackPanel>
-                                        </TabItem.Header>
-                                        <annotations:AnnotationEditorControl DataContext="{Binding InvisibleAnnotationEditor}"/>
-                                    </TabItem>
-                                </TabControl>
                             </TabItem>
                         </TabControl>
                     </Border>
                 </Grid>
             </TabItem>
-            <TabItem Header="Fields" DataContext="{Binding FieldList}">
+            <TabItem DataContext="{Binding FieldList}">
+                <TabItem.Header>
+                    <TextBlock Text="{Binding Fields.Count, StringFormat={}Fields ({0})}"/>
+                </TabItem.Header>
                 <Grid>
                     <Grid.ColumnDefinitions>
                         <ColumnDefinition Width="196*"/>
                         <ColumnDefinition Width="5"/>
                         <ColumnDefinition Width="587*"/>
                     </Grid.ColumnDefinitions>
-                    <ListBox ItemsSource="{Binding Fields}" SelectedItem="{Binding SelectedField, UpdateSourceTrigger=PropertyChanged}" Margin="-2,0,0,0" BorderThickness="1 1 1 1">
+                    <ListBox ItemsSource="{Binding Fields}" 
+                             SelectedItem="{Binding SelectedField, UpdateSourceTrigger=PropertyChanged}" 
+                             BorderBrush="{DynamicResource AREghZyBrush.Primary.3.Border.Static}"
+                             BorderThickness="1 1 1 1"
+                             SelectionMode="Extended"
+                             HorizontalContentAlignment="Stretch"
+                             ScrollViewer.CanContentScroll="False">
                         <ListBox.ItemTemplate>
                             <DataTemplate>
                                 <controls:FieldInfoControl DataContext="{Binding}"/>
                             </DataTemplate>
                         </ListBox.ItemTemplate>
                     </ListBox>
-                    <GridSplitter HorizontalAlignment="Stretch" VerticalAlignment="Stretch" Grid.Column="1" BorderThickness="0 1" BorderBrush="{DynamicResource AREghZyBrush.Primary.1.Border.Static}"/>
-                    <Border BorderThickness="1 1 1 1" Grid.Column="2" BorderBrush="{DynamicResource AREghZyBrush.Primary.1.Border.Static}">
+                    <GridSplitter Background="Transparent" HorizontalAlignment="Stretch" VerticalAlignment="Stretch" Grid.Column="1" BorderThickness="0 0 0 0"/>
+                    <Border BorderThickness="1 1 1 1" Grid.Column="2" BorderBrush="{DynamicResource AREghZyBrush.Primary.3.Border.Static}">
                         <Grid DataContext="{Binding SelectedField, UpdateSourceTrigger=PropertyChanged}">
-                            <TextBlock Text="Method Name" Width="100" HorizontalAlignment="Left" TextWrapping="NoWrap" VerticalAlignment="Top" Padding="5" FontWeight="Bold"/>
-                            <TextBlock Text="Descriptor" Width="100" HorizontalAlignment="Left" TextWrapping="NoWrap" VerticalAlignment="Top" Padding="5" FontWeight="Bold" Margin="0,26,0,0"/>
-                            <TextBlock Text="Signature" Width="100" HorizontalAlignment="Left" TextWrapping="NoWrap" VerticalAlignment="Top" Padding="5" FontWeight="Bold" Margin="0,52,0,0"/>
+                            <TextBlock Text="Field Name" Width="100" HorizontalAlignment="Left" TextWrapping="NoWrap" VerticalAlignment="Top" Padding="5" FontWeight="Bold" ToolTip="The name of this field (duh)"/>
+                            <TextBlock Text="Descriptor" Width="100" HorizontalAlignment="Left" TextWrapping="NoWrap" VerticalAlignment="Top" Padding="5" FontWeight="Bold" Margin="0,26,0,0" ToolTip="The field's descriptor, which shows what type the field holds"/>
+                            <TextBlock Text="Signature" Width="100" HorizontalAlignment="Left" TextWrapping="NoWrap" VerticalAlignment="Top" Padding="5" FontWeight="Bold" Margin="0,52,0,0" ToolTip="The field's signature, which is similar to the descriptor but also contains generic types too (e.g for an ArrayList element types)"/>
                             <TextBlock Text="Access Flags" Width="100" HorizontalAlignment="Left" TextWrapping="NoWrap" VerticalAlignment="Top" Padding="5" FontWeight="Bold" Margin="0,78,0,0"/>
-                            <TextBox Foreground="{DynamicResource AREghZyBrush.ColourfulGlyph.Static}" Background="Transparent" Text="{Binding FieldName, UpdateSourceTrigger=PropertyChanged}"          HorizontalAlignment="Stretch" TextWrapping="NoWrap" VerticalAlignment="Top" Padding="5" Margin="100,0,0,0" BorderThickness="0"  FontWeight="Bold" FontFamily="Consolas" Height="26"/>
-                            <TextBox Foreground="{DynamicResource AREghZyBrush.ColourfulGlyph.Static}" Background="Transparent" Text="{Binding Descriptor, UpdateSourceTrigger=PropertyChanged,           Converter={StaticResource DescriptorConverter}}"   HorizontalAlignment="Stretch" TextWrapping="NoWrap" VerticalAlignment="Top" Padding="5" Margin="100,26,110,0" BorderThickness="0"  FontWeight="Bold" FontStyle="Italic" FontFamily="Consolas" TextDecorations="{x:Null}" Height="26"/>
-                            <TextBox Foreground="{DynamicResource AREghZyBrush.ColourfulGlyph.Static}" Background="Transparent" Text="{Binding Signature, UpdateSourceTrigger=PropertyChanged}"           HorizontalAlignment="Stretch" TextWrapping="NoWrap" VerticalAlignment="Top" Padding="5" Margin="100,52,0,0" BorderThickness="0"  FontWeight="Bold" FontStyle="Italic" TextDecorations="{x:Null}" FontFamily="Consolas" Height="26"/>
-                            <TextBox Foreground="{DynamicResource AREghZyBrush.ColourfulGlyph.Static}" Background="Transparent" Text="{Binding Access, UpdateSourceTrigger=PropertyChanged, Converter={StaticResource EnumToString}}"              HorizontalAlignment="Stretch" TextWrapping="NoWrap" VerticalAlignment="Top" Padding="5" Margin="100,78,110,0" BorderThickness="0"  FontWeight="Bold" FontStyle="Italic" TextDecorations="{x:Null}"/>
+                            <TextBox Foreground="{DynamicResource AREghZyBrush.ColourfulGlyph.Static}" Background="Transparent" Text="{Binding FieldName, UpdateSourceTrigger=PropertyChanged}"           HorizontalAlignment="Stretch" TextWrapping="NoWrap" VerticalAlignment="Top" Padding="5" Margin="100,0,0,0" BorderThickness="0"  FontWeight="Bold" FontFamily="Consolas" Height="26"/>
+                            <TextBox Foreground="{DynamicResource AREghZyBrush.ColourfulGlyph.Static}" Background="Transparent" Text="{Binding Descriptor, UpdateSourceTrigger=PropertyChanged, Converter={StaticResource TypeDescConverter}}" HorizontalAlignment="Stretch" TextWrapping="NoWrap" VerticalAlignment="Top" Padding="5" Margin="100,26,110,0" BorderThickness="0"  FontWeight="Bold" FontStyle="Italic" FontFamily="Consolas"  Height="26"/>
+                            <TextBox Foreground="{DynamicResource AREghZyBrush.ColourfulGlyph.Static}" Background="Transparent" Text="{Binding Signature, UpdateSourceTrigger=PropertyChanged}"           HorizontalAlignment="Stretch" TextWrapping="NoWrap" VerticalAlignment="Top" Padding="5" Margin="100,52,0,0" BorderThickness="0"  FontWeight="Bold" FontStyle="Italic"  FontFamily="Consolas" Height="26"/>
+                            <TextBox Foreground="{DynamicResource AREghZyBrush.ColourfulGlyph.Static}" Background="Transparent" Text="{Binding Access, UpdateSourceTrigger=PropertyChanged, Converter={StaticResource EnumToString}}" IsReadOnly="True" HorizontalAlignment="Stretch" TextWrapping="NoWrap" VerticalAlignment="Top" Padding="5" Margin="100,78,110,0" BorderThickness="0"  FontWeight="Bold" />
                             <Button IsEnabled="False" Command="{Binding EditDescriptorCommand, UpdateSourceTrigger=PropertyChanged}" Margin="0,26,5,0" Content="Edit Descriptor" Height="26" VerticalAlignment="Top" HorizontalAlignment="Right" Width="100"/>
                             <Button Command="{Binding EditAccessCommand, UpdateSourceTrigger=PropertyChanged}"     Margin="0,78,5,0" Content="Edit Access"     Height="26" VerticalAlignment="Top" HorizontalAlignment="Right" Width="100"/>
                             <GroupBox Header="Annotations" Margin="5,109,5,5">
@@ -294,7 +397,7 @@
                     </Border>
                 </Grid>
             </TabItem>
-            <TabItem Header="Source code Viewer">
+            <TabItem Header="Source Code Generator">
                 <Grid>
                     <Button Command="{Binding SourceCode.GenerateCommand}" Content="Generate" VerticalAlignment="Top" Height="33"/>
                     <TextBox Text="{Binding SourceCode.Text}" IsReadOnly="True" Margin="0,33,0,20" FontFamily="Consolas" FontSize="14"/>
@@ -304,9 +407,9 @@
         </TabControl>
         <Grid VerticalAlignment="Bottom" Height="24" Background="{DynamicResource AREghZyBrush.Primary.2.Background.Static}">
             <StackPanel Orientation="Horizontal">
-                <TextBlock Text="{Binding ClassInfo.ClassName}" VerticalAlignment="Center" Padding="5 2" FontWeight="Bold"/>
+                <TextBox ToolTip="The name of the class that is currently open" AutoWordSelection="False" IsReadOnly="True" Text="{Binding ClassInfo.ClassName}" VerticalAlignment="Center" Padding="5 2" FontWeight="Bold" Background="Transparent" BorderBrush="Transparent" BorderThickness="0"/>
                 <Separator Style="{DynamicResource VerticalSeparator}"/>
-                <TextBox AutoWordSelection="False" Background="Transparent" BorderThickness="0" Text="{Binding FilePath, UpdateSourceTrigger=PropertyChanged}" VerticalAlignment="Center" Padding="5 2" Margin="0,2.02,0,1.98" TextDecorations="Underline" FontStyle="Italic">
+                <TextBox ToolTip="The path to the currently open class file" AutoWordSelection="False" Background="Transparent" BorderThickness="0" Text="{Binding FilePath, UpdateSourceTrigger=PropertyChanged}" VerticalAlignment="Center" Padding="5 2" Margin="0,2.02,0,1.98" TextDecorations="Underline" FontStyle="Italic">
                     <TextBox.ContextMenu>
                         <ContextMenu>
                             <MenuItem Header="Open in folder" Click="MenuItem_Click"/>

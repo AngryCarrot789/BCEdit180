@@ -99,11 +99,15 @@ namespace BCEdit180.ViewModels {
 
         public MethodNode Node { get; private set; }
 
-        public MethodInfoViewModel(MethodNode node) {
+        public MethodListViewModel MethodList { get; }
+
+        public MethodInfoViewModel(MethodListViewModel methodList, MethodNode node) {
+            this.MethodList = methodList;
+            this.Node = node;
             this.EditAccessCommand = new RelayCommand(() => ViewManager.ShowAccessEditor(this));
             this.VisibleAnnotationEditor = new AnnotationEditorViewModel();
             this.InvisibleAnnotationEditor = new AnnotationEditorViewModel();
-            this.CodeEditor = new CodeEditorViewModel(node);
+            this.CodeEditor = new CodeEditorViewModel(this);
             Load(node);
         }
 

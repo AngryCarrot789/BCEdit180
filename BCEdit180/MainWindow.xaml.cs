@@ -1,6 +1,10 @@
-﻿using System.Diagnostics;
+﻿using System.Collections.Generic;
+using System.Collections.ObjectModel;
+using System.Diagnostics;
 using System.IO;
 using System.Windows;
+using System.Windows.Controls;
+using BCEdit180.CodeEditing;
 using BCEdit180.ViewModels;
 using JavaAsm;
 using JavaAsm.IO;
@@ -89,6 +93,87 @@ namespace BCEdit180 {
                     e.Handled = true;
                 }
             }
+        }
+
+        // i have literally no idea how to do this using only MVVM
+
+        private void RemoveSelectedMethodsClick(object sender, RoutedEventArgs e) {
+            if (this.MethodList.SelectedItems.Count == 0) {
+                return;
+            }
+
+            List<MethodInfoViewModel> remove = new List<MethodInfoViewModel>();
+            foreach(object element in this.MethodList.SelectedItems) {
+                if (element != null) {
+                    remove.Add((MethodInfoViewModel) element);
+                }
+            }
+
+            if (remove.Count == 0) {
+                return;
+            }
+
+            CodeEditorViewModel editor = remove[0].CodeEditor;
+            ObservableCollection<MethodInfoViewModel> actualMethods = editor.MethodInfo.MethodList.Methods;
+            ObservableCollection<MethodInfoViewModel> removedMethods = editor.MethodInfo.MethodList.RemovedMethods;
+            foreach (MethodInfoViewModel method in remove) {
+                actualMethods.Remove(method);
+                removedMethods.Add(method);
+            }
+        }
+
+        private void RemoveAddedMethod(object sender, RoutedEventArgs e) {
+            if (this.AddedMethodList.SelectedItems.Count == 0) {
+                return;
+            }
+
+            List<MethodInfoViewModel> remove = new List<MethodInfoViewModel>();
+            foreach (object element in this.AddedMethodList.SelectedItems) {
+                if (element != null) {
+                    remove.Add((MethodInfoViewModel) element);
+                }
+            }
+
+            if (remove.Count == 0) {
+                return;
+            }
+
+            CodeEditorViewModel editor = remove[0].CodeEditor;
+            ObservableCollection<MethodInfoViewModel> methods = editor.MethodInfo.MethodList.AddedMethods;
+            ObservableCollection<MethodInfoViewModel> removedMethods = editor.MethodInfo.MethodList.RemovedMethods;
+            foreach (MethodInfoViewModel method in remove) {
+                methods.Remove(method);
+                removedMethods.Add(method);
+            }
+        }
+
+        private void UndoRemoveMethod(object sender, RoutedEventArgs e) {
+            if (this.RemovedMethodList.SelectedItems.Count == 0) {
+                return;
+            }
+
+            List<MethodInfoViewModel> removed = new List<MethodInfoViewModel>();
+            foreach (object element in this.RemovedMethodList.SelectedItems) {
+                if (element != null) {
+                    removed.Add((MethodInfoViewModel) element);
+                }
+            }
+
+            if (removed.Count == 0) {
+                return;
+            }
+
+            CodeEditorViewModel editor = removed[0].CodeEditor;
+            ObservableCollection<MethodInfoViewModel> removedMethods = editor.MethodInfo.MethodList.RemovedMethods;
+            ObservableCollection<MethodInfoViewModel> actualMethods = editor.MethodInfo.MethodList.Methods;
+            foreach (MethodInfoViewModel method in removed) {
+                removedMethods.Remove(method);
+                actualMethods.Add(method);
+            }
+        }
+
+        private void Window_PreviewKeyDown(object sender, System.Windows.Input.KeyEventArgs e) {
+
         }
     }
 }

@@ -6,10 +6,10 @@
         xmlns:local="clr-namespace:BCEdit180.FlagEditor" 
         d:DataContext="{d:DesignInstance Type=local:FlagEditorViewModel}"
         mc:Ignorable="d"
-        Title="FlagEditorWindow" Height="450" Width="250" Style="{DynamicResource CustomWindowStyle}">
-    <Grid>
+        Title="Edit Access" Height="450" Width="250" Style="{DynamicResource CustomWindowStyle}">
+    <Grid Background="{DynamicResource AREghZyBrush.Deep.3.Background.Static}">
         <TextBlock Text="{Binding PreviewEnumValue}" VerticalAlignment="Top" Padding="2" Margin="10,10,10,0"/>
-        <ListBox ItemsSource="{Binding FlagItems}" Margin="10,35,10,39" BorderThickness="0">
+        <ListBox ItemsSource="{Binding FlagItems}" Margin="10,35,10,39" BorderThickness="1" Background="{DynamicResource AREghZyBrush.Deep.2.Background.Static}">
             <ListBox.ItemTemplate>
                 <DataTemplate>
                     <CheckBox Height="20" VerticalContentAlignment="Center" Content="{Binding Name, UpdateSourceTrigger=PropertyChanged}" IsChecked="{Binding IsChecked, UpdateSourceTrigger=PropertyChanged}"/>

@@ -8,7 +8,7 @@
         xmlns:asmi="clr-namespace:JavaAsm.Instructions;assembly=JavaAsm" xmlns:converters="clr-namespace:BCEdit180.Converters"
         d:DataContext="{d:DesignInstance Type=local:ChangeInstructionViewModel}"
         mc:Ignorable="d"
-        Title="Replace Opcode" Height="325" Width="450"
+        Title="Replace Opcode" Height="350" Width="450"
         Style="{DynamicResource CustomWindowStyle}" Background="{DynamicResource AREghZyBrush.Deep.3.Background.Static}">
     <Grid Margin="10">
         <TextBlock Text="Select a new instruction" Padding="10" Margin="0,0,0,0" VerticalAlignment="Top"/>
@@ -32,8 +32,8 @@
                 <ColumnDefinition Width="5"/>
                 <ColumnDefinition Width="81*"/>
             </Grid.ColumnDefinitions>
-            <Button Command="{Binding ApplyChangesCommand, Mode=OneTime}" Content="Okay" Background="#FF79D43A" Click="OkayClick"/>
-            <Button Content="Cancel" Click="CancelClick" Grid.Column="2"/>
+            <Button Focusable="True" Command="{Binding ApplyChangesCommand, Mode=OneTime}" Content="Okay" Background="#FF79D43A" Click="OkayClick"/>
+            <Button Focusable="False" Content="Cancel" Click="CancelClick" Grid.Column="2"/>
 
         </Grid>
     </Grid>

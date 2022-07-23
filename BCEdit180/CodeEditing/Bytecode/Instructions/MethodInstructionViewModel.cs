@@ -17,8 +17,8 @@ namespace BCEdit180.CodeEditing.Bytecode.Instructions {
             set => RaisePropertyChanged(ref this.methodName, value);
         }
 
-        private string methodDescriptor;
-        public string MethodDescriptor {
+        private MethodDescriptor methodDescriptor;
+        public MethodDescriptor MethodDescriptor {
             get => this.methodDescriptor;
             set => RaisePropertyChanged(ref this.methodDescriptor, value);
         }
@@ -30,7 +30,7 @@ namespace BCEdit180.CodeEditing.Bytecode.Instructions {
             MethodInstruction insn = (MethodInstruction) instruction;
             this.MethodOwner = insn.Owner.Name;
             this.MethodName = insn.Name;
-            this.MethodDescriptor = insn.Descriptor.ToString();
+            this.MethodDescriptor = insn.Descriptor;
         }
 
         public override void Save(Instruction instruction) {
@@ -38,7 +38,7 @@ namespace BCEdit180.CodeEditing.Bytecode.Instructions {
             MethodInstruction insn = (MethodInstruction) instruction;
             insn.Owner = new ClassName(this.MethodOwner);
             insn.Name = this.MethodName;
-            insn.Descriptor = JavaAsm.MethodDescriptor.Parse(this.MethodDescriptor);
+            insn.Descriptor = this.MethodDescriptor;
         }
     }
 }

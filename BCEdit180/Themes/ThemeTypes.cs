@@ -1,4 +1,4 @@
-﻿namespace REghZyFramework.Themes {
+﻿namespace BCEdit180.Themes {
     public enum ThemeType {
         Dark,
         Red,
