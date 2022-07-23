@@ -1,9 +1,9 @@
 ﻿using REghZy.MVVM.ViewModels;
 
 namespace BCEdit180.ViewModels {
-    public class ReferenceObjectViewModel : BaseViewModel {
-        private object value;
-        public object Value {
+    public class ReferenceObjectViewModel<T> : BaseViewModel {
+        private T value;
+        public T Value {
             get => this.value;
             set => RaisePropertyChanged(ref this.value, value);
         }
@@ -12,7 +12,7 @@ namespace BCEdit180.ViewModels {
 
         }
 
-        public ReferenceObjectViewModel(object initialValue) {
+        public ReferenceObjectViewModel(T initialValue) {
             this.Value = initialValue;
         }
     }

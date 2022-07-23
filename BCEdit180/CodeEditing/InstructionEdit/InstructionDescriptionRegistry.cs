@@ -173,9 +173,9 @@ namespace BCEdit180.CodeEditing.InstructionEdit {
                 case Opcode.FSUB:
                     return "No description currently";
                 case Opcode.GETFIELD:
-                    return "No description currently";
+                    return "Fetches a field's value from an object instance";
                 case Opcode.GETSTATIC:
-                    return "No description currently";
+                    return "Fetches a static field's value";
                 case Opcode.GOTO:
                     return "No description currently";
                 case Opcode.GOTO_W:
@@ -267,15 +267,15 @@ namespace BCEdit180.CodeEditing.InstructionEdit {
                 case Opcode.INSTANCEOF:
                     return "No description currently";
                 case Opcode.INVOKEDYNAMIC:
-                    return "No description currently";
+                    return "Too many words required to decribe this op code. But in a nutshell, it returns a reference to a functional interface represented by a method handle (e.g method reference, lambda as a static method, etc)";
                 case Opcode.INVOKEINTERFACE:
-                    return "No description currently";
+                    return "Invokes an interface function";
                 case Opcode.INVOKESPECIAL:
-                    return "No description currently";
+                    return "Invokes an instance method in special conditions, such as directly invoking a superclass method (without virtual dispatch obviously), private methods, and constructors";
                 case Opcode.INVOKESTATIC:
-                    return "No description currently";
+                    return "Invokes a static method";
                 case Opcode.INVOKEVIRTUAL:
-                    return "No description currently";
+                    return "Invokes an instance method. The method that is actually invoked depends on the object's hierarchy";
                 case Opcode.IOR:
                     return "No description currently";
                 case Opcode.IREM:
@@ -377,13 +377,13 @@ namespace BCEdit180.CodeEditing.InstructionEdit {
                 case Opcode.LXOR:
                     return "No description currently";
                 case Opcode.MONITORENTER:
-                    return "No description currently";
+                    return "Enters a monitor for a specific object";
                 case Opcode.MONITOREXIT:
-                    return "No description currently";
+                    return "Exits a monitor for a specific object";
                 case Opcode.MULTIANEWARRAY:
                     return "No description currently";
                 case Opcode.NEW:
-                    return "No description currently";
+                    return "Allocates a new (uninitialised) object.";
                 case Opcode.NEWARRAY:
                     return "No description currently";
                 case Opcode.NOP:

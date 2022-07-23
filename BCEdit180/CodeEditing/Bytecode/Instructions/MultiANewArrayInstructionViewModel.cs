@@ -17,7 +17,9 @@ namespace BCEdit180.CodeEditing.Bytecode.Instructions {
             set => RaisePropertyChanged(ref this.dimensions, value);
         }
 
-        public override IEnumerable<Opcode> AvailableOpCodes => new Opcode[] {};
+        public override IEnumerable<Opcode> AvailableOpCodes => new Opcode[] {Opcode.MULTIANEWARRAY};
+
+        public override bool CanEditOpCode => false;
 
         public override void Load(Instruction instruction) {
             base.Load(instruction);

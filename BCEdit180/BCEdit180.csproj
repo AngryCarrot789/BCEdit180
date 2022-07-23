@@ -114,9 +114,6 @@
     <Compile Include="Annotations\Entries\BaseAnnotationEntryViewModel.cs" />
     <Compile Include="Annotations\Entries\BooleanValueAnnotationEntryViewModel.cs" />
     <Compile Include="Annotations\Entries\StringValueAnnotationEntryViewModel.cs" />
-    <Compile Include="CodeEditing\BytecodeEditorControl.xaml.cs">
-      <DependentUpon>BytecodeEditorControl.xaml</DependentUpon>
-    </Compile>
     <Compile Include="CodeEditing\BytecodeEditorViewModel.cs" />
     <Compile Include="CodeEditing\Bytecode\Controls\FieldInstructionEditorControl.xaml.cs">
       <DependentUpon>FieldInstructionEditorControl.xaml</DependentUpon>
@@ -130,16 +127,30 @@
     <Compile Include="CodeEditing\Bytecode\Editor\FieldInstructionControl.xaml.cs">
       <DependentUpon>FieldInstructionControl.xaml</DependentUpon>
     </Compile>
-    <Compile Include="CodeEditing\Bytecode\FieldInstructionViewModel.cs" />
-    <Compile Include="CodeEditing\Bytecode\IncrementInstructionViewModel.cs" />
-    <Compile Include="CodeEditing\Bytecode\InstructionViewModel.cs" />
-    <Compile Include="CodeEditing\Bytecode\IntegerPushInstructionViewModel.cs" />
-    <Compile Include="CodeEditing\Bytecode\InvokeDynamicInstructionViewModel.cs" />
-    <Compile Include="CodeEditing\Bytecode\JumpInstructionViewModel.cs" />
-    <Compile Include="CodeEditing\Bytecode\LdcInstructionViewModel.cs" />
-    <Compile Include="CodeEditing\Bytecode\MethodInstructionViewModel.cs" />
-    <Compile Include="CodeEditing\Bytecode\TypeInstructionViewModel.cs" />
-    <Compile Include="CodeEditing\Bytecode\VariableInstructionViewModel.cs" />
+    <Compile Include="CodeEditing\Bytecode\Instructions\BaseInstructionViewModel.cs" />
+    <Compile Include="CodeEditing\Bytecode\Instructions\FieldInstructionViewModel.cs" />
+    <Compile Include="CodeEditing\Bytecode\Instructions\IncrementInstructionViewModel.cs" />
+    <Compile Include="CodeEditing\Bytecode\Instructions\IntegerPushInstructionViewModel.cs" />
+    <Compile Include="CodeEditing\Bytecode\Instructions\InvokeDynamicInstructionViewModel.cs" />
+    <Compile Include="CodeEditing\Bytecode\Instructions\JumpInstructionViewModel.cs" />
+    <Compile Include="CodeEditing\Bytecode\Instructions\LabelViewModel.cs" />
+    <Compile Include="CodeEditing\Bytecode\Instructions\LdcInstructionViewModel.cs" />
+    <Compile Include="CodeEditing\Bytecode\Instructions\LineNumberViewModel.cs" />
+    <Compile Include="CodeEditing\Bytecode\Instructions\ListControls\FieldInstructionItemControl.xaml.cs">
+      <DependentUpon>FieldInstructionItemControl.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="CodeEditing\Bytecode\Instructions\ListControls\MethodInstructionItemControl.xaml.cs">
+      <DependentUpon>MethodInstructionItemControl.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="CodeEditing\Bytecode\Instructions\LookupSwitchInstructionViewModel.cs" />
+    <Compile Include="CodeEditing\Bytecode\Instructions\MethodInstructionViewModel.cs" />
+    <Compile Include="CodeEditing\Bytecode\Instructions\MultiANewArrayInstructionViewModel.cs" />
+    <Compile Include="CodeEditing\Bytecode\Instructions\NewArrayInstructionViewModel.cs" />
+    <Compile Include="CodeEditing\Bytecode\Instructions\SimpleInstructionViewModel.cs" />
+    <Compile Include="CodeEditing\Bytecode\Instructions\StackMapFrameViewModel.cs" />
+    <Compile Include="CodeEditing\Bytecode\Instructions\TableSwitchInstructionViewModel.cs" />
+    <Compile Include="CodeEditing\Bytecode\Instructions\TypeInstructionViewModel.cs" />
+    <Compile Include="CodeEditing\Bytecode\Instructions\VariableInstructionViewModel.cs" />
     <Compile Include="CodeEditing\CodeEditorViewModel.cs" />
     <Compile Include="CodeEditing\ExceptionTableViewModel.cs" />
     <Compile Include="CodeEditing\InstructionEdit\ChangeInstructionViewModel.cs" />
@@ -159,6 +170,7 @@
     </Compile>
     <Compile Include="Converters\BooleanToVisibilityConverter.cs" />
     <Compile Include="Converters\EnumBooleanConverter.cs" />
+    <Compile Include="Converters\EnumToStringConverter.cs" />
     <Compile Include="Converters\MethodDescriptorToStringConverter.cs" />
     <Compile Include="Converters\OpCodeToDescriptionConverter.cs" />
     <Compile Include="Descriptors\MethodDescriptorEditorViewModel.cs" />
@@ -180,11 +192,6 @@
     </Compile>
     <Compile Include="Themes\ThemesController.cs" />
     <Compile Include="Themes\ThemeTypes.cs" />
-    <Compile Include="TypeEditor\DescriptorEditorViewModel.cs" />
-    <Compile Include="TypeEditor\PrimitiveSelectorViewModel.cs" />
-    <Compile Include="TypeEditor\TypeDescriptorEditorWindow.xaml.cs">
-      <DependentUpon>TypeDescriptorEditorWindow.xaml</DependentUpon>
-    </Compile>
     <Compile Include="Utils\CollectionUtils.cs" />
     <Compile Include="ViewManager.cs" />
     <Compile Include="Annotations\AnnotationViewModel.cs" />
@@ -195,15 +202,12 @@
     <Compile Include="ViewModels\FieldListViewModel.cs" />
     <Compile Include="ViewModels\MethodListViewModel.cs" />
     <Compile Include="ViewModels\ReferenceObjectViewModel.cs" />
+    <Compile Include="ViewModels\SourceCodeViewModel.cs" />
     <Page Include="Annotations\AnnotationEditorControl.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
     <Page Include="Annotations\AnnotationItemControl.xaml">
-      <SubType>Designer</SubType>
-      <Generator>MSBuild:Compile</Generator>
-    </Page>
-    <Page Include="CodeEditing\BytecodeEditorControl.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
@@ -220,6 +224,14 @@
       <Generator>MSBuild:Compile</Generator>
     </Page>
     <Page Include="CodeEditing\Bytecode\Editor\FieldInstructionControl.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="CodeEditing\Bytecode\Instructions\ListControls\FieldInstructionItemControl.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="CodeEditing\Bytecode\Instructions\ListControls\MethodInstructionItemControl.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
@@ -284,10 +296,6 @@
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </Page>
-    <Page Include="TypeEditor\TypeDescriptorEditorWindow.xaml">
-      <SubType>Designer</SubType>
-      <Generator>MSBuild:Compile</Generator>
-    </Page>
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Properties\AssemblyInfo.cs">
@@ -318,6 +326,9 @@
   </ItemGroup>
   <ItemGroup>
     <Folder Include="EnumEditor\" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="CodeEditing\Bytecode\_hierarchy.txt" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>

@@ -13,12 +13,12 @@ using System.Windows.Media.Imaging;
 using System.Windows.Navigation;
 using System.Windows.Shapes;
 
-namespace BCEdit180.CodeEditing {
+namespace BCEdit180.CodeEditing.Bytecode.Instructions.ListControls {
     /// <summary>
-    /// Interaction logic for BytecodeEditorControl.xaml
+    /// Interaction logic for FieldInstructionItemControl.xaml
     /// </summary>
-    public partial class BytecodeEditorControl : UserControl {
-        public BytecodeEditorControl() {
+    public partial class FieldInstructionItemControl : UserControl {
+        public FieldInstructionItemControl() {
             InitializeComponent();
         }
     }

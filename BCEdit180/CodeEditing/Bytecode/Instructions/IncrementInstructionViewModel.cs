@@ -18,6 +18,8 @@ namespace BCEdit180.CodeEditing.Bytecode.Instructions {
 
         public override IEnumerable<Opcode> AvailableOpCodes => new Opcode[] {Opcode.IINC};
 
+        public override bool CanEditOpCode => false;
+
         public override void Load(Instruction instruction) {
             base.Load(instruction);
             IncrementInstruction increment = (IncrementInstruction) instruction;

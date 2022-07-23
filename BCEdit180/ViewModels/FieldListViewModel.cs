@@ -4,9 +4,18 @@ using REghZy.MVVM.ViewModels;
 
 namespace BCEdit180.ViewModels {
     public class FieldListViewModel : BaseViewModel {
+        public ClassViewModel Class { get; }
+
         public ObservableCollection<FieldInfoViewModel> Fields { get; }
 
-        public FieldListViewModel() {
+        private FieldInfoViewModel selectedField;
+        public FieldInfoViewModel SelectedField {
+            get => this.selectedField;
+            set => RaisePropertyChanged(ref this.selectedField, value);
+        }
+
+        public FieldListViewModel(ClassViewModel classViewModel) {
+            this.Class = classViewModel;
             this.Fields = new ObservableCollection<FieldInfoViewModel>();
         }
 

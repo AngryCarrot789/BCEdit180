@@ -10,8 +10,6 @@ using REghZy.MVVM.ViewModels;
 
 namespace BCEdit180.ViewModels {
     public class FieldInfoViewModel : BaseViewModel {
-        public FieldNode Node { get; }
-
         private FieldAccessModifiers access;
         private string fieldName;
         private TypeDescriptor descriptor;
@@ -63,8 +61,9 @@ namespace BCEdit180.ViewModels {
 
         public ICommand EditAccessCommand { get; }
 
+        public FieldNode Node { get; private set; }
+
         public FieldInfoViewModel(FieldNode node) {
-            this.Node = node;
             this.EditAccessCommand = new RelayCommand(() => ViewManager.ShowAccessEditor(this));
             this.EditDescriptorCommand = new RelayCommand(() => ViewManager.ShowDescriptorEditor(this));
             this.VisibleAnnotationEditor = new AnnotationEditorViewModel();
@@ -73,6 +72,7 @@ namespace BCEdit180.ViewModels {
         }
 
         public void Load(FieldNode node) {
+            this.Node = node;
             this.FieldName = node.Name;
             this.Access = node.Access;
             this.Descriptor = node.Descriptor;

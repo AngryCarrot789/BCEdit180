@@ -4,9 +4,18 @@ using REghZy.MVVM.ViewModels;
 
 namespace BCEdit180.ViewModels {
     public class MethodListViewModel : BaseViewModel {
+        public ClassViewModel Class { get; }
+
         public ObservableCollection<MethodInfoViewModel> Methods { get; }
 
-        public MethodListViewModel() {
+        private MethodInfoViewModel selectedMethod;
+        public MethodInfoViewModel SelectedMethod {
+            get => this.selectedMethod;
+            set => RaisePropertyChanged(ref this.selectedMethod, value);
+        }
+
+        public MethodListViewModel(ClassViewModel classViewModel) {
+            this.Class = classViewModel;
             this.Methods = new ObservableCollection<MethodInfoViewModel>();
         }
 

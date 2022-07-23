@@ -64,5 +64,31 @@ namespace BCEdit180 {
                 }
             }
         }
+
+        private void Window_PreviewDrop(object sender, DragEventArgs e) {
+            if (e.Data.GetDataPresent(DataFormats.FileDrop)) {
+                string[] files = (string[]) e.Data.GetData(DataFormats.FileDrop);
+                if (files == null || files.Length == 0) {
+                    return;
+                }
+
+                string targetFile = null;
+                foreach (string path in files) {
+                    if (path.EndsWith(".class")) {
+                        if (File.Exists(path)) {
+                            targetFile = path;
+                            break;
+                        }
+                    }
+                }
+
+                if (targetFile != null) {
+                    ((ClassViewModel) this.DataContext).ReadClassFile(targetFile);
+                }
+                else {
+                    e.Handled = true;
+                }
+            }
+        }
     }
 }

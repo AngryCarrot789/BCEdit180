@@ -1,13 +1,8 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.ComponentModel;
 using System.Globalization;
-using System.Linq;
 using System.Text;
-using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Data;
-using JavaAsm;
 
 namespace BCEdit180.Converters {
     public class EnumToStringConverter : IValueConverter {
@@ -17,7 +12,7 @@ namespace BCEdit180.Converters {
             }
 
             if (value is Enum) {
-                return new StringBuilder().Append((int) value).Append(" (").Append(value.ToString()).Append(")").ToString();
+                return new StringBuilder().Append("0x").Append(((Enum) value).ToString("X")).Append(" (").Append(value.ToString()).Append(")").ToString();
             }
             else {
                 return "[Unknown type: " + value + "]";

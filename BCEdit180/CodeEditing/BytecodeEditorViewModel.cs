@@ -1,8 +1,7 @@
 ﻿using System;
 using System.Collections.ObjectModel;
-using BCEdit180.CodeEditing.Bytecode;
+using BCEdit180.CodeEditing.Bytecode.Instructions;
 using JavaAsm;
-using JavaAsm.CustomAttributes.Annotation;
 using JavaAsm.Instructions;
 using JavaAsm.Instructions.Types;
 using REghZy.MVVM.ViewModels;

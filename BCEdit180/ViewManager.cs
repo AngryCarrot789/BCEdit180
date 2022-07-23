@@ -45,11 +45,22 @@ namespace BCEdit180 {
 
         public static void ShowAccessEditor(ClassInfoViewModel model) {
             FlagEditorWindow window = new FlagEditorWindow();
-            window.Title = "Method Access Editor";
-            // ClassInfoFlagEditorVM.UpdateFlagItemsWithBitMask((long) model.Access);
-            // ClassInfoFlagEditorVM.UpdateEnumCallback = (e) => model.Access = (MethodAccessModifiers) e;
+            window.Title = "Class Access Editor";
+            ClassInfoFlagEditorVM.UpdateFlagItemsWithBitMask<ClassAccessModifiers>((long) model.AccessFlags);
+            ClassInfoFlagEditorVM.UpdateEnumCallback = (e) => model.AccessFlags = (ClassAccessModifiers) e;
             window.DataContext = ClassInfoFlagEditorVM;
             window.ShowDialog();
+        }
+
+        internal static void ShowMethodDescriptorEditorRT(MethodInfoViewModel method) {
+            ShowDescriptorEditor(method.Descriptor.ReturnType, (c, t, a) => {
+                if (t.HasValue) {
+                    method.Descriptor = new MethodDescriptor(new TypeDescriptor(t.Value, a), method.Descriptor.ArgumentTypes);
+                }
+                else {
+                    method.Descriptor = new MethodDescriptor(new TypeDescriptor(new ClassName(c), a), method.Descriptor.ArgumentTypes);
+                }
+            });
         }
 
         internal static void ShowDescriptorEditor(FieldInfoViewModel field) {

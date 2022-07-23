@@ -10,7 +10,9 @@ namespace BCEdit180.CodeEditing.Bytecode.Instructions {
             set => RaisePropertyChanged(ref this.value, value);
         }
 
-        public override IEnumerable<Opcode> AvailableOpCodes => new Opcode[] {Opcode.LDC, Opcode.LDC_W, Opcode.LDC2_W};
+        public override IEnumerable<Opcode> AvailableOpCodes => new Opcode[] {Opcode.LDC};
+
+        public override bool CanEditOpCode => false;
 
         public override void Load(Instruction instruction) {
             base.Load(instruction);

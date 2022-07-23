@@ -10,11 +10,13 @@ using REghZy.MVVM.ViewModels;
 
 namespace BCEdit180.ViewModels {
     public class ClassViewModel : BaseViewModel {
-        private ClassNode node;
+        public ClassNode Node { get; private set; }
 
-        public ClassInfoViewModel ClassInfo { get; private set; }
-        public MethodListViewModel MethodList { get; private set; }
-        public FieldListViewModel FieldList { get; private set; }
+        public ClassInfoViewModel ClassInfo { get; }
+        public MethodListViewModel MethodList { get; }
+        public FieldListViewModel FieldList { get; }
+
+        public SourceCodeViewModel SourceCode { get; }
 
         private string filePath;
         public string FilePath {
@@ -31,26 +33,27 @@ namespace BCEdit180.ViewModels {
         public ICommand ExitCommand { get; }
 
         public ClassViewModel(ClassNode node) {
-            this.node = node;
+            this.Node = node;
             this.ExitCommand = ApplicationCommands.Close;
             this.OpenFileCommand = new RelayCommand(OpenFile);
             this.SaveFileCommand = new RelayCommand(Save);
             this.SaveFileAsCommand = new RelayCommand(SaveAs);
 
-            this.ClassInfo = new ClassInfoViewModel();
-            this.MethodList = new MethodListViewModel();
-            this.FieldList = new FieldListViewModel();
+            this.ClassInfo = new ClassInfoViewModel(this);
+            this.MethodList = new MethodListViewModel(this);
+            this.FieldList = new FieldListViewModel(this);
+            this.SourceCode = new SourceCodeViewModel(this);
 
-            LoadClass(this.node);
+            LoadClass(this.Node);
         }
 
         public void ReadClassFile(string path) {
             using (BufferedStream input = new BufferedStream(File.OpenRead(path))) {
-                this.node = ClassFile.ParseClass(input);
+                this.Node = ClassFile.ParseClass(input);
             }
 
             this.FilePath = path;
-            LoadClass(this.node);
+            LoadClass(this.Node);
         }
 
         public void LoadClass(ClassNode node) {
@@ -91,9 +94,9 @@ namespace BCEdit180.ViewModels {
                     File.Copy(this.FilePath, backupPath);
                 }
 
-                SaveClass(this.node);
+                SaveClass(this.Node);
                 using (BufferedStream output = new BufferedStream(File.OpenWrite(this.FilePath))) {
-                    ClassFile.WriteClass(output, this.node);
+                    ClassFile.WriteClass(output, this.Node);
                 }
 
                 // ClassFile.WriteClass mutates ClassNode's attributes,
@@ -125,7 +128,7 @@ namespace BCEdit180.ViewModels {
                         }
 
                         try {
-                            SaveClass(this.node);
+                            SaveClass(this.Node);
                         }
                         catch (Exception e) {
                             MessageBox.Show("Failed to process/save class before writing to file: " + e, "Failed to process class");
@@ -133,7 +136,7 @@ namespace BCEdit180.ViewModels {
                         }
 
                         using (BufferedStream output = new BufferedStream(File.OpenWrite(this.FilePath))) {
-                            ClassFile.WriteClass(output, this.node);
+                            ClassFile.WriteClass(output, this.Node);
                         }
 
                         // ClassFile.WriteClass mutates ClassNode's attributes,

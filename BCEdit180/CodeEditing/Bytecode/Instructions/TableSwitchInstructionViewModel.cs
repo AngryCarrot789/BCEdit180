@@ -4,7 +4,9 @@ using JavaAsm.Instructions.Types;
 
 namespace BCEdit180.CodeEditing.Bytecode.Instructions {
     public class TableSwitchInstructionViewModel : BaseInstructionViewModel {
-        public override IEnumerable<Opcode> AvailableOpCodes => new Opcode[] {};
+        public override IEnumerable<Opcode> AvailableOpCodes => new Opcode[] {Opcode.TABLESWITCH};
+
+        public override bool CanEditOpCode => false;
 
         public override void Load(Instruction instruction) {
             base.Load(instruction);

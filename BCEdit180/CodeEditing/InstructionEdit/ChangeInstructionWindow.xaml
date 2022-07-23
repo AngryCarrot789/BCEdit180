@@ -24,7 +24,7 @@
             <Grid.Resources>
                 <converters:OpCodeToDescriptionConverter x:Key="DescriptionConverter"/>
             </Grid.Resources>
-            <TextBlock Text="{Binding ElementName=InstructionListBox, Path=SelectedItem, Converter={StaticResource DescriptionConverter}, FallbackValue=No description}" Padding="2" FontStyle="Italic" FontSize="14"/>
+            <TextBlock Text="{Binding ElementName=InstructionListBox, Path=SelectedItem, Converter={StaticResource DescriptionConverter}, FallbackValue=No description}" Padding="2" FontStyle="Italic" FontSize="14" TextWrapping="Wrap"/>
         </Grid>
         <Grid Height="29" VerticalAlignment="Bottom" Margin="175,0,0,0">
             <Grid.ColumnDefinitions>

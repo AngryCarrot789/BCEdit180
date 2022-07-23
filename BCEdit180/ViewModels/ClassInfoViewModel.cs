@@ -4,9 +4,11 @@ using System.IO;
 using System.Linq;
 using System.Runtime.Remoting.Messaging;
 using System.Threading;
+using System.Windows.Input;
 using BCEdit180.Utils;
 using JavaAsm;
 using JavaAsm.IO;
+using REghZy.MVVM.Commands;
 using REghZy.MVVM.ViewModels;
 
 namespace BCEdit180.ViewModels {
@@ -21,7 +23,7 @@ namespace BCEdit180.ViewModels {
         private int methodCount;
         private int attributeCount;
 
-        private ClassNode classNode;
+        public ClassViewModel Class { get; }
 
         public int MinorVersion {
             get => this.minorVersion;
@@ -48,38 +50,32 @@ namespace BCEdit180.ViewModels {
             set => RaisePropertyChanged(ref this.superName, value);
         }
 
-        public ObservableCollection<ReferenceObjectViewModel> Interfaces { get; }
-
-        public int FieldCount {
-            get => this.fieldCount;
-            set => RaisePropertyChanged(ref this.fieldCount, value);
-        }
-
-        public int MethodCount {
-            get => this.methodCount;
-            set => RaisePropertyChanged(ref this.methodCount, value);
-        }
+        public ObservableCollection<ReferenceObjectViewModel<string>> Interfaces { get; }
 
         public int AttributeCount {
             get => this.attributeCount;
             set => RaisePropertyChanged(ref this.attributeCount, value);
         }
 
-        public ClassInfoViewModel() {
-            this.Interfaces = new ObservableCollection<ReferenceObjectViewModel>();
+        public ClassNode Node { get; private set; }
+
+        public ICommand EditAccessCommand { get; }
+
+        public ClassInfoViewModel(ClassViewModel classVM) {
+            this.Class = classVM;
+            this.Interfaces = new ObservableCollection<ReferenceObjectViewModel<string>>();
+            this.EditAccessCommand = new RelayCommand(() => ViewManager.ShowAccessEditor(this));
         }
 
         public void Load(ClassNode node) {
-            this.classNode = node;
+            this.Node = node;
             this.MinorVersion = node.MinorVersion;
             this.MajorVersion = node.MajorVersion;
             this.AccessFlags = node.Access;
             this.ClassName = node.Name.Name;
             this.SuperName = node.SuperName.Name;
             this.Interfaces.Clear();
-            this.Interfaces.AddAll(node.Interfaces.Select(c => new ReferenceObjectViewModel(c.Name)));
-            this.FieldCount = node.Fields.Count;
-            this.MethodCount = node.Methods.Count;
+            this.Interfaces.AddAll(node.Interfaces.Select(c => new ReferenceObjectViewModel<string>(c.Name)));
             this.AttributeCount = node.Attributes.Count;
         }
 
@@ -89,7 +85,7 @@ namespace BCEdit180.ViewModels {
             node.Access = this.AccessFlags;
             node.Name = new ClassName(this.ClassName);
             node.SuperName = new ClassName(this.SuperName);
-            node.Interfaces = new List<ClassName>(this.Interfaces.Select(c => new ClassName((string) c.Value)));
+            node.Interfaces = new List<ClassName>(this.Interfaces.Select(c => new ClassName(c.Value)));
         }
     }
 }
