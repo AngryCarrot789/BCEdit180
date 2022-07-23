@@ -1,0 +1,66 @@
+﻿<Window x:Class="BCEdit180.TypeEditor.TypeEditorWindow"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        xmlns:local="clr-namespace:BCEdit180.TypeEditor" 
+        xmlns:converters="clr-namespace:BCEdit180.Converters" 
+        xmlns:asm="clr-namespace:JavaAsm;assembly=JavaAsm" 
+        d:DataContext="{d:DesignInstance Type=local:TypeEditorViewModel}"
+        mc:Ignorable="d"
+        Title="Type Editor" Height="410" Width="320"
+        Style="{DynamicResource CustomWindowStyle}" Background="{DynamicResource AREghZyBrush.Deep.2.Background.Static}">
+    <Window.Resources>
+        <converters:EnumBooleanConverter x:Key="EnumConverter"/>
+    </Window.Resources>
+    <Grid Margin="10,10,10,10">
+        <Grid.RowDefinitions>
+            <RowDefinition Height="1*"/>
+            <RowDefinition Height="1*"/>
+            <RowDefinition Height="29"/>
+        </Grid.RowDefinitions>
+        <GroupBox Margin="0,0,0,5">
+            <GroupBox.Header>
+                <Grid>
+                    <RadioButton x:Name="ObjectRadioButton" Width="100" Content="Object Type" GroupName="TypeSelector" IsChecked="{Binding IsObject, UpdateSourceTrigger=PropertyChanged}"/>
+                </Grid>
+            </GroupBox.Header>
+            <Grid IsEnabled="{Binding ElementName=ObjectRadioButton, Path=IsChecked, UpdateSourceTrigger=PropertyChanged}">
+                <Label Padding="3" VerticalAlignment="Top" Height="24" VerticalContentAlignment="Center">
+                    <TextBlock Text="Class Name (packages separated with '/' or '.')"/>
+                </Label>
+                <TextBox Text="Method Name" VerticalAlignment="Top" Padding="3" Margin="0,24,0,0"/>
+                <Label Padding="3" VerticalAlignment="Top" Height="24" VerticalContentAlignment="Center" HorizontalAlignment="Left" Width="90" Margin="0,48,0,0">
+                    <TextBlock Text="Real Preview"/>
+                </Label>
+                <TextBox IsReadOnly="True" Text="Method Name" VerticalAlignment="Top" Padding="3" Margin="0,72,0,0"/>
+            </Grid>
+        </GroupBox>
+        <GroupBox Margin="0,5,0,0" Grid.Row="1">
+            <GroupBox.Header>
+                <Grid>
+                    <RadioButton x:Name="PrimitiveRadioButton" Width="100" Content="Primitive Type" GroupName="TypeSelector" IsChecked="{Binding IsPrimitive, UpdateSourceTrigger=PropertyChanged}"/>
+                </Grid>
+            </GroupBox.Header>
+            <Grid IsEnabled="{Binding ElementName=PrimitiveRadioButton, Path=IsChecked, UpdateSourceTrigger=PropertyChanged}">
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition/>
+                    <ColumnDefinition/>
+                </Grid.ColumnDefinitions>
+                <RadioButton IsChecked="{Binding SelectedPrimitive, Converter={StaticResource EnumConverter}, ConverterParameter={x:Static asm:PrimitiveType.Byte}}" Content="Byte" VerticalAlignment="Top" Height="20"/>
+                <RadioButton IsChecked="{Binding SelectedPrimitive, Converter={StaticResource EnumConverter}, ConverterParameter={x:Static asm:PrimitiveType.Short}}" Content="Short" VerticalAlignment="Top" Height="20" Margin="0,20,0,0"/>
+                <RadioButton IsChecked="{Binding SelectedPrimitive, Converter={StaticResource EnumConverter}, ConverterParameter={x:Static asm:PrimitiveType.Integer}}" Content="Integer" VerticalAlignment="Top" Height="20" Margin="0,40,0,0"/>
+                <RadioButton IsChecked="{Binding SelectedPrimitive, Converter={StaticResource EnumConverter}, ConverterParameter={x:Static asm:PrimitiveType.Long}}" Content="Long" VerticalAlignment="Top" Height="20" Margin="0,60,0,0"/>
+                <RadioButton IsChecked="{Binding SelectedPrimitive, Converter={StaticResource EnumConverter}, ConverterParameter={x:Static asm:PrimitiveType.Float}}" Content="Float" VerticalAlignment="Top" Height="20" Grid.Column="1"/>
+                <RadioButton IsChecked="{Binding SelectedPrimitive, Converter={StaticResource EnumConverter}, ConverterParameter={x:Static asm:PrimitiveType.Double}}" Content="Double" VerticalAlignment="Top" Height="20" Grid.Column="1" Margin="0,20,0,0"/>
+                <RadioButton IsChecked="{Binding SelectedPrimitive, Converter={StaticResource EnumConverter}, ConverterParameter={x:Static asm:PrimitiveType.Character}}" Content="Character" VerticalAlignment="Top" Height="20" Grid.Column="1" Margin="0,40,0,0"/>
+                <RadioButton IsChecked="{Binding SelectedPrimitive, Converter={StaticResource EnumConverter}, ConverterParameter={x:Static asm:PrimitiveType.Boolean}}" Content="Boolean" VerticalAlignment="Top" Height="20" Grid.Column="1" Margin="0,60,0,0"/>
+                <RadioButton IsChecked="{Binding SelectedPrimitive, Converter={StaticResource EnumConverter}, ConverterParameter={x:Static asm:PrimitiveType.Void}}" Content="Void" VerticalAlignment="Top" Height="20" Margin="0,80,0,0" Grid.Column="1"/>
+            </Grid>
+        </GroupBox>
+        <Grid Grid.Row="2" Margin="0,5,0,0">
+            <Button Content="Okay" Command="{Binding ApplyChangesCommand}" HorizontalAlignment="Right" Margin="0,0,79,0" Width="74" Background="#FF79D43A" Click="Okay_Click"/>
+            <Button Content="Cancel" HorizontalAlignment="Right" Width="74" Click="Cancel_Click"/>
+        </Grid>
+    </Grid>
+</Window>

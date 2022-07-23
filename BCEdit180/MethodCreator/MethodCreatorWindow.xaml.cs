@@ -12,12 +12,12 @@ using System.Windows.Media;
 using System.Windows.Media.Imaging;
 using System.Windows.Shapes;
 
-namespace BCEdit180.Descriptors {
+namespace BCEdit180.MethodCreator {
     /// <summary>
-    /// Interaction logic for MethodDescriptorEditorWindow.xaml
+    /// Interaction logic for MethodCreatorWindow.xaml
     /// </summary>
-    public partial class MethodDescriptorEditorWindow : Window {
-        public MethodDescriptorEditorWindow() {
+    public partial class MethodCreatorWindow : Window {
+        public MethodCreatorWindow() {
             InitializeComponent();
         }
     }
