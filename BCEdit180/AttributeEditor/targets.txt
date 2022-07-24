@@ -1,0 +1,32 @@
+Class:
+    SourceDebugExtension
+    SourceFile
+    EnclosingMethod
+    InnerClasses
+    BootstrapMethods
+
+Fields:
+    # ConstantValue
+
+Methods:
+    # Code
+    Exceptions
+    MethodParameters
+    RuntimeInvisibleParameterAnnotations
+    RuntimeVisibleParameterAnnotations
+    AnnotationDefault
+
+Method Code:
+    # LineNumberTable
+    # LocalVariableTable
+    LocalVariableTypeTable
+    StackMapTable
+
+Class, Fields and Methods:
+    RuntimeInvisibleAnnotations
+    RuntimeVisibleAnnotations
+    RuntimeInvisibleTypeAnnotations
+    RuntimeVisibleTypeAnnotations
+    Deprecated
+    Signature
+    Synthetic

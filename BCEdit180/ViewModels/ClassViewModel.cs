@@ -1,7 +1,10 @@
 using System;
 using System.IO;
+using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Input;
+using BCEdit180.AttributeEditor;
+using BCEdit180.Dialogs;
 using JavaAsm;
 using JavaAsm.IO;
 using Microsoft.Win32;
@@ -17,6 +20,8 @@ namespace BCEdit180.ViewModels {
         public FieldListViewModel FieldList { get; }
 
         public SourceCodeViewModel SourceCode { get; }
+
+        public ClassAttributeEditorViewModel ClassAttributes { get; }
 
         private string filePath;
         public string FilePath {
@@ -43,27 +48,45 @@ namespace BCEdit180.ViewModels {
             this.MethodList = new MethodListViewModel(this);
             this.FieldList = new FieldListViewModel(this);
             this.SourceCode = new SourceCodeViewModel(this);
+            this.ClassAttributes = new ClassAttributeEditorViewModel(this);
 
             LoadClass(this.Node);
         }
 
-        public void ReadClassFile(string path) {
-            using (BufferedStream input = new BufferedStream(File.OpenRead(path))) {
-                this.Node = ClassFile.ParseClass(input);
-            }
+        public void ReadClassFileAndShowDialog(string path) {
+            DialogMessageViewModel vm = Dialog.ShowMessage("Loading classfile", true);
+            vm.Description = "Reading file " + path;
 
-            this.FilePath = path;
-            LoadClass(this.Node);
+            Task.Run(async () => {
+                await Task.Delay(100);
+                Application.Current.Dispatcher.Invoke(()=> {
+                    using (BufferedStream input = new BufferedStream(File.OpenRead(path))) {
+                        this.Node = ClassFile.ParseClass(input);
+                    }
+                    
+                    vm.Description = "Parsing classfile... ";
+                    Task.Run(async () => {
+                        await Task.Delay(100);
+                        Application.Current.Dispatcher.Invoke(() => {
+                            this.FilePath = path;
+                            LoadClass(this.Node);
+                            vm.CloseDialog();
+                        });
+                    });
+                });
+            });
         }
 
         public void LoadClass(ClassNode node) {
             this.ClassInfo.Load(node);
+            this.ClassAttributes.Load(node);
             this.MethodList.Load(node);
             this.FieldList.Load(node);
         }
 
         public void SaveClass(ClassNode node) {
             this.ClassInfo.Save(node);
+            this.ClassAttributes.Save(node);
             this.MethodList.Save(node);
             this.FieldList.Save(node);
         }
@@ -75,7 +98,7 @@ namespace BCEdit180.ViewModels {
             if (dialog.ShowDialog() == true) {
                 string path = dialog.FileName;
                 if (File.Exists(path)) {
-                    ReadClassFile(path);
+                    ReadClassFileAndShowDialog(path);
                 }
                 else {
                     MessageBox.Show("File does not exist: " + path, "No such file");
@@ -101,7 +124,7 @@ namespace BCEdit180.ViewModels {
 
                 // ClassFile.WriteClass mutates ClassNode's attributes,
                 // so reloading will fix
-                ReadClassFile(this.FilePath);
+                ReadClassFileAndShowDialog(this.FilePath);
             }
             catch (Exception e) {
                 MessageBox.Show("Failed to save file: " + e, "Failed to save");
@@ -141,7 +164,7 @@ namespace BCEdit180.ViewModels {
 
                         // ClassFile.WriteClass mutates ClassNode's attributes,
                         // so reloading will fix
-                        ReadClassFile(this.FilePath);
+                        ReadClassFileAndShowDialog(this.FilePath);
                     }
                     catch (Exception e) {
                         MessageBox.Show("Failed to save file: " + e, "Failed to save");

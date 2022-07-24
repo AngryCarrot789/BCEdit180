@@ -11,9 +11,12 @@
         xmlns:edit="clr-namespace:BCEdit180.CodeEditing"
         xmlns:controls1="clr-namespace:BCEdit180.CodeEditing.Bytecode.Controls"
         xmlns:vm="clr-namespace:BCEdit180.CodeEditing.Bytecode"
-        xmlns:instructions="clr-namespace:BCEdit180.CodeEditing.Bytecode.Instructions" xmlns:listcontrols="clr-namespace:BCEdit180.CodeEditing.Bytecode.Instructions.ListControls"
+        xmlns:instructions="clr-namespace:BCEdit180.CodeEditing.Bytecode.Instructions" 
+        xmlns:listcontrols="clr-namespace:BCEdit180.CodeEditing.Bytecode.Instructions.ListControls"
         xmlns:attachedProperties="clr-namespace:BCEdit180.AttachedProperties"
         xmlns:locals="clr-namespace:BCEdit180.CodeEditing.Bytecode.Locals"
+        xmlns:attribs="clr-namespace:BCEdit180.AttributeEditor"
+        xmlns:attribclass="clr-namespace:BCEdit180.AttributeEditor.Classes"
         mc:Ignorable="d"
         Title="MainWindow" Width="1280" Height="720" 
         d:DataContext="{d:DesignInstance viewModels:ClassViewModel}"
@@ -23,6 +26,9 @@
         AllowDrop="True"
         PreviewDrop="Window_PreviewDrop"
         PreviewKeyDown="Window_PreviewKeyDown">
+    <Window.Resources>
+        <converters:EnumToStringConverter x:Key="EnumToString"/>
+    </Window.Resources>
     <Grid>
         <Grid.Resources>
             <converters:EnumToStringConverter x:Key="EnumToString"/>
@@ -38,33 +44,33 @@
             </MenuItem>
         </Menu>
         <TabControl Margin="0,18,0,24">
-            <TabItem Header="Class Info" DataContext="{Binding ClassInfo}">
-                <Grid>
-                    <TextBlock Width="125" HorizontalAlignment="Left" TextWrapping="NoWrap" Text="Minor Version" VerticalAlignment="Top" Padding="5"  FontWeight="Bold"/>
-                    <TextBlock Width="125" HorizontalAlignment="Left" TextWrapping="NoWrap" Text="Major Version" VerticalAlignment="Top" Padding="5" Margin="0,26,0,0"  FontWeight="Bold"/>
-                    <TextBlock Width="125" HorizontalAlignment="Left" TextWrapping="NoWrap" Text="Constant Pool Size" VerticalAlignment="Top" Padding="5" Margin="0,52,0,0"  FontWeight="Bold" />
-                    <TextBlock Width="125" HorizontalAlignment="Left" TextWrapping="NoWrap" Text="Access Flags" VerticalAlignment="Top" Padding="5" Margin="0,78,0,0"  FontWeight="Bold"/>
-                    <TextBlock Width="125" HorizontalAlignment="Left" TextWrapping="NoWrap" Text="This Class" VerticalAlignment="Top" Padding="5" Margin="0,104,0,0"  FontWeight="Bold"/>
-                    <TextBlock Width="125" HorizontalAlignment="Left" TextWrapping="NoWrap" Text="Super Class" VerticalAlignment="Top" Padding="5" Margin="0,130,0,0"  FontWeight="Bold"/>
-                    <TextBlock Width="125" HorizontalAlignment="Left" TextWrapping="NoWrap" Text="Interfaces Count" VerticalAlignment="Top" Padding="5" Margin="0,156,0,0"  FontWeight="Bold"/>
-                    <TextBlock Width="125" HorizontalAlignment="Left" TextWrapping="NoWrap" Text="Field Count" VerticalAlignment="Top" Padding="5" Margin="0,182,0,0"  FontWeight="Bold"/>
-                    <TextBlock Width="125" HorizontalAlignment="Left" TextWrapping="NoWrap" Text="Method Count" VerticalAlignment="Top" Padding="5" Margin="0,208,0,0"  FontWeight="Bold"/>
-                    <TextBlock Width="125" HorizontalAlignment="Left" TextWrapping="NoWrap" Text="Attribute Count" VerticalAlignment="Top" Padding="5" Margin="0,234,0,0"  FontWeight="Bold"/>
-                    <TextBox AutoWordSelection="False" Text="{Binding MinorVersion, UpdateSourceTrigger=PropertyChanged}"   HorizontalAlignment="Stretch" TextWrapping="NoWrap" VerticalAlignment="Top" Padding="5" Margin="125,0,0,0" BorderThickness="0"  FontWeight="Bold" FontStyle="Italic"    Foreground="{DynamicResource AREghZyBrush.ColourfulGlyph.Static}"/>
-                    <TextBox AutoWordSelection="False" Text="{Binding MajorVersion, UpdateSourceTrigger=PropertyChanged}"   HorizontalAlignment="Stretch" TextWrapping="NoWrap" VerticalAlignment="Top" Padding="5" Margin="125,26,0,0" BorderThickness="0"  FontWeight="Bold" FontStyle="Italic"   Foreground="{DynamicResource AREghZyBrush.ColourfulGlyph.Static}"/>
-                    <TextBox AutoWordSelection="False" IsReadOnly="True" Text="(Not implemented yet)"                       HorizontalAlignment="Stretch" TextWrapping="NoWrap" VerticalAlignment="Top" Padding="5" Margin="125,52,0,0" BorderThickness="0"  FontWeight="Bold" FontStyle="Italic"   Foreground="{DynamicResource AREghZyBrush.ColourfulGlyph.Static}"/>
-                    <TextBox AutoWordSelection="False" Text="{Binding AccessFlags, UpdateSourceTrigger=PropertyChanged, Converter={StaticResource EnumToString}}"    HorizontalAlignment="Stretch" TextWrapping="NoWrap" VerticalAlignment="Top" Padding="5" Margin="125,78,100,0" BorderThickness="0"  FontWeight="Bold" FontStyle="Italic"   Foreground="{DynamicResource AREghZyBrush.ColourfulGlyph.Static}"/>
-                    <TextBox AutoWordSelection="False" Text="{Binding ClassName, UpdateSourceTrigger=PropertyChanged}"      HorizontalAlignment="Stretch" TextWrapping="NoWrap" VerticalAlignment="Top" Padding="5" Margin="125,104,0,0" BorderThickness="0"  FontWeight="Bold" FontStyle="Italic"  Foreground="{DynamicResource AREghZyBrush.ColourfulGlyph.Static}"/>
-                    <TextBox AutoWordSelection="False" Text="{Binding SuperName, UpdateSourceTrigger=PropertyChanged}"      HorizontalAlignment="Stretch" TextWrapping="NoWrap" VerticalAlignment="Top" Padding="5" Margin="125,130,0,0" BorderThickness="0"  FontWeight="Bold" FontStyle="Italic"  Foreground="{DynamicResource AREghZyBrush.ColourfulGlyph.Static}"/>
-                    <TextBox AutoWordSelection="False" IsReadOnly="True" Text="{Binding Interfaces.Count, UpdateSourceTrigger=PropertyChanged, Mode=OneWay}"  HorizontalAlignment="Stretch" TextWrapping="NoWrap" VerticalAlignment="Top" Padding="5" Margin="125,156,0,0" BorderThickness="0"  FontWeight="Bold" FontStyle="Italic"  Foreground="{DynamicResource AREghZyBrush.ColourfulGlyph.Static}"/>
-                    <TextBox AutoWordSelection="False" IsReadOnly="True" Text="{Binding Class.FieldList.Fields.Count, UpdateSourceTrigger=PropertyChanged, Mode=OneWay}"   HorizontalAlignment="Stretch" TextWrapping="NoWrap" VerticalAlignment="Top" Padding="5" Margin="125,182,0,0" BorderThickness="0"  FontWeight="Bold" FontStyle="Italic"                 Foreground="{DynamicResource AREghZyBrush.ColourfulGlyph.Static}"/>
-                    <TextBox AutoWordSelection="False" IsReadOnly="True" Text="{Binding Class.MethodList.Methods.Count, UpdateSourceTrigger=PropertyChanged, Mode=OneWay}" HorizontalAlignment="Stretch" TextWrapping="NoWrap" VerticalAlignment="Top" Padding="5" Margin="125,208,0,0" BorderThickness="0"  FontWeight="Bold" FontStyle="Italic"                 Foreground="{DynamicResource AREghZyBrush.ColourfulGlyph.Static}"/>
-                    <TextBox AutoWordSelection="False" IsReadOnly="True" Text="{Binding AttributeCount, UpdateSourceTrigger=PropertyChanged}" HorizontalAlignment="Stretch" TextWrapping="NoWrap" VerticalAlignment="Top" Padding="5" Margin="125,234,0,0" BorderThickness="0"  FontWeight="Bold" FontStyle="Italic"                 Foreground="{DynamicResource AREghZyBrush.ColourfulGlyph.Static}"/>
-                    <Button Command="{Binding EditAccessCommand}" Margin="0,78,0,0" Content="Edit Access" Height="26" VerticalAlignment="Top" HorizontalAlignment="Right" Width="100"/>
-                    <TabControl Margin="0,260,0,0">
+            <TabItem Header="Class Info">
+                <Grid DataContext="{Binding ClassInfo}">
+                    <Grid Height="234" VerticalAlignment="Top">
+                        <TextBlock Width="125" HorizontalAlignment="Left" TextWrapping="NoWrap" Text="Minor Version" VerticalAlignment="Top" Padding="5"  FontWeight="Bold"/>
+                        <TextBlock Width="125" HorizontalAlignment="Left" TextWrapping="NoWrap" Text="Major Version" VerticalAlignment="Top" Padding="5" Margin="0,26,0,0"  FontWeight="Bold"/>
+                        <TextBlock Width="125" HorizontalAlignment="Left" TextWrapping="NoWrap" Text="Constant Pool Size" VerticalAlignment="Top" Padding="5" Margin="0,52,0,0"  FontWeight="Bold" />
+                        <TextBlock Width="125" HorizontalAlignment="Left" TextWrapping="NoWrap" Text="Access Flags" VerticalAlignment="Top" Padding="5" Margin="0,78,0,0"  FontWeight="Bold"/>
+                        <TextBlock Width="125" HorizontalAlignment="Left" TextWrapping="NoWrap" Text="This Class" VerticalAlignment="Top" Padding="5" Margin="0,104,0,0"  FontWeight="Bold"/>
+                        <TextBlock Width="125" HorizontalAlignment="Left" TextWrapping="NoWrap" Text="Super Class" VerticalAlignment="Top" Padding="5" Margin="0,130,0,0"  FontWeight="Bold"/>
+                        <TextBlock Width="125" HorizontalAlignment="Left" TextWrapping="NoWrap" Text="Interfaces Count" VerticalAlignment="Top" Padding="5" Margin="0,156,0,0"  FontWeight="Bold"/>
+                        <TextBlock Width="125" HorizontalAlignment="Left" TextWrapping="NoWrap" Text="Field Count" VerticalAlignment="Top" Padding="5" Margin="0,182,0,0"  FontWeight="Bold"/>
+                        <TextBlock Width="125" HorizontalAlignment="Left" TextWrapping="NoWrap" Text="Method Count" VerticalAlignment="Top" Padding="5" Margin="0,208,0,0"  FontWeight="Bold"/>
+                        <TextBox AutoWordSelection="False" Text="{Binding MinorVersion, UpdateSourceTrigger=PropertyChanged}"   HorizontalAlignment="Stretch" TextWrapping="NoWrap" VerticalAlignment="Top" Padding="5" Margin="125,0,0,0" BorderThickness="0"  FontWeight="Bold" FontStyle="Italic"    Foreground="{DynamicResource AREghZyBrush.ColourfulGlyph.Static}"/>
+                        <TextBox AutoWordSelection="False" Text="{Binding MajorVersion, UpdateSourceTrigger=PropertyChanged}"   HorizontalAlignment="Stretch" TextWrapping="NoWrap" VerticalAlignment="Top" Padding="5" Margin="125,26,0,0" BorderThickness="0"  FontWeight="Bold" FontStyle="Italic"   Foreground="{DynamicResource AREghZyBrush.ColourfulGlyph.Static}"/>
+                        <TextBox AutoWordSelection="False" IsReadOnly="True" Text="(Not implemented yet)"                       HorizontalAlignment="Stretch" TextWrapping="NoWrap" VerticalAlignment="Top" Padding="5" Margin="125,52,0,0" BorderThickness="0"  FontWeight="Bold" FontStyle="Italic"   Foreground="{DynamicResource AREghZyBrush.ColourfulGlyph.Static}"/>
+                        <TextBox AutoWordSelection="False" Text="{Binding AccessFlags, UpdateSourceTrigger=PropertyChanged, Converter={StaticResource EnumToString}}"    HorizontalAlignment="Stretch" TextWrapping="NoWrap" VerticalAlignment="Top" Padding="5" Margin="125,78,100,0" BorderThickness="0"  FontWeight="Bold" FontStyle="Italic"   Foreground="{DynamicResource AREghZyBrush.ColourfulGlyph.Static}"/>
+                        <TextBox AutoWordSelection="False" Text="{Binding ClassName, UpdateSourceTrigger=PropertyChanged}"      HorizontalAlignment="Stretch" TextWrapping="NoWrap" VerticalAlignment="Top" Padding="5" Margin="125,104,0,0" BorderThickness="0"  FontWeight="Bold" FontStyle="Italic"  Foreground="{DynamicResource AREghZyBrush.ColourfulGlyph.Static}"/>
+                        <TextBox AutoWordSelection="False" Text="{Binding SuperName, UpdateSourceTrigger=PropertyChanged}"      HorizontalAlignment="Stretch" TextWrapping="NoWrap" VerticalAlignment="Top" Padding="5" Margin="125,130,0,0" BorderThickness="0"  FontWeight="Bold" FontStyle="Italic"  Foreground="{DynamicResource AREghZyBrush.ColourfulGlyph.Static}"/>
+                        <TextBox AutoWordSelection="False" IsReadOnly="True" Text="{Binding Interfaces.Count, UpdateSourceTrigger=PropertyChanged, Mode=OneWay}"  HorizontalAlignment="Stretch" TextWrapping="NoWrap" VerticalAlignment="Top" Padding="5" Margin="125,156,0,0" BorderThickness="0"  FontWeight="Bold" FontStyle="Italic"  Foreground="{DynamicResource AREghZyBrush.ColourfulGlyph.Static}"/>
+                        <TextBox AutoWordSelection="False" IsReadOnly="True" Text="{Binding Class.FieldList.Fields.Count, UpdateSourceTrigger=PropertyChanged, Mode=OneWay}"   HorizontalAlignment="Stretch" TextWrapping="NoWrap" VerticalAlignment="Top" Padding="5" Margin="125,182,0,0" BorderThickness="0"  FontWeight="Bold" FontStyle="Italic"                 Foreground="{DynamicResource AREghZyBrush.ColourfulGlyph.Static}"/>
+                        <TextBox AutoWordSelection="False" IsReadOnly="True" Text="{Binding Class.MethodList.Methods.Count, UpdateSourceTrigger=PropertyChanged, Mode=OneWay}" HorizontalAlignment="Stretch" TextWrapping="NoWrap" VerticalAlignment="Top" Padding="5" Margin="125,208,0,0" BorderThickness="0"  FontWeight="Bold" FontStyle="Italic"                 Foreground="{DynamicResource AREghZyBrush.ColourfulGlyph.Static}"/>
+                        <Button Command="{Binding EditAccessCommand}" Margin="0,78,0,0" Content="Edit Access" Height="26" VerticalAlignment="Top" HorizontalAlignment="Right" Width="100"/>
+                    </Grid>
+                    <TabControl Margin="0,234,0,0">
                         <TabItem>
                             <TabItem.Header>
-                                <TextBlock Text="{Binding Interfaces.Count, Mode=OneWay, UpdateSourceTrigger=PropertyChanged, StringFormat={}Interfaces ({0}), FallbackValue=Interfaces}" HorizontalAlignment="Center" Padding="3" FontWeight="Bold" VerticalAlignment="Center"/>
+                                <TextBlock Text="{Binding Interfaces.Count, Mode=OneWay, UpdateSourceTrigger=PropertyChanged, StringFormat={}Interfaces ({0}), FallbackValue=Interfaces}" HorizontalAlignment="Center" Padding="1" FontWeight="Bold" VerticalAlignment="Center"/>
                             </TabItem.Header>
                             <ListBox ItemsSource="{Binding Interfaces}" Background="Transparent" BorderThickness="0">
                                 <ListBox.ItemTemplate>
@@ -74,8 +80,144 @@
                                 </ListBox.ItemTemplate>
                             </ListBox>
                         </TabItem>
-                        <TabItem Header="Attributes">
-
+                        <TabItem Header="Attributes" DataContext="{Binding Class.ClassAttributes}">
+                            <Grid>
+                                <TabControl>
+                                    <TabItem>
+                                        <TabItem.Header>
+                                            <StackPanel Orientation="Horizontal">
+                                                <TextBlock Text="Source File" VerticalAlignment="Center"/>
+                                                <CheckBox Margin="5 0 0 0" Content="Use" IsChecked="{Binding IsEnabledSourceFile, UpdateSourceTrigger=PropertyChanged}" Width="50"/>
+                                            </StackPanel>
+                                        </TabItem.Header>
+                                        <Grid IsEnabled="{Binding IsEnabledSourceFile, UpdateSourceTrigger=PropertyChanged}">
+                                            <Grid DataContext="{Binding SourceFile}">
+                                                <TextBlock Padding="5" Text="Source file (Could be a .java class. This is used mainly in stack traces)" VerticalAlignment="Top"/>
+                                                <TextBox Padding="5" Text="{Binding SourceFile, UpdateSourceTrigger=PropertyChanged}" VerticalAlignment="Top" Margin="79,26,0,0" Background="{DynamicResource AREghZyBrush.Deep.3.Background.Static}" Height="29" VerticalContentAlignment="Center"/>
+                                                <TextBlock Padding="5" Text="File Name:" VerticalAlignment="Top" Margin="0,27,1173,0"/>
+                                            </Grid>
+                                        </Grid>
+                                    </TabItem>
+                                    <TabItem>
+                                        <TabItem.Header>
+                                            <StackPanel Orientation="Horizontal">
+                                                <TextBlock Text="Source Debug" VerticalAlignment="Center"/>
+                                                <CheckBox Margin="5 0 0 0" Content="Use" IsChecked="{Binding IsEnabledSourceDebug, UpdateSourceTrigger=PropertyChanged}" Width="50"/>
+                                            </StackPanel>
+                                        </TabItem.Header>
+                                        <Grid IsEnabled="{Binding IsEnabledSourceDebug, UpdateSourceTrigger=PropertyChanged}">
+                                            <Grid DataContext="{Binding SourceDebug}">
+                                                <TextBlock Padding="5" Text="I have no idea what this is really used for... it just has a string value" VerticalAlignment="Top"/>
+                                                <TextBox Padding="5" Text="{Binding Value, UpdateSourceTrigger=PropertyChanged}" VerticalAlignment="Top" Margin="79,26,0,0" Background="{DynamicResource AREghZyBrush.Deep.3.Background.Static}" Height="29" VerticalContentAlignment="Center"/>
+                                                <TextBlock Padding="5" Text="Value:" VerticalAlignment="Top" Margin="0,27,1173,0"/>
+                                            </Grid>
+                                        </Grid>
+                                    </TabItem>
+                                    <TabItem>
+                                        <TabItem.Header>
+                                            <StackPanel Orientation="Horizontal">
+                                                <TextBlock Text="Inner Classes" VerticalAlignment="Center"/>
+                                                <CheckBox Margin="5 0 0 0" Content="Use" IsChecked="{Binding IsEnabledInnerClasses, UpdateSourceTrigger=PropertyChanged}" Width="50"/>
+                                            </StackPanel>
+                                        </TabItem.Header>
+                                        <Grid IsEnabled="{Binding IsEnabledInnerClasses, UpdateSourceTrigger=PropertyChanged}">
+                                            <Grid.ColumnDefinitions>
+                                                <ColumnDefinition Width="200"/>
+                                                <ColumnDefinition Width="5"/>
+                                                <ColumnDefinition Width="1037*"/>
+                                            </Grid.ColumnDefinitions>
+                                            <ListBox ItemsSource="{Binding InnerClasses}" BorderBrush="{DynamicResource AREghZyBrush.Primary.4.Border.Static}"
+                                                     HorizontalContentAlignment="Stretch" x:Name="InnerClassesList">
+                                                <ListBox.ItemTemplate>
+                                                    <DataTemplate>
+                                                        <controls:DoubleClickEditBox Text="{Binding InnerName, UpdateSourceTrigger=PropertyChanged}" Padding="2" VerticalContentAlignment="Center">
+                                                            <controls:DoubleClickEditBox.ContextMenu>
+                                                                <ContextMenu>
+                                                                    <MenuItem Header="Remove inner class(es)" Click="RemoveSelectedInnerClasses"/>
+                                                                </ContextMenu>
+                                                            </controls:DoubleClickEditBox.ContextMenu>
+                                                        </controls:DoubleClickEditBox>
+                                                    </DataTemplate>
+                                                </ListBox.ItemTemplate>
+                                            </ListBox>
+                                            <GridSplitter HorizontalAlignment="Stretch" VerticalAlignment="Stretch" Grid.Column="1" Background="Transparent"/>
+                                            <GroupBox DataContext="{Binding ElementName=InnerClassesList, Path=SelectedItem, UpdateSourceTrigger=PropertyChanged}" d:DataContext="{d:DesignInstance attribclass:InnerClassViewModel}" Grid.Column="2">
+                                                <GroupBox.Header>
+                                                    <controls:DoubleClickEditBox Text="{Binding InnerName, UpdateSourceTrigger=PropertyChanged}" Padding="2" VerticalAlignment="Center"  VerticalContentAlignment="Center"/>
+                                                </GroupBox.Header>
+                                                <Grid>
+                                                    <TextBlock Width="140" HorizontalAlignment="Left" TextWrapping="NoWrap" Text="Full Inner Class Name" VerticalAlignment="Top" Padding="5"  FontWeight="Bold" Margin="0,2,0,0"/>
+                                                    <TextBox Text="{Binding InnerClassName, UpdateSourceTrigger=PropertyChanged}" Padding="5" VerticalAlignment="Top" HorizontalAlignment="Stretch" VerticalContentAlignment="Center" Height="29" Margin="140,0,0,0" BorderBrush="{DynamicResource AREghZyBrush.Primary.2.Border.Static}" Background="{DynamicResource AREghZyBrush.Deep.3.Background.Static}"/>
+                                                    <TextBlock Width="140" HorizontalAlignment="Left" TextWrapping="NoWrap" VerticalAlignment="Top" Padding="5"  FontWeight="Bold" Margin="0,36,0,0" Text="Full Outer Class Name"/>
+                                                    <TextBox Text="{Binding OuterClassName, UpdateSourceTrigger=PropertyChanged}" Padding="5" VerticalAlignment="Top" HorizontalAlignment="Stretch" VerticalContentAlignment="Center" Height="29" Margin="140,34,0,0" BorderBrush="{DynamicResource AREghZyBrush.Primary.2.Border.Static}" Background="{DynamicResource AREghZyBrush.Deep.3.Background.Static}"/>
+                                                    <TextBlock Width="140" HorizontalAlignment="Left" TextWrapping="NoWrap" VerticalAlignment="Top" Padding="5"  FontWeight="Bold" Margin="0,70,0,0" Text="Inner class Access"/>
+                                                    <TextBox Text="{Binding ClassAccess, UpdateSourceTrigger=PropertyChanged, Converter={StaticResource EnumToString}}" Padding="5" VerticalAlignment="Top" HorizontalAlignment="Stretch" VerticalContentAlignment="Center" Height="29" Margin="140,68,75,0" BorderBrush="{DynamicResource AREghZyBrush.Primary.2.Border.Static}" Background="{DynamicResource AREghZyBrush.Deep.3.Background.Static}"/>
+                                                    <Button Command="{Binding EditAccessCommand}" Content="Edit" Height="29" VerticalAlignment="Top" HorizontalAlignment="Right" MinWidth="75" d:DataContext="{d:DesignInstance attribclass:InnerClassViewModel}" Margin="0,68,0,0" BorderThickness="0 1 1 1" BorderBrush="{DynamicResource AREghZyBrush.Primary.2.Border.Static}"/>
+                                                </Grid>
+                                            </GroupBox>
+                                        </Grid>
+                                    </TabItem>
+                                    <TabItem>
+                                        <TabItem.Header>
+                                            <StackPanel Orientation="Horizontal">
+                                                <TextBlock Text="Enclosing Method" VerticalAlignment="Center"/>
+                                                <CheckBox Margin="5 0 0 0" Content="Use" IsChecked="{Binding IsEnabledEnclosingMethod, UpdateSourceTrigger=PropertyChanged}" Width="50"/>
+                                            </StackPanel>
+                                        </TabItem.Header>
+                                        <Grid IsEnabled="{Binding IsEnabledEnclosingMethod, UpdateSourceTrigger=PropertyChanged}">
+                                            <Grid DataContext="{Binding EnclosingMethod}">
+                                                <TextBlock Width="130" HorizontalAlignment="Left" TextWrapping="NoWrap" VerticalAlignment="Top" Padding="5" FontWeight="Bold" ToolTip="The name of this method (duh)"><Run Text="Outer Class"/><Run Text=" Name"/></TextBlock>
+                                                <TextBlock Text="Outer Method name" Width="130" HorizontalAlignment="Left" TextWrapping="NoWrap" VerticalAlignment="Top" Padding="5" FontWeight="Bold" ToolTip="The name of this method (duh)" Margin="0,26,0,0"/>
+                                                <TextBlock Text="Descriptor" Width="130" HorizontalAlignment="Left" TextWrapping="NoWrap" VerticalAlignment="Top" Padding="5" FontWeight="Bold" Margin="0,52,0,0" ToolTip="The method's descriptor, which shows the method parameters and return type"/>
+                                                <TextBox Foreground="{DynamicResource AREghZyBrush.ColourfulGlyph.Static}" Text="{Binding ClassName, UpdateSourceTrigger=PropertyChanged}" HorizontalAlignment="Stretch" TextWrapping="NoWrap" VerticalAlignment="Top" Padding="5" Margin="130,0,0,0" BorderThickness="0"  FontWeight="Bold" FontFamily="Consolas" Height="26"/>
+                                                <TextBox Foreground="{DynamicResource AREghZyBrush.ColourfulGlyph.Static}" Text="{Binding MethodName, UpdateSourceTrigger=PropertyChanged}" HorizontalAlignment="Stretch" TextWrapping="NoWrap" VerticalAlignment="Top" Padding="5" Margin="130,26,0,0" BorderThickness="0"  FontWeight="Bold" FontFamily="Consolas"  FontStyle="Italic" Height="26"/>
+                                                <TextBox Foreground="{DynamicResource AREghZyBrush.ColourfulGlyph.Static}" Text="{Binding Descriptor, UpdateSourceTrigger=PropertyChanged, Converter={StaticResource TypeDescConverter}}" IsReadOnly="True" HorizontalAlignment="Stretch" TextWrapping="NoWrap" VerticalAlignment="Top" Padding="5" Margin="130,52,100,0" BorderThickness="0"  FontWeight="Bold" />
+                                                <Button Command="{Binding EditDescriptorCommand}" Margin="0,52,0,0" Content="Edit Descriptor" Height="26" VerticalAlignment="Top" HorizontalAlignment="Right" Width="100"/>
+                                            </Grid>
+                                        </Grid>
+                                    </TabItem>
+                                    <TabItem IsEnabled="False">
+                                        <TabItem.Header>
+                                            <StackPanel Orientation="Horizontal">
+                                                <TextBlock Text="Bootstrap Methods (Not implemented yet)" VerticalAlignment="Center"/>
+                                                <CheckBox Visibility="Collapsed" Margin="5 0 0 0" Content="Use" IsChecked="{Binding IsEnabledBootstrapMethods, UpdateSourceTrigger=PropertyChanged}" Width="50"/>
+                                            </StackPanel>
+                                        </TabItem.Header>
+                                        <Grid IsEnabled="{Binding IsEnabledBootstrapMethods, UpdateSourceTrigger=PropertyChanged}">
+                                            <Grid.ColumnDefinitions>
+                                                <ColumnDefinition Width="200"/>
+                                                <ColumnDefinition Width="5"/>
+                                                <ColumnDefinition Width="1037*"/>
+                                            </Grid.ColumnDefinitions>
+                                            <ListBox ItemsSource="{Binding BootstrapMethods}" BorderBrush="{DynamicResource AREghZyBrush.Primary.4.Border.Static}"
+                                                     HorizontalContentAlignment="Stretch" x:Name="BootstrapMethodsList">
+                                                <ListBox.ItemTemplate>
+                                                    <DataTemplate>
+                                                        <controls:DoubleClickEditBox Text="{Binding BootstrapMethodName, UpdateSourceTrigger=PropertyChanged}" Padding="2" VerticalContentAlignment="Center"/>
+                                                    </DataTemplate>
+                                                </ListBox.ItemTemplate>
+                                            </ListBox>
+                                            <GridSplitter HorizontalAlignment="Stretch" VerticalAlignment="Stretch" Grid.Column="1" Background="Transparent"/>
+                                            <GroupBox DataContext="{Binding ElementName=BootstrapMethodsList, Path=SelectedItem, UpdateSourceTrigger=PropertyChanged}" d:DataContext="{d:DesignInstance attribclass:BootstrapMethodViewModel}" Grid.Column="2">
+                                                <GroupBox.Header>
+                                                    <controls:DoubleClickEditBox Text="{Binding BootstrapMethodName, UpdateSourceTrigger=PropertyChanged}" Padding="2" VerticalAlignment="Center"  VerticalContentAlignment="Center"/>
+                                                </GroupBox.Header>
+                                                <Grid>
+                                                    <TextBlock Width="140" HorizontalAlignment="Left" TextWrapping="NoWrap" Text="Reference Type" VerticalAlignment="Top" Padding="5"  FontWeight="Bold" Margin="0,2,0,0"/>
+                                                    <TextBox Text="{Binding BootstrapReferenceType, UpdateSourceTrigger=PropertyChanged}" Padding="5" VerticalAlignment="Top" HorizontalAlignment="Stretch" VerticalContentAlignment="Center" Height="29" Margin="140,0,0,0" BorderBrush="{DynamicResource AREghZyBrush.Primary.2.Border.Static}" Background="{DynamicResource AREghZyBrush.Deep.3.Background.Static}"/>
+                                                    <TextBlock Width="140" HorizontalAlignment="Left" TextWrapping="NoWrap" VerticalAlignment="Top" Padding="5"  FontWeight="Bold" Margin="0,36,0,0" Text="Method Owner Class"/>
+                                                    <TextBox Text="{Binding BootstrapMethodOwner, UpdateSourceTrigger=PropertyChanged}" Padding="5" VerticalAlignment="Top" HorizontalAlignment="Stretch" VerticalContentAlignment="Center" Height="29" Margin="140,34,0,0" BorderBrush="{DynamicResource AREghZyBrush.Primary.2.Border.Static}" Background="{DynamicResource AREghZyBrush.Deep.3.Background.Static}"/>
+                                                    <TextBlock Width="140" HorizontalAlignment="Left" TextWrapping="NoWrap" VerticalAlignment="Top" Padding="5"  FontWeight="Bold" Margin="0,70,0,0" Text="Method Name"/>
+                                                    <TextBox Text="{Binding BootstrapMethodName, UpdateSourceTrigger=PropertyChanged, Converter={StaticResource EnumToString}}" Padding="5" VerticalAlignment="Top" HorizontalAlignment="Stretch" VerticalContentAlignment="Center" Height="29" Margin="140,68,0,0" BorderBrush="{DynamicResource AREghZyBrush.Primary.2.Border.Static}" Background="{DynamicResource AREghZyBrush.Deep.3.Background.Static}"/>
+                                                    <TextBlock Width="140" HorizontalAlignment="Left" TextWrapping="NoWrap" VerticalAlignment="Top" Padding="5"  FontWeight="Bold" Margin="0,104,0,0" Text="Method Descriptor"/>
+                                                    <TextBox Text="{Binding BootstrapMethodDescriptor, UpdateSourceTrigger=PropertyChanged, Converter={StaticResource TypeDescConverter}}" Padding="5" VerticalAlignment="Top" HorizontalAlignment="Stretch" VerticalContentAlignment="Center" Height="29" Margin="140,102,75,0" BorderBrush="{DynamicResource AREghZyBrush.Primary.2.Border.Static}" Background="{DynamicResource AREghZyBrush.Deep.3.Background.Static}"/>
+                                                    <Button Command="{Binding EditDescriptorCommand}" Content="Edit" Height="28" VerticalAlignment="Top" HorizontalAlignment="Right" MinWidth="75" Margin="0,102,0,0" BorderThickness="0 1 1 1" BorderBrush="{DynamicResource AREghZyBrush.Primary.2.Border.Static}"/>
+                                                </Grid>
+                                            </GroupBox>
+                                        </Grid>
+                                    </TabItem>
+                                </TabControl>
+                            </Grid>
                         </TabItem>
                     </TabControl>
                 </Grid>
@@ -415,7 +557,7 @@
             <StackPanel Orientation="Horizontal">
                 <TextBox ToolTip="The name of the class that is currently open" AutoWordSelection="False" IsReadOnly="True" Text="{Binding ClassInfo.ClassName}" VerticalAlignment="Center" Padding="5 2" FontWeight="Bold" Background="Transparent" BorderBrush="Transparent" BorderThickness="0"/>
                 <Separator Style="{DynamicResource VerticalSeparator}"/>
-                <TextBox ToolTip="The path to the currently open class file" AutoWordSelection="False" Background="Transparent" BorderThickness="0" Text="{Binding FilePath, UpdateSourceTrigger=PropertyChanged}" VerticalAlignment="Center" Padding="5 2" Margin="0,2.02,0,1.98" TextDecorations="Underline" FontStyle="Italic">
+                <TextBox ToolTip="The path to the currently open class file" AutoWordSelection="False" Background="Transparent" BorderThickness="0" Text="{Binding FilePath, UpdateSourceTrigger=PropertyChanged}" VerticalAlignment="Center" Padding="5 2" Margin="0,2.02,0,1.98" TextDecorations="Underline">
                     <TextBox.ContextMenu>
                         <ContextMenu>
                             <MenuItem Header="Open in folder" Click="MenuItem_Click"/>

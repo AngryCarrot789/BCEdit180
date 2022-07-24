@@ -4,6 +4,8 @@ using System.Diagnostics;
 using System.IO;
 using System.Windows;
 using System.Windows.Controls;
+using BCEdit180.AttributeEditor;
+using BCEdit180.AttributeEditor.Classes;
 using BCEdit180.CodeEditing;
 using BCEdit180.ViewModels;
 using JavaAsm;
@@ -87,7 +89,7 @@ namespace BCEdit180 {
                 }
 
                 if (targetFile != null) {
-                    ((ClassViewModel) this.DataContext).ReadClassFile(targetFile);
+                    ((ClassViewModel) this.DataContext).ReadClassFileAndShowDialog(targetFile);
                 }
                 else {
                     e.Handled = true;
@@ -103,7 +105,7 @@ namespace BCEdit180 {
             }
 
             List<MethodInfoViewModel> remove = new List<MethodInfoViewModel>();
-            foreach(object element in this.MethodList.SelectedItems) {
+            foreach (object element in this.MethodList.SelectedItems) {
                 if (element != null) {
                     remove.Add((MethodInfoViewModel) element);
                 }
@@ -154,7 +156,7 @@ namespace BCEdit180 {
 
             List<MethodInfoViewModel> removed = new List<MethodInfoViewModel>();
             foreach (object element in this.RemovedMethodList.SelectedItems) {
-                if (element != null) {
+                if (element != null && element is MethodInfoViewModel) {
                     removed.Add((MethodInfoViewModel) element);
                 }
             }
@@ -189,6 +191,28 @@ namespace BCEdit180 {
         private void MethodList_GotFocus(object sender, RoutedEventArgs e) {
             this.AddedMethodList.SelectedItem = null;
             this.RemovedMethodList.SelectedItem = null;
+        }
+
+        private void RemoveSelectedInnerClasses(object sender, RoutedEventArgs e) {
+            if (this.InnerClassesList.SelectedItems.Count == 0) {
+                return;
+            }
+
+            List<InnerClassViewModel> remove = new List<InnerClassViewModel>();
+            foreach (object element in this.InnerClassesList.SelectedItems) {
+                if (element != null && element is InnerClassViewModel) {
+                    remove.Add((InnerClassViewModel) element);
+                }
+            }
+
+            if (remove.Count == 0) {
+                return;
+            }
+
+            ClassAttributeEditorViewModel editor = remove[0].Class;
+            foreach (InnerClassViewModel inner in remove) {
+                editor.InnerClasses.Remove(inner);
+            }
         }
     }
 }

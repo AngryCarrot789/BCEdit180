@@ -115,6 +115,12 @@
     <Compile Include="Annotations\Entries\BooleanValueAnnotationEntryViewModel.cs" />
     <Compile Include="Annotations\Entries\StringValueAnnotationEntryViewModel.cs" />
     <Compile Include="AttachedProperties\TextBoxAP.cs" />
+    <Compile Include="AttributeEditor\ClassAttributeEditorViewModel.cs" />
+    <Compile Include="AttributeEditor\Classes\BootstrapMethodViewModel.cs" />
+    <Compile Include="AttributeEditor\Classes\EnclosingMethodViewModel.cs" />
+    <Compile Include="AttributeEditor\Classes\InnerClassViewModel.cs" />
+    <Compile Include="AttributeEditor\Classes\SourceDebugExtensionViewModel.cs" />
+    <Compile Include="AttributeEditor\Classes\SourceFileViewModel.cs" />
     <Compile Include="CodeEditing\BytecodeEditorViewModel.cs" />
     <Compile Include="CodeEditing\Bytecode\Controls\FieldInstructionEditorControl.xaml.cs">
       <DependentUpon>FieldInstructionEditorControl.xaml</DependentUpon>
@@ -180,11 +186,16 @@
     <Compile Include="Converters\TypeDescriptorToStringConverter.cs" />
     <Compile Include="Converters\OpCodeToDescriptionConverter.cs" />
     <Compile Include="Dialogs\Dialog.cs" />
+    <Compile Include="Dialogs\DialogMessageViewModel.cs" />
+    <Compile Include="Dialogs\DialogMessageWindow.xaml.cs">
+      <DependentUpon>DialogMessageWindow.xaml</DependentUpon>
+    </Compile>
     <Compile Include="FlagEditor\FlagEditorViewModel.cs" />
     <Compile Include="FlagEditor\FlagEditorWindow.xaml.cs">
       <DependentUpon>FlagEditorWindow.xaml</DependentUpon>
     </Compile>
     <Compile Include="FlagEditor\FlagItemViewModel.cs" />
+    <Compile Include="ISaveable.cs" />
     <Compile Include="MethodCreator\MethodEditorViewModel.cs" />
     <Compile Include="MethodCreator\MethodEditorWindow.xaml.cs">
       <DependentUpon>MethodEditorWindow.xaml</DependentUpon>
@@ -259,6 +270,10 @@
       <Generator>MSBuild:Compile</Generator>
     </Page>
     <Page Include="Controls\MethodInfoControl.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Dialogs\DialogMessageWindow.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
@@ -339,9 +354,7 @@
     <None Include="App.config" />
   </ItemGroup>
   <ItemGroup>
-    <Folder Include="EnumEditor\" />
-  </ItemGroup>
-  <ItemGroup>
+    <Content Include="AttributeEditor\targets.txt" />
     <Content Include="CodeEditing\Bytecode\_hierarchy.txt" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />

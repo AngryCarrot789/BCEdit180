@@ -29,36 +29,54 @@ namespace BCEdit180 {
 
         public static void ShowAccessEditor(MethodInfoViewModel model) {
             FlagEditorWindow window = new FlagEditorWindow();
-            window.Title = "Method Access Editor";
+            window.Title = "Method Access";
             MethodInfoFlagEditorVM.UpdateFlagItemsWithBitMask<MethodAccessModifiers>((long) model.Access);
-            MethodInfoFlagEditorVM.UpdateEnumCallback = (e) => model.Access = (MethodAccessModifiers) e;
+            MethodInfoFlagEditorVM.ApplyChangeCallback = (e) => model.Access = (MethodAccessModifiers) e;
             window.DataContext = MethodInfoFlagEditorVM;
             window.ShowDialog();
         }
 
         public static void ShowAccessEditor(Action<MethodAccessModifiers> accessCallback, MethodAccessModifiers defaultAccess = MethodAccessModifiers.Public) {
             FlagEditorWindow window = new FlagEditorWindow();
-            window.Title = "Method Access Editor";
+            window.Title = "Method Access";
             MethodInfoFlagEditorVM.UpdateFlagItemsWithBitMask<MethodAccessModifiers>((long) defaultAccess);
-            MethodInfoFlagEditorVM.UpdateEnumCallback = (e) => accessCallback((MethodAccessModifiers) e);
+            MethodInfoFlagEditorVM.ApplyChangeCallback = (e) => accessCallback((MethodAccessModifiers) e);
             window.DataContext = MethodInfoFlagEditorVM;
             window.ShowDialog();
         }
 
         public static void ShowAccessEditor(FieldInfoViewModel model) {
             FlagEditorWindow window = new FlagEditorWindow();
-            window.Title = "Field Access Editor";
+            window.Title = "Field Access";
             FieldInfoFlagEditorVM.UpdateFlagItemsWithBitMask<FieldAccessModifiers>((long) model.Access);
-            FieldInfoFlagEditorVM.UpdateEnumCallback = (e) => model.Access = (FieldAccessModifiers) e;
+            FieldInfoFlagEditorVM.ApplyChangeCallback = (e) => model.Access = (FieldAccessModifiers) e;
+            window.DataContext = FieldInfoFlagEditorVM;
+            window.ShowDialog();
+        }
+
+        public static void ShowAccessEditor(Action<FieldAccessModifiers> accessCallback, FieldAccessModifiers defaultAccess = FieldAccessModifiers.Public) {
+            FlagEditorWindow window = new FlagEditorWindow();
+            window.Title = "Field Access";
+            FieldInfoFlagEditorVM.UpdateFlagItemsWithBitMask<FieldAccessModifiers>((long) defaultAccess);
+            FieldInfoFlagEditorVM.ApplyChangeCallback = (e) => accessCallback((FieldAccessModifiers) e);
             window.DataContext = FieldInfoFlagEditorVM;
             window.ShowDialog();
         }
 
         public static void ShowAccessEditor(ClassInfoViewModel model) {
             FlagEditorWindow window = new FlagEditorWindow();
-            window.Title = "Class Access Editor";
+            window.Title = "Class Access";
             ClassInfoFlagEditorVM.UpdateFlagItemsWithBitMask<ClassAccessModifiers>((long) model.AccessFlags);
-            ClassInfoFlagEditorVM.UpdateEnumCallback = (e) => model.AccessFlags = (ClassAccessModifiers) e;
+            ClassInfoFlagEditorVM.ApplyChangeCallback = (e) => model.AccessFlags = (ClassAccessModifiers) e;
+            window.DataContext = ClassInfoFlagEditorVM;
+            window.ShowDialog();
+        }
+
+        public static void ShowAccessEditor(Action<ClassAccessModifiers> accessCallback, ClassAccessModifiers defaultAccess = ClassAccessModifiers.Public) {
+            FlagEditorWindow window = new FlagEditorWindow();
+            window.Title = "Class Access";
+            ClassInfoFlagEditorVM.UpdateFlagItemsWithBitMask<ClassAccessModifiers>((long) defaultAccess);
+            ClassInfoFlagEditorVM.ApplyChangeCallback = (e) => accessCallback((ClassAccessModifiers) e);
             window.DataContext = ClassInfoFlagEditorVM;
             window.ShowDialog();
         }
@@ -76,7 +94,7 @@ namespace BCEdit180 {
         }
 
         public static void ShowDescriptorEditor(TypeDescriptor descriptor, Action<PrimitiveType?, string, int> callback) {
-            ShowEditType(callback, descriptor.PrimitiveType, descriptor.ClassName.Name);
+            ShowEditType(callback, descriptor?.PrimitiveType, descriptor?.ClassName?.Name);
         }
 
         public static void ShowEditInstructionView(IEnumerable<Opcode> opcodes, Action<Opcode> callback) {

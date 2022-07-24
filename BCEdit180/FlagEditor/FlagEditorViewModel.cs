@@ -28,7 +28,7 @@ namespace BCEdit180.FlagEditor {
 
         private Func<long, Enum> MaskToEnum { get; }
 
-        public Action<object> UpdateEnumCallback { get; set; }
+        public Action<object> ApplyChangeCallback { get; set; }
 
         public ICommand ApplyChangesCommand { get; }
 
@@ -59,7 +59,7 @@ namespace BCEdit180.FlagEditor {
         }
 
         public void ApplyChange() {
-            this.UpdateEnumCallback?.Invoke(GetEnumValue());
+            this.ApplyChangeCallback?.Invoke(GetEnumValue());
         }
 
         public void LoadFlags<TEnum>(Func<TEnum, long> enumToBit) where TEnum : Enum {
