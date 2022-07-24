@@ -2,7 +2,7 @@ using System.Collections.Generic;
 using JavaAsm.Instructions;
 using JavaAsm.Instructions.Types;
 
-namespace BCEdit180.CodeEditing.Bytecode.Instructions {
+namespace BCEdit180.Core.CodeEditing.Bytecode.Instructions {
     public class IntegerPushInstructionViewModel : BaseInstructionViewModel {
         private ushort value;
         public ushort Value {

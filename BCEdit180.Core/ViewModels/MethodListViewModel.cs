@@ -2,14 +2,13 @@
 using System.Collections.ObjectModel;
 using System.Linq;
 using System.Windows.Input;
-using BCEdit180.Core;
 using BCEdit180.Core.Dialogs;
 using BCEdit180.Core.Editors;
 using JavaAsm;
 using REghZy.MVVM.Commands;
 using REghZy.MVVM.ViewModels;
 
-namespace BCEdit180.ViewModels {
+namespace BCEdit180.Core.ViewModels {
     public class MethodListViewModel : BaseViewModel, ISaveable<ClassNode> {
         public ObservableCollection<MethodInfoViewModel> RemovedMethods { get; }
         public ObservableCollection<MethodInfoViewModel> Methods { get; }

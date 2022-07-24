@@ -1,10 +1,10 @@
-﻿using BCEdit180.CodeEditing.Bytecode.Locals;
-using BCEdit180.CodeEditing.ExceptionTable;
+﻿using BCEdit180.Core.CodeEditing.Bytecode.Locals;
+using BCEdit180.Core.CodeEditing.ExceptionTable;
 using BCEdit180.Core.ViewModels;
 using JavaAsm;
 using REghZy.MVVM.ViewModels;
 
-namespace BCEdit180.CodeEditing {
+namespace BCEdit180.Core.CodeEditing {
     public class CodeEditorViewModel : BaseViewModel {
         public BytecodeEditorViewModel ByteCodeEditor { get; }
         public ExceptionTableViewModel ExceptionEditor { get; }

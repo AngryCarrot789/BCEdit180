@@ -1,20 +1,20 @@
 ﻿using System.Windows;
+using BCEdit180.Core.Editors;
 using System.Windows.Input;
 
-namespace BCEdit180.CodeEditing.InstructionEdit {
+namespace BCEdit180.Windows {
     /// <summary>
-    /// Interaction logic for ChangeInstructionWindow.xaml
+    /// Interaction logic for MethodDescEditorWindow.xaml
     /// </summary>
-    public partial class ChangeInstructionWindow : Window {
-        public ChangeInstructionWindow() {
+    public partial class MethodDescEditorWindow : Window {
+        public MethodDescEditorWindow() {
             InitializeComponent();
         }
 
         protected override void OnKeyDown(KeyEventArgs e) {
             base.OnKeyDown(e);
-
             if (e.Key == Key.Enter) {
-                ((ChangeInstructionViewModel) this.DataContext).ApplyChanges();
+                ((MethodEditorViewModel) this.DataContext).ApplyChanges();
                 Close();
             }
             else if (e.Key == Key.Escape) {
@@ -22,7 +22,6 @@ namespace BCEdit180.CodeEditing.InstructionEdit {
             }
         }
 
-        // easy solution
         private void Okay_Click(object sender, RoutedEventArgs e) {
             this.Close();
         }

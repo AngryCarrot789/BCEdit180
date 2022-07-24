@@ -1,11 +1,9 @@
 using System;
 
 namespace BCEdit180.Core {
-    public interface AppServices {
-        public static Action Shutdown { get; set; }
+    public interface IAppServices {
+        void Shutdown();
 
-        public static void RunSync(Action action) {
-
-        }
+        void RunSync(Action action);
     }
 }

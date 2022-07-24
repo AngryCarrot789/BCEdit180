@@ -1,13 +1,12 @@
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
-using BCEdit180.AttributeEditor.Classes;
-using BCEdit180.Core;
+using BCEdit180.Core.AttributeEditor.Classes;
 using BCEdit180.Core.ViewModels;
 using JavaAsm;
 using JavaAsm.CustomAttributes;
 using REghZy.MVVM.ViewModels;
 
-namespace BCEdit180.AttributeEditor {
+namespace BCEdit180.Core.AttributeEditor {
     public class ClassAttributeEditorViewModel : BaseViewModel, ISaveable<ClassNode> {
         public ClassViewModel Class { get; }
 

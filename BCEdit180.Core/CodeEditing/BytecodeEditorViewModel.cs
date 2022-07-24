@@ -2,14 +2,14 @@
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Windows.Input;
-using BCEdit180.CodeEditing.Bytecode.Instructions;
+using BCEdit180.Core.CodeEditing.Bytecode.Instructions;
 using JavaAsm;
 using JavaAsm.Instructions;
 using JavaAsm.Instructions.Types;
 using REghZy.MVVM.Commands;
 using REghZy.MVVM.ViewModels;
 
-namespace BCEdit180.CodeEditing {
+namespace BCEdit180.Core.CodeEditing {
     public class BytecodeEditorViewModel : BaseViewModel {
         public CodeEditorViewModel CodeEditor { get; }
 

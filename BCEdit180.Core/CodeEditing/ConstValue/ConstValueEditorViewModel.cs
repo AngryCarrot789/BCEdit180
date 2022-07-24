@@ -1,4 +1,4 @@
-namespace BCEdit180.CodeEditing.ConstValue {
+namespace BCEdit180.Core.CodeEditing.ConstValue {
     public class ConstValueEditorViewModel {
         
     }

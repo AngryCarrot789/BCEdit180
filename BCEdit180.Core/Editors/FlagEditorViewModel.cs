@@ -5,7 +5,7 @@ using System.Windows.Input;
 using REghZy.MVVM.Commands;
 using REghZy.MVVM.ViewModels;
 
-namespace BCEdit180.FlagEditor {
+namespace BCEdit180.Core.Editors {
     public class FlagEditorViewModel : BaseViewModel {
         private bool ignoreFlagChanges;
 
@@ -77,7 +77,7 @@ namespace BCEdit180.FlagEditor {
             return this.MaskToEnum(this.BitMask);
         }
 
-        public void UpdateFlagItemsWithBitMask<TEnum>(long bitMask) where TEnum : Enum {
+        public void UpdateFlagItemsWithBitMask(long bitMask) {
             this.ignoreFlagChanges = true;
             foreach (FlagItemViewModel flag in this.FlagItems) {
                 flag.IsChecked = false;

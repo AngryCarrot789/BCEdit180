@@ -1,13 +1,12 @@
 ﻿using System.Collections.ObjectModel;
 using System.Windows.Input;
-using BCEdit180.Core;
 using BCEdit180.Core.Dialogs;
 using BCEdit180.Core.Editors;
 using JavaAsm;
 using REghZy.MVVM.Commands;
 using REghZy.MVVM.ViewModels;
 
-namespace BCEdit180.ViewModels {
+namespace BCEdit180.Core.ViewModels {
     public class FieldListViewModel : BaseViewModel, ISaveable<ClassNode> {
         public ObservableCollection<FieldInfoViewModel> Fields { get; }
         public ObservableCollection<FieldInfoViewModel> RemovedFields { get; }

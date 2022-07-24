@@ -1,9 +1,10 @@
 ﻿using System.Threading.Tasks;
 using System.Windows;
 using BCEdit180.Core.Dialogs;
+using BCEdit180.Windows;
 
 namespace BCEdit180.Dialogs {
-    public class Dialog : IDialogManager {
+    public class WindowsDialogs : IDialogManager {
         public Task ShowInformationDialog(string header, string description) {
             MessageBox.Show(description, header, MessageBoxButton.OK, MessageBoxImage.Information);
             return Task.CompletedTask;

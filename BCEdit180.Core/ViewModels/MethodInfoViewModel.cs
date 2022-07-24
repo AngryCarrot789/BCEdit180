@@ -2,9 +2,8 @@
 using System.Linq;
 using System.Threading.Tasks;
 using System.Windows.Input;
-using BCEdit180.Annotations;
-using BCEdit180.CodeEditing;
-using BCEdit180.Core;
+using BCEdit180.Core.Annotations;
+using BCEdit180.Core.CodeEditing;
 using BCEdit180.Core.Dialogs;
 using BCEdit180.Core.Utils;
 using JavaAsm;
@@ -12,7 +11,7 @@ using JavaAsm.CustomAttributes.Annotation;
 using REghZy.MVVM.Commands;
 using REghZy.MVVM.ViewModels;
 
-namespace BCEdit180.ViewModels {
+namespace BCEdit180.Core.ViewModels {
     public class MethodInfoViewModel : BaseViewModel, ISaveable<MethodNode> {
         private MethodAccessModifiers access;
         public MethodAccessModifiers Access {

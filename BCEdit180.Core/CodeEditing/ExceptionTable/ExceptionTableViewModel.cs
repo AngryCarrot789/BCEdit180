@@ -5,7 +5,7 @@ using BCEdit180.Core.Utils;
 using JavaAsm;
 using REghZy.MVVM.ViewModels;
 
-namespace BCEdit180.CodeEditing.ExceptionTable {
+namespace BCEdit180.Core.CodeEditing.ExceptionTable {
     public class ExceptionTableViewModel : BaseViewModel {
         public CodeEditorViewModel CodeEditor { get; }
 

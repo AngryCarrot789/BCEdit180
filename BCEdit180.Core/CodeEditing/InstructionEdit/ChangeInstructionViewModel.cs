@@ -7,7 +7,7 @@ using JavaAsm.Instructions;
 using REghZy.MVVM.Commands;
 using REghZy.MVVM.ViewModels;
 
-namespace BCEdit180.CodeEditing.InstructionEdit {
+namespace BCEdit180.Core.CodeEditing.InstructionEdit {
     public class ChangeInstructionViewModel : BaseViewModel {
         public ObservableCollection<Opcode> AvailableOpCodes { get; }
 

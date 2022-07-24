@@ -1,7 +1,7 @@
 using REghZy.MVVM.ViewModels;
 using TypeDescriptor = JavaAsm.TypeDescriptor;
 
-namespace BCEdit180.MethodCreator {
+namespace BCEdit180.Core.Editors {
     public class TypeDescriptorViewModel : BaseViewModel {
         private TypeDescriptor descriptor;
 

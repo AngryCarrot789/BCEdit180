@@ -1,17 +1,17 @@
 using System;
 using System.IO;
+using System.Net.Mime;
 using System.Threading.Tasks;
-using System.Windows;
 using System.Windows.Input;
-using BCEdit180.AttributeEditor;
-using BCEdit180.Core;
+using BCEdit180.Core.AttributeEditor;
 using BCEdit180.Core.Dialogs;
+using BCEdit180.Core.Utils;
 using JavaAsm;
 using JavaAsm.IO;
 using REghZy.MVVM.Commands;
 using REghZy.MVVM.ViewModels;
 
-namespace BCEdit180.ViewModels {
+namespace BCEdit180.Core.ViewModels {
     /// <summary>
     /// A view model for a class file (.class). This manages the view models for fields, methods, attributes, etc
     /// </summary>
@@ -81,7 +81,7 @@ namespace BCEdit180.ViewModels {
 
         public ClassViewModel(ClassNode node) {
             this.Node = node;
-            this.ExitCommand = ApplicationCommands.Close;
+            this.ExitCommand = new RelayCommand(()=> Environment.Exit(0));
             this.OpenFileCommand = new RelayCommand(OpenFile);
             this.ReloadFileCommand = new RelayCommand(ReloadFile);
             this.SaveFileCommand = new RelayCommand(Save);
@@ -113,7 +113,7 @@ namespace BCEdit180.ViewModels {
                 ActionProgressViewModel vm = Dialog.Message.ShowProgressWindow("Loading class file", "Reading file " + path);
                 Task.Run(async () => {
                     await Task.Delay(100);
-                    Application.Current.Dispatcher.Invoke(() => {
+                    AppServices.Services.RunSync(() => {
                         using (BufferedStream input = new BufferedStream(File.OpenRead(path), 8192)) {
                             this.Node = ClassFile.ParseClass(input);
                         }
@@ -121,7 +121,7 @@ namespace BCEdit180.ViewModels {
                         vm.Description = "Parsing classfile... ";
                         Task.Run(async () => {
                             await Task.Delay(100);
-                            Application.Current.Dispatcher.Invoke(() => {
+                            AppServices.Services.RunSync(() => {
                                 this.FilePath = path;
                                 Load(this.Node);
                                 vm.CloseDialog();

@@ -1,10 +1,12 @@
 using System;
+using System.Threading.Tasks;
 using System.Windows.Input;
+using BCEdit180.Core.Dialogs;
 using JavaAsm;
 using REghZy.MVVM.Commands;
 using REghZy.MVVM.ViewModels;
 
-namespace BCEdit180.FieldCreator {
+namespace BCEdit180.Core.Editors {
     public class FieldEditorViewModel : BaseViewModel {
         private string fieldName;
         public string FieldName {
@@ -53,14 +55,12 @@ namespace BCEdit180.FieldCreator {
             this.ApplyChangesCommand = new RelayCommand(ApplyChanges);
         }
 
-        public void EditDescriptor() {
-            ViewManager.ShowEditType((p, c, a) => {
-                this.Descriptor = p.HasValue ? new TypeDescriptor(p.Value, a) : new TypeDescriptor(new ClassName(c), a);
-            }, this.Descriptor?.PrimitiveType, this.Descriptor?.ClassName?.Name);
+        public async Task EditDescriptor() {
+            this.Descriptor = await Dialog.TypeEditor.EditTypeDescriptorDialog(this.Descriptor);
         }
 
-        public void EditAccess() {
-            ViewManager.ShowAccessEditor((a) => this.Access = a);
+        public async Task EditAccess() {
+            this.Access = await Dialog.AccessEditor.EditFieldAccess(this.Access);
         }
 
         public void ApplyChanges() {

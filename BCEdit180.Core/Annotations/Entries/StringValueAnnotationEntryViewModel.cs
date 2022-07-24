@@ -1,7 +1,7 @@
 ﻿using System;
 using JavaAsm.CustomAttributes.Annotation;
 
-namespace BCEdit180.Annotations.Entries {
+namespace BCEdit180.Core.Annotations.Entries {
     public class StringValueAnnotationEntryViewModel : BaseAnnotationEntryViewModel {
 
         private string entryValue;

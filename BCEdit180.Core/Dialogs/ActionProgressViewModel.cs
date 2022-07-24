@@ -2,7 +2,7 @@
 using REghZy.MVVM.ViewModels;
 
 namespace BCEdit180.Core.Dialogs {
-    public class DialogMessageViewModel : BaseViewModel {
+    public class ActionProgressViewModel : BaseViewModel {
         private string headerMessage;
         public string HeaderMessage {
             get => this.headerMessage;
@@ -23,7 +23,7 @@ namespace BCEdit180.Core.Dialogs {
 
         public Action CloseCallback { get; }
 
-        public DialogMessageViewModel(Action close) {
+        public ActionProgressViewModel(Action close) {
             this.CloseCallback = close;
         }
 

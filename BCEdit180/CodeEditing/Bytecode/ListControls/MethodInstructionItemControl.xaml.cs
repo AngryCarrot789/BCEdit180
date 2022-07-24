@@ -1,6 +1,6 @@
 ﻿using System.Windows.Controls;
 
-namespace BCEdit180.CodeEditing.Bytecode.Controls.ListControls {
+namespace BCEdit180.CodeEditing.Bytecode.ListControls {
     /// <summary>
     /// Interaction logic for MethodInstructionItemControl.xaml
     /// </summary>

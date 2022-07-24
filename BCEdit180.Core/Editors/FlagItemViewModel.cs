@@ -1,7 +1,7 @@
 using System;
 using REghZy.MVVM.ViewModels;
 
-namespace BCEdit180.FlagEditor {
+namespace BCEdit180.Core.Editors {
     public class FlagItemViewModel : BaseViewModel {
         private string name;
         private bool isChecked;

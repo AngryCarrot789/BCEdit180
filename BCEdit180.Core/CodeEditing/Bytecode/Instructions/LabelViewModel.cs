@@ -1,7 +1,7 @@
 using System.Collections.Generic;
 using JavaAsm.Instructions;
 
-namespace BCEdit180.CodeEditing.Bytecode.Instructions {
+namespace BCEdit180.Core.CodeEditing.Bytecode.Instructions {
     public class LabelViewModel : BaseInstructionViewModel {
         public override IEnumerable<Opcode> AvailableOpCodes => new Opcode[] {Opcode.None};
 

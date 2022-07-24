@@ -1,6 +1,6 @@
 ﻿using REghZy.MVVM.ViewModels;
 
-namespace BCEdit180.ViewModels {
+namespace BCEdit180.Core.ViewModels {
     public class ReferenceObjectViewModel<T> : BaseViewModel {
         private T value;
         public T Value {

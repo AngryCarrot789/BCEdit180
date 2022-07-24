@@ -3,12 +3,12 @@ using System.Collections.Generic;
 using REghZy.MVVM.ViewModels;
 
 namespace BCEdit180.Core {
-    public class Services {
-        public static Services Instance { get; } = new Services();
+    public class ServiceManager {
+        public static ServiceManager Instance { get; } = new ServiceManager();
 
         private readonly Dictionary<Type, object> serviceMap;
 
-        public Services() {
+        public ServiceManager() {
             this.serviceMap = new Dictionary<Type, object>();
         }
 

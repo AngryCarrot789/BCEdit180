@@ -6,7 +6,7 @@ using JavaAsm;
 using JavaAsm.CustomAttributes;
 using REghZy.MVVM.ViewModels;
 
-namespace BCEdit180.CodeEditing.Bytecode.Locals {
+namespace BCEdit180.Core.CodeEditing.Bytecode.Locals {
     public class LocalVariableTableViewModel : BaseViewModel {
         public CodeEditorViewModel CodeEditor { get; }
 

@@ -3,14 +3,13 @@ using System.Collections.ObjectModel;
 using System.Linq;
 using System.Threading.Tasks;
 using System.Windows.Input;
-using BCEdit180.Core;
 using BCEdit180.Core.Dialogs;
 using BCEdit180.Core.Utils;
 using JavaAsm;
 using REghZy.MVVM.Commands;
 using REghZy.MVVM.ViewModels;
 
-namespace BCEdit180.ViewModels {
+namespace BCEdit180.Core.ViewModels {
     public class ClassInfoViewModel : BaseViewModel, ISaveable<ClassNode> {
         private int minorVersion;
         private ClassVersion majorVersion;

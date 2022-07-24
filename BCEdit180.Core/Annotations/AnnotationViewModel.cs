@@ -1,13 +1,13 @@
 ﻿using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Linq;
-using BCEdit180.Annotations.Entries;
+using BCEdit180.Core.Annotations.Entries;
 using BCEdit180.Core.Utils;
 using JavaAsm;
 using JavaAsm.CustomAttributes.Annotation;
 using REghZy.MVVM.ViewModels;
 
-namespace BCEdit180.Annotations {
+namespace BCEdit180.Core.Annotations {
     public class AnnotationViewModel : BaseViewModel {
         private readonly AnnotationNode node;
 

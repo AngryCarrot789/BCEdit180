@@ -1,12 +1,13 @@
 ﻿using System;
 using System.Collections.ObjectModel;
+using System.Threading.Tasks;
 using System.Windows.Input;
 using BCEdit180.Core.Dialogs;
 using JavaAsm;
 using REghZy.MVVM.Commands;
 using REghZy.MVVM.ViewModels;
 
-namespace BCEdit180.MethodCreator {
+namespace BCEdit180.Core.Editors {
     public class MethodEditorViewModel : BaseViewModel {
         private string methodName;
         public string MethodName {
@@ -58,19 +59,19 @@ namespace BCEdit180.MethodCreator {
             this.ApplyChangesCommand = new RelayCommand(ApplyChanges);
         }
 
-        public async void EditReturnType() {
+        public async Task EditReturnType() {
             this.ReturnType = await Dialog.TypeEditor.EditTypeDescriptorDialog(this.ReturnType);
         }
 
-        public async void AddNewParameter() {
+        public async Task AddNewParameter() {
             TypeDescriptor descriptor = await Dialog.TypeEditor.EditTypeDescriptorDialog(new TypeDescriptor(PrimitiveType.Integer, 0));
             this.Parameters.Add(new TypeDescriptorViewModel() {
                 Descriptor = descriptor
             });
         }
 
-        public void EditAccess() {
-            ViewManager.ShowAccessEditor((a) => this.Access = a);
+        public async Task EditAccess() {
+            this.Access = await Dialog.AccessEditor.EditMethodAccess(this.Access);
         }
 
         public void ApplyChanges() {

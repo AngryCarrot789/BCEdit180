@@ -13,4 +13,12 @@
     </Reference>
   </ItemGroup>
 
+  <ItemGroup>
+    <Content Include="AttributeEditor\targets.txt" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Folder Include="CodeEditing\Bytecode" />
+  </ItemGroup>
+
 </Project>

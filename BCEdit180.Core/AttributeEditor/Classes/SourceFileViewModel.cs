@@ -1,8 +1,7 @@
-using BCEdit180.Core;
 using JavaAsm;
 using REghZy.MVVM.ViewModels;
 
-namespace BCEdit180.AttributeEditor.Classes {
+namespace BCEdit180.Core.AttributeEditor.Classes {
     public class SourceFileViewModel : BaseViewModel, ISaveable<ClassNode> {
         private string sourceFile;
         public string SourceFile {

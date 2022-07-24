@@ -3,7 +3,7 @@ using JavaAsm;
 using JavaAsm.Instructions;
 using JavaAsm.Instructions.Types;
 
-namespace BCEdit180.CodeEditing.Bytecode.Instructions {
+namespace BCEdit180.Core.CodeEditing.Bytecode.Instructions {
     public class MethodInstructionViewModel : BaseInstructionViewModel {
         private string methodOwner;
         public string MethodOwner {

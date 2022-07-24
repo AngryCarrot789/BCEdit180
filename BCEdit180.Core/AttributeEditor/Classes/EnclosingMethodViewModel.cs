@@ -1,13 +1,12 @@
 using System.Threading.Tasks;
 using System.Windows.Input;
-using BCEdit180.Core;
 using BCEdit180.Core.Dialogs;
 using JavaAsm;
 using JavaAsm.CustomAttributes;
 using REghZy.MVVM.Commands;
 using REghZy.MVVM.ViewModels;
 
-namespace BCEdit180.AttributeEditor.Classes {
+namespace BCEdit180.Core.AttributeEditor.Classes {
     public class EnclosingMethodViewModel : BaseViewModel, ISaveable<ClassNode> {
         private string className;
         public string ClassName {

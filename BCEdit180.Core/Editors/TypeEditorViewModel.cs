@@ -4,7 +4,7 @@ using JavaAsm;
 using REghZy.MVVM.Commands;
 using REghZy.MVVM.ViewModels;
 
-namespace BCEdit180.Core.Types {
+namespace BCEdit180.Core.Editors {
     public class TypeEditorViewModel : BaseViewModel {
         private string className;
         public string ClassName {

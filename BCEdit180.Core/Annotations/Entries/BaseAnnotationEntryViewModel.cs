@@ -2,7 +2,7 @@
 using REghZy.MVVM.ViewModels;
 using static JavaAsm.CustomAttributes.Annotation.AnnotationNode;
 
-namespace BCEdit180.Annotations.Entries {
+namespace BCEdit180.Core.Annotations.Entries {
     public class BaseAnnotationEntryViewModel : BaseViewModel {
         protected readonly ElementValuePair entry;
         protected readonly ElementValue value;

@@ -1,6 +1,6 @@
 ﻿using JavaAsm.Instructions;
 
-namespace BCEdit180.CodeEditing {
+namespace BCEdit180.Core.CodeEditing {
     public static class InstructionDescriptionRegistry {
         public static string GetDescription(Opcode opcode) {
             switch (opcode) {

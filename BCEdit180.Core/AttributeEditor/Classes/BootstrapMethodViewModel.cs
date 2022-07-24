@@ -7,7 +7,7 @@ using JavaAsm.Instructions.Types;
 using REghZy.MVVM.Commands;
 using REghZy.MVVM.ViewModels;
 
-namespace BCEdit180.AttributeEditor.Classes {
+namespace BCEdit180.Core.AttributeEditor.Classes {
     public class BootstrapMethodViewModel : BaseViewModel {
         private ReferenceKindType bootstrapReferenceType;
         public ReferenceKindType BootstrapReferenceType {

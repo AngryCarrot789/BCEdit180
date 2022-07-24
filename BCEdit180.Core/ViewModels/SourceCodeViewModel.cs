@@ -7,7 +7,7 @@ using JavaAsm;
 using REghZy.MVVM.Commands;
 using REghZy.MVVM.ViewModels;
 
-namespace BCEdit180.ViewModels {
+namespace BCEdit180.Core.ViewModels {
     public class SourceCodeViewModel : BaseViewModel {
         private string text;
         public string Text {

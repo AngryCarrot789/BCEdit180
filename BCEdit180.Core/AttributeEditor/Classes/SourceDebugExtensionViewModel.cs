@@ -1,8 +1,7 @@
-using BCEdit180.Core;
 using JavaAsm;
 using REghZy.MVVM.ViewModels;
 
-namespace BCEdit180.AttributeEditor.Classes {
+namespace BCEdit180.Core.AttributeEditor.Classes {
     public class SourceDebugExtensionViewModel : BaseViewModel, ISaveable<ClassNode> {
         private string value;
         public string Value {

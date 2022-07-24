@@ -4,8 +4,9 @@
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
              xmlns:local="clr-namespace:BCEdit180.Annotations" xmlns:controls="clr-namespace:BCEdit180.Controls"
-             xmlns:entries="clr-namespace:BCEdit180.Annotations.Entries"
-             d:DataContext="{d:DesignInstance Type=local:AnnotationEditorViewModel}"
+             xmlns:annotations="clr-namespace:BCEdit180.Core.Annotations;assembly=BCEdit180.Core"
+             xmlns:entries="clr-namespace:BCEdit180.Core.Annotations.Entries;assembly=BCEdit180.Core"
+             d:DataContext="{d:DesignInstance Type=annotations:AnnotationEditorViewModel}"
              mc:Ignorable="d" 
              d:DesignHeight="450" d:DesignWidth="800">
     <Grid>
@@ -23,7 +24,7 @@
         </ListBox>
         <GridSplitter HorizontalAlignment="Stretch" VerticalAlignment="Stretch" Grid.Column="1" BorderThickness="0 1" BorderBrush="{DynamicResource AREghZyBrush.Primary.3.Border.Static}" Background="{DynamicResource AREghZyBrush.Primary.2.Background.Static}"/>
         <Border BorderThickness="1 1 1 1" Grid.Column="2" BorderBrush="{DynamicResource AREghZyBrush.Primary.3.Border.Static}">
-            <Grid DataContext="{Binding ElementName=AnnotationListBox, Path=SelectedItem}" d:DataContext="{d:DesignInstance local:AnnotationViewModel}">
+            <Grid DataContext="{Binding ElementName=AnnotationListBox, Path=SelectedItem}" d:DataContext="{d:DesignInstance annotations:AnnotationViewModel}">
                 <TextBlock Text="Type" Width="100" HorizontalAlignment="Left" TextWrapping="NoWrap" VerticalAlignment="Top" Padding="5" FontWeight="Bold"/>
                 <TextBlock Text="Array Depth" Width="100" HorizontalAlignment="Left" TextWrapping="NoWrap" VerticalAlignment="Top" Padding="5" FontWeight="Bold" Margin="0,26,0,0"/>
                 <TextBlock Text="Size on Stack" Width="100" HorizontalAlignment="Left" TextWrapping="NoWrap" VerticalAlignment="Top" Padding="5" FontWeight="Bold" Margin="0,52,0,0"/>

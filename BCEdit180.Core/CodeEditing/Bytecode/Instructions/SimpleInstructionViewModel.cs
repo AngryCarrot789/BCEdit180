@@ -1,7 +1,7 @@
 using System.Collections.Generic;
 using JavaAsm.Instructions;
 
-namespace BCEdit180.CodeEditing.Bytecode.Instructions {
+namespace BCEdit180.Core.CodeEditing.Bytecode.Instructions {
     public class SimpleInstructionViewModel : BaseInstructionViewModel {
         private static readonly Opcode[] CODES = new Opcode[] {
             Opcode.NOP,

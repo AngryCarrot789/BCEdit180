@@ -5,7 +5,8 @@
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
              mc:Ignorable="d"
              xmlns:annotations="clr-namespace:BCEdit180.Annotations"
-             d:DataContext="{d:DesignInstance Type=annotations:AnnotationViewModel}" d:DesignWidth="400" Height="50">
+             xmlns:annotations1="clr-namespace:BCEdit180.Core.Annotations;assembly=BCEdit180.Core"
+             d:DataContext="{d:DesignInstance Type=annotations1:AnnotationViewModel}" d:DesignWidth="400" Height="50">
     <Grid>
         <TextBox IsReadOnly="True" Text="{Binding PreviewTypeName, UpdateSourceTrigger=PropertyChanged}" Padding="5" Background="Transparent" BorderThickness="0" FontSize="14" FontFamily="Consolas" Height="28" VerticalAlignment="Top"/>
         <TextBlock Text="{Binding Entries.Count, UpdateSourceTrigger=PropertyChanged, StringFormat={}{0} entries}" Margin="0,28,0,0" Padding="5 2"/>

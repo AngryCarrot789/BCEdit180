@@ -1,7 +1,7 @@
 ﻿using JavaAsm;
 using REghZy.MVVM.ViewModels;
 
-namespace BCEdit180.CodeEditing.ExceptionTable {
+namespace BCEdit180.Core.CodeEditing.ExceptionTable {
     public class TryCatchBlockViewModel : BaseViewModel {
         private long startIndex;
         private long endIndex;

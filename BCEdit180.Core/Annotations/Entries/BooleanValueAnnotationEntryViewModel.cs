@@ -1,6 +1,6 @@
 using JavaAsm.CustomAttributes.Annotation;
 
-namespace BCEdit180.Annotations.Entries {
+namespace BCEdit180.Core.Annotations.Entries {
     public class BooleanValueAnnotationEntryViewModel : BaseAnnotationEntryViewModel {
         private bool state;
 
