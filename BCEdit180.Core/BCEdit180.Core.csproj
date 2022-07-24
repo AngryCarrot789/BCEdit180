@@ -1,0 +1,16 @@
+<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <TargetFramework>netstandard2.0</TargetFramework>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <Reference Include="JavaAsm">
+      <HintPath>..\BCEdit180\JavaAsm.dll</HintPath>
+    </Reference>
+    <Reference Include="REghZy.MVVM">
+      <HintPath>..\..\REghZy\DLL\REghZy.MVVM.dll</HintPath>
+    </Reference>
+  </ItemGroup>
+
+</Project>

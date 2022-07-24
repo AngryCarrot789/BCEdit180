@@ -1,0 +1,32 @@
+Class:
+    # SourceDebugExtension
+    # SourceFile
+    # EnclosingMethod
+    # InnerClasses
+    BootstrapMethods -- can this even be done? java-asm parses these only when method instructions are being parsed
+
+Fields:
+    # ConstantValue -- no need to create a custom attribute editor for fields
+
+Methods:
+    # Code
+    Exceptions
+    MethodParameters
+    RuntimeInvisibleParameterAnnotations
+    RuntimeVisibleParameterAnnotations
+    AnnotationDefault
+
+Method Code:
+    # LineNumberTable
+    # LocalVariableTable
+    LocalVariableTypeTable
+    StackMapTable
+
+Class, Fields and Methods:
+    # RuntimeInvisibleAnnotations -- custom annotation editor
+    # RuntimeVisibleAnnotations -- custom annotation editor
+    RuntimeInvisibleTypeAnnotations
+    RuntimeVisibleTypeAnnotations
+    Deprecated
+    Signature
+    Synthetic
