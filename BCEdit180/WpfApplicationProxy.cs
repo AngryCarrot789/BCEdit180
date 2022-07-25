@@ -3,7 +3,7 @@ using System.Windows;
 using BCEdit180.Core;
 
 namespace BCEdit180 {
-    public class WPFAppServices : IAppServices {
+    public class WpfApplicationProxy : IApplicationProxy {
         public void Shutdown() {
             Application.Current.Shutdown();
         }

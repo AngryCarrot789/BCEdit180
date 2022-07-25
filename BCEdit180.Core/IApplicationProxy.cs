@@ -1,7 +1,7 @@
 using System;
 
 namespace BCEdit180.Core {
-    public interface IAppServices {
+    public interface IApplicationProxy {
         void Shutdown();
 
         void RunSync(Action action);
