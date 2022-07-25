@@ -38,31 +38,12 @@
     <Reference Include="BinaryEncoding, Version=1.5.0.0, Culture=neutral, processorArchitecture=MSIL">
       <HintPath>..\packages\BinaryEncoding.1.5.0\lib\net452\BinaryEncoding.dll</HintPath>
     </Reference>
-    <Reference Include="JavaAsm, Version=1.0.0.0, Culture=neutral, processorArchitecture=MSIL">
-      <SpecificVersion>False</SpecificVersion>
-      <HintPath>.\JavaAsm.dll</HintPath>
+    <Reference Include="JavaAsm">
+      <HintPath>..\..\java-asm\JavaAsm\bin\Release\netstandard2.0\JavaAsm.dll</HintPath>
     </Reference>
     <Reference Include="PresentationFramework.Aero2" />
-    <Reference Include="REghZy.Collections">
-      <HintPath>..\..\REghZy\DLL\REghZy.Collections.dll</HintPath>
-    </Reference>
-    <Reference Include="REghZy.Maths">
-      <HintPath>..\..\REghZy\DLL\REghZy.Maths.dll</HintPath>
-    </Reference>
-    <Reference Include="REghZy.MathsF">
-      <HintPath>..\..\REghZy\DLL\REghZy.MathsF.dll</HintPath>
-    </Reference>
     <Reference Include="REghZy.MVVM">
       <HintPath>..\..\REghZy\DLL\REghZy.MVVM.dll</HintPath>
-    </Reference>
-    <Reference Include="REghZy.MVVM.Framework">
-      <HintPath>..\..\REghZy\DLL\REghZy.MVVM.Framework.dll</HintPath>
-    </Reference>
-    <Reference Include="REghZy.Streams">
-      <HintPath>..\..\REghZy\DLL\REghZy.Streams.dll</HintPath>
-    </Reference>
-    <Reference Include="REghZy.Utils">
-      <HintPath>..\..\REghZy\DLL\REghZy.Utils.dll</HintPath>
     </Reference>
     <Reference Include="REghZy.WPF">
       <HintPath>..\..\REghZy\DLL\REghZy.WPF.dll</HintPath>

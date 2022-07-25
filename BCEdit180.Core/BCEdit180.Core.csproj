@@ -5,20 +5,20 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <Reference Include="JavaAsm">
-      <HintPath>..\BCEdit180\JavaAsm.dll</HintPath>
-    </Reference>
-    <Reference Include="REghZy.MVVM">
-      <HintPath>..\..\REghZy\DLL\REghZy.MVVM.dll</HintPath>
-    </Reference>
-  </ItemGroup>
-
-  <ItemGroup>
     <Content Include="AttributeEditor\targets.txt" />
   </ItemGroup>
 
   <ItemGroup>
     <Folder Include="CodeEditing\Bytecode" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Reference Include="JavaAsm">
+      <HintPath>..\..\java-asm\JavaAsm\bin\Release\netstandard2.0\JavaAsm.dll</HintPath>
+    </Reference>
+    <Reference Include="REghZy.MVVM">
+      <HintPath>..\..\REghZy\DLL\REghZy.MVVM.dll</HintPath>
+    </Reference>
   </ItemGroup>
 
 </Project>
