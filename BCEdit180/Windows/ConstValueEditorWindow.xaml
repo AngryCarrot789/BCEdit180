@@ -3,27 +3,68 @@
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
         xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
-        xmlns:window="clr-namespace:BCEdit180.Core.Window;assembly=BCEdit180.Core"
         xmlns:windows="clr-namespace:BCEdit180.Windows"
-        d:DataContext="{d:DesignInstance Type=window:ConstValueEditorViewModel}"
+        xmlns:const="clr-namespace:BCEdit180.Core.Editors.Const;assembly=BCEdit180.Core"
+        d:DataContext="{d:DesignInstance Type=const:ConstValueEditorViewModel}"
         mc:Ignorable="d"
-        Title="Action" Height="225" Width="400"
+        Title="Action" Height="357" Width="500"
         Style="{DynamicResource CustomWindowStyle}" Background="{DynamicResource AREghZyBrush.Deep.3.Background.Static}">
     <Grid Margin="10">
-        <Grid.RowDefinitions>
-            <RowDefinition Height="*"/>
-            <RowDefinition Height="*"/>
-        </Grid.RowDefinitions>
-        <Grid>
-            <Label HorizontalContentAlignment="Center" VerticalContentAlignment="Center">
-                <TextBlock Text="{Binding HeaderMessage, UpdateSourceTrigger=PropertyChanged}" TextWrapping="Wrap" FontSize="20"/>
-            </Label>
-        </Grid>
-        <Grid Grid.Row="1">
-            <Label Margin="0,0,0,24" HorizontalContentAlignment="Center" VerticalContentAlignment="Center">
-                <TextBlock Text="{Binding Description, UpdateSourceTrigger=PropertyChanged}" TextWrapping="Wrap" FontSize="13"/>
-            </Label>
-            <ProgressBar IsIndeterminate="{Binding IsLoading, UpdateSourceTrigger=PropertyChanged}" Height="24" VerticalAlignment="Bottom"/>
+        <Label VerticalContentAlignment="Center" HorizontalContentAlignment="Center" Height="49" VerticalAlignment="Top">
+            <TextBlock FontSize="14" TextAlignment="Center"><Run Text="Select a tab on the left, which represents the constant data type"/><LineBreak/><Run Text="Then on the right, enter the value"/></TextBlock>
+        </Label>
+        <TabControl Margin="0,49,0,29" TabStripPlacement="Left" SelectionChanged="TabControl_SelectionChanged">
+            <TabItem Header="Integer" IsSelected="{Binding Type, Converter={StaticResource EnumConverter}, ConverterParameter={x:Static const:ConstType.Integer}, UpdateSourceTrigger=PropertyChanged}">
+                <Grid VerticalAlignment="Stretch">
+                    <TextBlock Text="Edit the Integer value here" VerticalAlignment="Top" Padding="3"/>
+                    <TextBox x:Name="TextBox_I" FontFamily="Consolas" Text="{Binding ValueInteger, UpdateSourceTrigger=PropertyChanged}" Padding="3" Margin="0 24 0 0" Background="{DynamicResource AREghZyBrush.Deep.2.Background.Static}" BorderBrush="{DynamicResource AREghZyBrush.Primary.3.Border.Static}"/>
+                </Grid>
+            </TabItem>
+            <TabItem Header="Long" IsSelected="{Binding Type, Converter={StaticResource EnumConverter}, ConverterParameter={x:Static const:ConstType.Long}, UpdateSourceTrigger=PropertyChanged}">
+                <Grid VerticalAlignment="Stretch">
+                    <TextBlock Text="Edit the Long value here" VerticalAlignment="Top" Padding="3"/>
+                    <TextBox x:Name="TextBox_L" FontFamily="Consolas" Text="{Binding ValueLong, UpdateSourceTrigger=PropertyChanged}" Padding="3" Margin="0 24 0 0" Background="{DynamicResource AREghZyBrush.Deep.2.Background.Static}" BorderBrush="{DynamicResource AREghZyBrush.Primary.3.Border.Static}"/>
+                </Grid>
+            </TabItem>
+            <TabItem Header="Float" IsSelected="{Binding Type, Converter={StaticResource EnumConverter}, ConverterParameter={x:Static const:ConstType.Float}, UpdateSourceTrigger=PropertyChanged}">
+                <Grid VerticalAlignment="Stretch">
+                    <TextBlock Text="Edit the Float value here" VerticalAlignment="Top" Padding="3"/>
+                    <TextBox x:Name="TextBox_F" FontFamily="Consolas" Text="{Binding ValueFloat, UpdateSourceTrigger=PropertyChanged}" Padding="3" Margin="0 24 0 0" Background="{DynamicResource AREghZyBrush.Deep.2.Background.Static}" BorderBrush="{DynamicResource AREghZyBrush.Primary.3.Border.Static}"/>
+                </Grid>
+            </TabItem>
+            <TabItem Header="Double" IsSelected="{Binding Type, Converter={StaticResource EnumConverter}, ConverterParameter={x:Static const:ConstType.Double}, UpdateSourceTrigger=PropertyChanged}">
+                <Grid VerticalAlignment="Stretch">
+                    <TextBlock Text="Edit the Double value here" VerticalAlignment="Top" Padding="3"/>
+                    <TextBox x:Name="TextBox_D" FontFamily="Consolas" Text="{Binding ValueDouble, UpdateSourceTrigger=PropertyChanged}" Padding="3" Margin="0 24 0 0" Background="{DynamicResource AREghZyBrush.Deep.2.Background.Static}" BorderBrush="{DynamicResource AREghZyBrush.Primary.3.Border.Static}"/>
+                </Grid>
+            </TabItem>
+            <TabItem Header="String" IsSelected="{Binding Type, Converter={StaticResource EnumConverter}, ConverterParameter={x:Static const:ConstType.String}, UpdateSourceTrigger=PropertyChanged}">
+                <Grid VerticalAlignment="Stretch">
+                    <TextBlock Text="Edit the String value here" VerticalAlignment="Top" Padding="3"/>
+                    <TextBox x:Name="TextBox_S" FontFamily="Consolas" Text="{Binding ValueString, UpdateSourceTrigger=PropertyChanged}" Padding="3" Margin="0 24 0 0" Background="{DynamicResource AREghZyBrush.Deep.2.Background.Static}" BorderBrush="{DynamicResource AREghZyBrush.Primary.3.Border.Static}"/>
+                </Grid>
+            </TabItem>
+            <TabItem Header="Class Name" IsSelected="{Binding Type, Converter={StaticResource EnumConverter}, ConverterParameter={x:Static const:ConstType.Class}, UpdateSourceTrigger=PropertyChanged}">
+                <Grid VerticalAlignment="Stretch">
+                    <TextBlock Text="Edit the Class Name here" VerticalAlignment="Top" Padding="3"/>
+                    <TextBox x:Name="TextBox_CN" FontFamily="Consolas" Text="{Binding ValueClass, UpdateSourceTrigger=PropertyChanged}" Padding="3" Margin="0 24 75 0" Background="{DynamicResource AREghZyBrush.Deep.2.Background.Static}" BorderBrush="{DynamicResource AREghZyBrush.Primary.3.Border.Static}"/>
+                    <Button Command="{Binding EditClassNameCommand}" Content="Edit" BorderThickness="0 1 1 1" BorderBrush="{DynamicResource AREghZyBrush.Primary.3.Border.Static}" Background="{DynamicResource AREghZyBrush.Primary.2.Background.Static}" Margin="0,24,0,0" HorizontalAlignment="Right" Width="75"/>
+                </Grid>
+            </TabItem>
+            <TabItem Header="Handle" IsSelected="{Binding Type, Converter={StaticResource EnumConverter}, ConverterParameter={x:Static const:ConstType.Handle}, UpdateSourceTrigger=PropertyChanged}">
+                <TextBlock Text="Coming Soon" FontSize="24" VerticalAlignment="Center" HorizontalAlignment="Center"/>
+            </TabItem>
+            <TabItem Header="Method Descriptor" IsSelected="{Binding Type, Converter={StaticResource EnumConverter}, ConverterParameter={x:Static const:ConstType.MethodDescriptor}, UpdateSourceTrigger=PropertyChanged}">
+                <Grid VerticalAlignment="Stretch">
+                    <TextBlock Text="Edit the Method Descriptor here" VerticalAlignment="Top" Padding="3"/>
+                    <TextBox x:Name="TextBox_MD" FontFamily="Consolas" Text="{Binding ValueMethodDescriptor, UpdateSourceTrigger=PropertyChanged}" Padding="3" Margin="0 24 75 0" Background="{DynamicResource AREghZyBrush.Deep.2.Background.Static}" BorderBrush="{DynamicResource AREghZyBrush.Primary.3.Border.Static}"/>
+                    <Button Command="{Binding EditMethodDescriptorCommand}" Content="Edit" BorderThickness="0 1 1 1" BorderBrush="{DynamicResource AREghZyBrush.Primary.3.Border.Static}" Background="{DynamicResource AREghZyBrush.Primary.2.Background.Static}" Margin="0,24,0,0" HorizontalAlignment="Right" Width="75"/>
+                </Grid>
+            </TabItem>
+        </TabControl>
+        <Grid Height="24" VerticalAlignment="Bottom">
+            <Button Command="{Binding ConfirmCommand, RelativeSource={RelativeSource FindAncestor, AncestorType={x:Type windows:WindowModal}}}" Focusable="False" Content="Okay" HorizontalAlignment="Right" Margin="0,0,79,0" Width="74" Background="#FF79D43A"/>
+            <Button Command="{Binding CancelCommand, RelativeSource={RelativeSource FindAncestor, AncestorType={x:Type windows:WindowModal}}}" Focusable="False" Content="Cancel" HorizontalAlignment="Right" Width="74"/>
         </Grid>
     </Grid>
-    </windows:WindowModal>
+</windows:WindowModal>

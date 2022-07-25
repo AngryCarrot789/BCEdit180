@@ -12,6 +12,7 @@ using System.Windows.Media;
 using System.Windows.Media.Imaging;
 using System.Windows.Navigation;
 using System.Windows.Shapes;
+using BCEdit180.Core.CodeEditing.Bytecode.Instructions;
 
 namespace BCEdit180.CodeEditing.Bytecode.ListControls {
     /// <summary>
@@ -20,6 +21,18 @@ namespace BCEdit180.CodeEditing.Bytecode.ListControls {
     public partial class LdcInstructionItemControl : UserControl {
         public LdcInstructionItemControl() {
             InitializeComponent();
+        }
+
+        private void TextBlock_MouseDown(object sender, MouseButtonEventArgs e) {
+            if (e.ClickCount == 2) {
+                ((LdcInstructionViewModel) this.DataContext).EditOpcode();
+            }
+        }
+
+        private void TextBlock_MouseDown_1(object sender, MouseButtonEventArgs e) {
+            if (e.ClickCount == 2) {
+                ((LdcInstructionViewModel) this.DataContext).EditValueAction();
+            }
         }
     }
 }

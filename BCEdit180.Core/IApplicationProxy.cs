@@ -4,6 +4,6 @@ namespace BCEdit180.Core {
     public interface IApplicationProxy {
         void Shutdown();
 
-        void RunSync(Action action);
+        void InvokeSync(Action action);
     }
 }

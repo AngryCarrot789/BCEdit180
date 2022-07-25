@@ -12,7 +12,7 @@ using REghZy.MVVM.ViewModels;
 
 namespace BCEdit180.Core.CodeEditing {
     public class BytecodeEditorViewModel : BaseViewModel {
-        public static IMultiSelector<BaseInstructionViewModel> SelectedInstructionProvider { get; set; }
+        public static IListSelector<BaseInstructionViewModel> BytecodeList { get; set; }
 
         public CodeEditorViewModel CodeEditor { get; }
 
@@ -51,7 +51,7 @@ namespace BCEdit180.Core.CodeEditing {
         }
 
         public void DeleteSelectedInstructions() {
-            IEnumerable<BaseInstructionViewModel> remove = SelectedInstructionProvider.SelectedItems;
+            IEnumerable<BaseInstructionViewModel> remove = BytecodeList.SelectedItems;
             foreach (BaseInstructionViewModel instruction in remove) {
                 this.Instructions.Remove(instruction);
             }
@@ -76,40 +76,34 @@ namespace BCEdit180.Core.CodeEditing {
             }
         }
 
-        private bool doExtendedSearch;
-
         public void SearchNextElement() {
-            int start = this.SelectedInstructionIndex + 1;
-            if (start < 0 || start >= this.Instructions.Count) {
-                start = this.SelectedInstructionIndex = 0;
+            if (string.IsNullOrEmpty(this.SearchText)) {
+                return;
             }
 
-            for (int i = start, size = this.Instructions.Count; i < size; i++) {
-                BaseInstructionViewModel instruction = this.Instructions[i];
-                if (MatchInstruction(instruction, this.SearchText)) {
-                    this.SelectedInstructionIndex = i;
-                    break;
+            bool doExtendedSearch = false;
+            while (true) {
+                int start = this.SelectedInstructionIndex + 1;
+                if (start < 0 || start >= this.Instructions.Count) {
+                    start = this.SelectedInstructionIndex = 0;
                 }
-            }
 
-            // Semi-recursive
-            if (!this.doExtendedSearch) {
-                this.doExtendedSearch = true;
-                SearchNextElement();
-            }
-            else {
-                this.doExtendedSearch = false;
-            }
-        }
-
-        public static BaseInstructionViewModel FindInstruction(IEnumerable<BaseInstructionViewModel> instructions, string search) {
-            foreach (BaseInstructionViewModel instruction in instructions) {
-                if (MatchInstruction(instruction, search)) {
-                    return instruction;
+                for (int i = start, size = this.Instructions.Count; i < size; i++) {
+                    BaseInstructionViewModel instruction = this.Instructions[i];
+                    if (MatchInstruction(instruction, this.SearchText)) {
+                        this.SelectedInstructionIndex = i;
+                        BytecodeList.ScrollToSelectedItem();
+                        break;
+                    }
                 }
-            }
 
-            return null;
+                if (!doExtendedSearch) {
+                    doExtendedSearch = true;
+                    continue;
+                }
+
+                break;
+            }
         }
 
         public static bool MatchInstruction(BaseInstructionViewModel instruction, string search) {

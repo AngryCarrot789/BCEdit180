@@ -24,7 +24,7 @@
         <GroupBox Background="{DynamicResource AREghZyBrush.Deep.2.Background.Static}">
             <GroupBox.Header>
                 <Grid>
-                    <RadioButton x:Name="ObjectRadioButton" Width="100" Content="Object Type" GroupName="TypeSelector" IsChecked="{Binding IsObject, UpdateSourceTrigger=PropertyChanged}"/>
+                    <RadioButton x:Name="ObjectRadioButton" Width="100" Content="Object Type" GroupName="TypeSelector" IsChecked="{Binding IsObject, UpdateSourceTrigger=PropertyChanged}" IsEnabled="{Binding AllowPrimitive, UpdateSourceTrigger=PropertyChanged}"/>
                 </Grid>
             </GroupBox.Header>
             <Grid IsEnabled="{Binding ElementName=ObjectRadioButton, Path=IsChecked, UpdateSourceTrigger=PropertyChanged}">
@@ -41,7 +41,7 @@
         <GroupBox Grid.Row="2" Background="{DynamicResource AREghZyBrush.Deep.2.Background.Static}">
             <GroupBox.Header>
                 <Grid>
-                    <RadioButton x:Name="PrimitiveRadioButton" Width="100" Content="Primitive Type" GroupName="TypeSelector" IsChecked="{Binding IsPrimitive, UpdateSourceTrigger=PropertyChanged}"/>
+                    <RadioButton x:Name="PrimitiveRadioButton" Width="100" Content="Primitive Type" GroupName="TypeSelector" IsChecked="{Binding IsPrimitive, UpdateSourceTrigger=PropertyChanged}" IsEnabled="{Binding AllowPrimitive, UpdateSourceTrigger=PropertyChanged}"/>
                 </Grid>
             </GroupBox.Header>
             <Grid IsEnabled="{Binding ElementName=PrimitiveRadioButton, Path=IsChecked, UpdateSourceTrigger=PropertyChanged}">

@@ -11,7 +11,7 @@
         <TextBlock Width="100" HorizontalAlignment="Left" TextWrapping="NoWrap" VerticalAlignment="Top" Padding="5"  FontWeight="Bold" Text="Opcode"/>
         <TextBlock Width="100" HorizontalAlignment="Left" TextWrapping="NoWrap" VerticalAlignment="Top" Padding="5"  FontWeight="Bold" Margin="0,26,0,0" Text="Value"/>
         <TextBox Text="{Binding Opcode, UpdateSourceTrigger=PropertyChanged}" Background="Transparent" HorizontalAlignment="Stretch" TextWrapping="NoWrap" VerticalAlignment="Top" Padding="5" Margin="100,0,0,0" BorderThickness="0"  FontWeight="Bold" FontStyle="Italic" />
-        <TextBox Text="{Binding Value, UpdateSourceTrigger=PropertyChanged}" Background="Transparent" HorizontalAlignment="Stretch" TextWrapping="NoWrap" VerticalAlignment="Top" Padding="5" Margin="100,26,0,0" BorderThickness="0"  FontWeight="Bold" FontStyle="Italic" />
-        <TextBlock TextWrapping="NoWrap" VerticalAlignment="Top" Padding="5" Margin="0,52,0,0"><Run Text="Warning! Editing LDC instruction values is "/><Run Text="incomplete "/><Run Text="and may corrupt "/><LineBreak/><Run Text="the class file during runtime"/><Run Text=" (unless the constant value is a string)"/></TextBlock>
+        <TextBox Text="{Binding Value, UpdateSourceTrigger=PropertyChanged}" IsEnabled="{Binding IsEditable, UpdateSourceTrigger=PropertyChanged}" Background="Transparent" HorizontalAlignment="Stretch" TextWrapping="NoWrap" VerticalAlignment="Top" Padding="5" Margin="100,26,0,0" BorderThickness="0"  FontWeight="Bold" FontStyle="Italic" />
+        <Button Command="{Binding EditValueCommand}" Focusable="False" Margin="0,57,0,0" Content="Edit Constant Value" Height="29" VerticalAlignment="Top"/>
     </Grid>
 </UserControl>

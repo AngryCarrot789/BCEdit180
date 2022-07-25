@@ -132,6 +132,9 @@
     <Compile Include="CodeEditing\Bytecode\ListControls\InvokeDynamicInstructionItemControl.xaml.cs">
       <DependentUpon>InvokeDynamicInstructionItemControl.xaml</DependentUpon>
     </Compile>
+    <Compile Include="CodeEditing\Bytecode\ListControls\LdcInstructionItemControl.xaml.cs">
+      <DependentUpon>LdcInstructionItemControl.xaml</DependentUpon>
+    </Compile>
     <Compile Include="CodeEditing\Bytecode\ListControls\MethodInstructionItemControl.xaml.cs">
       <DependentUpon>MethodInstructionItemControl.xaml</DependentUpon>
     </Compile>
@@ -163,6 +166,9 @@
       <DependentUpon>ActionProgressWindow.xaml</DependentUpon>
     </Compile>
     <Compile Include="Dialogs\WindowsTypeEditors.cs" />
+    <Compile Include="Windows\ConstValueEditorWindow.xaml.cs">
+      <DependentUpon>ConstValueEditorWindow.xaml</DependentUpon>
+    </Compile>
     <Compile Include="Windows\FieldEditorWindow.xaml.cs">
       <DependentUpon>FieldEditorWindow.xaml</DependentUpon>
     </Compile>
@@ -185,7 +191,8 @@
     </Compile>
     <Compile Include="Windows\WindowBase.cs" />
     <Compile Include="Windows\WindowModal.cs" />
-    <Compile Include="WPFAppServices.cs" />
+    <Compile Include="WpfApplicationProxy.cs" />
+    <Compile Include="WPFCommandManager.cs" />
     <Page Include="Annotations\AnnotationEditorControl.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
@@ -216,6 +223,10 @@
     <Page Include="CodeEditing\Bytecode\ListControls\InvokeDynamicInstructionItemControl.xaml">
       <Generator>MSBuild:Compile</Generator>
     </Page>
+    <Page Include="CodeEditing\Bytecode\ListControls\LdcInstructionItemControl.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
     <Page Include="CodeEditing\Bytecode\ListControls\MethodInstructionItemControl.xaml">
       <Generator>MSBuild:Compile</Generator>
     </Page>
@@ -236,6 +247,10 @@
       <Generator>MSBuild:Compile</Generator>
     </Page>
     <Page Include="Windows\ActionProgressWindow.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Windows\ConstValueEditorWindow.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>

@@ -53,15 +53,16 @@ namespace BCEdit180.Core.AttributeEditor.Classes {
         }
 
         public void Load(InnerClass node) {
-            this.InnerClassName = node.InnerClassName?.Name;
-            this.OuterClassName = node.OuterClassName?.Name;
+            this.OuterClassName = node.OuterClassName?.Name ?? ""; // can be null in some cases cases
+            this.InnerClassName = node.InnerClassName?.Name ?? "";
             this.InnerName = node.InnerName;
             this.ClassAccess = node.Access;
         }
 
         public void Save(InnerClass node) {
-            node.InnerClassName = new ClassName(this.InnerClassName);
-            node.OuterClassName = new ClassName(this.OuterClassName);
+            // default to null inner/outer class
+            node.InnerClassName = string.IsNullOrWhiteSpace(this.InnerClassName) ? null : new ClassName(this.InnerClassName);
+            node.OuterClassName = string.IsNullOrWhiteSpace(this.OuterClassName) ? null : new ClassName(this.OuterClassName);
             node.InnerName = this.InnerName;
             node.Access = this.ClassAccess;
         }

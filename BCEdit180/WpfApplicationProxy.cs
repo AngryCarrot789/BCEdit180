@@ -8,7 +8,7 @@ namespace BCEdit180 {
             Application.Current.Shutdown();
         }
 
-        public void RunSync(Action action) {
+        public void InvokeSync(Action action) {
             Application.Current.Dispatcher.Invoke(action);
         }
     }

@@ -9,10 +9,10 @@
              d:DesignHeight="24" d:DesignWidth="400"
              ContextMenu="{StaticResource BytecodeEditorItemContextMenu}">
     <StackPanel Orientation="Horizontal">
-        <TextBlock Text="{Binding Opcode, UpdateSourceTrigger=PropertyChanged}" Padding="0 0 5 0" VerticalAlignment="Center"/>
-        <TextBlock Text="{Binding FieldOwner, UpdateSourceTrigger=PropertyChanged}" Padding="0 0 0 0" VerticalAlignment="Center"/>
+        <TextBlock Text="{Binding Opcode, UpdateSourceTrigger=PropertyChanged}" Padding="0 0 5 0" VerticalAlignment="Center" ToolTip="The field instruction" MouseDown="TextBlock_MouseDown"/>
+        <TextBlock Text="{Binding FieldOwner, UpdateSourceTrigger=PropertyChanged}" Padding="0 0 0 0" VerticalAlignment="Center" ToolTip="The class that owns this field"/>
         <TextBlock Text="." Padding="0" VerticalAlignment="Center"/>
-        <TextBlock Text="{Binding FieldName, UpdateSourceTrigger=PropertyChanged}" Padding="0 0 5 0" VerticalAlignment="Center"/>
-        <TextBlock Text="{Binding FieldDescriptor, UpdateSourceTrigger=PropertyChanged}" Padding="0 0 0 0" VerticalAlignment="Center"/>
+        <TextBlock Text="{Binding FieldName, UpdateSourceTrigger=PropertyChanged}" Padding="0 0 5 0" VerticalAlignment="Center" ToolTip="The name of the field"/>
+        <TextBlock Text="{Binding FieldDescriptor, UpdateSourceTrigger=PropertyChanged}" Padding="0 0 0 0" VerticalAlignment="Center" ToolTip="The descriptor of the type that this field holds"/>
     </StackPanel>
 </UserControl>

@@ -6,14 +6,11 @@
              xmlns:local="clr-namespace:BCEdit180.CodeEditing.Bytecode.ListControls"
              mc:Ignorable="d" 
              xmlns:instructions="clr-namespace:BCEdit180.Core.CodeEditing.Bytecode.Instructions;assembly=BCEdit180.Core"
-             d:DataContext="{d:DesignInstance Type=instructions:FieldInstructionViewModel}"
+             d:DataContext="{d:DesignInstance Type=instructions:LdcInstructionViewModel}"
              d:DesignHeight="24" d:DesignWidth="400"
              ContextMenu="{StaticResource BytecodeEditorItemContextMenu}">
     <StackPanel Orientation="Horizontal">
-        <TextBlock Text="{Binding Opcode, UpdateSourceTrigger=PropertyChanged}" Padding="0 0 5 0" VerticalAlignment="Center"/>
-        <TextBlock Text="{Binding FieldOwner, UpdateSourceTrigger=PropertyChanged}" Padding="0 0 0 0" VerticalAlignment="Center"/>
-        <TextBlock Text="." Padding="0" VerticalAlignment="Center"/>
-        <TextBlock Text="{Binding FieldName, UpdateSourceTrigger=PropertyChanged}" Padding="0 0 5 0" VerticalAlignment="Center"/>
-        <TextBlock Text="{Binding FieldDescriptor, UpdateSourceTrigger=PropertyChanged}" Padding="0 0 0 0" VerticalAlignment="Center"/>
+        <TextBlock Text="{Binding Opcode, UpdateSourceTrigger=PropertyChanged}" MouseDown="TextBlock_MouseDown" Padding="0 0 5 0" VerticalAlignment="Center"/>
+        <TextBlock Text="{Binding Value, UpdateSourceTrigger=PropertyChanged}" MouseDown="TextBlock_MouseDown_1" Padding="0 0 0 0" VerticalAlignment="Center"/>
     </StackPanel>
 </UserControl>

@@ -1,5 +1,5 @@
 namespace BCEdit180.Core.Utils {
-    public class AppServices {
-        public static IApplicationProxy Services => ServiceManager.GetService<IApplicationProxy>();
+    public class AppProxy {
+        public static IApplicationProxy Proxy => ServiceManager.GetService<IApplicationProxy>();
     }
 }

@@ -9,7 +9,7 @@
              d:DesignHeight="24" d:DesignWidth="400"
              ContextMenu="{StaticResource BytecodeEditorItemContextMenu}">
     <StackPanel Orientation="Horizontal">
-        <TextBlock Text="{Binding Opcode, UpdateSourceTrigger=PropertyChanged}" Padding="0 0 5 0" VerticalAlignment="Center" ToolTip="The method instruction"/>
+        <TextBlock Text="{Binding Opcode, UpdateSourceTrigger=PropertyChanged}" Padding="0 0 5 0" VerticalAlignment="Center" ToolTip="The method instruction" MouseDown="TextBlock_MouseDown"/>
         <TextBlock Text="{Binding MethodOwner, UpdateSourceTrigger=PropertyChanged}" Padding="0 0 0 0" VerticalAlignment="Center" ToolTip="The class that owns the method"/>
         <TextBlock Text="." Padding="0" VerticalAlignment="Center"/>
         <TextBlock Text="{Binding MethodName, UpdateSourceTrigger=PropertyChanged}" Padding="0 0 0 0" VerticalAlignment="Center" ToolTip="The name of the method"/>

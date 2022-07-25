@@ -1,9 +1,11 @@
 using System.Collections.Generic;
 using System.Linq;
+using System.Security.Cryptography;
 using System.Threading.Tasks;
 using System.Windows;
 using BCEdit180.Core.CodeEditing.InstructionEdit;
 using BCEdit180.Core.Editors;
+using BCEdit180.Core.Editors.Const;
 using BCEdit180.Core.Utils;
 using BCEdit180.Core.Window;
 using BCEdit180.Windows;
@@ -12,7 +14,7 @@ using JavaAsm.Instructions;
 
 namespace BCEdit180.Dialogs {
     public class WindowsTypeEditors : ITypeEditors {
-        public Task<TypeDescriptor> EditTypeDescriptorDialog(TypeDescriptor defaultDescriptor = null) {
+        public Task<TypeDescriptor> EditTypeDescriptorDialog(TypeDescriptor defaultDescriptor = null, bool allowClass = true, bool allowPrimitve = true) {
             TypeEditorWindow window = new TypeEditorWindow();
             TypeEditorViewModel editor = new TypeEditorViewModel();
             if (defaultDescriptor != null) {
@@ -27,6 +29,8 @@ namespace BCEdit180.Dialogs {
 
             }
 
+            editor.AllowPrimitive = allowPrimitve;
+            editor.AllowClass = allowClass;
             window.DataContext = editor;
             window.ShowDialog();
             if (editor.IsPrimitive) {
@@ -87,6 +91,13 @@ namespace BCEdit180.Dialogs {
             window.DataContext = vm;
             window.ShowDialog();
             return Task.FromResult(vm);
+        }
+
+        public Task<ConstValueEditorViewModel> EditConstantDialog(ConstValueEditorViewModel defaultEditor = null) {
+            ConstValueEditorWindow window = new ConstValueEditorWindow();
+            ConstValueEditorViewModel vm = defaultEditor ?? new ConstValueEditorViewModel();
+            window.DataContext = vm;
+            return window.ShowDialog() != true ? Task.FromResult<ConstValueEditorViewModel>(null) : Task.FromResult((ConstValueEditorViewModel) window.DataContext);
         }
 
         public Task<Opcode?> ChangeInstructionDialog(IEnumerable<Opcode> opcodes) {

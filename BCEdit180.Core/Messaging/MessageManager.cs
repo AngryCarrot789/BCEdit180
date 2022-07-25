@@ -1,13 +1,13 @@
 using System;
 using System.Collections.Generic;
-using BCEdit180.Core.Modals;
+using System.Reflection;
 using BCEdit180.Core.Utils;
 
-namespace BCEdit180.Core {
+namespace BCEdit180.Core.Messaging {
     public static class MessageManager {
         private static readonly Dictionary<Type, List<IMessageReceiver>> ReceiverMap = new Dictionary<Type, List<IMessageReceiver>>();
 
-        public static void RegisterHandler<TMessage, TReceiver>(TReceiver receiver) where TReceiver : IMessageReceiver<TMessage> {
+        public static void RegisterHandler<TMessage>(IMessageReceiver<TMessage> receiver) {
             if (!ReceiverMap.ContainsKey(typeof(TMessage))) {
                 ReceiverMap[typeof(TMessage)] = new List<IMessageReceiver>();
             }
@@ -15,10 +15,21 @@ namespace BCEdit180.Core {
             ReceiverMap[typeof(TMessage)].Add(receiver);
         }
 
+        private static IMessageReceiver currentObject;
         public static void Publish<T>(T message) {
             if (ReceiverMap.TryGetValue(typeof(T), out List<IMessageReceiver> list)) {
                 foreach (IMessageReceiver receiver in list) {
-                    ((IMessageReceiver<T>) receiver).Handle(message);
+                    if (currentObject == receiver) {
+                        throw new Exception($"Prevented stack overflow exception while publishing event. Handler {receiver.GetType()} receiving {message.GetType()} ({message})");
+                    }
+
+                    currentObject = receiver;
+                    try {
+                        ((IMessageReceiver<T>) receiver).HandleMessage(message);
+                    }
+                    finally {
+                        currentObject = null;
+                    }
                 }
             }
         }

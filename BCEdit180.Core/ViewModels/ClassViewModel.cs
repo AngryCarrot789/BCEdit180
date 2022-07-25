@@ -3,6 +3,9 @@ using System.IO;
 using System.Threading.Tasks;
 using System.Windows.Input;
 using BCEdit180.Core.AttributeEditor;
+using BCEdit180.Core.Commands;
+using BCEdit180.Core.Messaging;
+using BCEdit180.Core.Messaging.Messages;
 using BCEdit180.Core.Utils;
 using BCEdit180.Core.Window;
 using JavaAsm;
@@ -14,7 +17,7 @@ namespace BCEdit180.Core.ViewModels {
     /// <summary>
     /// A view model for a class file (.class). This manages the view models for fields, methods, attributes, etc
     /// </summary>
-    public class ClassViewModel : BaseViewModel, ISaveable<ClassNode> {
+    public class ClassViewModel : BaseViewModel, ISaveable<ClassNode>, IMessageReceiver<BusyStateMessage> {
         /// <summary>
         /// The class node handle that this class will load and save into
         /// <para>
@@ -55,13 +58,26 @@ namespace BCEdit180.Core.ViewModels {
             set => RaisePropertyChanged(ref this.filePath, value);
         }
 
-        public ICommand OpenFileCommand { get; }
+        private bool isBusy;
+        public bool IsBusy {
+            get => this.isBusy;
+            set {
+                RaisePropertyChanged(ref this.isBusy, value);
+                this.OpenFileCommand.RaiseCanExecuteChanged();
+                this.ReloadFileCommand.RaiseCanExecuteChanged();
+                this.SaveFileCommand.RaiseCanExecuteChanged();
+                this.SaveFileAsCommand.RaiseCanExecuteChanged();
+            }
+        }
 
-        public ICommand ReloadFileCommand { get; }
 
-        public ICommand SaveFileCommand { get; }
+        public ExtendedRelayCommand OpenFileCommand { get; }
 
-        public ICommand SaveFileAsCommand { get; }
+        public ExtendedRelayCommand ReloadFileCommand { get; }
+
+        public ExtendedRelayCommand SaveFileCommand { get; }
+
+        public ExtendedRelayCommand SaveFileAsCommand { get; }
 
         public ICommand ExitCommand { get; }
 
@@ -79,12 +95,14 @@ namespace BCEdit180.Core.ViewModels {
         }
 
         public ClassViewModel(ClassNode node) {
+            MessageManager.RegisterHandler<BusyStateMessage>(this);
+
             this.Node = node;
             this.ExitCommand = new RelayCommand(()=> Environment.Exit(0));
-            this.OpenFileCommand = new RelayCommand(OpenFile);
-            this.ReloadFileCommand = new RelayCommand(ReloadFile);
-            this.SaveFileCommand = new RelayCommand(Save);
-            this.SaveFileAsCommand = new RelayCommand(SaveAs);
+            this.OpenFileCommand = new ExtendedRelayCommand(OpenFile, () => !this.IsBusy );
+            this.ReloadFileCommand = new ExtendedRelayCommand(ReloadFile, () => !this.IsBusy );
+            this.SaveFileCommand = new ExtendedRelayCommand(SaveClassFile, () => !this.IsBusy );
+            this.SaveFileAsCommand = new ExtendedRelayCommand(SaveClassFileAs, () => !this.IsBusy );
 
             this.ClassInfo = new ClassInfoViewModel(this);
             this.MethodList = new MethodListViewModel(this);
@@ -108,34 +126,40 @@ namespace BCEdit180.Core.ViewModels {
 
         public void ReadClassFile(string path, bool showProgressDialog = true) {
             // my attempt at a semi-async class parser
-            if (showProgressDialog) {
-                ActionProgressViewModel vm = Dialog.Message.ShowProgressWindow("Loading class file", "Reading file " + path);
-                Task.Run(async () => {
-                    await Task.Delay(100);
-                    AppServices.Services.RunSync(() => {
-                        using (BufferedStream input = new BufferedStream(File.OpenRead(path), 8192)) {
-                            this.Node = ClassFile.ParseClass(input);
-                        }
+            try {
+                this.IsBusy = true;
+                if (showProgressDialog) {
+                    ActionProgressViewModel vm = Dialog.Message.ShowProgressWindow("Loading class file", "Reading file " + path);
+                    Task.Run(async () => {
+                        await Task.Delay(100);
+                        AppProxy.Proxy.InvokeSync(() => {
+                            using (BufferedStream input = new BufferedStream(File.OpenRead(path), 8192)) {
+                                this.Node = ClassFile.ParseClass(input);
+                            }
 
-                        vm.Description = "Parsing classfile... ";
-                        Task.Run(async () => {
-                            await Task.Delay(100);
-                            AppServices.Services.RunSync(() => {
-                                this.FilePath = path;
-                                Load(this.Node);
-                                vm.CloseDialog();
+                            vm.Description = "Parsing classfile... ";
+                            Task.Run(async () => {
+                                await Task.Delay(100);
+                                AppProxy.Proxy.InvokeSync(() => {
+                                    this.FilePath = path;
+                                    Load(this.Node);
+                                    vm.CloseDialog();
+                                });
                             });
                         });
                     });
-                });
-            }
-            else {
-                using (BufferedStream input = new BufferedStream(File.OpenRead(path))) {
-                    this.Node = ClassFile.ParseClass(input);
                 }
+                else {
+                    using (BufferedStream input = new BufferedStream(File.OpenRead(path))) {
+                        this.Node = ClassFile.ParseClass(input);
+                    }
 
-                this.FilePath = path;
-                Load(this.Node);
+                    this.FilePath = path;
+                    Load(this.Node);
+                }
+            }
+            finally {
+                this.IsBusy = false;
             }
         }
 
@@ -168,8 +192,9 @@ namespace BCEdit180.Core.ViewModels {
             }
         }
 
-        public async void Save() {
+        public async void SaveClassFile() {
             try {
+                this.IsBusy = true;
                 if (this.FilePath != null) {
                     if (File.Exists(this.FilePath)) {
                         string backupPath = Path.Combine(Path.GetDirectoryName(this.FilePath) ?? "", "backup_" + Path.GetFileName(this.FilePath));
@@ -202,20 +227,24 @@ namespace BCEdit180.Core.ViewModels {
                     ReadClassFileAndShowDialog(this.FilePath);
                 }
                 else {
-                    SaveAs();
+                    SaveClassFileAs();
                 }
             }
             catch (Exception e) {
                 await Dialog.Message.ShowWarningDialog("Failed to save", "Failed to save file: " + this.FilePath + "\n" + e);
             }
+            finally {
+                this.IsBusy = false;
+            }
         }
 
-        public async void SaveAs() {
-            if (await Dialog.File.OpenSaveDialog("Save a class file", "ClassFile|*.class|All|*.*", out string path)) {
-                if (!File.Exists(path) || await Dialog.Message.ConfirmOkCancel("Overwrite file", "File already exists. Overwrite " + path + "?", true)) {
-                    this.FilePath = path;
+        public async void SaveClassFileAs() {
+            this.IsBusy = true;
+            try {
+                if (await Dialog.File.OpenSaveDialog("Save a class file", "ClassFile|*.class|All|*.*", out string path)) {
+                    if (!File.Exists(path) || await Dialog.Message.ConfirmOkCancel("Overwrite file", "File already exists. Overwrite " + path + "?", true)) {
+                        this.FilePath = path;
 
-                    try {
                         if (File.Exists(this.FilePath)) {
                             string backupPath = Path.Combine(Path.GetDirectoryName(this.FilePath) ?? "", "backup_" + Path.GetFileName(this.FilePath));
                             if (File.Exists(backupPath)) {
@@ -246,11 +275,18 @@ namespace BCEdit180.Core.ViewModels {
                         // so reloading will fix
                         ReadClassFileAndShowDialog(this.FilePath);
                     }
-                    catch (Exception e) {
-                        await Dialog.Message.ShowWarningDialog("Failed to save", "Failed to save file: " + e);
-                    }
                 }
             }
+            catch (Exception e) {
+                await Dialog.Message.ShowWarningDialog("Failed to save", "Failed to save file: " + e);
+            }
+            finally {
+                this.IsBusy = false;
+            }
+        }
+
+        public void HandleMessage(BusyStateMessage message) {
+            this.IsBusy = message.IsBusy;
         }
     }
 }

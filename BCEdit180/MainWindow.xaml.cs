@@ -9,6 +9,7 @@ using BCEdit180.Core.AttributeEditor;
 using BCEdit180.Core.AttributeEditor.Classes;
 using BCEdit180.Core.CodeEditing;
 using BCEdit180.Core.CodeEditing.Bytecode.Instructions;
+using BCEdit180.Core.Commands;
 using BCEdit180.Core.Modals;
 using BCEdit180.Core.Utils;
 using BCEdit180.Core.ViewModels;
@@ -26,9 +27,10 @@ namespace BCEdit180 {
             ServiceManager.SetService<ITypeEditors>(new WindowsTypeEditors());
             ServiceManager.SetService<IAccessEditor>(new WindowsAccessEditor());
             ServiceManager.SetService<IFileDialog>(new WindowsFileDialogs());
-            ServiceManager.SetService<IAppServices>(new WPFAppServices());
+            ServiceManager.SetService<IApplicationProxy>(new WpfApplicationProxy());
             ServiceManager.SetService<IModalManager>(new WPFModalManager());
-            BytecodeEditorViewModel.SelectedInstructionProvider = new BytecodeMultiselectImpl(this);
+            ServiceManager.SetService<ICommandManager>(new WPFCommandManager());
+            BytecodeEditorViewModel.BytecodeList = new BytecodeMultiselectImpl(this);
             this.DataContext = new ClassViewModel();
 
             // string path = "F:\\IJProjects\\CarrotTools\\out\\production\\CarrotTools\\reghzy\\carrottools\\playerdata\\results\\custom\\tileentity\\TileEntityTimingResult.class";
@@ -70,7 +72,7 @@ namespace BCEdit180 {
 
         }
 
-        private class BytecodeMultiselectImpl : IMultiSelector<BaseInstructionViewModel> {
+        private class BytecodeMultiselectImpl : IListSelector<BaseInstructionViewModel> {
             private readonly MainWindow window;
 
             public BytecodeMultiselectImpl(MainWindow window) {
@@ -86,6 +88,14 @@ namespace BCEdit180 {
 
                     return instructions;
                 }
+            }
+
+            public void BringIntoView(BaseInstructionViewModel value) {
+                this.window.BytecodeEditorListBox.ScrollIntoView(value);
+            }
+
+            public void ScrollToSelectedItem() {
+                this.window.BytecodeEditorListBox.ScrollIntoView(this.window.BytecodeEditorListBox.SelectedItem);
             }
         }
 
@@ -302,6 +312,16 @@ namespace BCEdit180 {
             // if (instructions != null) {
             // 
             // }
+        }
+
+        private void OnWindowKeyDown(object sender, KeyEventArgs e) {
+            if (Keyboard.IsKeyDown(Key.F) && (Keyboard.Modifiers & ModifierKeys.Control) != 0) {
+                this.FindBox.Focus();
+                this.FindBox.SelectAll();
+            }
+            else if (Keyboard.IsKeyDown(Key.S) && (Keyboard.Modifiers & ModifierKeys.Control) != 0) {
+                ((ClassViewModel) this.DataContext).SaveClassFile();
+            }
         }
     }
 }

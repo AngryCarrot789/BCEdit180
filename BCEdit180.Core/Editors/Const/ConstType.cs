@@ -1,5 +1,12 @@
 namespace BCEdit180.Core.Editors.Const {
-    public class ConstType {
-        
+    public enum ConstType {
+        Integer,
+        Long,
+        Float,
+        Double,
+        String,
+        Class,
+        Handle,
+        MethodDescriptor,
     }
 }

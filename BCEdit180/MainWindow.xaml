@@ -23,7 +23,8 @@
         AllowDrop="True"
         PreviewDrop="Window_PreviewDrop"
         PreviewKeyDown="Window_PreviewKeyDown"
-        Title="{Binding ClassInfo.ClassName, UpdateSourceTrigger=PropertyChanged, Converter={StaticResource FQCNConverter}, ConverterParameter=BCEdit180 ({0})}">
+        Title="{Binding ClassInfo.ClassName, UpdateSourceTrigger=PropertyChanged, Converter={StaticResource FQCNConverter}, ConverterParameter=BCEdit180 ({0})}"
+        KeyDown="OnWindowKeyDown">
     <Grid>
         <Grid.Resources>
             <converters:EnumToStringConverter x:Key="EnumToString"/>
@@ -335,7 +336,7 @@
                                 <Grid DataContext="{Binding CodeEditor}">
                                     <TabControl BorderBrush="{DynamicResource AREghZyBrush.Primary.4.Border.Static}">
                                         <TabItem Header="Bytecode Editor" DataContext="{Binding ByteCodeEditor}">
-                                            <Grid Background="{DynamicResource AREghZyBrush.Deep..Background.Static}">
+                                            <Grid Background="{DynamicResource AREghZyBrush.Deep.4.Background.Static}">
                                                 <Grid.RowDefinitions>
                                                     <RowDefinition Height="36*"/>
                                                     <RowDefinition Height="5"/>
@@ -369,12 +370,15 @@
                                                         <DataTemplate DataType="{x:Type instructions:MethodInstructionViewModel}">
                                                             <listControls:MethodInstructionItemControl DataContext="{Binding}"/>
                                                         </DataTemplate>
+                                                        <DataTemplate DataType="{x:Type instructions:LdcInstructionViewModel}">
+                                                            <listControls:LdcInstructionItemControl DataContext="{Binding}"/>
+                                                        </DataTemplate>
                                                         <DataTemplate DataType="{x:Type instructions:InvokeDynamicInstructionViewModel}">
                                                             <listControls:InvokeDynamicInstructionItemControl DataContext="{Binding}"/>
                                                         </DataTemplate>
                                                     </ListBox.Resources>
                                                 </ListBox>
-                                                <TextBox Grid.Row="0" Style="{DynamicResource HintedTextBox}" Tag="Search for anything in this instruction list" AutoWordSelection="False" ToolTip="Searches the instructions for the given string of text" Text="{Binding SearchText, UpdateSourceTrigger=PropertyChanged}" VerticalContentAlignment="Center" Padding="3 1" VerticalAlignment="Bottom" Height="24" Margin="-2,0,60,0" BorderThickness="0 1 0 0" BorderBrush="{DynamicResource AREghZyBrush.Primary.4.Border.Static}" attachedProperties:TextBoxAP.ClearOnClickEsc="True">
+                                                <TextBox x:Name="FindBox" Grid.Row="0" Style="{DynamicResource HintedTextBox}" Tag="Search for anything in this instruction list" AutoWordSelection="False" ToolTip="Searches the instructions for the given string of text" Text="{Binding SearchText, UpdateSourceTrigger=PropertyChanged}" VerticalContentAlignment="Center" Padding="3 1" VerticalAlignment="Bottom" Height="24" Margin="-2,0,60,0" BorderThickness="0 1 0 0" BorderBrush="{DynamicResource AREghZyBrush.Primary.4.Border.Static}" attachedProperties:TextBoxAP.ClearOnClickEsc="True">
                                                     <TextBox.InputBindings>
                                                         <KeyBinding Key="Enter" Command="{Binding FindNextInstructionCommand}"/>
                                                     </TextBox.InputBindings>
@@ -387,7 +391,7 @@
                                                             <Grid HorizontalAlignment="Stretch">
                                                                 <TextBlock HorizontalAlignment="Left" VerticalAlignment="Center" TextWrapping="NoWrap" Text="Opcode:" Padding="5"  FontWeight="Bold" Margin="0 -1 0 0"/>
                                                                 <TextBox HorizontalAlignment="Left" VerticalAlignment="Center" Text="{Binding Opcode, UpdateSourceTrigger=PropertyChanged}" Background="Transparent" TextWrapping="NoWrap" Padding="5"  BorderThickness="0"  FontWeight="Bold" FontStyle="Italic"  Margin="57,-1,0,0"/>
-                                                                <Button IsEnabled="{Binding CanEditOpCode}" Command="{Binding EditOpcodeCommand}" HorizontalAlignment="Right" VerticalAlignment="Center" Width="75" Height="22" Content="Change" Margin="0,4,-3,5"/>
+                                                                <Button IsEnabled="{Binding CanEditOpCode}" Command="{Binding EditOpcodeCommand}" Focusable="False" HorizontalAlignment="Right" VerticalAlignment="Center" Width="75" Height="22" Content="Change" Margin="0,4,-3,5"/>
                                                             </Grid>
                                                         </GroupBox.Header>
                                                         <ScrollViewer VerticalScrollBarVisibility="Auto" HorizontalScrollBarVisibility="Auto">

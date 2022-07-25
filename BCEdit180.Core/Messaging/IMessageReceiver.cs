@@ -1,4 +1,4 @@
-namespace BCEdit180.Core.Modals {
+namespace BCEdit180.Core.Messaging {
     /// <summary>
     /// A class that can receive messages. This is the base class, without a receiver method, and shouldn't be used
     /// </summary>
@@ -11,6 +11,6 @@ namespace BCEdit180.Core.Modals {
     /// </summary>
     /// <typeparam name="TMessage"></typeparam>
     public interface IMessageReceiver<in TMessage> : IMessageReceiver {
-        void Handle(TMessage message);
+        void HandleMessage(TMessage message);
     }
 }

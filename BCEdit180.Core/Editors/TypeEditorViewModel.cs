@@ -51,8 +51,22 @@ namespace BCEdit180.Core.Editors {
             }
         }
 
+        private bool allowPrimitive;
+        public bool AllowPrimitive {
+            get => this.allowPrimitive;
+            set => RaisePropertyChanged(ref this.allowPrimitive, value);
+        }
+
+        private bool allowClass;
+        public bool AllowClass {
+            get => this.allowClass;
+            set => RaisePropertyChanged(ref this.allowClass, value);
+        }
+
         public TypeEditorViewModel() {
             this.ArrayDepth = 0;
+            this.AllowPrimitive = true;
+            this.AllowClass = true;
         }
 
         public void UpdateClassName() {

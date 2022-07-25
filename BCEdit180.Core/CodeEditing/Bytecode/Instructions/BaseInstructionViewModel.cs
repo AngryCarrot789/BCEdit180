@@ -33,8 +33,8 @@ namespace BCEdit180.Core.CodeEditing.Bytecode.Instructions {
             });
         }
 
-        public async Task EditOpcode() {
-            Opcode? opcode = await Dialog.TypeEditor.ChangeInstructionDialog(this.AvailableOpCodes);
+        public void EditOpcode() {
+            Opcode? opcode = Dialog.TypeEditor.ChangeInstructionDialog(this.AvailableOpCodes).Result;
             if (opcode.HasValue) {
                 this.Opcode = opcode.Value;
             }

@@ -3,6 +3,8 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Input;
+using BCEdit180.Core.Messaging;
+using BCEdit180.Core.Messaging.Messages;
 using JavaAsm;
 using REghZy.MVVM.Commands;
 using REghZy.MVVM.ViewModels;
@@ -32,10 +34,13 @@ namespace BCEdit180.Core.ViewModels {
 
         public void GenerateCode() {
             this.IsGenerating = true;
+            MessageManager.Publish(new BusyStateMessage(true));
             Task.Run(async () => {
                 string code = await GenerateCodeAsync();
+                await Task.Delay(2000);
                 this.IsGenerating = false;
                 this.Text = code;
+                MessageManager.PublishUI(new BusyStateMessage(false));
             });
         }
 
