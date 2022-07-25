@@ -3,6 +3,15 @@ A java classfile viewer and editor, written in C#.
 
 Similar to jclasslib but will soon support many more features, e.g copy and pasting bytecode, adding and removing methods and fields, etc
 
+See the bottom of this page for a feature list... and also some bugs :(
+
+## Preview
+### Method general info
+![](BCEdit180_2022-07-25_22.17.51.png)
+### Bytecode editor (WIP)
+![](BCEdit180_2022-07-25_22.21.55.png)
+
+
 # Features
 - Class info viewer
 - Interfaces list (editable, currently can't add/remove)
@@ -17,5 +26,5 @@ Similar to jclasslib but will soon support many more features, e.g copy and past
 
 There's probably more that i've missed, but this is generally what this program can do
 
-## Preview
-![](BCEdit180_2022-07-25_22.17.51.png)
+## Bugs :'(
+When changing opcodes or possibly editing type descriptors, clicking cancel won't actually cancel it. This is visible for editing method opcodes for example; by default, INVOKESTATIC is selected, so clicking cancel just sets the instruction opcode to INVOKESTATIC instead of not doing anything... whoops
