@@ -6,7 +6,8 @@
              xmlns:instructions="clr-namespace:BCEdit180.Core.CodeEditing.Bytecode.Instructions;assembly=BCEdit180.Core"
              d:DataContext="{d:DesignInstance Type=instructions:FieldInstructionViewModel}"
              mc:Ignorable="d" 
-             d:DesignHeight="24" d:DesignWidth="400">
+             d:DesignHeight="24" d:DesignWidth="400"
+             ContextMenu="{StaticResource BytecodeEditorItemContextMenu}">
     <StackPanel Orientation="Horizontal">
         <TextBlock Text="{Binding Opcode, UpdateSourceTrigger=PropertyChanged}" Padding="0 0 5 0" VerticalAlignment="Center"/>
         <TextBlock Text="{Binding FieldOwner, UpdateSourceTrigger=PropertyChanged}" Padding="0 0 0 0" VerticalAlignment="Center"/>

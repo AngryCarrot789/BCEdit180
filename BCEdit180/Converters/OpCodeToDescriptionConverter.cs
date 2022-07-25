@@ -2,7 +2,6 @@
 using System.Globalization;
 using System.Windows;
 using System.Windows.Data;
-using BCEdit180.CodeEditing;
 using BCEdit180.Core.CodeEditing;
 using JavaAsm.Instructions;
 

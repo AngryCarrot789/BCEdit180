@@ -3,11 +3,16 @@ using System.Collections.ObjectModel;
 using System.Diagnostics;
 using System.IO;
 using System.Windows;
+using System.Windows.Input;
 using BCEdit180.Core;
 using BCEdit180.Core.AttributeEditor;
 using BCEdit180.Core.AttributeEditor.Classes;
-using BCEdit180.Core.Dialogs;
+using BCEdit180.Core.CodeEditing;
+using BCEdit180.Core.CodeEditing.Bytecode.Instructions;
+using BCEdit180.Core.Modals;
+using BCEdit180.Core.Utils;
 using BCEdit180.Core.ViewModels;
+using BCEdit180.Core.Window;
 using BCEdit180.Dialogs;
 
 namespace BCEdit180 {
@@ -22,6 +27,8 @@ namespace BCEdit180 {
             ServiceManager.SetService<IAccessEditor>(new WindowsAccessEditor());
             ServiceManager.SetService<IFileDialog>(new WindowsFileDialogs());
             ServiceManager.SetService<IAppServices>(new WPFAppServices());
+            ServiceManager.SetService<IModalManager>(new WPFModalManager());
+            BytecodeEditorViewModel.SelectedInstructionProvider = new BytecodeMultiselectImpl(this);
             this.DataContext = new ClassViewModel();
 
             // string path = "F:\\IJProjects\\CarrotTools\\out\\production\\CarrotTools\\reghzy\\carrottools\\playerdata\\results\\custom\\tileentity\\TileEntityTimingResult.class";
@@ -61,6 +68,25 @@ namespace BCEdit180 {
             // system.Connection.Disconnect();
             // server.Close();
 
+        }
+
+        private class BytecodeMultiselectImpl : IMultiSelector<BaseInstructionViewModel> {
+            private readonly MainWindow window;
+
+            public BytecodeMultiselectImpl(MainWindow window) {
+                this.window = window;
+            }
+
+            public IEnumerable<BaseInstructionViewModel> SelectedItems {
+                get {
+                    List<BaseInstructionViewModel> instructions = new List<BaseInstructionViewModel>();
+                    foreach (object item in this.window.BytecodeEditorListBox.SelectedItems) {
+                        instructions.Add((BaseInstructionViewModel) item);
+                    }
+
+                    return instructions;
+                }
+            }
         }
 
         private void MenuItem_Click(object sender, RoutedEventArgs e) {
@@ -242,6 +268,40 @@ namespace BCEdit180 {
             foreach (InnerClassViewModel inner in remove) {
                 editor.InnerClasses.Remove(inner);
             }
+        }
+
+        private bool isDragging;
+
+        private void BytecodeEditorListBox_PreviewMouseLeftButtonDown(object sender, MouseButtonEventArgs e) {
+            // ListBox list = (ListBox) sender;
+            // IEnumerable<BaseInstructionViewModel> selected = BytecodeEditorViewModel.SelectedInstructionProvider.SelectedItems;
+            // List<Instruction> instructions = new List<Instruction>();
+            // foreach (BaseInstructionViewModel instruction in selected) {
+            //     instruction.Save(instruction.Instruction);
+            //     instructions.Add(instruction.Instruction);
+            // }
+            // 
+            // this.isDragging = true;
+            // DragDropEffects effect = DragDrop.DoDragDrop(list, instructions, Keyboard.IsKeyDown(Key.LeftCtrl) ? DragDropEffects.Copy : DragDropEffects.Move);
+            // this.isDragging = false;
+            // if (effect == DragDropEffects.Move) {
+            //     BytecodeEditorViewModel vm = (BytecodeEditorViewModel) list.DataContext;
+            //     foreach(BaseInstructionViewModel instruction in selected) {
+            //         vm.Instructions.Remove(instruction);
+            //     }
+            // }
+        }
+
+        private void BytecodeEditorListBox_Drop(object sender, DragEventArgs e) {
+            // if (this.isDragging) {
+            //     e.Handled = true;
+            //     return;
+            // }
+            // 
+            // List<Instruction> instructions = e.Data.GetData(typeof(List<Instruction>)) as List<Instruction>;
+            // if (instructions != null) {
+            // 
+            // }
         }
     }
 }

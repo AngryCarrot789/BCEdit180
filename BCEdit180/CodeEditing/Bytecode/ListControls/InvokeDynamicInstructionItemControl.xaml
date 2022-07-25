@@ -6,7 +6,8 @@
              xmlns:instructions="clr-namespace:BCEdit180.Core.CodeEditing.Bytecode.Instructions;assembly=BCEdit180.Core"
              mc:Ignorable="d"
              d:DataContext="{d:DesignInstance Type=instructions:InvokeDynamicInstructionViewModel}"
-             d:DesignHeight="24" d:DesignWidth="400">
+             d:DesignHeight="24" d:DesignWidth="400"
+             ContextMenu="{StaticResource BytecodeEditorItemContextMenu}">
     <StackPanel Orientation="Horizontal">
         <TextBlock Text="{Binding Opcode, UpdateSourceTrigger=PropertyChanged}" Padding="0 0 5 0" VerticalAlignment="Center" ToolTip="Invoke dynamic; java's secret weapon"/>
         <TextBlock Text="{Binding Descriptor, UpdateSourceTrigger=PropertyChanged}" Padding="0 0 0 0" VerticalAlignment="Center" ToolTip="The descriptor of a method that is to be referenced, taking lambda parameters and returning (usually) a functional interface (this method is generated/referenced initially by a bootstrap method)" ToolTipService.ShowDuration="60000"/>

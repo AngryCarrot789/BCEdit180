@@ -1,18 +1,16 @@
-﻿<Window x:Class="BCEdit180.Windows.MethodDescEditorWindow"
-        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
-        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
-        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
-        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
-        xmlns:converters="clr-namespace:BCEdit180.Converters"
-        xmlns:controls="clr-namespace:BCEdit180.Controls"
-        xmlns:editors="clr-namespace:BCEdit180.Core.Editors;assembly=BCEdit180.Core"
-        d:DataContext="{d:DesignInstance Type=editors:MethodEditorViewModel}"
-        mc:Ignorable="d"
-        Title="Edit Method Desc" Height="450" Width="320"
-        Style="{DynamicResource CustomWindowStyle}" Background="{DynamicResource AREghZyBrush.Deep.3.Background.Static}">
-    <Window.Resources>
-        <converters:TypeDescriptorToStringConverter x:Key="TypeConverter"/>
-    </Window.Resources>
+﻿<windows:WindowModal x:Class="BCEdit180.Windows.MethodDescEditorWindow"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+             xmlns:converters="clr-namespace:BCEdit180.Converters"
+             xmlns:controls="clr-namespace:BCEdit180.Controls"
+             xmlns:editors="clr-namespace:BCEdit180.Core.Editors;assembly=BCEdit180.Core"
+             xmlns:windows="clr-namespace:BCEdit180.Windows"
+             d:DataContext="{d:DesignInstance Type=editors:MethodEditorViewModel}"
+             mc:Ignorable="d"
+             Title="Edit Method Desc" Height="450" Width="320"
+             Style="{DynamicResource CustomWindowStyle}" Background="{DynamicResource AREghZyBrush.Deep.3.Background.Static}">
     <Grid Margin="10">
         <Label Padding="3" Width="100" VerticalAlignment="Top" HorizontalAlignment="Left" Height="24" VerticalContentAlignment="Center" Margin="0,47,0,0">
             <TextBlock Text="Access Flags"/>
@@ -43,8 +41,8 @@
         </GroupBox>
         <TextBlock TextWrapping="Wrap" TextAlignment="Center" Padding="2 5" Height="42" VerticalAlignment="Top"><Run Text="Fill in the information below, regarding"/><LineBreak/><Run Text="the method"/><Run Text=" descriptor"/><Run Text=" to "/><Run Text="edit"/></TextBlock>
         <Grid Height="24" VerticalAlignment="Bottom">
-            <Button Focusable="False" Content="Okay" Command="{Binding ApplyChangesCommand}" HorizontalAlignment="Right" Margin="0,0,79,0" Width="74" Background="#FF79D43A" Click="Okay_Click"/>
-            <Button Focusable="False" Content="Cancel" HorizontalAlignment="Right" Width="74" Click="Cancel_Click"/>
+            <Button Command="{Binding ConfirmCommand, RelativeSource={RelativeSource FindAncestor, AncestorType={x:Type windows:WindowModal}}}" Focusable="False" Content="Okay" HorizontalAlignment="Right" Margin="0,0,79,0" Width="74" Background="#FF79D43A"/>
+            <Button Command="{Binding ConfirmCommand, RelativeSource={RelativeSource FindAncestor, AncestorType={x:Type windows:WindowModal}}}" Focusable="False" Content="Cancel" HorizontalAlignment="Right" Width="74"/>
         </Grid>
     </Grid>
-</Window>
+</windows:WindowModal>

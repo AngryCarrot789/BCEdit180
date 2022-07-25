@@ -1,10 +1,7 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.Collections.ObjectModel;
-using System.Windows.Input;
 using BCEdit180.Core.Utils;
 using JavaAsm.Instructions;
-using REghZy.MVVM.Commands;
 using REghZy.MVVM.ViewModels;
 
 namespace BCEdit180.Core.CodeEditing.InstructionEdit {
@@ -23,12 +20,7 @@ namespace BCEdit180.Core.CodeEditing.InstructionEdit {
             set => RaisePropertyChanged(ref this.selectedOpcode, value);
         }
 
-        public ICommand ApplyChangesCommand { get; }
-
-        public Action<Opcode> SetOpcodeCallback { get; set; }
-
         public ChangeInstructionViewModel() {
-            this.ApplyChangesCommand = new RelayCommand(ApplyChanges);
             this.AvailableOpCodes = new ObservableCollection<Opcode>();
         }
 
@@ -39,12 +31,6 @@ namespace BCEdit180.Core.CodeEditing.InstructionEdit {
 
         public bool IsValidSelection() {
             return this.selectedIndex >= 0 && this.selectedIndex < this.AvailableOpCodes.Count;
-        }
-
-        public void ApplyChanges() {
-            if (IsValidSelection()) {
-                this.SetOpcodeCallback?.Invoke(this.SelectedOpcode);
-            }
         }
     }
 }

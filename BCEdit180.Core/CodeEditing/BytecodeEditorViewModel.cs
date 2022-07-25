@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Windows.Input;
 using BCEdit180.Core.CodeEditing.Bytecode.Instructions;
+using BCEdit180.Core.Utils;
 using JavaAsm;
 using JavaAsm.Instructions;
 using JavaAsm.Instructions.Types;
@@ -11,6 +12,8 @@ using REghZy.MVVM.ViewModels;
 
 namespace BCEdit180.Core.CodeEditing {
     public class BytecodeEditorViewModel : BaseViewModel {
+        public static IMultiSelector<BaseInstructionViewModel> SelectedInstructionProvider { get; set; }
+
         public CodeEditorViewModel CodeEditor { get; }
 
         public ObservableCollection<BaseInstructionViewModel> Instructions { get; }
@@ -35,11 +38,29 @@ namespace BCEdit180.Core.CodeEditing {
         }
 
         public ICommand FindNextInstructionCommand { get; }
+        public ICommand DeleteSelectedInstructionsCommand { get; }
+
+        public ICommand InsertInstructionCommand { get; }
+        public ICommand InsertCodeCommand { get; }
 
         public BytecodeEditorViewModel(CodeEditorViewModel codeEditor) {
             this.CodeEditor = codeEditor;
             this.Instructions = new ObservableCollection<BaseInstructionViewModel>();
             this.FindNextInstructionCommand = new RelayCommand(SearchNextElement);
+            this.DeleteSelectedInstructionsCommand = new RelayCommand(DeleteSelectedInstructions);
+        }
+
+        public void DeleteSelectedInstructions() {
+            IEnumerable<BaseInstructionViewModel> remove = SelectedInstructionProvider.SelectedItems;
+            foreach (BaseInstructionViewModel instruction in remove) {
+                this.Instructions.Remove(instruction);
+            }
+        }
+
+        public void LoadInstruction(Instruction instruction) {
+            BaseInstructionViewModel vm = BaseInstructionViewModel.ForInstruction(instruction);
+            vm.Load(instruction);
+            this.Instructions.Add(vm);
         }
 
         public void Load(MethodNode node) {
@@ -53,12 +74,6 @@ namespace BCEdit180.Core.CodeEditing {
             foreach (BaseInstructionViewModel instruction in this.Instructions) {
                 instruction.Save(instruction.Instruction);
             }
-        }
-
-        public void LoadInstruction(Instruction instruction) {
-            BaseInstructionViewModel vm = BaseInstructionViewModel.ForInstruction(instruction);
-            vm.Load(instruction);
-            this.Instructions.Add(vm);
         }
 
         private bool doExtendedSearch;

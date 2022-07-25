@@ -6,7 +6,8 @@
              xmlns:instructions="clr-namespace:BCEdit180.Core.CodeEditing.Bytecode.Instructions;assembly=BCEdit180.Core"
              mc:Ignorable="d"
              d:DataContext="{d:DesignInstance Type=instructions:MethodInstructionViewModel}"
-             d:DesignHeight="24" d:DesignWidth="400">
+             d:DesignHeight="24" d:DesignWidth="400"
+             ContextMenu="{StaticResource BytecodeEditorItemContextMenu}">
     <StackPanel Orientation="Horizontal">
         <TextBlock Text="{Binding Opcode, UpdateSourceTrigger=PropertyChanged}" Padding="0 0 5 0" VerticalAlignment="Center" ToolTip="The method instruction"/>
         <TextBlock Text="{Binding MethodOwner, UpdateSourceTrigger=PropertyChanged}" Padding="0 0 0 0" VerticalAlignment="Center" ToolTip="The class that owns the method"/>

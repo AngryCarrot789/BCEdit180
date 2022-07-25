@@ -1,6 +1,7 @@
 ﻿<Application x:Class="BCEdit180.App"
              xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
-             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml" 
+             xmlns:converters="clr-namespace:BCEdit180.Converters"
              StartupUri="MainWindow.xaml">
     <Application.Resources>
         <ResourceDictionary>
@@ -9,6 +10,18 @@
                 <ResourceDictionary Source="Themes/ControlColours.xaml"/>
                 <ResourceDictionary Source="Themes/Controls.xaml"/>
             </ResourceDictionary.MergedDictionaries>
+            
+            <converters:EnumToStringConverter x:Key="EnumToString"/>
+            <converters:FQCNToSimpleNameConverter x:Key="FQCNConverter"/>
+            <converters:TypeDescriptorToStringConverter x:Key="TypeConverter"/>
+            <converters:EnumBooleanConverter x:Key="EnumConverter" />
+
+            <ContextMenu x:Key="BytecodeEditorItemContextMenu">
+                <MenuItem Header="Change Opcode" IsEnabled="{Binding CanEditOpCode}" Command="{Binding EditOpcodeCommand}"/>
+                <Separator/>
+                <MenuItem Header="Remove Instruction(s)" Command="{Binding DeleteSelectedInstructionsCommand}"/>
+            </ContextMenu>
+
             <Style x:Key="FreeHeaderGroupBox" TargetType="{x:Type GroupBox}">
                 <Setter Property="Background" Value="{DynamicResource GroupBox.Static.Background}" />
                 <Setter Property="BorderBrush" Value="{DynamicResource GroupBox.Static.Border}" />

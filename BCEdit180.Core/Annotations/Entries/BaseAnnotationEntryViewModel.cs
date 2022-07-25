@@ -27,7 +27,7 @@ namespace BCEdit180.Core.Annotations.Entries {
             }
         }
 
-        public BaseAnnotationEntryViewModel(AnnotationViewModel annotation, ElementValuePair entry) {
+        protected BaseAnnotationEntryViewModel(AnnotationViewModel annotation, ElementValuePair entry) {
             this.Annotation = annotation;
             this.entry = entry;
             this.value = entry.Value;
@@ -38,12 +38,12 @@ namespace BCEdit180.Core.Annotations.Entries {
         public static BaseAnnotationEntryViewModel Of(AnnotationViewModel annotation, ElementValuePair entry) {
             switch (entry.Value.Tag) {
                 case ElementValue.ElementValueTag.Byte:
-                case ElementValue.ElementValueTag.Character:
-                case ElementValue.ElementValueTag.Double:
-                case ElementValue.ElementValueTag.Float:
+                case ElementValue.ElementValueTag.Short:
                 case ElementValue.ElementValueTag.Integer:
                 case ElementValue.ElementValueTag.Long:
-                case ElementValue.ElementValueTag.Short:
+                case ElementValue.ElementValueTag.Float:
+                case ElementValue.ElementValueTag.Double:
+                case ElementValue.ElementValueTag.Character:
                 case ElementValue.ElementValueTag.String:
                     return new StringValueAnnotationEntryViewModel(annotation, entry);
                 case ElementValue.ElementValueTag.Boolean:

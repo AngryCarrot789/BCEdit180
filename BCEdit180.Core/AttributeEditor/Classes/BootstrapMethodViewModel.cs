@@ -1,7 +1,7 @@
 using System;
 using System.Collections.ObjectModel;
 using System.Windows.Input;
-using BCEdit180.Core.Dialogs;
+using BCEdit180.Core.Window;
 using JavaAsm;
 using JavaAsm.Instructions.Types;
 using REghZy.MVVM.Commands;

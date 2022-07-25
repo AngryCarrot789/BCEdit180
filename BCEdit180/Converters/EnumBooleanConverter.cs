@@ -5,11 +5,11 @@ using System.Windows.Data;
 namespace BCEdit180.Converters {
     public class EnumBooleanConverter : IValueConverter {
         public object Convert(object value, Type targetType, object parameter, CultureInfo culture) {
-            return value.Equals(parameter);
+            return value?.Equals(parameter) ?? Binding.DoNothing;
         }
 
         public object ConvertBack(object value, Type targetType, object parameter, CultureInfo culture) {
-            return ((bool) value) ? parameter : Binding.DoNothing;
+            return (value is bool b && b) ? parameter : Binding.DoNothing;
         }
 
         // public object Convert(object value, Type targetType, object parameter, System.Globalization.CultureInfo culture) {

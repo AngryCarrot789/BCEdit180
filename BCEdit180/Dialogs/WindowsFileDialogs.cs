@@ -1,6 +1,6 @@
 ﻿using System.IO;
 using System.Threading.Tasks;
-using BCEdit180.Core.Dialogs;
+using BCEdit180.Core.Window;
 using Microsoft.Win32;
 
 namespace BCEdit180.Dialogs {

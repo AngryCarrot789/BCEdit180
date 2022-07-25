@@ -3,16 +3,16 @@ using System.Linq;
 using System.Threading.Tasks;
 using System.Windows;
 using BCEdit180.Core.CodeEditing.InstructionEdit;
-using BCEdit180.Core.Dialogs;
 using BCEdit180.Core.Editors;
 using BCEdit180.Core.Utils;
+using BCEdit180.Core.Window;
 using BCEdit180.Windows;
 using JavaAsm;
 using JavaAsm.Instructions;
 
 namespace BCEdit180.Dialogs {
     public class WindowsTypeEditors : ITypeEditors {
-        public async Task<TypeDescriptor> EditTypeDescriptorDialog(TypeDescriptor defaultDescriptor = null) {
+        public Task<TypeDescriptor> EditTypeDescriptorDialog(TypeDescriptor defaultDescriptor = null) {
             TypeEditorWindow window = new TypeEditorWindow();
             TypeEditorViewModel editor = new TypeEditorViewModel();
             if (defaultDescriptor != null) {
@@ -30,14 +30,14 @@ namespace BCEdit180.Dialogs {
             window.DataContext = editor;
             window.ShowDialog();
             if (editor.IsPrimitive) {
-                return new TypeDescriptor(editor.SelectedPrimitive, editor.ArrayDepth);
+                return Task.FromResult(new TypeDescriptor(editor.SelectedPrimitive, editor.ArrayDepth));
             }
             else {
-                return new TypeDescriptor(new ClassName(editor.RealClassName ?? ""), editor.ArrayDepth);
+                return Task.FromResult(new TypeDescriptor(new ClassName(editor.RealClassName ?? ""), editor.ArrayDepth));
             }
         }
 
-        public async Task<MethodDescriptor> EditMethodDescriptorDialog(MethodDescriptor defaultDescriptor = null) {
+        public Task<MethodDescriptor> EditMethodDescriptorDialog(MethodDescriptor defaultDescriptor = null) {
             MethodDescEditorWindow window = new MethodDescEditorWindow();
             MethodEditorViewModel vm = new MethodEditorViewModel();
             if (defaultDescriptor != null) {
@@ -50,10 +50,10 @@ namespace BCEdit180.Dialogs {
 
             window.DataContext = vm;
             window.ShowDialog();
-            return new MethodDescriptor(vm.ReturnType, vm.Parameters.Select(x => x.Descriptor).ToList());
+            return Task.FromResult(new MethodDescriptor(vm.ReturnType, vm.Parameters.Select(x => x.Descriptor).ToList()));
         }
 
-        public async Task<MethodEditorViewModel> EditMethodDialog(bool showMethodName = true, MethodEditorViewModel defaultEditor = null) {
+        public Task<MethodEditorViewModel> EditMethodDialog(bool showMethodName = true, MethodEditorViewModel defaultEditor = null) {
             Window window;
             if (showMethodName) {
                 window = new MethodEditorWindow();
@@ -72,10 +72,10 @@ namespace BCEdit180.Dialogs {
 
             window.DataContext = vm;
             window.ShowDialog();
-            return vm;
+            return Task.FromResult(vm);
         }
 
-        public async Task<FieldEditorViewModel> EditFieldDialog(bool showFieldName = true, FieldEditorViewModel defaultEditor = null) {
+        public Task<FieldEditorViewModel> EditFieldDialog(bool showFieldName = true, FieldEditorViewModel defaultEditor = null) {
             FieldEditorWindow window = new FieldEditorWindow();
             FieldEditorViewModel vm = new FieldEditorViewModel();
             if (defaultEditor != null) {
@@ -86,10 +86,10 @@ namespace BCEdit180.Dialogs {
 
             window.DataContext = vm;
             window.ShowDialog();
-            return vm;
+            return Task.FromResult(vm);
         }
 
-        public async Task<Opcode?> ChangeInstructionDialog(IEnumerable<Opcode> opcodes) {
+        public Task<Opcode?> ChangeInstructionDialog(IEnumerable<Opcode> opcodes) {
             ChangeInstructionWindow window = new ChangeInstructionWindow();
             ChangeInstructionViewModel vm = new ChangeInstructionViewModel();
             vm.SetAvailableInstructions(opcodes);
@@ -97,10 +97,10 @@ namespace BCEdit180.Dialogs {
             window.Title = "Replace Opcode";
             window.ShowDialog();
             if (vm.IsValidSelection()) {
-                return vm.SelectedOpcode;
+                return Task.FromResult<Opcode?>(vm.SelectedOpcode);
             }
             else {
-                return null;
+                return Task.FromResult<Opcode?>(null);
             }
         }
     }

@@ -5,6 +5,9 @@ namespace BCEdit180.Core.Editors {
     public class FlagItemViewModel : BaseViewModel {
         private string name;
         private bool isChecked;
+        private readonly Action<FlagItemViewModel> onStateChanged;
+
+        public long Bit { get; }
 
         public string Name {
             get => this.name;
@@ -15,18 +18,14 @@ namespace BCEdit180.Core.Editors {
             get => this.isChecked;
             set {
                 RaisePropertyChanged(ref this.isChecked, value);
-                this.OnStateChanged(this);
+                this.onStateChanged(this);
             }
         }
-
-        public long Bit { get; }
-
-        private Action<FlagItemViewModel> OnStateChanged { get; }
 
         public FlagItemViewModel(string name, long bit, Action<FlagItemViewModel> onStateChanged) {
             this.Name = name;
             this.Bit = bit;
-            this.OnStateChanged = onStateChanged;
+            this.onStateChanged = onStateChanged;
         }
 
         public override string ToString() {

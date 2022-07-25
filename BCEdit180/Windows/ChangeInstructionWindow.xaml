@@ -1,14 +1,15 @@
-﻿<Window x:Class="BCEdit180.Windows.ChangeInstructionWindow"
-        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
-        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
-        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
-        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
-        xmlns:converters="clr-namespace:BCEdit180.Converters"
-        xmlns:instructionEdit="clr-namespace:BCEdit180.Core.CodeEditing.InstructionEdit;assembly=BCEdit180.Core"
-        d:DataContext="{d:DesignInstance Type=instructionEdit:ChangeInstructionViewModel}"
-        mc:Ignorable="d"
-        Title="Replace Opcode" Height="350" Width="450"
-        Style="{DynamicResource CustomWindowStyle}" Background="{DynamicResource AREghZyBrush.Deep.3.Background.Static}">
+﻿<windows:WindowModal x:Class="BCEdit180.Windows.ChangeInstructionWindow"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+             xmlns:converters="clr-namespace:BCEdit180.Converters"
+             xmlns:instructionEdit="clr-namespace:BCEdit180.Core.CodeEditing.InstructionEdit;assembly=BCEdit180.Core"
+             xmlns:windows="clr-namespace:BCEdit180.Windows"
+             d:DataContext="{d:DesignInstance Type=instructionEdit:ChangeInstructionViewModel}"
+             mc:Ignorable="d"
+             Title="Replace Opcode" Height="350" Width="450"
+             Style="{DynamicResource CustomWindowStyle}" Background="{DynamicResource AREghZyBrush.Deep.3.Background.Static}">
     <Grid Margin="10">
         <TextBlock Text="Select a new instruction" Padding="10" Margin="0,0,0,0" VerticalAlignment="Top"/>
         <ListBox ItemsSource="{Binding AvailableOpCodes}" 
@@ -30,9 +31,9 @@
                 <ColumnDefinition Width="5"/>
                 <ColumnDefinition Width="81*"/>
             </Grid.ColumnDefinitions>
-            <Button Focusable="False" Command="{Binding ApplyChangesCommand, Mode=OneTime}" Content="Okay" Background="#FF79D43A" Click="Okay_Click"/>
-            <Button Focusable="False" Content="Cancel" Click="Cancel_Click" Grid.Column="2"/>
+            <Button Command="{Binding ConfirmCommand, RelativeSource={RelativeSource FindAncestor, AncestorType={x:Type windows:WindowModal}}}" Focusable="False"  Content="Okay" Background="#FF79D43A"/>
+            <Button Command="{Binding CancelCommand, RelativeSource={RelativeSource FindAncestor, AncestorType={x:Type windows:WindowModal}}}" Focusable="False" Content="Cancel" Grid.Column="2"/>
 
         </Grid>
     </Grid>
-</Window>
+</windows:WindowModal>

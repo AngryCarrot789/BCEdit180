@@ -3,8 +3,8 @@ using System.Linq;
 using System.Threading.Tasks;
 using System.Windows.Input;
 using BCEdit180.Core.Annotations;
-using BCEdit180.Core.Dialogs;
 using BCEdit180.Core.Utils;
+using BCEdit180.Core.Window;
 using JavaAsm;
 using JavaAsm.CustomAttributes.Annotation;
 using REghZy.MVVM.Commands;
@@ -83,7 +83,10 @@ namespace BCEdit180.Core.ViewModels {
         }
 
         public async Task EditAccess() {
-            this.Access = await Dialog.AccessEditor.EditFieldAccess(this.Access);
+            FieldAccessModifiers? modifier = await Dialog.AccessEditor.EditFieldAccess(this.Access);
+            if (modifier.HasValue) {
+                this.Access = modifier.Value;
+            }
         }
 
         public async Task EditDescriptor() {

@@ -1,0 +1,40 @@
+﻿<UserControl x:Class="BCEdit180.Annotations.AnnotationEntryEditorControl"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
+             xmlns:Converters="clr-namespace:BCEdit180.Converters"
+             xmlns:annotations="clr-namespace:BCEdit180.Core.Annotations;assembly=BCEdit180.Core"
+             mc:Ignorable="d" 
+             d:DataContext="{d:DesignInstance annotations:AnnotationEntryEditorViewModel}"
+             d:DesignHeight="450" d:DesignWidth="800">
+    <UserControl.Resources>
+        <Converters:EnumBooleanConverter x:Key="EnumConverter"/>
+    </UserControl.Resources>
+    <Grid>
+
+        <GroupBox Background="{DynamicResource AREghZyBrush.Deep.2.Background.Static}" HorizontalAlignment="Left" Width="202">
+            <GroupBox.Header>
+                <Grid>
+                    <RadioButton x:Name="PrimitiveRadioButton" Width="100" Content="Primitive Type" GroupName="TypeSelector" IsChecked="{Binding IsPrimitive, UpdateSourceTrigger=PropertyChanged}"/>
+                </Grid>
+            </GroupBox.Header>
+            <StackPanel IsEnabled="{Binding IsChecked, ElementName=PrimitiveRadioButton, UpdateSourceTrigger=PropertyChanged}">
+                <RadioButton IsChecked="{Binding SelectedPrimitive, ConverterParameter={x:Static annotations:ElementValueTagXAML.Byte}, Converter={StaticResource EnumConverter}}" Content="Byte" VerticalAlignment="Top" Height="20"/>
+                <RadioButton IsChecked="{Binding SelectedPrimitive, ConverterParameter={x:Static annotations:ElementValueTagXAML.Short}, Converter={StaticResource EnumConverter}}" Content="Short" VerticalAlignment="Top" Height="20"/>
+                <RadioButton IsChecked="{Binding SelectedPrimitive, ConverterParameter={x:Static annotations:ElementValueTagXAML.Integer}, Converter={StaticResource EnumConverter}}" Content="Integer" VerticalAlignment="Top" Height="20"/>
+                <RadioButton IsChecked="{Binding SelectedPrimitive, ConverterParameter={x:Static annotations:ElementValueTagXAML.Long}, Converter={StaticResource EnumConverter}}" Content="Long" VerticalAlignment="Top" Height="20"/>
+                <RadioButton IsChecked="{Binding SelectedPrimitive, ConverterParameter={x:Static annotations:ElementValueTagXAML.Float}, Converter={StaticResource EnumConverter}}" Content="Float" VerticalAlignment="Top" Height="20"/>
+                <RadioButton IsChecked="{Binding SelectedPrimitive, ConverterParameter={x:Static annotations:ElementValueTagXAML.Double}, Converter={StaticResource EnumConverter}}" Content="Double" VerticalAlignment="Top" Height="20"/>
+                <RadioButton IsChecked="{Binding SelectedPrimitive, ConverterParameter={x:Static annotations:ElementValueTagXAML.Character}, Converter={StaticResource EnumConverter}}" Content="Character" VerticalAlignment="Top" Height="20"/>
+                <RadioButton IsChecked="{Binding SelectedPrimitive, ConverterParameter={x:Static annotations:ElementValueTagXAML.Boolean}, Converter={StaticResource EnumConverter}}" Content="Boolean" VerticalAlignment="Top" Height="20"/>
+                <RadioButton IsChecked="{Binding SelectedPrimitive, ConverterParameter={x:Static annotations:ElementValueTagXAML.String}, Converter={StaticResource EnumConverter}}" Content="String" VerticalAlignment="Top" Height="20"/>
+                <RadioButton IsChecked="{Binding SelectedPrimitive, ConverterParameter={x:Static annotations:ElementValueTagXAML.Array}, Converter={StaticResource EnumConverter}}" Content="Array" VerticalAlignment="Top" Height="20"/>
+                <RadioButton IsChecked="{Binding SelectedPrimitive, ConverterParameter={x:Static annotations:ElementValueTagXAML.Enum}, Converter={StaticResource EnumConverter}}" Content="Enum" VerticalAlignment="Top" Height="20"/>
+                <RadioButton IsChecked="{Binding SelectedPrimitive, ConverterParameter={x:Static annotations:ElementValueTagXAML.Class}, Converter={StaticResource EnumConverter}}" Content="Class" VerticalAlignment="Top" Height="20"/>
+                <RadioButton IsChecked="{Binding SelectedPrimitive, ConverterParameter={x:Static annotations:ElementValueTagXAML.Annotation}, Converter={StaticResource EnumConverter}}" Content="Annotation" VerticalAlignment="Top" Height="20"/>
+            </StackPanel>
+        </GroupBox>
+
+    </Grid>
+</UserControl>

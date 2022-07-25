@@ -1,6 +1,6 @@
 using System.Threading.Tasks;
 
-namespace BCEdit180.Core.Dialogs {
+namespace BCEdit180.Core.Window {
     public interface IDialogManager {
         Task ShowInformationDialog(string header, string description);
 

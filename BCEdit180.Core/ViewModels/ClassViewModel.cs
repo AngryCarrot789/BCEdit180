@@ -1,11 +1,10 @@
 using System;
 using System.IO;
-using System.Net.Mime;
 using System.Threading.Tasks;
 using System.Windows.Input;
 using BCEdit180.Core.AttributeEditor;
-using BCEdit180.Core.Dialogs;
 using BCEdit180.Core.Utils;
+using BCEdit180.Core.Window;
 using JavaAsm;
 using JavaAsm.IO;
 using REghZy.MVVM.Commands;

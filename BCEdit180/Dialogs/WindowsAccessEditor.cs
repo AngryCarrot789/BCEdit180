@@ -1,6 +1,6 @@
 using System.Threading.Tasks;
-using BCEdit180.Core.Dialogs;
 using BCEdit180.Core.Editors;
+using BCEdit180.Core.Window;
 using BCEdit180.Windows;
 using JavaAsm;
 
@@ -21,28 +21,40 @@ namespace BCEdit180.Dialogs {
             FieldInfoFlagEditorVM.LoadFlags<FieldAccessModifiers>(m => (long) m);
         }
 
-        public async Task<ClassAccessModifiers> EditClassAccess(ClassAccessModifiers defaultAccess = ClassAccessModifiers.Public | ClassAccessModifiers.Super) {
+        public Task<ClassAccessModifiers?> EditClassAccess(ClassAccessModifiers defaultAccess = ClassAccessModifiers.Public | ClassAccessModifiers.Super) {
             FlagEditorWindow window = new FlagEditorWindow {Title = "Class Access"};
             ClassInfoFlagEditorVM.UpdateFlagItemsWithBitMask((long) defaultAccess);
             window.DataContext = ClassInfoFlagEditorVM;
-            window.ShowDialog();
-            return (ClassAccessModifiers) MethodInfoFlagEditorVM.GetEnumValue();
+            if (window.ShowDialog() == true) {
+                return Task.FromResult((ClassAccessModifiers?) ClassInfoFlagEditorVM.GetEnumValue());
+            }
+            else {
+                return Task.FromResult<ClassAccessModifiers?>(null);
+            }
         }
 
-        public async Task<MethodAccessModifiers> EditMethodAccess(MethodAccessModifiers defaultAccess = MethodAccessModifiers.Public) {
+        public Task<MethodAccessModifiers?> EditMethodAccess(MethodAccessModifiers defaultAccess = MethodAccessModifiers.Public) {
             FlagEditorWindow window = new FlagEditorWindow {Title = "Method Access"};
             MethodInfoFlagEditorVM.UpdateFlagItemsWithBitMask((long) defaultAccess);
             window.DataContext = MethodInfoFlagEditorVM;
-            window.ShowDialog();
-            return (MethodAccessModifiers) MethodInfoFlagEditorVM.GetEnumValue();
+            if (window.ShowDialog() == true) {
+                return Task.FromResult((MethodAccessModifiers?) MethodInfoFlagEditorVM.GetEnumValue());
+            }
+            else {
+                return Task.FromResult<MethodAccessModifiers?>(null);
+            }
         }
 
-        public async Task<FieldAccessModifiers> EditFieldAccess(FieldAccessModifiers defaultAccess = FieldAccessModifiers.Public) {
+        public Task<FieldAccessModifiers?> EditFieldAccess(FieldAccessModifiers defaultAccess = FieldAccessModifiers.Public) {
             FlagEditorWindow window = new FlagEditorWindow {Title = "Field Access"};
             FieldInfoFlagEditorVM.UpdateFlagItemsWithBitMask((long) defaultAccess);
             window.DataContext = FieldInfoFlagEditorVM;
-            window.ShowDialog();
-            return (FieldAccessModifiers) MethodInfoFlagEditorVM.GetEnumValue();
+            if (window.ShowDialog() == true) {
+                return Task.FromResult((FieldAccessModifiers?) FieldInfoFlagEditorVM.GetEnumValue());
+            }
+            else {
+                return Task.FromResult<FieldAccessModifiers?>(null);
+            }
         }
     }
 }

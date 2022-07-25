@@ -64,11 +64,11 @@ namespace BCEdit180.Core.AttributeEditor {
             this.BootstrapMethods.Clear();
 
             if (string.IsNullOrEmpty(node.SourceFile)) {
-                this.isEnabledSourceFile = false;
+                this.IsEnabledSourceFile = false;
                 this.SourceFile.SourceFile = null;
             }
             else {
-                this.isEnabledSourceFile = true;
+                this.IsEnabledSourceFile = true;
                 this.SourceFile.SourceFile = node.SourceFile;
             }
 

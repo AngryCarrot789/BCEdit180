@@ -3,8 +3,8 @@ using System.Collections.ObjectModel;
 using System.Linq;
 using System.Threading.Tasks;
 using System.Windows.Input;
-using BCEdit180.Core.Dialogs;
 using BCEdit180.Core.Utils;
+using BCEdit180.Core.Window;
 using JavaAsm;
 using REghZy.MVVM.Commands;
 using REghZy.MVVM.ViewModels;
@@ -60,7 +60,12 @@ namespace BCEdit180.Core.ViewModels {
             this.EditAccessCommand = new RelayCommand(()=> EditAccess());
         }
 
-        public async Task EditAccess() => this.AccessFlags = await Dialog.AccessEditor.EditClassAccess(this.AccessFlags | ClassAccessModifiers.Super);
+        public async Task EditAccess() {
+            ClassAccessModifiers? modifier = await Dialog.AccessEditor.EditClassAccess(this.AccessFlags | ClassAccessModifiers.Super);
+            if (modifier.HasValue) {
+                this.AccessFlags = modifier.Value;
+            }
+        }
 
         public void Load(ClassNode node) {
             this.MinorVersion = node.MinorVersion;

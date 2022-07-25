@@ -1,7 +1,7 @@
 ﻿using System;
 using REghZy.MVVM.ViewModels;
 
-namespace BCEdit180.Core.Dialogs {
+namespace BCEdit180.Core.Window {
     public class ActionProgressViewModel : BaseViewModel {
         private string headerMessage;
         public string HeaderMessage {

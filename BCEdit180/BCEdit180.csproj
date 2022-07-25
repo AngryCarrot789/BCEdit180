@@ -107,6 +107,9 @@
     <Compile Include="Annotations\AnnotationEditorControl.xaml.cs">
       <DependentUpon>AnnotationEditorControl.xaml</DependentUpon>
     </Compile>
+    <Compile Include="Annotations\AnnotationEntryEditorControl.xaml.cs">
+      <DependentUpon>AnnotationEntryEditorControl.xaml</DependentUpon>
+    </Compile>
     <Compile Include="Annotations\AnnotationItemControl.xaml.cs">
       <DependentUpon>AnnotationItemControl.xaml</DependentUpon>
     </Compile>
@@ -132,8 +135,12 @@
     <Compile Include="CodeEditing\Bytecode\ListControls\MethodInstructionItemControl.xaml.cs">
       <DependentUpon>MethodInstructionItemControl.xaml</DependentUpon>
     </Compile>
+    <Compile Include="Converters\AnnontationEntryPrimitiveValueConverter.cs" />
+    <Compile Include="Converters\FQCNToSimpleNameConverter.cs" />
+    <Compile Include="Converters\PrimitiveConverter.cs" />
     <Compile Include="Dialogs\WindowsAccessEditor.cs" />
     <Compile Include="Dialogs\WindowsFileDialogs.cs" />
+    <Compile Include="Dialogs\WPFModalManager.cs" />
     <Compile Include="Windows\ChangeInstructionWindow.xaml.cs">
       <DependentUpon>ChangeInstructionWindow.xaml</DependentUpon>
     </Compile>
@@ -176,8 +183,14 @@
     <Compile Include="Windows\TypeEditorWindow.xaml.cs">
       <DependentUpon>TypeEditorWindow.xaml</DependentUpon>
     </Compile>
+    <Compile Include="Windows\WindowBase.cs" />
+    <Compile Include="Windows\WindowModal.cs" />
     <Compile Include="WPFAppServices.cs" />
     <Page Include="Annotations\AnnotationEditorControl.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Annotations\AnnotationEntryEditorControl.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>

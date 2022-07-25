@@ -1,7 +1,7 @@
 using System.Threading.Tasks;
 using JavaAsm;
 
-namespace BCEdit180.Core.Dialogs {
+namespace BCEdit180.Core.Window {
     public interface IAccessEditor {
         /// <summary>
         /// Shows a dialog that allows a user to pick a class modifier

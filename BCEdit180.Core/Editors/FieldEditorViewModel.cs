@@ -1,7 +1,6 @@
-using System;
 using System.Threading.Tasks;
 using System.Windows.Input;
-using BCEdit180.Core.Dialogs;
+using BCEdit180.Core.Window;
 using JavaAsm;
 using REghZy.MVVM.Commands;
 using REghZy.MVVM.ViewModels;
@@ -36,9 +35,9 @@ namespace BCEdit180.Core.Editors {
 
         public ICommand EditAccessCommand { get; }
 
+        public bool IsCancelled { get; set; }
         public ICommand ApplyChangesCommand { get; }
-
-        public Action Callback { get; set; }
+        public ICommand CancelChangesCommand { get; }
 
         public FieldEditorViewModel() {
             this.FieldName = "myFieldName";
@@ -52,7 +51,8 @@ namespace BCEdit180.Core.Editors {
                 EditAccess();
             });
 
-            this.ApplyChangesCommand = new RelayCommand(ApplyChanges);
+            this.ApplyChangesCommand = new RelayCommand(() => this.IsCancelled = false);
+            this.CancelChangesCommand = new RelayCommand(() => this.IsCancelled = true);
         }
 
         public async Task EditDescriptor() {
@@ -60,11 +60,10 @@ namespace BCEdit180.Core.Editors {
         }
 
         public async Task EditAccess() {
-            this.Access = await Dialog.AccessEditor.EditFieldAccess(this.Access);
-        }
-
-        public void ApplyChanges() {
-            this.Callback?.Invoke();
+            FieldAccessModifiers? modifier = await Dialog.AccessEditor.EditFieldAccess(this.Access);
+            if (modifier.HasValue) {
+                this.Access = modifier.Value;
+            }
         }
     }
 }

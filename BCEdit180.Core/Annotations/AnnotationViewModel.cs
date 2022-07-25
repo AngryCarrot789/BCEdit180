@@ -52,7 +52,7 @@ namespace BCEdit180.Core.Annotations {
             this.FullTypeName = node.Type.ClassName.Name;
             UpdatePreviewName();
             this.Entries.Clear();
-            this.Entries.AddAll(node.ElementValuePairs.Select(a => new BaseAnnotationEntryViewModel(this, a)));
+            this.Entries.AddAll(node.ElementValuePairs.Select(a => BaseAnnotationEntryViewModel.Of(this, a)));
             this.ArrayDepth = node.Type.ArrayDepth;
             this.SizeOnStack = node.Type.SizeOnStack;
         }

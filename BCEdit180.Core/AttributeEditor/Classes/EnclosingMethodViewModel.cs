@@ -1,6 +1,6 @@
 using System.Threading.Tasks;
 using System.Windows.Input;
-using BCEdit180.Core.Dialogs;
+using BCEdit180.Core.Window;
 using JavaAsm;
 using JavaAsm.CustomAttributes;
 using REghZy.MVVM.Commands;

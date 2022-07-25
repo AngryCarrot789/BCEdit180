@@ -1,7 +1,5 @@
-﻿using System;
-using System.Windows.Input;
+﻿using BCEdit180.Core.Utils;
 using JavaAsm;
-using REghZy.MVVM.Commands;
 using REghZy.MVVM.ViewModels;
 
 namespace BCEdit180.Core.Editors {
@@ -30,7 +28,10 @@ namespace BCEdit180.Core.Editors {
         private bool isObject;
         public bool IsObject {
             get => this.isObject;
-            set => RaisePropertyChanged(ref this.isObject, value);
+            set {
+                RaisePropertyChanged(ref this.isObject, value);
+                UpdateClassName();
+            }
         }
 
         private bool isPrimitive;
@@ -39,32 +40,28 @@ namespace BCEdit180.Core.Editors {
             set => RaisePropertyChanged(ref this.isPrimitive, value);
         }
 
+        private bool ignoreArrayDepthUpdate;
         private ushort arrayDepth;
         public ushort ArrayDepth {
             get => this.arrayDepth;
-            set => RaisePropertyChanged(ref this.arrayDepth, value);
+            set {
+                RaisePropertyChanged(ref this.arrayDepth, value);
+                if (!this.ignoreArrayDepthUpdate)
+                    UpdateClassName();
+            }
         }
-
-        public ICommand ApplyChangesCommand { get; }
-
-        public Action<PrimitiveType?, string, int> Callback { get; set; }
 
         public TypeEditorViewModel() {
-            this.ApplyChangesCommand = new RelayCommand(ApplyChange);
-        }
-
-        public void ApplyChange() {
-            if (this.IsPrimitive) {
-                this.Callback?.Invoke(this.SelectedPrimitive, null, this.ArrayDepth);
-            }
-            else if (!string.IsNullOrEmpty(this.ClassName)) {
-                this.Callback?.Invoke(null, this.ClassName, this.ArrayDepth);
-            }
+            this.ArrayDepth = 0;
         }
 
         public void UpdateClassName() {
+            this.ignoreArrayDepthUpdate = true;
+            this.ArrayDepth = (ushort) (string.IsNullOrEmpty(this.ClassName) ? 0 : this.ClassName.CountCharsAtStart('['));
+            this.ignoreArrayDepthUpdate = false;
+            string arrayParts = '['.Repeat(this.ArrayDepth);
             if (string.IsNullOrEmpty(this.ClassName)) {
-                this.RealClassName = "";
+                this.RealClassName = arrayParts;
             }
             else {
                 string clazz = this.ClassName.Replace('.', '/');
@@ -72,7 +69,7 @@ namespace BCEdit180.Core.Editors {
                     clazz = clazz.Substring(1, clazz.Length - 2);
                 }
 
-                this.RealClassName = clazz;
+                this.RealClassName = arrayParts + clazz;
             }
         }
     }

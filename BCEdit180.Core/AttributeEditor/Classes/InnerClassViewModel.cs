@@ -1,6 +1,6 @@
 using System.Threading.Tasks;
 using System.Windows.Input;
-using BCEdit180.Core.Dialogs;
+using BCEdit180.Core.Window;
 using JavaAsm;
 using JavaAsm.CustomAttributes;
 using REghZy.MVVM.Commands;
@@ -45,7 +45,12 @@ namespace BCEdit180.Core.AttributeEditor.Classes {
             Load(inner);
         }
 
-        public async Task EditAccess() => this.ClassAccess = await Dialog.AccessEditor.EditClassAccess(this.ClassAccess | ClassAccessModifiers.Super);
+        public async Task EditAccess() {
+            ClassAccessModifiers? modifier = await Dialog.AccessEditor.EditClassAccess(this.ClassAccess | ClassAccessModifiers.Super);
+            if (modifier.HasValue) {
+                this.ClassAccess = modifier.Value;
+            }
+        }
 
         public void Load(InnerClass node) {
             this.InnerClassName = node.InnerClassName?.Name;

@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using System.Threading.Tasks;
 using System.Windows.Input;
-using BCEdit180.Core.Dialogs;
+using BCEdit180.Core.Window;
 using JavaAsm.Instructions;
 using JavaAsm.Instructions.Types;
 using REghZy.MVVM.Commands;
@@ -16,7 +16,6 @@ namespace BCEdit180.Core.CodeEditing.Bytecode.Instructions {
         public abstract IEnumerable<Opcode> AvailableOpCodes { get; }
 
         private Opcode opCode;
-
         public Opcode Opcode {
             get => this.opCode;
             set => RaisePropertyChanged(ref this.opCode, value);

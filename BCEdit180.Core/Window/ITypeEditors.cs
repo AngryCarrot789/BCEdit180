@@ -1,11 +1,10 @@
-using System.Collections;
 using System.Collections.Generic;
 using System.Threading.Tasks;
 using BCEdit180.Core.Editors;
 using JavaAsm;
 using JavaAsm.Instructions;
 
-namespace BCEdit180.Core.Dialogs {
+namespace BCEdit180.Core.Window {
     public interface ITypeEditors {
         Task<TypeDescriptor> EditTypeDescriptorDialog(TypeDescriptor defaultDescriptor = null);
 
