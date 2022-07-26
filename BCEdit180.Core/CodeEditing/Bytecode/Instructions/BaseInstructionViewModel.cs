@@ -34,9 +34,8 @@ namespace BCEdit180.Core.CodeEditing.Bytecode.Instructions {
         }
 
         public void EditOpcode() {
-            Opcode? opcode = Dialog.TypeEditor.ChangeInstructionDialog(this.AvailableOpCodes).Result;
-            if (opcode.HasValue) {
-                this.Opcode = opcode.Value;
+            if (this.CanEditOpCode && Dialog.TypeEditor.ChangeInstructionDialog(this.AvailableOpCodes, this.Opcode, out Opcode code).Result) {
+                this.Opcode = code;
             }
         }
 

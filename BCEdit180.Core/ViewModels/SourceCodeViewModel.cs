@@ -37,7 +37,6 @@ namespace BCEdit180.Core.ViewModels {
             MessageManager.Publish(new BusyStateMessage(true));
             Task.Run(async () => {
                 string code = await GenerateCodeAsync();
-                await Task.Delay(2000);
                 this.IsGenerating = false;
                 this.Text = code;
                 MessageManager.PublishUI(new BusyStateMessage(false));

@@ -45,14 +45,18 @@ namespace BCEdit180.Core.AttributeEditor.Classes {
                     case ReferenceKindType.GetStatic: break;
                     case ReferenceKindType.PutField: break;
                     case ReferenceKindType.PutStatic:
-                        this.BootstrapMethodDescriptor = Dialog.TypeEditor.EditTypeDescriptorDialog(this.BootstrapMethodDescriptor as TypeDescriptor).Result;
+                        if (Dialog.TypeEditor.EditTypeDescriptorDialog(this.BootstrapMethodDescriptor as TypeDescriptor, out TypeDescriptor typeDesc).Result) {
+                            this.BootstrapMethodDescriptor = typeDesc;
+                        }
                         break;
                     case ReferenceKindType.InvokeVirtual: break;
                     case ReferenceKindType.InvokeStatic: break;
                     case ReferenceKindType.InvokeSpecial: break;
                     case ReferenceKindType.NewInvokeSpecial: break;
                     case ReferenceKindType.InvokeReference:
-                        this.BootstrapMethodDescriptor = Dialog.TypeEditor.EditMethodDescriptorDialog(this.BootstrapMethodDescriptor as MethodDescriptor).Result;
+                        if (Dialog.TypeEditor.EditMethodDescriptorDialog(this.BootstrapMethodDescriptor as MethodDescriptor, out MethodDescriptor methodDesc).Result) {
+                            this.BootstrapMethodDescriptor = methodDesc;
+                        }
                         break;
                     default: throw new ArgumentOutOfRangeException();
                 }

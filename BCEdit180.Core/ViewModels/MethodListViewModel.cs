@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Linq;
 using System.Windows.Input;
@@ -19,6 +20,16 @@ namespace BCEdit180.Core.ViewModels {
             set => RaisePropertyChanged(ref this.selectedMethod, value);
         }
 
+        private int previousIndex;
+        private int selectedIndex;
+        public int SelectedIndex {
+            get => this.selectedIndex;
+            set {
+                this.previousIndex = this.selectedIndex;
+                RaisePropertyChanged(ref this.selectedIndex, value);
+            }
+        }
+
         public ICommand CreateMethodCommand { get; }
 
         public ClassViewModel Class { get; }
@@ -30,8 +41,10 @@ namespace BCEdit180.Core.ViewModels {
             this.CreateMethodCommand = new RelayCommand(ShowCreateMethodDialog);
         }
 
-        public async void ShowCreateMethodDialog() {
-            CreateMethod(await Dialog.TypeEditor.EditMethodDialog(true, null));
+        public void ShowCreateMethodDialog() {
+            if (Dialog.TypeEditor.EditMethodDialog(out MethodEditorViewModel editor, true).Result) {
+                CreateMethod(editor);
+            }
         }
 
         public void CreateMethod(MethodEditorViewModel editor) {
@@ -68,6 +81,10 @@ namespace BCEdit180.Core.ViewModels {
             this.Methods.Clear();
             foreach (MethodNode method in node.Methods) {
                 this.Methods.Add(new MethodInfoViewModel(this, method));
+            }
+
+            if (this.previousIndex >= 0 && this.previousIndex < this.Methods.Count) {
+                this.SelectedIndex = this.previousIndex;
             }
         }
 

@@ -1,4 +1,5 @@
 using System;
+using System.Collections.Generic;
 using System.IO;
 using System.Threading.Tasks;
 using System.Windows.Input;
@@ -9,6 +10,8 @@ using BCEdit180.Core.Messaging.Messages;
 using BCEdit180.Core.Utils;
 using BCEdit180.Core.Window;
 using JavaAsm;
+using JavaAsm.Instructions;
+using JavaAsm.Instructions.Types;
 using JavaAsm.IO;
 using REghZy.MVVM.Commands;
 using REghZy.MVVM.ViewModels;
@@ -82,12 +85,58 @@ namespace BCEdit180.Core.ViewModels {
         public ICommand ExitCommand { get; }
 
         private static ClassNode CreateBlankClass() {
-            return new ClassNode() {
+            ClassNode node = new ClassNode() {
                 Name = new ClassName("BlankClass"),
                 Access = ClassAccessModifiers.Public | ClassAccessModifiers.Super,
                 MajorVersion = ClassVersion.Java8,
                 SuperName = new ClassName("java/lang/Object")
             };
+
+            node.Methods.Add(new MethodNode() {
+                Owner = node,
+                Access = MethodAccessModifiers.Public,
+                Name = "<init>",
+                Descriptor = new MethodDescriptor(new TypeDescriptor(PrimitiveType.Void, 0), new List<TypeDescriptor>()),
+                MaxLocals = 1,
+                Instructions = new InstructionList() {
+                    new VariableInstruction(Opcode.ALOAD) { VariableIndex = 0 },
+                    new MethodInstruction(Opcode.INVOKESPECIAL) {
+                        Owner = new ClassName("java/lang/Object"),
+                        Descriptor = new MethodDescriptor(new TypeDescriptor(PrimitiveType.Void, 0), new List<TypeDescriptor>()),
+                        Name = "<init>"
+                    },
+
+                    new VariableInstruction(Opcode.ALOAD) { VariableIndex = 0 },
+                    new MethodInstruction(Opcode.INVOKEVIRTUAL) {
+                        Owner = node.Name,
+                        Descriptor = new MethodDescriptor(new TypeDescriptor(PrimitiveType.Void, 0), new List<TypeDescriptor>()),
+                        Name = "blankMethod"
+                    },
+
+                    new SimpleInstruction(Opcode.RETURN)
+                }
+            });
+
+            node.Methods.Add(new MethodNode() {
+                Owner = node,
+                Access = MethodAccessModifiers.Public,
+                Name = "blankMethod",
+                Descriptor = new MethodDescriptor(new TypeDescriptor(PrimitiveType.Void, 0), new List<TypeDescriptor>()),
+                MaxLocals = 1,
+                Instructions = new InstructionList() {
+                    new SimpleInstruction(Opcode.RETURN)
+                }
+            });
+
+            node.Fields.Add(new FieldNode() {
+                Owner = node,
+                Name = "blankField",
+                Access = FieldAccessModifiers.Public,
+                Descriptor = new TypeDescriptor(PrimitiveType.Integer, 0),
+                ConstantValue = 420
+            });
+
+            return node;
         }
 
         public ClassViewModel() : this(CreateBlankClass()) {
@@ -181,18 +230,18 @@ namespace BCEdit180.Core.ViewModels {
             this.FieldList.Save(node);
         }
 
-        public async void OpenFile() {
-            if (await Dialog.File.OpenFileDialog("Select a class file to open", "ClassFile|*.class|All|*.*", out string path)) {
+        public void OpenFile() {
+            if (Dialog.File.OpenFileDialog("Select a class file to open", "ClassFile|*.class|All|*.*", out string path).Result) {
                 if (File.Exists(path)) {
                     ReadClassFileAndShowDialog(path);
                 }
                 else {
-                    await Dialog.Message.ShowWarningDialog("No such file", "File does not exist: " + path);
+                    Dialog.Message.ShowWarningDialog("No such file", "File does not exist: " + path);
                 }
             }
         }
 
-        public async void SaveClassFile() {
+        public void SaveClassFile() {
             try {
                 this.IsBusy = true;
                 if (this.FilePath != null) {
@@ -209,7 +258,7 @@ namespace BCEdit180.Core.ViewModels {
                         Save(this.Node);
                     }
                     catch (Exception e) {
-                        await Dialog.Message.ShowWarningDialog("Failed to process class", "Failed to process/save class before writing to file: " + this.FilePath + "\n" + e);
+                        Dialog.Message.ShowWarningDialog("Failed to process class", "Failed to process/save class before writing to file: " + this.FilePath + "\n" + e);
                         return;
                     }
 
@@ -219,7 +268,7 @@ namespace BCEdit180.Core.ViewModels {
                         }
                     }
                     catch (Exception e) {
-                        await Dialog.Message.ShowWarningDialog("Failed to write to file", "Failed to write class to file: " + this.FilePath + "\n" + e);
+                        Dialog.Message.ShowWarningDialog("Failed to write to file", "Failed to write class to file: " + this.FilePath + "\n" + e);
                     }
 
                     // ClassFile.WriteClass mutates ClassNode's attributes,
@@ -231,18 +280,18 @@ namespace BCEdit180.Core.ViewModels {
                 }
             }
             catch (Exception e) {
-                await Dialog.Message.ShowWarningDialog("Failed to save", "Failed to save file: " + this.FilePath + "\n" + e);
+                Dialog.Message.ShowWarningDialog("Failed to save", "Failed to save file: " + this.FilePath + "\n" + e);
             }
             finally {
                 this.IsBusy = false;
             }
         }
 
-        public async void SaveClassFileAs() {
+        public void SaveClassFileAs() {
             this.IsBusy = true;
             try {
-                if (await Dialog.File.OpenSaveDialog("Save a class file", "ClassFile|*.class|All|*.*", out string path)) {
-                    if (!File.Exists(path) || await Dialog.Message.ConfirmOkCancel("Overwrite file", "File already exists. Overwrite " + path + "?", true)) {
+                if (Dialog.File.OpenSaveDialog("Save a class file", "ClassFile|*.class|All|*.*", out string path).Result) {
+                    if (!File.Exists(path) || Dialog.Message.ConfirmOkCancel("Overwrite file", "File already exists. Overwrite " + path + "?", true).Result) {
                         this.FilePath = path;
 
                         if (File.Exists(this.FilePath)) {
@@ -258,7 +307,7 @@ namespace BCEdit180.Core.ViewModels {
                             Save(this.Node);
                         }
                         catch (Exception e) {
-                            await Dialog.Message.ShowWarningDialog("Failed to process class", "Failed to process/save class before writing to file: " + this.FilePath + "\n" + e);
+                            Dialog.Message.ShowWarningDialog("Failed to process class", "Failed to process/save class before writing to file: " + this.FilePath + "\n" + e);
                             return;
                         }
 
@@ -268,7 +317,7 @@ namespace BCEdit180.Core.ViewModels {
                             }
                         }
                         catch (Exception e) {
-                            await Dialog.Message.ShowWarningDialog("Failed to write to file", "Failed to write class to file: " + this.FilePath + "\n" + e);
+                            Dialog.Message.ShowWarningDialog("Failed to write to file", "Failed to write class to file: " + this.FilePath + "\n" + e);
                         }
 
                         // ClassFile.WriteClass mutates ClassNode's attributes,
@@ -278,7 +327,7 @@ namespace BCEdit180.Core.ViewModels {
                 }
             }
             catch (Exception e) {
-                await Dialog.Message.ShowWarningDialog("Failed to save", "Failed to save file: " + e);
+                Dialog.Message.ShowWarningDialog("Failed to save", "Failed to save file: " + e);
             }
             finally {
                 this.IsBusy = false;

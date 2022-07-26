@@ -10,7 +10,7 @@
              d:DataContext="{d:DesignInstance Type=editors:TypeEditorViewModel}"
              mc:Ignorable="d"
              Title="Type Editor" Height="440" Width="320"
-             Style="{DynamicResource CustomWindowStyle}" Background="{DynamicResource AREghZyBrush.Deep.3.Background.Static}">
+             Style="{DynamicResource CustomWindowBaseStyle}" Background="{DynamicResource AREghZyBrush.Deep.3.Background.Static}">
     <Grid Margin="10,10,10,10">
         <Grid.RowDefinitions>
             <RowDefinition Height="1*"/>
@@ -24,7 +24,7 @@
         <GroupBox Background="{DynamicResource AREghZyBrush.Deep.2.Background.Static}">
             <GroupBox.Header>
                 <Grid>
-                    <RadioButton x:Name="ObjectRadioButton" Width="100" Content="Object Type" GroupName="TypeSelector" IsChecked="{Binding IsObject, UpdateSourceTrigger=PropertyChanged}" IsEnabled="{Binding AllowPrimitive, UpdateSourceTrigger=PropertyChanged}"/>
+                    <RadioButton x:Name="ObjectRadioButton" Width="100" Content="Object Type" GroupName="TypeSelector" IsChecked="{Binding IsObject, UpdateSourceTrigger=PropertyChanged}" IsEnabled="{Binding AllowClass, UpdateSourceTrigger=PropertyChanged}"/>
                 </Grid>
             </GroupBox.Header>
             <Grid IsEnabled="{Binding ElementName=ObjectRadioButton, Path=IsChecked, UpdateSourceTrigger=PropertyChanged}">

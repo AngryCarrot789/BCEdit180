@@ -5,5 +5,7 @@ namespace BCEdit180.Core {
         void Shutdown();
 
         void InvokeSync(Action action);
+
+        void SyspendDispatcherForAction(Action action);
     }
 }

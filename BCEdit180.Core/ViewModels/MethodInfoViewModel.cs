@@ -108,23 +108,24 @@ namespace BCEdit180.Core.ViewModels {
             this.Node = node;
             this.CalculateMaxStackCommand = new RelayCommand(CalculateMaxStackSize);
             this.CalculateMaxLocalsCommand = new RelayCommand(CalculateMaxLocalsSize);
-            this.EditAccessCommand = new RelayCommand(() => EditAccess());
-            this.EditDescriptorCommand = new RelayCommand(() => EditDescriptor());
+            this.EditAccessCommand = new RelayCommand(EditAccess);
+            this.EditDescriptorCommand = new RelayCommand(EditDescriptor);
             this.VisibleAnnotationEditor = new AnnotationEditorViewModel();
             this.InvisibleAnnotationEditor = new AnnotationEditorViewModel();
             this.CodeEditor = new CodeEditorViewModel(this);
             Load(node);
         }
 
-        public async Task EditAccess() {
-            MethodAccessModifiers? modifier = await Dialog.AccessEditor.EditMethodAccess(this.Access);
-            if (modifier.HasValue) {
-                this.Access = modifier.Value;
+        public void EditAccess() {
+            if (Dialog.AccessEditor.EditMethodAccess(this.Access, out MethodAccessModifiers access).Result) {
+                this.Access = access;
             }
         }
 
-        public async Task EditDescriptor() {
-            this.Descriptor = await Dialog.TypeEditor.EditMethodDescriptorDialog(this.Descriptor);
+        public void EditDescriptor() {
+            if (Dialog.TypeEditor.EditMethodDescriptorDialog(this.Descriptor, out MethodDescriptor typeDesc).Result) {
+                this.Descriptor = typeDesc;
+            }
         }
 
         public void CalculateMaxStackSize() {

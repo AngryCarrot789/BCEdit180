@@ -252,5 +252,5 @@
     <SolidColorBrush x:Key="Window.Static.Background"       Color="{DynamicResource AREghZyColour.Deep.1.Background.Static}"/>
     <SolidColorBrush x:Key="Window.Static.Border"           Color="{DynamicResource AREghZyColour.Deep.2.Border.Static}"/>
     <SolidColorBrush x:Key="Window.Static.Foreground"       Color="{DynamicResource AREghZyColour.Foreground.Static}"/>
-    <SolidColorBrush x:Key="Window.Static.Title.Background" Color="{DynamicResource AREghZyColour.Deep.1.Background.Static}"/>
+    <SolidColorBrush x:Key="Window.Static.Title.Background" Color="{DynamicResource AREghZyColour.Deep.3.Background.Static}"/>
 </ResourceDictionary>

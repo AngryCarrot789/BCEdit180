@@ -1,8 +1,10 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
+using System.Linq;
 using System.Windows.Input;
 using BCEdit180.Core.CodeEditing.Bytecode.Instructions;
+using BCEdit180.Core.Collections;
 using BCEdit180.Core.Utils;
 using JavaAsm;
 using JavaAsm.Instructions;
@@ -16,7 +18,7 @@ namespace BCEdit180.Core.CodeEditing {
 
         public CodeEditorViewModel CodeEditor { get; }
 
-        public ObservableCollection<BaseInstructionViewModel> Instructions { get; }
+        public ExtendedObservableCollection<BaseInstructionViewModel> Instructions { get; }
 
         private int selectedInstructionIndex;
 
@@ -42,32 +44,37 @@ namespace BCEdit180.Core.CodeEditing {
 
         public ICommand InsertInstructionCommand { get; }
         public ICommand InsertCodeCommand { get; }
+        public ICommand ShowHideOptionsCommand { get; }
 
         public BytecodeEditorViewModel(CodeEditorViewModel codeEditor) {
             this.CodeEditor = codeEditor;
-            this.Instructions = new ObservableCollection<BaseInstructionViewModel>();
+            this.Instructions = new ExtendedObservableCollection<BaseInstructionViewModel>();
             this.FindNextInstructionCommand = new RelayCommand(SearchNextElement);
             this.DeleteSelectedInstructionsCommand = new RelayCommand(DeleteSelectedInstructions);
         }
 
         public void DeleteSelectedInstructions() {
-            IEnumerable<BaseInstructionViewModel> remove = BytecodeList.SelectedItems;
-            foreach (BaseInstructionViewModel instruction in remove) {
-                this.Instructions.Remove(instruction);
-            }
+            this.Instructions.RemoveRange(BytecodeList.SelectedItems);
         }
 
-        public void LoadInstruction(Instruction instruction) {
+        public BaseInstructionViewModel CreateInstructionForHandle(Instruction instruction) {
             BaseInstructionViewModel vm = BaseInstructionViewModel.ForInstruction(instruction);
             vm.Load(instruction);
-            this.Instructions.Add(vm);
+            return vm;
         }
 
         public void Load(MethodNode node) {
             this.Instructions.Clear();
-            for (Instruction instruction = node.Instructions.First; instruction != null; instruction = instruction.Next) {
-                LoadInstruction(instruction);
-            }
+            this.Instructions.AddRange(node.Instructions.Select(CreateInstructionForHandle));
+            // List<BaseInstructionViewModel> instructions = new List<BaseInstructionViewModel>(node.Instructions.Count);
+            // for (Instruction instruction = node.Instructions.First; instruction != null; instruction = instruction.Next) {
+            //     instructions.Add(CreateInstructionForHandle(instruction));
+            // }
+
+        }
+
+        private void DoLoadInstructions(MethodNode node) {
+
         }
 
         public void Save(MethodNode node) {
@@ -83,7 +90,7 @@ namespace BCEdit180.Core.CodeEditing {
 
             bool doExtendedSearch = false;
             while (true) {
-                int start = this.SelectedInstructionIndex + 1;
+                int start = doExtendedSearch ? 0 : (this.SelectedInstructionIndex + 1);
                 if (start < 0 || start >= this.Instructions.Count) {
                     start = this.SelectedInstructionIndex = 0;
                 }
@@ -93,9 +100,10 @@ namespace BCEdit180.Core.CodeEditing {
                     if (MatchInstruction(instruction, this.SearchText)) {
                         this.SelectedInstructionIndex = i;
                         BytecodeList.ScrollToSelectedItem();
-                        break;
+                        return;
                     }
                 }
+
 
                 if (!doExtendedSearch) {
                     doExtendedSearch = true;

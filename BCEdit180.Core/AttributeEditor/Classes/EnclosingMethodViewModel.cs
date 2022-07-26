@@ -30,11 +30,13 @@ namespace BCEdit180.Core.AttributeEditor.Classes {
         public ICommand EditDescriptorCommand { get; }
 
         public EnclosingMethodViewModel() {
-            this.EditDescriptorCommand = new RelayCommand(() => EditMethodDesc());
+            this.EditDescriptorCommand = new RelayCommand(EditMethodDesc);
         }
 
-        public async Task EditMethodDesc() {
-            this.Descriptor = await Dialog.TypeEditor.EditMethodDescriptorDialog(this.Descriptor);
+        public void EditMethodDesc() {
+            if (Dialog.TypeEditor.EditMethodDescriptorDialog(this.Descriptor, out MethodDescriptor descriptor).Result) {
+                this.Descriptor = descriptor;
+            }
         }
 
         public void Load(ClassNode node) {

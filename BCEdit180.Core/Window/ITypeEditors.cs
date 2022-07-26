@@ -1,3 +1,4 @@
+using System;
 using System.Collections.Generic;
 using System.Threading.Tasks;
 using BCEdit180.Core.Editors;
@@ -7,16 +8,32 @@ using JavaAsm.Instructions;
 
 namespace BCEdit180.Core.Window {
     public interface ITypeEditors {
-        Task<TypeDescriptor> EditTypeDescriptorDialog(TypeDescriptor defaultDescriptor = null, bool allowClass = true, bool allowPrimitve = true);
+        Task<bool> EditTypeDescriptorDialog(out TypeDescriptor descriptor, bool allowClass = true, bool allowPrimitve = true);
 
-        Task<MethodDescriptor> EditMethodDescriptorDialog(MethodDescriptor defaultDescriptor = null);
+        Task<bool> EditTypeDescriptorDialog(in TypeDescriptor template, out TypeDescriptor descriptor, bool allowClass = true, bool allowPrimitve = true);
 
-        Task<MethodEditorViewModel> EditMethodDialog(bool showMethodName = true, MethodEditorViewModel defaultEditor = null);
+        Task<bool> EditMethodDescriptorDialog(out MethodDescriptor descriptor);
 
-        Task<FieldEditorViewModel> EditFieldDialog(bool showFieldName = true, FieldEditorViewModel defaultEditor = null);
+        Task<bool> EditMethodDescriptorDialog(in MethodDescriptor template, out MethodDescriptor descriptor);
 
-        Task<ConstValueEditorViewModel> EditConstantDialog(ConstValueEditorViewModel defaultEditor = null);
+        Task<bool> EditMethodDialog(out MethodEditorViewModel editor, bool showMethodName = true);
 
-        Task<Opcode?> ChangeInstructionDialog(IEnumerable<Opcode> opcodes);
+        Task<bool> EditMethodDialog(in MethodEditorViewModel template, out MethodEditorViewModel editor, bool showMethodName = true);
+
+        Task<bool> EditFieldDialog(out FieldEditorViewModel editor, bool showFieldName = true);
+
+        Task<bool> EditFieldDialog(in FieldEditorViewModel template, out FieldEditorViewModel editor, bool showFieldName = true);
+
+        Task<bool> EditConstantDialog(out ConstValueEditorViewModel editor);
+
+        Task<bool> EditConstantDialog(in ConstValueEditorViewModel template, out ConstValueEditorViewModel editor);
+
+        Task<bool> ChangeInstructionDialog(IEnumerable<Opcode> opcodes, out Opcode opcode);
+
+        Task<bool> ChangeInstructionDialog(IEnumerable<Opcode> opcodes, in Opcode? defaultOpcode, out Opcode opcode);
+
+        Task<bool> EditEnumDialog<TEnum>(out TEnum access) where TEnum : Enum ;
+
+        Task<bool> EditEnumDialog<TEnum>(in TEnum template, out TEnum access) where TEnum : Enum ;
     }
 }

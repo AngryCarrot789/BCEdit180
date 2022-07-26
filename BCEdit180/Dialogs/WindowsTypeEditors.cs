@@ -1,6 +1,6 @@
+using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Security.Cryptography;
 using System.Threading.Tasks;
 using System.Windows;
 using BCEdit180.Core.CodeEditing.InstructionEdit;
@@ -14,50 +14,83 @@ using JavaAsm.Instructions;
 
 namespace BCEdit180.Dialogs {
     public class WindowsTypeEditors : ITypeEditors {
-        public Task<TypeDescriptor> EditTypeDescriptorDialog(TypeDescriptor defaultDescriptor = null, bool allowClass = true, bool allowPrimitve = true) {
+        private static readonly Dictionary<Type, FlagEditorViewModel> FlagEditorForEnum = new Dictionary<Type, FlagEditorViewModel>();
+
+        private static FlagEditorViewModel GetEditorForEnum<TEnum>() where TEnum : Enum {
+            if (FlagEditorForEnum.TryGetValue(typeof(TEnum), out FlagEditorViewModel flagEditor)) {
+                return flagEditor;
+            }
+            else {
+                return FlagEditorForEnum[typeof(TEnum)] = new FlagEditorViewModel(value => (TEnum) Enum.Parse(typeof(TEnum), value.ToString()));
+            }
+        }
+
+        public Task<bool> EditTypeDescriptorDialog(out TypeDescriptor descriptor, bool allowClass = true, bool allowPrimitve = true) {
+            return EditTypeDescriptorDialog(new TypeDescriptor(PrimitiveType.Integer, 0), out descriptor, allowClass, allowPrimitve);
+        }
+
+        public Task<bool> EditTypeDescriptorDialog(in TypeDescriptor template, out TypeDescriptor descriptor, bool allowClass = true, bool allowPrimitve = true) {
             TypeEditorWindow window = new TypeEditorWindow();
             TypeEditorViewModel editor = new TypeEditorViewModel();
-            if (defaultDescriptor != null) {
-                if (defaultDescriptor.PrimitiveType.HasValue) {
+            if (template != null) {
+                if (template.PrimitiveType.HasValue) {
                     editor.IsPrimitive = true;
-                    editor.SelectedPrimitive = defaultDescriptor.PrimitiveType.Value;
+                    editor.SelectedPrimitive = template.PrimitiveType.Value;
                 }
                 else {
                     editor.IsObject = true;
-                    editor.ClassName = defaultDescriptor.ClassName?.Name;
+                    editor.ClassName = template.ClassName?.Name;
                 }
-
             }
 
             editor.AllowPrimitive = allowPrimitve;
             editor.AllowClass = allowClass;
             window.DataContext = editor;
-            window.ShowDialog();
+            if (window.ShowDialog() != true) {
+                descriptor = null;
+                return Task.FromResult(false);
+            }
+
             if (editor.IsPrimitive) {
-                return Task.FromResult(new TypeDescriptor(editor.SelectedPrimitive, editor.ArrayDepth));
+                descriptor = new TypeDescriptor(editor.SelectedPrimitive, editor.ArrayDepth);
             }
             else {
-                return Task.FromResult(new TypeDescriptor(new ClassName(editor.RealClassName ?? ""), editor.ArrayDepth));
+                descriptor = new TypeDescriptor(new ClassName(editor.RealClassName ?? ""), editor.ArrayDepth);
             }
+
+            return Task.FromResult(true);
         }
 
-        public Task<MethodDescriptor> EditMethodDescriptorDialog(MethodDescriptor defaultDescriptor = null) {
+        public Task<bool> EditMethodDescriptorDialog(out MethodDescriptor descriptor) {
+            return EditMethodDescriptorDialog(new MethodDescriptor(new TypeDescriptor(PrimitiveType.Void, 0), new List<TypeDescriptor>()), out descriptor);
+        }
+
+        public Task<bool> EditMethodDescriptorDialog(in MethodDescriptor template, out MethodDescriptor descriptor) {
             MethodDescEditorWindow window = new MethodDescEditorWindow();
             MethodEditorViewModel vm = new MethodEditorViewModel();
-            if (defaultDescriptor != null) {
-                vm.ReturnType = defaultDescriptor.ReturnType;
+            if (template != null) {
+                vm.ReturnType = template.ReturnType;
                 vm.Parameters.Clear();
-                if (defaultDescriptor.ArgumentTypes != null) {
-                    vm.Parameters.AddAll(defaultDescriptor.ArgumentTypes.Select(x => new TypeDescriptorViewModel() {Descriptor = x}));
+                if (template.ArgumentTypes != null) {
+                    vm.Parameters.AddAll(template.ArgumentTypes.Select(x => new TypeDescriptorViewModel() { Descriptor = x }));
                 }
             }
 
             window.DataContext = vm;
-            window.ShowDialog();
-            return Task.FromResult(new MethodDescriptor(vm.ReturnType, vm.Parameters.Select(x => x.Descriptor).ToList()));
+            if (window.ShowDialog() != true) {
+                descriptor = null;
+                return Task.FromResult(false);
+            }
+
+            descriptor = new MethodDescriptor(vm.ReturnType ?? new TypeDescriptor(PrimitiveType.Void, 0), vm.Parameters.Select(x => x.Descriptor).ToList());
+            return Task.FromResult(true);
         }
 
-        public Task<MethodEditorViewModel> EditMethodDialog(bool showMethodName = true, MethodEditorViewModel defaultEditor = null) {
+        public Task<bool> EditMethodDialog(out MethodEditorViewModel editor, bool showMethodName = true) {
+            return EditMethodDialog(null, out editor, showMethodName);
+        }
+
+        public Task<bool> EditMethodDialog(in MethodEditorViewModel template, out MethodEditorViewModel editor, bool showMethodName = true) {
             Window window;
             if (showMethodName) {
                 window = new MethodEditorWindow();
@@ -66,52 +99,109 @@ namespace BCEdit180.Dialogs {
                 window = new MethodDescEditorWindow();
             }
 
-            MethodEditorViewModel vm = new MethodEditorViewModel();
-            if (defaultEditor != null) {
-                vm.Access = defaultEditor.Access;
-                vm.Parameters.AddAll(defaultEditor.Parameters);
-                vm.MethodName = defaultEditor.MethodName;
-                vm.ReturnType = defaultEditor.ReturnType;
-            }
+            MethodEditorViewModel vm = template ?? new MethodEditorViewModel() {
+                ReturnType = new TypeDescriptor(PrimitiveType.Void, 0),
+                Access = MethodAccessModifiers.Public,
+                MethodName = "methodName"
+            };
 
             window.DataContext = vm;
-            window.ShowDialog();
-            return Task.FromResult(vm);
+            if (window.ShowDialog() != true || !(window.DataContext is MethodEditorViewModel)) {
+                editor = null;
+                return Task.FromResult(false);
+            }
+
+            editor = (MethodEditorViewModel) window.DataContext;
+            return Task.FromResult(true);
         }
 
-        public Task<FieldEditorViewModel> EditFieldDialog(bool showFieldName = true, FieldEditorViewModel defaultEditor = null) {
+        public Task<bool> EditFieldDialog(out FieldEditorViewModel editor, bool showFieldName = true) {
+            return EditFieldDialog(null, out editor, showFieldName);
+        }
+
+        public Task<bool> EditFieldDialog(in FieldEditorViewModel template, out FieldEditorViewModel editor, bool showFieldName = true) {
             FieldEditorWindow window = new FieldEditorWindow();
-            FieldEditorViewModel vm = new FieldEditorViewModel();
-            if (defaultEditor != null) {
-                vm.Access = defaultEditor.Access;
-                vm.FieldName = defaultEditor.FieldName;
-                vm.Descriptor = defaultEditor.Descriptor;
+            FieldEditorViewModel vm = template ?? new FieldEditorViewModel() {
+                Access = FieldAccessModifiers.Public,
+                Descriptor = new TypeDescriptor(PrimitiveType.Integer, 0),
+                ConstantValue = 0,
+                FieldName = "fieldName"
+            };
+
+            window.DataContext = vm;
+            if (window.ShowDialog() != true || !(window.DataContext is FieldEditorViewModel)) {
+                editor = null;
+                return Task.FromResult(false);
             }
 
-            window.DataContext = vm;
-            window.ShowDialog();
-            return Task.FromResult(vm);
+            editor = (FieldEditorViewModel) window.DataContext;
+            return Task.FromResult(true);
         }
 
-        public Task<ConstValueEditorViewModel> EditConstantDialog(ConstValueEditorViewModel defaultEditor = null) {
+        public Task<bool> EditConstantDialog(out ConstValueEditorViewModel editor) {
+            return EditConstantDialog(null, out editor);
+        }
+
+        public Task<bool> EditConstantDialog(in ConstValueEditorViewModel template, out ConstValueEditorViewModel editor) {
             ConstValueEditorWindow window = new ConstValueEditorWindow();
-            ConstValueEditorViewModel vm = defaultEditor ?? new ConstValueEditorViewModel();
+            ConstValueEditorViewModel vm = template ?? new ConstValueEditorViewModel() {
+                Type = ConstType.String,
+                ValueString = "Constant String Value Here"
+            };
+
             window.DataContext = vm;
-            return window.ShowDialog() != true ? Task.FromResult<ConstValueEditorViewModel>(null) : Task.FromResult((ConstValueEditorViewModel) window.DataContext);
+            if (window.ShowDialog() != true || !(window.DataContext is ConstValueEditorViewModel)) {
+                editor = null;
+                return Task.FromResult(false);
+            }
+
+            editor = (ConstValueEditorViewModel) window.DataContext;
+            return Task.FromResult(true);
         }
 
-        public Task<Opcode?> ChangeInstructionDialog(IEnumerable<Opcode> opcodes) {
+        public Task<bool> ChangeInstructionDialog(IEnumerable<Opcode> opcodes, out Opcode opcode) {
+            return ChangeInstructionDialog(opcodes, null, out opcode);
+        }
+
+        public Task<bool> ChangeInstructionDialog(IEnumerable<Opcode> opcodes, in Opcode? defaultOpcode, out Opcode opcode) {
             ChangeInstructionWindow window = new ChangeInstructionWindow();
+            window.Title = "Replace Opcode";
+
             ChangeInstructionViewModel vm = new ChangeInstructionViewModel();
             vm.SetAvailableInstructions(opcodes);
             window.DataContext = vm;
-            window.Title = "Replace Opcode";
-            window.ShowDialog();
-            if (vm.IsValidSelection()) {
-                return Task.FromResult<Opcode?>(vm.SelectedOpcode);
+            if (defaultOpcode.HasValue) {
+                Opcode code = defaultOpcode.Value;
+                Application.Current.Dispatcher.Invoke(() => {
+                    vm.SelectedOpcode = code;
+                }, System.Windows.Threading.DispatcherPriority.Loaded);
+            }
+
+            if (window.ShowDialog() != true || !vm.IsValidSelection()) {
+                opcode = Opcode.None;
+                return Task.FromResult(false);
+            }
+
+            opcode = vm.SelectedOpcode;
+            return Task.FromResult(true);
+        }
+
+        public Task<bool> EditEnumDialog<TEnum>(out TEnum access) where TEnum : Enum {
+            return EditEnumDialog(default, out access);
+        }
+
+        public Task<bool> EditEnumDialog<TEnum>(in TEnum template, out TEnum access) where TEnum : Enum {
+            FlagEditorWindow window = new FlagEditorWindow {Title = typeof(TEnum).Name + " Editor"};
+            FlagEditorViewModel vm = GetEditorForEnum<TEnum>();
+            vm.UpdateFlagItemsWithBitMask(Convert.ToInt64(template));
+            window.DataContext = vm;
+            if (window.ShowDialog() == true) {
+                access = (TEnum) vm.GetEnumValue();
+                return Task.FromResult(true);
             }
             else {
-                return Task.FromResult<Opcode?>(null);
+                access = template;
+                return Task.FromResult(false);
             }
         }
     }

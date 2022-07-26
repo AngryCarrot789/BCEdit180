@@ -1,5 +1,6 @@
 using System;
 using System.Windows;
+using System.Windows.Threading;
 using BCEdit180.Core;
 
 namespace BCEdit180 {
@@ -10,6 +11,12 @@ namespace BCEdit180 {
 
         public void InvokeSync(Action action) {
             Application.Current.Dispatcher.Invoke(action);
+        }
+
+        public void SyspendDispatcherForAction(Action action) {
+            using (DispatcherProcessingDisabled disabled = Application.Current.Dispatcher.DisableProcessing()) {
+                action();
+            }
         }
     }
 }

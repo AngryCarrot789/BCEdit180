@@ -38,17 +38,16 @@ namespace BCEdit180.Core.AttributeEditor.Classes {
 
         public InnerClassViewModel(ClassAttributeEditorViewModel clazz) {
             this.Class = clazz;
-            this.EditAccessCommand = new RelayCommand(() => EditAccess());
+            this.EditAccessCommand = new RelayCommand(EditAccess);
         }
 
         public InnerClassViewModel(ClassAttributeEditorViewModel clazz, InnerClass inner) : this(clazz) {
             Load(inner);
         }
 
-        public async Task EditAccess() {
-            ClassAccessModifiers? modifier = await Dialog.AccessEditor.EditClassAccess(this.ClassAccess | ClassAccessModifiers.Super);
-            if (modifier.HasValue) {
-                this.ClassAccess = modifier.Value;
+        public void EditAccess() {
+            if (Dialog.AccessEditor.EditClassAccess(this.ClassAccess, out ClassAccessModifiers access).Result) {
+                this.ClassAccess = access;
             }
         }
 

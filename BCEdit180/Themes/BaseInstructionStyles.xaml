@@ -1,0 +1,18 @@
+﻿<ResourceDictionary xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+                    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml">
+    <Color x:Key="ClassNameColour">#FF4ec08D</Color>
+    <Color x:Key="InterfaceColour">#FFb8d7a3</Color>
+    <Color x:Key="ThingyThingKeywordThatsIt">#FF78D4DE</Color>
+    <Color x:Key="NumberColour">#FF1C98DD</Color>
+    <Color x:Key="EnumColour">#FFb8d890</Color>
+    <Color x:Key="Descriptor">#FF279C68</Color>
+    <SolidColorBrush x:Key="ClassName" Color="{StaticResource ClassNameColour}"/>
+    <SolidColorBrush x:Key="InterfaceName" Color="{StaticResource InterfaceColour}"/>
+    <SolidColorBrush x:Key="FieldName" Color="{StaticResource ThingyThingKeywordThatsIt}"/>
+    <SolidColorBrush x:Key="MethodName" Color="{StaticResource ThingyThingKeywordThatsIt}"/>
+    <SolidColorBrush x:Key="MethodReturnType" Color="{StaticResource Descriptor}"/>
+    <SolidColorBrush x:Key="FieldDescriptor" Color="{StaticResource Descriptor}"/>
+    <SolidColorBrush x:Key="Keyword" Color="{StaticResource ThingyThingKeywordThatsIt}"/>
+    <SolidColorBrush x:Key="ConstNumeric" Color="{StaticResource NumberColour}"/>
+    <SolidColorBrush x:Key="ConstEnum" Color="{StaticResource EnumColour}"/>
+</ResourceDictionary>

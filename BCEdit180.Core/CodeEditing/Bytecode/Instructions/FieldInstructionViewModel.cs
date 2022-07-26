@@ -1,7 +1,11 @@
 using System.Collections.Generic;
+using System.Windows.Input;
+using BCEdit180.Core.Commands;
+using BCEdit180.Core.Window;
 using JavaAsm;
 using JavaAsm.Instructions;
 using JavaAsm.Instructions.Types;
+using REghZy.MVVM.Commands;
 
 namespace BCEdit180.Core.CodeEditing.Bytecode.Instructions {
     public class FieldInstructionViewModel : BaseInstructionViewModel {
@@ -24,6 +28,18 @@ namespace BCEdit180.Core.CodeEditing.Bytecode.Instructions {
         }
 
         public override IEnumerable<Opcode> AvailableOpCodes => new Opcode[] {Opcode.GETFIELD, Opcode.GETSTATIC, Opcode.PUTFIELD, Opcode.PUTSTATIC};
+
+        public ICommand EditDescriptorCommand { get; }
+
+        public FieldInstructionViewModel() {
+            this.EditDescriptorCommand = new RelayCommand(EditDescriptorAction);
+        }
+
+        public void EditDescriptorAction() {
+            if (Dialog.TypeEditor.EditTypeDescriptorDialog(this.FieldDescriptor, out TypeDescriptor descriptor).Result) {
+                this.FieldDescriptor = descriptor;
+            }
+        }
 
         public override void Load(Instruction instruction) {
             base.Load(instruction);

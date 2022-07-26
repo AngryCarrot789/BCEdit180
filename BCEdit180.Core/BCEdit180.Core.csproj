@@ -9,10 +9,6 @@
   </ItemGroup>
 
   <ItemGroup>
-    <Folder Include="CodeEditing\Bytecode" />
-  </ItemGroup>
-
-  <ItemGroup>
     <Reference Include="JavaAsm">
       <HintPath>..\..\java-asm\JavaAsm\bin\Release\netstandard2.0\JavaAsm.dll</HintPath>
     </Reference>

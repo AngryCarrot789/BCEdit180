@@ -36,8 +36,7 @@ namespace BCEdit180.Core.CodeEditing.Bytecode.Instructions {
         }
 
         public void EditValueAction() {
-            ConstValueEditorViewModel editor = Dialog.TypeEditor.EditConstantDialog(new ConstValueEditorViewModel(this.Value)).Result;
-            if (editor != null) {
+            if (Dialog.TypeEditor.EditConstantDialog(new ConstValueEditorViewModel(this.Value), out ConstValueEditorViewModel editor).Result) {
                 this.Value = editor.GetValue();
             }
         }

@@ -3,19 +3,13 @@ using JavaAsm;
 
 namespace BCEdit180.Core.Window {
     public interface IAccessEditor {
-        /// <summary>
-        /// Shows a dialog that allows a user to pick a class modifier
-        /// </summary>
-        Task<ClassAccessModifiers?> EditClassAccess(ClassAccessModifiers defaultAccess = ClassAccessModifiers.Public | ClassAccessModifiers.Super);
+        Task<bool> EditClassAccess(out ClassAccessModifiers access);
+        Task<bool> EditClassAccess(in ClassAccessModifiers template, out ClassAccessModifiers access);
 
-        /// <summary>
-        /// Shows a dialog that allows a user to pick a method modifier
-        /// </summary>
-        Task<MethodAccessModifiers?> EditMethodAccess(MethodAccessModifiers defaultAccess = MethodAccessModifiers.Public);
+        Task<bool> EditMethodAccess(out MethodAccessModifiers template);
+        Task<bool> EditMethodAccess(in MethodAccessModifiers template, out MethodAccessModifiers access);
 
-        /// <summary>
-        /// Shows a dialog that allows a user to pick a field modifier
-        /// </summary>
-        Task<FieldAccessModifiers?> EditFieldAccess(FieldAccessModifiers defaultAccess = FieldAccessModifiers.Public);
+        Task<bool> EditFieldAccess(out FieldAccessModifiers access);
+        Task<bool> EditFieldAccess(in FieldAccessModifiers template, out FieldAccessModifiers access);
     }
 }

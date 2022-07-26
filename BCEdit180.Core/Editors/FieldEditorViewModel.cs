@@ -35,34 +35,23 @@ namespace BCEdit180.Core.Editors {
 
         public ICommand EditAccessCommand { get; }
 
-        public bool IsCancelled { get; set; }
-        public ICommand ApplyChangesCommand { get; }
-        public ICommand CancelChangesCommand { get; }
-
         public FieldEditorViewModel() {
             this.FieldName = "myFieldName";
             this.Descriptor = new TypeDescriptor(PrimitiveType.Integer, 0);
             this.Access = FieldAccessModifiers.Public;
-            this.EditDescriptorCommand = new RelayCommand(()=> {
-                EditDescriptor();
-            });
-
-            this.EditAccessCommand = new RelayCommand(() => {
-                EditAccess();
-            });
-
-            this.ApplyChangesCommand = new RelayCommand(() => this.IsCancelled = false);
-            this.CancelChangesCommand = new RelayCommand(() => this.IsCancelled = true);
+            this.EditDescriptorCommand = new RelayCommand(EditDescriptor);
+            this.EditAccessCommand = new RelayCommand(EditAccess);
         }
 
-        public async Task EditDescriptor() {
-            this.Descriptor = await Dialog.TypeEditor.EditTypeDescriptorDialog(this.Descriptor);
+        public void EditDescriptor() {
+            if (Dialog.TypeEditor.EditTypeDescriptorDialog(this.Descriptor, out TypeDescriptor descriptor).Result) {
+                this.Descriptor = descriptor;
+            }
         }
 
-        public async Task EditAccess() {
-            FieldAccessModifiers? modifier = await Dialog.AccessEditor.EditFieldAccess(this.Access);
-            if (modifier.HasValue) {
-                this.Access = modifier.Value;
+        public void EditAccess() {
+            if (Dialog.AccessEditor.EditFieldAccess(this.Access, out FieldAccessModifiers access).Result) {
+                this.Access = access;
             }
         }
     }

@@ -1,6 +1,6 @@
 <ResourceDictionary xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
                     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
-                    xmlns:editors="clr-namespace:BCEdit180.CodeEditing.NewEditorControls"
+                    xmlns:editors="clr-namespace:BCEdit180.CodeEditing.EditorControls"
                     xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
                     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
                     xmlns:vms="clr-namespace:BCEdit180.Core.CodeEditing.Bytecode.Instructions;assembly=BCEdit180.Core"
@@ -8,11 +8,15 @@
                     xmlns:converters="clr-namespace:BCEdit180.Converters"
                     mc:Ignorable="d">
     <converters:TypeDescriptorToStringConverter x:Key="TypeDescriptorConverter"/>
-    <Style TargetType="{x:Type editors:FieldInstructionEditorControl}" d:DataContext="{d:DesignInstance vms:FieldInstructionViewModel}">
+    <!-- Visual studio will give some errors reguarding d:DataContext, but i used
+         rider to make this file as it's better for writing code. VS for the designer :)
+         Some people even say the designer is pointless... i can't express how much i disagree    
+    -->
+    <Style TargetType="{x:Type editors:FieldInstructionEditorControl}">
         <Setter Property="Template">
             <Setter.Value>
                 <ControlTemplate>
-                    <Grid>
+                    <Grid d:DataContext="{d:DesignInstance vms:FieldInstructionViewModel}">
                         <TextBlock Width="100" HorizontalAlignment="Left" TextWrapping="NoWrap" Text="Opcode" VerticalAlignment="Top" Padding="5"  FontWeight="Bold"/>
                         <TextBlock Width="100" HorizontalAlignment="Left" TextWrapping="NoWrap" Text="Field Name" VerticalAlignment="Top" Padding="5"  FontWeight="Bold" Margin="0,26,0,0"/>
                         <TextBlock Width="100" HorizontalAlignment="Left" TextWrapping="NoWrap" Text="Field Owner" VerticalAlignment="Top" Padding="5"  FontWeight="Bold" Margin="0,52,0,0"/>
@@ -26,22 +30,27 @@
             </Setter.Value>
         </Setter>
     </Style>
-    <Style TargetType="{x:Type editors:IncrementInstructionEditorControl}" d:DataContext="{d:DesignInstance vms:IncrementInstructionViewModel}">
+    <Style TargetType="{x:Type editors:IncrementInstructionEditorControl}">
         <Setter Property="Template">
             <Setter.Value>
                 <ControlTemplate>
-                    <Grid>
-                        <TextBlock Text="Coming soon"/>
+                    <Grid d:DataContext="{d:DesignInstance vms:IncrementInstructionViewModel}">
+                        <TextBlock Text="Opcode" Width="100" HorizontalAlignment="Left" TextWrapping="NoWrap" VerticalAlignment="Top" Padding="5"  FontWeight="Bold"/>
+                        <TextBlock Text="Local Var Index" Width="100" HorizontalAlignment="Left" TextWrapping="NoWrap" VerticalAlignment="Top" Padding="5"  FontWeight="Bold" Margin="0,26,0,0"/>
+                        <TextBlock Text="By amount" Width="100" HorizontalAlignment="Left" TextWrapping="NoWrap" VerticalAlignment="Top" Padding="5"  FontWeight="Bold" Margin="0,52,0,0"/>
+                        <TextBox Text="{Binding Opcode, UpdateSourceTrigger=PropertyChanged}" Background="Transparent" HorizontalAlignment="Stretch" TextWrapping="NoWrap" VerticalAlignment="Top" Padding="5" Margin="100,0,0,0" BorderThickness="0"  FontWeight="Bold" FontStyle="Italic" />
+                        <TextBox Text="{Binding VarIndex, UpdateSourceTrigger=PropertyChanged}" Background="Transparent" HorizontalAlignment="Stretch" TextWrapping="NoWrap" VerticalAlignment="Top" Padding="5" Margin="100,26,0,0" BorderThickness="0"  FontWeight="Bold" FontStyle="Italic" />
+                        <TextBox Text="{Binding Value, UpdateSourceTrigger=PropertyChanged}" Background="Transparent" HorizontalAlignment="Stretch" TextWrapping="NoWrap" VerticalAlignment="Top" Padding="5" Margin="100,52,0,0" BorderThickness="0"  FontWeight="Bold" FontStyle="Italic" />
                     </Grid>
                 </ControlTemplate>
             </Setter.Value>
         </Setter>
     </Style>
-    <Style TargetType="{x:Type editors:IntegerPushInstructionEditorControl}" d:DataContext="{d:DesignInstance vms:IntegerPushInstructionViewModel}">
+    <Style TargetType="{x:Type editors:IntegerPushInstructionEditorControl}">
         <Setter Property="Template">
             <Setter.Value>
                 <ControlTemplate>
-                    <Grid>
+                    <Grid d:DataContext="{d:DesignInstance vms:IntegerPushInstructionViewModel}">
                         <TextBlock Width="100" HorizontalAlignment="Left" TextWrapping="NoWrap" Text="Opcode" VerticalAlignment="Top" Padding="5"  FontWeight="Bold"/>
                         <TextBlock Width="100" HorizontalAlignment="Left" TextWrapping="NoWrap" Text="Integer Value" VerticalAlignment="Top" Padding="5"  FontWeight="Bold" Margin="0,26,0,0"/>
                         <TextBox Text="{Binding Opcode, UpdateSourceTrigger=PropertyChanged}" Background="Transparent" HorizontalAlignment="Stretch" TextWrapping="NoWrap" VerticalAlignment="Top" Padding="5" Margin="100,0,0,0" BorderThickness="0"  FontWeight="Bold" FontStyle="Italic" />
@@ -51,11 +60,11 @@
             </Setter.Value>
         </Setter>
     </Style>
-    <Style TargetType="{x:Type editors:InvokeDynamicInstructionEditorControl}" d:DataContext="{d:DesignInstance vms:InvokeDynamicInstructionViewModel}">
+    <Style TargetType="{x:Type editors:InvokeDynamicInstructionEditorControl}">
         <Setter Property="Template">
             <Setter.Value>
                 <ControlTemplate>
-                    <Grid>
+                    <Grid d:DataContext="{d:DesignInstance vms:InvokeDynamicInstructionViewModel}">
                         <TextBlock Width="100" HorizontalAlignment="Left" TextWrapping="NoWrap" VerticalAlignment="Top" Padding="5"  FontWeight="Bold" Text="Opcode"/>
                         <TextBlock Width="100" HorizontalAlignment="Left" TextWrapping="NoWrap" VerticalAlignment="Top" Padding="5"  FontWeight="Bold" Margin="0,26,0,0" Text="Method Name"/>
                         <TextBlock Width="100" HorizontalAlignment="Left" TextWrapping="NoWrap" VerticalAlignment="Top" Padding="5"  FontWeight="Bold" Margin="0,52,0,0" Text="Descriptor"/>
@@ -64,45 +73,52 @@
                         <TextBlock Width="120" HorizontalAlignment="Left" TextWrapping="NoWrap" VerticalAlignment="Top" Padding="5"  FontWeight="Bold" Margin="25,130,0,0" Text="Method Owner"/>
                         <TextBlock Width="120" HorizontalAlignment="Left" TextWrapping="NoWrap" VerticalAlignment="Top" Padding="5"  FontWeight="Bold" Margin="25,156,0,0" Text="Method Name"/>
                         <TextBlock Width="120" HorizontalAlignment="Left" TextWrapping="NoWrap" VerticalAlignment="Top" Padding="5"  FontWeight="Bold" Margin="25,182,0,0"><Run Text="Method Descr"/><Run Text="iptor"/></TextBlock>
-                        <TextBox Text="{Binding Opcode, UpdateSourceTrigger=PropertyChanged}" Background="Transparent" HorizontalAlignment="Stretch" TextWrapping="NoWrap" VerticalAlignment="Top" Padding="5" Margin="100,0,-2,0" BorderThickness="0"  FontWeight="Bold" FontStyle="Italic" />
-                        <TextBox Text="{Binding Name, UpdateSourceTrigger=PropertyChanged}" Background="Transparent" HorizontalAlignment="Stretch" TextWrapping="NoWrap" VerticalAlignment="Top" Padding="5" Margin="100,26,-2,0" BorderThickness="0"  FontWeight="Bold" FontStyle="Italic" />
-                        <TextBox Text="{Binding Descriptor, UpdateSourceTrigger=PropertyChanged, Converter={StaticResource TypeDescriptorConverter}}" Background="Transparent" HorizontalAlignment="Stretch" TextWrapping="NoWrap" VerticalAlignment="Top" Padding="5" Margin="100,52,-2,0" BorderThickness="0"  FontWeight="Bold" FontStyle="Italic" />
-                        <TextBox Text="{Binding BootstrapReferenceType, UpdateSourceTrigger=PropertyChanged}" Background="Transparent" HorizontalAlignment="Stretch" TextWrapping="NoWrap" VerticalAlignment="Top" Padding="5" Margin="145,104,0,0" BorderThickness="0"  FontWeight="Bold" FontStyle="Italic" />
+                        <TextBox Text="{Binding Opcode, UpdateSourceTrigger=PropertyChanged}" Background="Transparent" HorizontalAlignment="Stretch" TextWrapping="NoWrap" VerticalAlignment="Top" Padding="5" Margin="100,0,0,0" BorderThickness="0"  FontWeight="Bold" FontStyle="Italic" />
+                        <TextBox Text="{Binding Name, UpdateSourceTrigger=PropertyChanged}" Background="Transparent" HorizontalAlignment="Stretch" TextWrapping="NoWrap" VerticalAlignment="Top" Padding="5" Margin="100,26,0,0" BorderThickness="0"  FontWeight="Bold" FontStyle="Italic" />
+                        <TextBox Text="{Binding Descriptor, UpdateSourceTrigger=PropertyChanged, Converter={StaticResource TypeDescriptorConverter}}" Background="Transparent" HorizontalAlignment="Stretch" TextWrapping="NoWrap" VerticalAlignment="Top" Padding="5" Margin="100,52,75,0" BorderThickness="0"  FontWeight="Bold" FontStyle="Italic" />
+                        <TextBox Text="{Binding BootstrapReferenceType, UpdateSourceTrigger=PropertyChanged}" Background="Transparent" HorizontalAlignment="Stretch" TextWrapping="NoWrap" VerticalAlignment="Top" Padding="5" Margin="145,104,75,0" BorderThickness="0"  FontWeight="Bold" FontStyle="Italic" />
                         <TextBox Text="{Binding BootstrapMethodOwner, UpdateSourceTrigger=PropertyChanged}" Background="Transparent" HorizontalAlignment="Stretch" TextWrapping="NoWrap" VerticalAlignment="Top" Padding="5" Margin="145,130,0,0" BorderThickness="0"  FontWeight="Bold" FontStyle="Italic" />
                         <TextBox Text="{Binding BootstrapMethodName, UpdateSourceTrigger=PropertyChanged}" Background="Transparent" HorizontalAlignment="Stretch" TextWrapping="NoWrap" VerticalAlignment="Top" Padding="5" Margin="145,156,0,0" BorderThickness="0"  FontWeight="Bold" FontStyle="Italic" />
-                        <TextBox Text="{Binding BootstrapMethodDescriptor, UpdateSourceTrigger=PropertyChanged, Converter={StaticResource TypeDescriptorConverter}}" Background="Transparent" HorizontalAlignment="Stretch" TextWrapping="NoWrap" VerticalAlignment="Top" Padding="5" Margin="145,182,0,0" BorderThickness="0"  FontWeight="Bold" FontStyle="Italic" />
+                        <TextBox Text="{Binding BootstrapMethodDescriptor, UpdateSourceTrigger=PropertyChanged, Converter={StaticResource TypeDescriptorConverter}}" Background="Transparent" HorizontalAlignment="Stretch" TextWrapping="NoWrap" VerticalAlignment="Top" Padding="5" Margin="145,182,75,0" BorderThickness="0"  FontWeight="Bold" FontStyle="Italic" />
+                        <Button Command="{Binding EditDescriptorCommand}" Focusable="False" Margin="0,52,0,0" Content="Edit" Height="26" VerticalAlignment="Top" HorizontalAlignment="Right" Width="75"/>
+                        <Button Command="{Binding EditBootstrapReferenceTypeCommand}" Focusable="False" Margin="0,104,0,0" Content="Edit" Height="26" VerticalAlignment="Top" HorizontalAlignment="Right" Width="75"/>
+                        <Button Command="{Binding EditBootstrapDescriptorCommand}" Focusable="False" Margin="0,182,0,0" Content="Edit" Height="26" VerticalAlignment="Top" HorizontalAlignment="Right" Width="75"/>
                     </Grid>
                 </ControlTemplate>
             </Setter.Value>
         </Setter>
     </Style>
-    <Style TargetType="{x:Type editors:JumpInstructionEditorControl}" d:DataContext="{d:DesignInstance vms:JumpInstructionViewModel}">
+    <Style TargetType="{x:Type editors:JumpInstructionEditorControl}">
         <Setter Property="Template">
             <Setter.Value>
                 <ControlTemplate>
-                    <Grid>
-                        <TextBlock Text="Coming soon"/>
+                    <Grid d:DataContext="{d:DesignInstance vms:JumpInstructionViewModel}">
+                        <TextBlock Width="100" HorizontalAlignment="Left" TextWrapping="NoWrap" Text="Opcode" VerticalAlignment="Top" Padding="5"  FontWeight="Bold"/>
+                        <TextBlock Width="100" HorizontalAlignment="Left" TextWrapping="NoWrap" Text="Integer Value" VerticalAlignment="Top" Padding="5"  FontWeight="Bold" Margin="0,26,0,0"/>
+                        <TextBox Text="{Binding Opcode, UpdateSourceTrigger=PropertyChanged}" Background="Transparent" HorizontalAlignment="Stretch" TextWrapping="NoWrap" VerticalAlignment="Top" Padding="5" Margin="100,0,0,0" BorderThickness="0"  FontWeight="Bold" FontStyle="Italic" />
+                        <TextBox Text="{Binding Target, UpdateSourceTrigger=PropertyChanged}" Background="Transparent" HorizontalAlignment="Stretch" TextWrapping="NoWrap" VerticalAlignment="Top" Padding="5" Margin="100,26,0,0" BorderThickness="0"  FontWeight="Bold" FontStyle="Italic" />
                     </Grid>
                 </ControlTemplate>
             </Setter.Value>
         </Setter>
     </Style>
-    <Style TargetType="{x:Type editors:LabelEditorControl}" d:DataContext="{d:DesignInstance vms:LabelViewModel}">
+    <Style TargetType="{x:Type editors:LabelEditorControl}">
         <Setter Property="Template">
             <Setter.Value>
                 <ControlTemplate>
-                    <Grid>
-                        <TextBlock Text="Coming soon"/>
+                    <Grid d:DataContext="{d:DesignInstance vms:LabelViewModel}">
+                        <TextBlock Width="100" HorizontalAlignment="Left" TextWrapping="NoWrap" Text="Index" VerticalAlignment="Top" Padding="5"  FontWeight="Bold"/>
+                        <TextBox Text="{Binding Index, UpdateSourceTrigger=PropertyChanged}" Background="Transparent" HorizontalAlignment="Stretch" TextWrapping="NoWrap" VerticalAlignment="Top" Padding="5" Margin="100,0,0,0" BorderThickness="0"  FontWeight="Bold" FontStyle="Italic" />
                     </Grid>
                 </ControlTemplate>
             </Setter.Value>
         </Setter>
     </Style>
-    <Style TargetType="{x:Type editors:LdcInstructionEditorControl}" d:DataContext="{d:DesignInstance vms:LdcInstructionViewModel}">
+    <Style TargetType="{x:Type editors:LdcInstructionEditorControl}">
         <Setter Property="Template">
             <Setter.Value>
                 <ControlTemplate>
-                    <Grid>
+                    <Grid d:DataContext="{d:DesignInstance vms:LdcInstructionViewModel}">
                         <TextBlock Width="100" HorizontalAlignment="Left" TextWrapping="NoWrap" VerticalAlignment="Top" Padding="5"  FontWeight="Bold" Text="Opcode"/>
                         <TextBlock Width="100" HorizontalAlignment="Left" TextWrapping="NoWrap" VerticalAlignment="Top" Padding="5"  FontWeight="Bold" Margin="0,26,0,0" Text="Value"/>
                         <TextBox Text="{Binding Opcode, UpdateSourceTrigger=PropertyChanged}" Background="Transparent" HorizontalAlignment="Stretch" TextWrapping="NoWrap" VerticalAlignment="Top" Padding="5" Margin="100,0,0,0" BorderThickness="0"  FontWeight="Bold" FontStyle="Italic" />
@@ -113,33 +129,39 @@
             </Setter.Value>
         </Setter>
     </Style>
-    <Style TargetType="{x:Type editors:LineNumberEditorControl}" d:DataContext="{d:DesignInstance vms:LineNumberViewModel}">
+    <Style TargetType="{x:Type editors:LineNumberEditorControl}">
         <Setter Property="Template">
             <Setter.Value>
                 <ControlTemplate>
-                    <Grid>
-                        <TextBlock Text="(not) Coming soon"/>
+                    <Grid d:DataContext="{d:DesignInstance vms:LineNumberViewModel}">
+                        <TextBlock Width="100" HorizontalAlignment="Left" TextWrapping="NoWrap" VerticalAlignment="Top" Padding="5"  FontWeight="Bold" Text="Line number"/>
+                        <TextBox Text="{Binding LineNumber, UpdateSourceTrigger=PropertyChanged}" Background="Transparent" HorizontalAlignment="Stretch" TextWrapping="NoWrap" VerticalAlignment="Top" Padding="5" Margin="100,0,0,0" BorderThickness="0"  FontWeight="Bold" FontStyle="Italic" />
                     </Grid>
                 </ControlTemplate>
             </Setter.Value>
         </Setter>
     </Style>
-    <Style TargetType="{x:Type editors:LookupSwitchInstructionEditorControl}" d:DataContext="{d:DesignInstance vms:LookupSwitchInstructionViewModel}">
+    <Style TargetType="{x:Type editors:LookupSwitchInstructionEditorControl}">
         <Setter Property="Template">
             <Setter.Value>
                 <ControlTemplate>
-                    <Grid>
-                        <TextBlock Text="Coming soon"/>
+                    <Grid d:DataContext="{d:DesignInstance vms:LookupSwitchInstructionViewModel}">
+                        <TextBlock Text="Opcode" Width="100" HorizontalAlignment="Left" TextWrapping="NoWrap" VerticalAlignment="Top" Padding="5"  FontWeight="Bold"/>
+                        <TextBlock Text="Default Index" Width="100" HorizontalAlignment="Left" TextWrapping="NoWrap" VerticalAlignment="Top" Padding="5"  FontWeight="Bold" Margin="0,26,0,0"/>
+                        <TextBlock Text="Match Labels" Width="100" HorizontalAlignment="Left" TextWrapping="NoWrap" VerticalAlignment="Top" Padding="5"  FontWeight="Bold" Margin="0,52,0,0"/>
+                        <TextBox Text="{Binding Opcode, UpdateSourceTrigger=PropertyChanged}" Background="Transparent" HorizontalAlignment="Stretch" TextWrapping="NoWrap" VerticalAlignment="Top" Padding="5" Margin="100,0,0,0" BorderThickness="0"  FontWeight="Bold" FontStyle="Italic" />
+                        <TextBox Text="{Binding DefaultIndex, UpdateSourceTrigger=PropertyChanged}" Background="Transparent" HorizontalAlignment="Stretch" TextWrapping="NoWrap" VerticalAlignment="Top" Padding="5" Margin="100,26,0,0" BorderThickness="0"  FontWeight="Bold" FontStyle="Italic" />
+                        <ListBox ItemsSource="{Binding MatchLabels, UpdateSourceTrigger=PropertyChanged}" Background="Transparent" HorizontalAlignment="Stretch" VerticalAlignment="Stretch" Padding="5" Margin="0,78,0,0" BorderThickness="0"/>
                     </Grid>
                 </ControlTemplate>
             </Setter.Value>
         </Setter>
     </Style>
-    <Style TargetType="{x:Type editors:MethodInstructionEditorControl}" d:DataContext="{d:DesignInstance vms:MethodInstructionViewModel}">
+    <Style TargetType="{x:Type editors:MethodInstructionEditorControl}">
         <Setter Property="Template">
             <Setter.Value>
                 <ControlTemplate>
-                    <Grid>
+                    <Grid d:DataContext="{d:DesignInstance vms:MethodInstructionViewModel}">
                         <TextBlock Width="100" HorizontalAlignment="Left" TextWrapping="NoWrap" VerticalAlignment="Top" Padding="5"  FontWeight="Bold" Text="Opcode"/>
                         <TextBlock Width="100" HorizontalAlignment="Left" TextWrapping="NoWrap" VerticalAlignment="Top" Padding="5"  FontWeight="Bold" Margin="0,26,0,0" Text="Method Name"/>
                         <TextBlock Width="100" HorizontalAlignment="Left" TextWrapping="NoWrap" VerticalAlignment="Top" Padding="5"  FontWeight="Bold" Margin="0,52,0,0" Text="Method Owner"/>
@@ -153,11 +175,11 @@
             </Setter.Value>
         </Setter>
     </Style>
-    <Style TargetType="{x:Type editors:MultiANewArrayInstructionEditorControl}" d:DataContext="{d:DesignInstance vms:MultiANewArrayInstructionViewModel}">
+    <Style TargetType="{x:Type editors:MultiANewArrayInstructionEditorControl}">
         <Setter Property="Template">
             <Setter.Value>
                 <ControlTemplate>
-                    <Grid>
+                    <Grid d:DataContext="{d:DesignInstance vms:MultiANewArrayInstructionViewModel}">
                         <TextBlock Width="100" HorizontalAlignment="Left" TextWrapping="NoWrap" VerticalAlignment="Top" Padding="5"  FontWeight="Bold" Text="Opcode"/>
                         <TextBlock Width="100" HorizontalAlignment="Left" TextWrapping="NoWrap" VerticalAlignment="Top" Padding="5"  FontWeight="Bold" Margin="0,26,0,0" Text="Component"/>
                         <TextBlock Width="100" HorizontalAlignment="Left" TextWrapping="NoWrap" VerticalAlignment="Top" Padding="5"  FontWeight="Bold" Margin="0,52,0,0" Text="Dimensions"/>
@@ -169,11 +191,11 @@
             </Setter.Value>
         </Setter>
     </Style>
-    <Style TargetType="{x:Type editors:NewArrayInstructionEditorControl}" d:DataContext="{d:DesignInstance vms:NewArrayInstructionViewModel}">
+    <Style TargetType="{x:Type editors:NewArrayInstructionEditorControl}">
         <Setter Property="Template">
             <Setter.Value>
                 <ControlTemplate>
-                    <Grid>
+                    <Grid d:DataContext="{d:DesignInstance vms:NewArrayInstructionViewModel}">
                         <TextBlock Width="100" HorizontalAlignment="Left" TextWrapping="NoWrap" VerticalAlignment="Top" Padding="5"  FontWeight="Bold" Text="Opcode"/>
                         <TextBlock Width="100" HorizontalAlignment="Left" TextWrapping="NoWrap" VerticalAlignment="Top" Padding="5"  FontWeight="Bold" Margin="0,26,0,0" Text="Array Type"/>
                         <TextBox Text="{Binding Opcode, UpdateSourceTrigger=PropertyChanged}" Background="Transparent" HorizontalAlignment="Stretch" TextWrapping="NoWrap" VerticalAlignment="Top" Padding="5" Margin="100,0,0,0" BorderThickness="0"  FontWeight="Bold" FontStyle="Italic" />
@@ -183,11 +205,11 @@
             </Setter.Value>
         </Setter>
     </Style>
-    <Style TargetType="{x:Type editors:SimpleInstructionEditorControl}" d:DataContext="{d:DesignInstance vms:SimpleInstructionViewModel}">
+    <Style TargetType="{x:Type editors:SimpleInstructionEditorControl}">
         <Setter Property="Template">
             <Setter.Value>
                 <ControlTemplate>
-                    <Grid>
+                    <Grid d:DataContext="{d:DesignInstance vms:SimpleInstructionViewModel}">
                         <TextBlock Width="100" HorizontalAlignment="Left" TextWrapping="NoWrap" VerticalAlignment="Top" Padding="5"  FontWeight="Bold" Text="Opcode"/>
                         <TextBlock Text="This is a simple instruction, and has no other editable values; you can only edit the opcode itself" TextWrapping="Wrap" Margin="5,26,5,5"/>
                     </Grid>
@@ -195,33 +217,39 @@
             </Setter.Value>
         </Setter>
     </Style>
-    <Style TargetType="{x:Type editors:StackMapFrameEditorControl}" d:DataContext="{d:DesignInstance vms:StackMapFrameViewModel}">
+    <Style TargetType="{x:Type editors:StackMapFrameEditorControl}">
         <Setter Property="Template">
             <Setter.Value>
                 <ControlTemplate>
-                    <Grid>
-                        <TextBlock Text="Coming soon"/>
+                    <Grid d:DataContext="{d:DesignInstance vms:StackMapFrameViewModel}">
+                        <TextBlock Text="Frame Type" Width="100" HorizontalAlignment="Left" TextWrapping="NoWrap" VerticalAlignment="Top" Padding="5"  FontWeight="Bold"/>
+                        <TextBlock Text="Stack Size" Width="100" HorizontalAlignment="Left" TextWrapping="NoWrap" VerticalAlignment="Top" Padding="5"  FontWeight="Bold" Margin="0,26,0,0"/>
+                        <TextBlock Text="Locals Size" Width="100" HorizontalAlignment="Left" TextWrapping="NoWrap" VerticalAlignment="Top" Padding="5"  FontWeight="Bold" Margin="0,52,0,0"/>
+                        <TextBox Text="{Binding FrameType, UpdateSourceTrigger=PropertyChanged}" Background="Transparent" HorizontalAlignment="Stretch" TextWrapping="NoWrap" VerticalAlignment="Top" Padding="5" Margin="100,0,0,0" BorderThickness="0"  FontWeight="Bold" FontStyle="Italic" />
+                        <TextBox Text="{Binding Stack, UpdateSourceTrigger=PropertyChanged}" Background="Transparent" HorizontalAlignment="Stretch" TextWrapping="NoWrap" VerticalAlignment="Top" Padding="5" Margin="100,26,0,0" BorderThickness="0"  FontWeight="Bold" FontStyle="Italic" />
+                        <TextBox Text="{Binding Locals, UpdateSourceTrigger=PropertyChanged}" Background="Transparent" HorizontalAlignment="Stretch" TextWrapping="NoWrap" VerticalAlignment="Top" Padding="5" Margin="100,52,0,0" BorderThickness="0"  FontWeight="Bold" FontStyle="Italic" />
                     </Grid>
                 </ControlTemplate>
             </Setter.Value>
         </Setter>
     </Style>
-    <Style TargetType="{x:Type editors:TableSwitchInstructionEditorControl}" d:DataContext="{d:DesignInstance vms:TableSwitchInstructionViewModel}">
+    <Style TargetType="{x:Type editors:TableSwitchInstructionEditorControl}">
         <Setter Property="Template">
             <Setter.Value>
                 <ControlTemplate>
-                    <Grid>
-                        <TextBlock Text="Coming soon"/>
+                    <Grid d:DataContext="{d:DesignInstance vms:TableSwitchInstructionViewModel}">
+                        <TextBlock Width="100" HorizontalAlignment="Left" TextWrapping="NoWrap" VerticalAlignment="Top" Padding="5"  FontWeight="Bold" Text="Opcode"/>
+                        <TextBlock Text="Extra options coming soon" TextWrapping="Wrap" Margin="5,26,5,5"/>
                     </Grid>
                 </ControlTemplate>
             </Setter.Value>
         </Setter>
     </Style>
-    <Style TargetType="{x:Type editors:TypeInstructionEditorControl}" d:DataContext="{d:DesignInstance vms:TypeInstructionViewModel}">
+    <Style TargetType="{x:Type editors:TypeInstructionEditorControl}">
         <Setter Property="Template">
             <Setter.Value>
                 <ControlTemplate>
-                    <Grid>
+                    <Grid d:DataContext="{d:DesignInstance vms:TypeInstructionViewModel}">
                         <TextBlock Width="100" HorizontalAlignment="Left" TextWrapping="NoWrap" VerticalAlignment="Top" Padding="5"  FontWeight="Bold" Text="Opcode"/>
                         <TextBlock Width="100" HorizontalAlignment="Left" TextWrapping="NoWrap" VerticalAlignment="Top" Padding="5"  FontWeight="Bold" Margin="0,26,0,0" Text="Type"/>
                         <TextBox Text="{Binding Opcode, UpdateSourceTrigger=PropertyChanged}" Background="Transparent" HorizontalAlignment="Stretch" TextWrapping="NoWrap" VerticalAlignment="Top" Padding="5" Margin="100,0,0,0" BorderThickness="0"  FontWeight="Bold" FontStyle="Italic" />
@@ -231,11 +259,11 @@
             </Setter.Value>
         </Setter>
     </Style>
-    <Style TargetType="{x:Type editors:VariableInstructionEditorControl}" d:DataContext="{d:DesignInstance vms:VariableInstructionViewModel}">
+    <Style TargetType="{x:Type editors:VariableInstructionEditorControl}">
         <Setter Property="Template">
             <Setter.Value>
                 <ControlTemplate>
-                    <Grid>
+                    <Grid d:DataContext="{d:DesignInstance vms:VariableInstructionViewModel}">
                         <TextBlock Width="100" HorizontalAlignment="Left" TextWrapping="NoWrap" VerticalAlignment="Top" Padding="5"  FontWeight="Bold" Text="Opcode"/>
                         <TextBlock Width="100" HorizontalAlignment="Left" TextWrapping="NoWrap" VerticalAlignment="Top" Padding="5"  FontWeight="Bold" Margin="0,26,0,0" Text="Variable Index"/>
                         <TextBox Text="{Binding Opcode, UpdateSourceTrigger=PropertyChanged}" Background="Transparent" HorizontalAlignment="Stretch" TextWrapping="NoWrap" VerticalAlignment="Top" Padding="5" Margin="100,0,0,0" BorderThickness="0"  FontWeight="Bold" FontStyle="Italic" />

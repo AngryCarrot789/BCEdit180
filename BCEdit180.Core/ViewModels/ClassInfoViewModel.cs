@@ -57,13 +57,12 @@ namespace BCEdit180.Core.ViewModels {
         public ClassInfoViewModel(ClassViewModel classVM) {
             this.Class = classVM;
             this.Interfaces = new ObservableCollection<ReferenceObjectViewModel<string>>();
-            this.EditAccessCommand = new RelayCommand(()=> EditAccess());
+            this.EditAccessCommand = new RelayCommand(EditAccess);
         }
 
-        public async Task EditAccess() {
-            ClassAccessModifiers? modifier = await Dialog.AccessEditor.EditClassAccess(this.AccessFlags | ClassAccessModifiers.Super);
-            if (modifier.HasValue) {
-                this.AccessFlags = modifier.Value;
+        public void EditAccess() {
+            if (Dialog.AccessEditor.EditClassAccess(this.AccessFlags | ClassAccessModifiers.Super, out ClassAccessModifiers access).Result) {
+                this.AccessFlags = access;
             }
         }
 

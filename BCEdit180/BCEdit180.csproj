@@ -94,32 +94,17 @@
     <Compile Include="Annotations\AnnotationItemControl.xaml.cs">
       <DependentUpon>AnnotationItemControl.xaml</DependentUpon>
     </Compile>
+    <Compile Include="AttachedProperties\Scrolling.cs" />
     <Compile Include="AttachedProperties\TextBoxAP.cs" />
-    <Compile Include="CodeEditing\Bytecode\EditorControls\FieldInstructionEditorControl.xaml.cs">
-      <DependentUpon>FieldInstructionEditorControl.xaml</DependentUpon>
+    <Compile Include="CodeEditing\EditorControls\BaseInstructionEditorControl.cs" />
+    <Compile Include="CodeEditing\EditorControls\InstructionEditorControls.cs" />
+    <Compile Include="CodeEditing\Ignore__UC_for_designer.xaml.cs">
+      <DependentUpon>Ignore__UC_for_designer.xaml</DependentUpon>
     </Compile>
-    <Compile Include="CodeEditing\Bytecode\EditorControls\InvokeDynamicInstructionEditorControl.xaml.cs">
-      <DependentUpon>InvokeDynamicInstructionEditorControl.xaml</DependentUpon>
-    </Compile>
-    <Compile Include="CodeEditing\Bytecode\EditorControls\LdcInstructionEditorControl.xaml.cs">
-      <DependentUpon>LdcInstructionEditorControl.xaml</DependentUpon>
-    </Compile>
-    <Compile Include="CodeEditing\Bytecode\EditorControls\MethodInstructionEditorControl.xaml.cs">
-      <DependentUpon>MethodInstructionEditorControl.xaml</DependentUpon>
-    </Compile>
-    <Compile Include="CodeEditing\Bytecode\ListControls\FieldInstructionItemControl.xaml.cs">
-      <DependentUpon>FieldInstructionItemControl.xaml</DependentUpon>
-    </Compile>
-    <Compile Include="CodeEditing\Bytecode\ListControls\InvokeDynamicInstructionItemControl.xaml.cs">
-      <DependentUpon>InvokeDynamicInstructionItemControl.xaml</DependentUpon>
-    </Compile>
-    <Compile Include="CodeEditing\Bytecode\ListControls\LdcInstructionItemControl.xaml.cs">
-      <DependentUpon>LdcInstructionItemControl.xaml</DependentUpon>
-    </Compile>
-    <Compile Include="CodeEditing\Bytecode\ListControls\MethodInstructionItemControl.xaml.cs">
-      <DependentUpon>MethodInstructionItemControl.xaml</DependentUpon>
-    </Compile>
+    <Compile Include="CodeEditing\ListControls\BaseInstructionControl.cs" />
+    <Compile Include="CodeEditing\ListControls\InstructionControls.cs" />
     <Compile Include="Converters\AnnontationEntryPrimitiveValueConverter.cs" />
+    <Compile Include="Converters\BindLeftBorderToTabConverter.cs" />
     <Compile Include="Converters\FQCNToSimpleNameConverter.cs" />
     <Compile Include="Converters\PrimitiveConverter.cs" />
     <Compile Include="Dialogs\WindowsAccessEditor.cs" />
@@ -149,6 +134,9 @@
     <Compile Include="Dialogs\WindowsTypeEditors.cs" />
     <Compile Include="Windows\ConstValueEditorWindow.xaml.cs">
       <DependentUpon>ConstValueEditorWindow.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Windows\ErrorDialogWindow.xaml.cs">
+      <DependentUpon>ErrorDialogWindow.xaml</DependentUpon>
     </Compile>
     <Compile Include="Windows\FieldEditorWindow.xaml.cs">
       <DependentUpon>FieldEditorWindow.xaml</DependentUpon>
@@ -186,29 +174,14 @@
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
-    <Page Include="CodeEditing\Bytecode\EditorControls\FieldInstructionEditorControl.xaml">
-      <Generator>MSBuild:Compile</Generator>
-    </Page>
-    <Page Include="CodeEditing\Bytecode\EditorControls\InvokeDynamicInstructionEditorControl.xaml">
-      <Generator>MSBuild:Compile</Generator>
-    </Page>
-    <Page Include="CodeEditing\Bytecode\EditorControls\LdcInstructionEditorControl.xaml">
-      <Generator>MSBuild:Compile</Generator>
-    </Page>
-    <Page Include="CodeEditing\Bytecode\EditorControls\MethodInstructionEditorControl.xaml">
-      <Generator>MSBuild:Compile</Generator>
-    </Page>
-    <Page Include="CodeEditing\Bytecode\ListControls\FieldInstructionItemControl.xaml">
-      <Generator>MSBuild:Compile</Generator>
-    </Page>
-    <Page Include="CodeEditing\Bytecode\ListControls\InvokeDynamicInstructionItemControl.xaml">
-      <Generator>MSBuild:Compile</Generator>
-    </Page>
-    <Page Include="CodeEditing\Bytecode\ListControls\LdcInstructionItemControl.xaml">
+    <Page Include="CodeEditing\EditorControls\InstructionEditorStyles.xaml" />
+    <Page Include="CodeEditing\Ignore__UC_for_designer.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
-    <Page Include="CodeEditing\Bytecode\ListControls\MethodInstructionItemControl.xaml">
+    <Page Include="CodeEditing\ListControls\InstructionControlStyles.xaml" />
+    <Page Include="Themes\BaseInstructionStyles.xaml">
+      <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
     <Page Include="Windows\ChangeInstructionWindow.xaml">
@@ -232,6 +205,10 @@
       <Generator>MSBuild:Compile</Generator>
     </Page>
     <Page Include="Windows\ConstValueEditorWindow.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Windows\ErrorDialogWindow.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
@@ -320,7 +297,7 @@
     <None Include="App.config" />
   </ItemGroup>
   <ItemGroup>
-    <Content Include="CodeEditing\Bytecode\_hierarchy.txt" />
+    <Content Include="CodeEditing\_hierarchy.txt" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\BCEdit180.Core\BCEdit180.Core.csproj">

@@ -23,7 +23,6 @@ namespace BCEdit180.Core.CodeEditing.Bytecode.Instructions {
         public ObservableCollection<NewArrayTypeCode> TypeCodes => CODES;
 
         private NewArrayTypeCode selectedCode;
-
         public NewArrayTypeCode SelectedCode {
             get => this.selectedCode;
             set => RaisePropertyChanged(ref this.selectedCode, value);

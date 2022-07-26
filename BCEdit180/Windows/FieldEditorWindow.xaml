@@ -21,12 +21,12 @@
             <TextBlock Text="Access Flags"/>
         </Label>
         <TextBox Text="{Binding Access, UpdateSourceTrigger=PropertyChanged}" VerticalAlignment="Top" Padding="3" Margin="100,71,50,0" BorderBrush="{DynamicResource AREghZyBrush.Primary.2.Border.Static}" Background="{DynamicResource AREghZyBrush.Deep.2.Background.Static}"/>
-        <Button Command="{Binding EditAccessCommand}" Content="Edit" VerticalAlignment="Top" Padding="3" Margin="0,71,0,0" BorderThickness="0 1 1 1" HorizontalAlignment="Right" Width="50"/>
+        <Button Focusable="False" Command="{Binding EditAccessCommand}" Content="Edit" VerticalAlignment="Top" Padding="3" Margin="0,71,0,0" BorderThickness="0 1 1 1" HorizontalAlignment="Right" Width="50"/>
         <Label Padding="3" Width="100" VerticalAlignment="Top" HorizontalAlignment="Left" Height="24" VerticalContentAlignment="Center" Margin="0,100,0,0">
             <TextBlock Text="Field Data Type"/>
         </Label>
         <TextBox Text="{Binding Descriptor, UpdateSourceTrigger=PropertyChanged, Converter={StaticResource TypeConverter}}" VerticalAlignment="Top" Padding="3" Margin="100,100,50,0" BorderBrush="{DynamicResource AREghZyBrush.Primary.2.Border.Static}" Background="{DynamicResource AREghZyBrush.Deep.2.Background.Static}"/>
-        <Button Command="{Binding EditDescriptorCommand}" Content="Edit" VerticalAlignment="Top" Padding="3" Margin="0,100,0,0" BorderThickness="0 1 1 1" HorizontalAlignment="Right" Width="50"/>
+        <Button Focusable="False" Command="{Binding EditDescriptorCommand}" Content="Edit" VerticalAlignment="Top" Padding="3" Margin="0,100,0,0" BorderThickness="0 1 1 1" HorizontalAlignment="Right" Width="50"/>
         <Grid Height="24" VerticalAlignment="Bottom">
             <Button Command="{Binding ConfirmCommand, RelativeSource={RelativeSource FindAncestor, AncestorType={x:Type windows:WindowModal}}}" Focusable="False" Content="Okay" HorizontalAlignment="Right" Margin="0,0,79,0" Width="74" Background="#FF79D43A"/>
             <Button Command="{Binding CancelCommand, RelativeSource={RelativeSource FindAncestor, AncestorType={x:Type windows:WindowModal}}}" Focusable="False" Content="Cancel" HorizontalAlignment="Right" Width="74"/>

@@ -17,19 +17,31 @@ namespace BCEdit180.Core.ViewModels {
             set => RaisePropertyChanged(ref this.selectedField, value);
         }
 
+        private int previousIndex;
+        private int selectedIndex;
+        public int SelectedIndex {
+            get => this.selectedIndex;
+            set {
+                this.previousIndex = this.selectedIndex;
+                RaisePropertyChanged(ref this.selectedIndex, value);
+            }
+        }
+
         public ICommand CreateFieldCommand { get; }
 
         public ClassViewModel Class { get; }
 
-        public FieldListViewModel(ClassViewModel classViewModel) {
-            this.Class = classViewModel;
+        public FieldListViewModel(ClassViewModel clazz) {
+            this.Class = clazz;
             this.Fields = new ObservableCollection<FieldInfoViewModel>();
             this.RemovedFields = new ObservableCollection<FieldInfoViewModel>();
             this.CreateFieldCommand = new RelayCommand(ShowCreateFieldDialog);
         }
 
-        public async void ShowCreateFieldDialog() {
-            CreateField(await Dialog.TypeEditor.EditFieldDialog(true, null));
+        public void ShowCreateFieldDialog() {
+            if (Dialog.TypeEditor.EditFieldDialog(out FieldEditorViewModel editor, true).Result) {
+                CreateField(editor);
+            }
         }
 
         public void CreateField(FieldEditorViewModel editor) {
@@ -52,6 +64,10 @@ namespace BCEdit180.Core.ViewModels {
             this.RemovedFields.Clear();
             foreach (FieldNode field in node.Fields) {
                 this.Fields.Add(new FieldInfoViewModel(this, field));
+            }
+
+            if (this.previousIndex >= 0 && this.previousIndex < this.Fields.Count) {
+                this.SelectedIndex = this.previousIndex;
             }
         }
 

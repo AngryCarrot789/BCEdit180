@@ -8,7 +8,7 @@
              d:DataContext="{d:DesignInstance Type=window:ActionProgressViewModel}"
              mc:Ignorable="d"
              Title="Action" Height="225" Width="400"
-             Style="{DynamicResource CustomWindowStyle}" Background="{DynamicResource AREghZyBrush.Deep.3.Background.Static}">
+             Style="{DynamicResource CustomWindowBaseStyle}" Background="{DynamicResource AREghZyBrush.Deep.3.Background.Static}">
     <Grid Margin="10">
         <Grid.RowDefinitions>
             <RowDefinition Height="*"/>

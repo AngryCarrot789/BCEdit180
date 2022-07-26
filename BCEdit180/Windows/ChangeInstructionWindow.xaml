@@ -9,7 +9,7 @@
              d:DataContext="{d:DesignInstance Type=instructionEdit:ChangeInstructionViewModel}"
              mc:Ignorable="d"
              Title="Replace Opcode" Height="350" Width="450"
-             Style="{DynamicResource CustomWindowStyle}" Background="{DynamicResource AREghZyBrush.Deep.3.Background.Static}">
+             Style="{DynamicResource CustomWindowBaseStyle}" Background="{DynamicResource AREghZyBrush.Deep.3.Background.Static}">
     <Grid Margin="10">
         <TextBlock Text="Select a new instruction" Padding="10" Margin="0,0,0,0" VerticalAlignment="Top"/>
         <ListBox ItemsSource="{Binding AvailableOpCodes}" 

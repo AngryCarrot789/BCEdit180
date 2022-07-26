@@ -26,49 +26,34 @@ namespace BCEdit180.Core.Editors {
 
         public ICommand AddNewParameterCommand { get; }
 
-        public ICommand ApplyChangesCommand { get; }
-
-        public ICommand CancelChangesCommand { get; }
-
         public ICommand EditAccessCommand { get; }
-
-        public bool IsCancelled { get; set; }
 
         public MethodDescEditorViewModel() {
             this.Parameters = new ObservableCollection<TypeDescriptorViewModel>();
             this.ReturnType = new TypeDescriptor(PrimitiveType.Void, 0);
             this.Access = MethodAccessModifiers.Public;
-            this.AddNewParameterCommand = new RelayCommand(() => {
-                AddNewParameter();
-            });
-
-            this.EditReturnTypeCommand = new RelayCommand(()=> {
-                EditReturnType();
-            });
-
-            this.EditAccessCommand = new RelayCommand(() => {
-                EditAccess();
-            });
-
-            this.ApplyChangesCommand = new RelayCommand(() => this.IsCancelled = false);
-            this.CancelChangesCommand = new RelayCommand(() => this.IsCancelled = true);
+            this.AddNewParameterCommand = new RelayCommand(AddNewParameter);
+            this.EditReturnTypeCommand = new RelayCommand(EditReturnType);
+            this.EditAccessCommand = new RelayCommand(EditAccess);
         }
 
-        public async Task EditReturnType() {
-            this.ReturnType = await Dialog.TypeEditor.EditTypeDescriptorDialog(this.ReturnType);
+        public void EditReturnType() {
+            if (Dialog.TypeEditor.EditTypeDescriptorDialog(this.ReturnType, out TypeDescriptor descriptor).Result) {
+                this.ReturnType = descriptor;
+            }
         }
 
-        public async Task AddNewParameter() {
-            TypeDescriptor descriptor = await Dialog.TypeEditor.EditTypeDescriptorDialog(new TypeDescriptor(PrimitiveType.Integer, 0));
-            this.Parameters.Add(new TypeDescriptorViewModel() {
-                Descriptor = descriptor
-            });
+        public void AddNewParameter() {
+            if (Dialog.TypeEditor.EditTypeDescriptorDialog(new TypeDescriptor(PrimitiveType.Integer, 0), out TypeDescriptor descriptor).Result) {
+                this.Parameters.Add(new TypeDescriptorViewModel() {
+                    Descriptor = descriptor
+                });
+            }
         }
 
-        public async Task EditAccess() {
-            MethodAccessModifiers? modifier = await Dialog.AccessEditor.EditMethodAccess(this.Access);
-            if (modifier.HasValue) {
-                this.Access = modifier.Value;
+        public void EditAccess() {
+            if (Dialog.AccessEditor.EditMethodAccess(this.Access, out MethodAccessModifiers access).Result) {
+                this.Access = access;
             }
         }
     }

@@ -15,12 +15,13 @@ using BCEdit180.Core.Utils;
 using BCEdit180.Core.ViewModels;
 using BCEdit180.Core.Window;
 using BCEdit180.Dialogs;
+using BCEdit180.Windows;
 
 namespace BCEdit180 {
     /// <summary>
     /// Interaction logic for MainWindow.xaml
     /// </summary>
-    public partial class MainWindow : Window {
+    public partial class MainWindow : WindowBase {
         public MainWindow() {
             InitializeComponent();
             ServiceManager.SetService<IDialogManager>(new WindowsDialogs());

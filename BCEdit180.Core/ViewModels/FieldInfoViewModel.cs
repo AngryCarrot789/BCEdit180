@@ -75,22 +75,23 @@ namespace BCEdit180.Core.ViewModels {
         public FieldInfoViewModel(FieldListViewModel list, FieldNode node) {
             this.FieldList = list;
             this.Node = node;
-            this.EditAccessCommand = new RelayCommand(() => EditAccess());
-            this.EditDescriptorCommand = new RelayCommand(() => EditDescriptor());
+            this.EditAccessCommand = new RelayCommand(EditAccess);
+            this.EditDescriptorCommand = new RelayCommand(EditDescriptor);
             this.VisibleAnnotationEditor = new AnnotationEditorViewModel();
             this.InvisibleAnnotationEditor = new AnnotationEditorViewModel();
             Load(node);
         }
 
-        public async Task EditAccess() {
-            FieldAccessModifiers? modifier = await Dialog.AccessEditor.EditFieldAccess(this.Access);
-            if (modifier.HasValue) {
-                this.Access = modifier.Value;
+        public void EditAccess() {
+            if (Dialog.AccessEditor.EditFieldAccess(this.Access, out FieldAccessModifiers access).Result) {
+                this.Access = access;
             }
         }
 
-        public async Task EditDescriptor() {
-            this.Descriptor = await Dialog.TypeEditor.EditTypeDescriptorDialog(this.Descriptor);
+        public void EditDescriptor() {
+            if (Dialog.TypeEditor.EditTypeDescriptorDialog(this.Descriptor, out TypeDescriptor descriptor).Result) {
+                this.Descriptor = descriptor;
+            }
         }
 
         public void Load(FieldNode node) {

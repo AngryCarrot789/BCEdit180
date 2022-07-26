@@ -9,8 +9,11 @@
                 <ResourceDictionary Source="Themes/SoftDark.xaml"/>
                 <ResourceDictionary Source="Themes/ControlColours.xaml"/>
                 <ResourceDictionary Source="Themes/Controls.xaml"/>
+                <ResourceDictionary Source="Themes/BaseInstructionStyles.xaml"/>
+                <ResourceDictionary Source="CodeEditing/ListControls/InstructionControlStyles.xaml"/>
+                <ResourceDictionary Source="CodeEditing/EditorControls/InstructionEditorStyles.xaml"/>
             </ResourceDictionary.MergedDictionaries>
-            
+
             <converters:EnumToStringConverter x:Key="EnumToString"/>
             <converters:FQCNToSimpleNameConverter x:Key="FQCNConverter"/>
             <converters:TypeDescriptorToStringConverter x:Key="TypeConverter"/>

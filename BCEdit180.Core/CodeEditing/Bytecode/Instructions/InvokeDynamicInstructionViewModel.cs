@@ -1,6 +1,10 @@
+using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
+using System.Windows.Input;
+using BCEdit180.Core.Commands;
 using BCEdit180.Core.Utils;
+using BCEdit180.Core.Window;
 using JavaAsm;
 using JavaAsm.Instructions;
 using JavaAsm.Instructions.Types;
@@ -49,8 +53,48 @@ namespace BCEdit180.Core.CodeEditing.Bytecode.Instructions {
 
         public override bool CanEditOpCode => false;
 
+        public ICommand EditDescriptorCommand { get; }
+        public ICommand EditBootstrapDescriptorCommand { get; }
+        public ICommand EditBootstrapReferenceTypeCommand { get; }
+
         public InvokeDynamicInstructionViewModel() {
             this.BootstrapMethodArgs = new ObservableCollection<object>();
+            this.EditDescriptorCommand = new ExtendedRelayCommand(EditDescriptorAction, () => true);
+            this.EditBootstrapDescriptorCommand = new ExtendedRelayCommand(EditBootstrapDescriptorAction, () => true);
+            this.EditBootstrapReferenceTypeCommand = new ExtendedRelayCommand(EditBootstrapReferenceTypeAction, () => true);
+        }
+
+        public void EditDescriptorAction() {
+            if (Dialog.TypeEditor.EditMethodDescriptorDialog(this.Descriptor, out MethodDescriptor descriptor).Result) {
+                this.Descriptor = descriptor;
+            }
+        }
+
+        public void EditBootstrapDescriptorAction() {
+            switch (this.BootstrapReferenceType) {
+                case ReferenceKindType.GetField:
+                case ReferenceKindType.GetStatic:
+                case ReferenceKindType.PutField:
+                case ReferenceKindType.PutStatic:
+                    if (Dialog.TypeEditor.EditTypeDescriptorDialog(this.BootstrapMethodDescriptor as TypeDescriptor, out TypeDescriptor typeDesc).Result)
+                        this.BootstrapMethodDescriptor = typeDesc;
+                    break;
+                case ReferenceKindType.InvokeVirtual:
+                case ReferenceKindType.InvokeStatic:
+                case ReferenceKindType.InvokeSpecial:
+                case ReferenceKindType.NewInvokeSpecial:
+                case ReferenceKindType.InvokeReference:
+                    if (Dialog.TypeEditor.EditMethodDescriptorDialog(this.BootstrapMethodDescriptor as MethodDescriptor, out MethodDescriptor methodDesc).Result)
+                        this.BootstrapMethodDescriptor = methodDesc;
+                    break;
+                default: throw new ArgumentOutOfRangeException();
+            }
+        }
+
+        public void EditBootstrapReferenceTypeAction() {
+            if (Dialog.TypeEditor.EditEnumDialog<ReferenceKindType>(this.BootstrapReferenceType, out ReferenceKindType type).Result) {
+                this.BootstrapReferenceType = type;
+            }
         }
 
         public override void Load(Instruction instruction) {

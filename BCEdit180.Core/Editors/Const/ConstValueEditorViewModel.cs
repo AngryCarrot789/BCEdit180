@@ -77,7 +77,7 @@ namespace BCEdit180.Core.Editors.Const {
 
         public ConstValueEditorViewModel() {
             this.EditClassNameCommand = new RelayCommand(EditClassNameAction);
-            this.EditMethodDescriptorCommand = new RelayCommand(EditClassNameAction);
+            this.EditMethodDescriptorCommand = new RelayCommand(EditMethodDescriptorAction);
         }
 
         public ConstValueEditorViewModel(object defaultValue) : this() {
@@ -133,16 +133,14 @@ namespace BCEdit180.Core.Editors.Const {
         }
 
         public void EditClassNameAction() {
-            TypeDescriptor descriptor = Dialog.TypeEditor.EditTypeDescriptorDialog(new TypeDescriptor(this.ValueClass ?? new ClassName(""), 0), true, false).Result;
-            if (descriptor != null) {
+            if (Dialog.TypeEditor.EditTypeDescriptorDialog(new TypeDescriptor(this.ValueClass ?? new ClassName(""), 0), out TypeDescriptor descriptor, true, false).Result) {
                 this.ValueClass = descriptor.ClassName;
             }
         }
 
         public void EditMethodDescriptorAction() {
-            MethodDescriptor desc = Dialog.TypeEditor.EditMethodDescriptorDialog(this.ValueMethodDescriptor).Result;
-            if (desc != null) {
-                this.ValueMethodDescriptor = desc;
+            if (Dialog.TypeEditor.EditMethodDescriptorDialog(this.ValueMethodDescriptor, out MethodDescriptor typeDesc).Result) {
+                this.ValueMethodDescriptor = typeDesc;
             }
         }
     }
