@@ -25,6 +25,3 @@ See the bottom of this page for a feature list... and also some bugs :(
 - You can view annotations, but you can only edit the annotation type, and the name/type of the annotation's entries. Will add more to this soon though
 
 There's probably more that i've missed, but this is generally what this program can do
-
-## Bugs :'(
-When changing opcodes or possibly editing type descriptors, clicking cancel won't actually cancel it. This is visible for editing method opcodes for example; by default, INVOKESTATIC is selected, so clicking cancel just sets the instruction opcode to INVOKESTATIC instead of not doing anything... whoops
