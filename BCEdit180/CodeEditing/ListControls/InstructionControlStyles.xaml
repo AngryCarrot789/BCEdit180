@@ -1,0 +1,292 @@
+<ResourceDictionary xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+                    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+                    xmlns:editors="clr-namespace:BCEdit180.CodeEditing.ListControls"
+                    xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+                    xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+                    xmlns:vms="clr-namespace:BCEdit180.Core.CodeEditing.Bytecode.Instructions;assembly=BCEdit180.Core"
+                    xmlns:controls="clr-namespace:BCEdit180.Controls"
+                    xmlns:converters="clr-namespace:BCEdit180.Converters"
+                    mc:Ignorable="d">
+    <converters:TypeDescriptorToStringConverter x:Key="TypeDescriptorConverter"/>
+    <Style TargetType="{x:Type editors:FieldInstructionControl}">
+        <Setter Property="Template">
+            <Setter.Value>
+                <ControlTemplate>
+                    <StackPanel Orientation="Horizontal" d:DataContext="{d:DesignInstance vms:FieldInstructionViewModel}">
+                        <TextBlock Text="{Binding Opcode, UpdateSourceTrigger=PropertyChanged}" Foreground="{Binding OpcodeTextBrush, RelativeSource={RelativeSource FindAncestor, AncestorType={x:Type editors:BaseInstructionControl}}}" Padding="0 0 5 0" VerticalAlignment="Center" ToolTip="The field instruction">
+                            <TextBlock.InputBindings>
+                                <MouseBinding Command="{Binding EditOpcodeCommand, RelativeSource={RelativeSource FindAncestor, AncestorType={x:Type editors:BaseInstructionControl}}}"/>
+                            </TextBlock.InputBindings>
+                        </TextBlock>
+                        <TextBlock Text="{Binding FieldOwner, UpdateSourceTrigger=PropertyChanged}" Foreground="{StaticResource ClassName}" Padding="0 0 0 0" VerticalAlignment="Center" ToolTip="The class that owns this field"/>
+                        <TextBlock Text="." Padding="0" VerticalAlignment="Center"/>
+                        <TextBlock Text="{Binding FieldName, UpdateSourceTrigger=PropertyChanged}" Foreground="{StaticResource FieldName}" Padding="0 0 5 0" VerticalAlignment="Center" ToolTip="The name of the field"/>
+                        <TextBlock Text="{Binding FieldDescriptor, UpdateSourceTrigger=PropertyChanged, Converter={StaticResource TypeDescriptorConverter}}" Foreground="{StaticResource FieldDescriptor}" Padding="0 0 0 0" VerticalAlignment="Center" ToolTip="The descriptor of the type that this field holds"/>
+                    </StackPanel>
+                </ControlTemplate>
+            </Setter.Value>
+        </Setter>
+    </Style>
+    <Style TargetType="{x:Type editors:IncrementInstructionControl}">
+        <Setter Property="Template">
+            <Setter.Value>
+                <ControlTemplate>
+                    <StackPanel Orientation="Horizontal" d:DataContext="{d:DesignInstance vms:IncrementInstructionViewModel}">
+                        <TextBlock Text="{Binding Opcode, UpdateSourceTrigger=PropertyChanged}" Foreground="{Binding OpcodeTextBrush, RelativeSource={RelativeSource FindAncestor, AncestorType={x:Type editors:BaseInstructionControl}}}" Padding="0 0 1 0" VerticalAlignment="Center">
+                            <TextBlock.InputBindings>
+                                <MouseBinding Command="{Binding EditOpcodeCommand, RelativeSource={RelativeSource FindAncestor, AncestorType={x:Type editors:BaseInstructionControl}}}"/>
+                            </TextBlock.InputBindings>
+                        </TextBlock>
+                        <controls:DoubleClickEditBox Text="{Binding VarIndex, UpdateSourceTrigger=PropertyChanged}" Foreground="{StaticResource Keyword}" VerticalAlignment="Center"/>
+                        <TextBlock Text="by" Padding="3 0 0 0" VerticalAlignment="Center"/>
+                        <controls:DoubleClickEditBox Text="{Binding Value, UpdateSourceTrigger=PropertyChanged}" Foreground="{StaticResource ConstNumeric}" VerticalAlignment="Center"/>
+                    </StackPanel>
+                </ControlTemplate>
+            </Setter.Value>
+        </Setter>
+    </Style>
+    <Style TargetType="{x:Type editors:IntegerPushInstructionControl}">
+        <Setter Property="Template">
+            <Setter.Value>
+                <ControlTemplate>
+                    <StackPanel Orientation="Horizontal" d:DataContext="{d:DesignInstance vms:IntegerPushInstructionViewModel}">
+                        <TextBlock Text="{Binding Opcode, UpdateSourceTrigger=PropertyChanged}" Foreground="{Binding OpcodeTextBrush, RelativeSource={RelativeSource FindAncestor, AncestorType={x:Type editors:BaseInstructionControl}}}" Padding="0 0 5 0" VerticalAlignment="Center">
+                            <TextBlock.InputBindings>
+                                <MouseBinding Command="{Binding EditOpcodeCommand, RelativeSource={RelativeSource FindAncestor, AncestorType={x:Type editors:BaseInstructionControl}}}"/>
+                            </TextBlock.InputBindings>
+                        </TextBlock>
+                        <TextBlock Text="{Binding Value, UpdateSourceTrigger=PropertyChanged}" Foreground="{StaticResource Keyword}" Padding="0 0 0 0" VerticalAlignment="Center">
+                            <TextBlock.InputBindings>
+                                <MouseBinding Command="{Binding UserAction1Command, RelativeSource={RelativeSource FindAncestor, AncestorType={x:Type editors:BaseInstructionControl}}}"/>
+                            </TextBlock.InputBindings>
+                        </TextBlock>
+                    </StackPanel>
+                </ControlTemplate>
+            </Setter.Value>
+        </Setter>
+    </Style>
+    <Style TargetType="{x:Type editors:InvokeDynamicInstructionControl}">
+        <Setter Property="Template">
+            <Setter.Value>
+                <ControlTemplate>
+                    <StackPanel Orientation="Horizontal" d:DataContext="{d:DesignInstance vms:InvokeDynamicInstructionViewModel}">
+                        <TextBlock Text="{Binding Opcode, UpdateSourceTrigger=PropertyChanged}" Foreground="{Binding OpcodeTextBrush, RelativeSource={RelativeSource FindAncestor, AncestorType={x:Type editors:BaseInstructionControl}}}" Padding="0 0 5 0" VerticalAlignment="Center" ToolTip="Invoke dynamic; java's secret weapon">
+                            <TextBlock.InputBindings>
+                                <MouseBinding Command="{Binding EditOpcodeCommand, RelativeSource={RelativeSource FindAncestor, AncestorType={x:Type editors:BaseInstructionControl}}}"/>
+                            </TextBlock.InputBindings>
+                        </TextBlock>
+                        <TextBlock Text="{Binding Descriptor, UpdateSourceTrigger=PropertyChanged}" Foreground="{StaticResource MethodReturnType}" Padding="0 0 0 0" VerticalAlignment="Center" ToolTip="The descriptor of a method that is to be referenced, taking lambda parameters and returning (usually) a functional interface (this method is generated/referenced initially by a bootstrap method)" ToolTipService.ShowDuration="60000"/>
+                        <TextBlock Text=" -> " Padding="0" VerticalAlignment="Center" Foreground="{DynamicResource AREghZyBrush.Glyph.Disabled}"/>
+                        <TextBlock Text="{Binding Name, UpdateSourceTrigger=PropertyChanged}" Foreground="{StaticResource MethodName}" Padding="0 0 0 0" VerticalAlignment="Center" ToolTip="The name of the (usually function interface) method that is invoked (the method will belong to the descriptor's return type)" ToolTipService.ShowDuration="60000"/>
+                        <TextBlock Text="{Binding BootstrapReferenceType, UpdateSourceTrigger=PropertyChanged, StringFormat={} ({0})}"  Foreground="{StaticResource ConstEnum}" Padding="0" VerticalAlignment="Center" ToolTip="The type of reference the bootstrap method will generate" ToolTipService.ShowDuration="60000"/>
+                    </StackPanel>
+                </ControlTemplate>
+            </Setter.Value>
+        </Setter>
+    </Style>
+    <Style TargetType="{x:Type editors:JumpInstructionControl}">
+        <Setter Property="Template">
+            <Setter.Value>
+                <ControlTemplate>
+                    <StackPanel Orientation="Horizontal" d:DataContext="{d:DesignInstance vms:JumpInstructionViewModel}">
+                        <TextBlock Text="{Binding Opcode, UpdateSourceTrigger=PropertyChanged}" Foreground="{Binding OpcodeTextBrush, RelativeSource={RelativeSource FindAncestor, AncestorType={x:Type editors:BaseInstructionControl}}}" Padding="0 0 5 0" VerticalAlignment="Center">
+                            <TextBlock.InputBindings>
+                                <MouseBinding Command="{Binding EditOpcodeCommand, RelativeSource={RelativeSource FindAncestor, AncestorType={x:Type editors:BaseInstructionControl}}}"/>
+                            </TextBlock.InputBindings>
+                        </TextBlock>
+                        <TextBlock Text="{Binding Target, UpdateSourceTrigger=PropertyChanged}" Foreground="{StaticResource Keyword}" Padding="0 0 0 0" VerticalAlignment="Center"/>
+                    </StackPanel>
+                </ControlTemplate>
+            </Setter.Value>
+        </Setter>
+    </Style>
+    <Style TargetType="{x:Type editors:LabelControl}">
+        <Setter Property="Template">
+            <Setter.Value>
+                <ControlTemplate>
+                    <StackPanel Orientation="Horizontal" d:DataContext="{d:DesignInstance vms:LabelViewModel}">
+                        <TextBlock Text="LABEL" Foreground="{Binding OpcodeTextBrush, RelativeSource={RelativeSource FindAncestor, AncestorType={x:Type editors:BaseInstructionControl}}}" Padding="0 0 5 0" VerticalAlignment="Center"/>
+                        <TextBlock Text="{Binding Index, UpdateSourceTrigger=PropertyChanged}" Foreground="{StaticResource Keyword}" Padding="0 0 0 0" VerticalAlignment="Center"/>
+                    </StackPanel>
+                </ControlTemplate>
+            </Setter.Value>
+        </Setter>
+    </Style>
+    <Style TargetType="{x:Type editors:LdcInstructionControl}">
+        <Setter Property="Template">
+            <Setter.Value>
+                <ControlTemplate>
+                    <StackPanel Orientation="Horizontal" d:DataContext="{d:DesignInstance vms:LdcInstructionViewModel}">
+                        <TextBlock Text="{Binding Opcode, UpdateSourceTrigger=PropertyChanged}" Foreground="{Binding OpcodeTextBrush, RelativeSource={RelativeSource FindAncestor, AncestorType={x:Type editors:BaseInstructionControl}}}" Padding="0 0 5 0" VerticalAlignment="Center">
+                            <TextBlock.InputBindings>
+                                <MouseBinding Command="{Binding EditOpcodeCommand, RelativeSource={RelativeSource FindAncestor, AncestorType={x:Type editors:BaseInstructionControl}}}"/>
+                            </TextBlock.InputBindings>
+                        </TextBlock>
+                        <TextBlock Text="{Binding Value, UpdateSourceTrigger=PropertyChanged}" Foreground="{StaticResource Keyword}" Padding="0 0 0 0" VerticalAlignment="Center">
+                            <TextBlock.InputBindings>
+                                <MouseBinding Command="{Binding UserAction1Command, RelativeSource={RelativeSource FindAncestor, AncestorType={x:Type editors:BaseInstructionControl}}}"/>
+                            </TextBlock.InputBindings>
+                        </TextBlock>
+                    </StackPanel>
+                </ControlTemplate>
+            </Setter.Value>
+        </Setter>
+    </Style>
+    <Style TargetType="{x:Type editors:LineNumberControl}">
+        <Setter Property="Template">
+            <Setter.Value>
+                <ControlTemplate>
+                    <StackPanel Orientation="Horizontal" d:DataContext="{d:DesignInstance vms:LineNumberViewModel}">
+                        <TextBlock Text="LINE" Foreground="{Binding OpcodeTextBrush, RelativeSource={RelativeSource FindAncestor, AncestorType={x:Type editors:BaseInstructionControl}}}" Padding="0 0 5 0" VerticalAlignment="Center"/>
+                        <TextBlock Text="{Binding LineNumber, UpdateSourceTrigger=PropertyChanged}" Foreground="{StaticResource Keyword}" Padding="0 0 0 0" VerticalAlignment="Center"/>
+                    </StackPanel>
+                </ControlTemplate>
+            </Setter.Value>
+        </Setter>
+    </Style>
+    <Style TargetType="{x:Type editors:LookupSwitchInstructionControl}">
+        <Setter Property="Template">
+            <Setter.Value>
+                <ControlTemplate>
+                    <StackPanel Orientation="Horizontal" d:DataContext="{d:DesignInstance vms:LookupSwitchInstructionViewModel}">
+                        <TextBlock Text="{Binding Opcode, UpdateSourceTrigger=PropertyChanged}" Foreground="{Binding OpcodeTextBrush, RelativeSource={RelativeSource FindAncestor, AncestorType={x:Type editors:BaseInstructionControl}}}" Padding="0 0 5 0" VerticalAlignment="Center">
+                            <TextBlock.InputBindings>
+                                <MouseBinding Command="{Binding EditOpcodeCommand, RelativeSource={RelativeSource FindAncestor, AncestorType={x:Type editors:BaseInstructionControl}}}"/>
+                            </TextBlock.InputBindings>
+                        </TextBlock>
+                        <TextBlock Text="{Binding MatchLabelsString, UpdateSourceTrigger=PropertyChanged}" Foreground="{StaticResource Keyword}" Padding="0 0 0 0" VerticalAlignment="Center"/>
+                    </StackPanel>
+                </ControlTemplate>
+            </Setter.Value>
+        </Setter>
+    </Style>
+    <Style TargetType="{x:Type editors:MethodInstructionControl}">
+        <Setter Property="Template">
+            <Setter.Value>
+                <ControlTemplate>
+                    <StackPanel Orientation="Horizontal" d:DataContext="{d:DesignInstance vms:MethodInstructionViewModel}">
+                        <TextBlock Text="{Binding Opcode, UpdateSourceTrigger=PropertyChanged}" Foreground="{Binding OpcodeTextBrush, RelativeSource={RelativeSource FindAncestor, AncestorType={x:Type editors:BaseInstructionControl}}}" Padding="0 0 5 0" VerticalAlignment="Center" ToolTip="The method instruction">
+                            <TextBlock.InputBindings>
+                                <MouseBinding Command="{Binding EditOpcodeCommand, RelativeSource={RelativeSource FindAncestor, AncestorType={x:Type editors:BaseInstructionControl}}}"/>
+                            </TextBlock.InputBindings>
+                        </TextBlock>
+                        <TextBlock Text="{Binding MethodOwner, UpdateSourceTrigger=PropertyChanged}" Foreground="{StaticResource ClassName}" Padding="0 0 0 0" VerticalAlignment="Center" ToolTip="The class that owns the method"/>
+                        <TextBlock Text="." Padding="0" VerticalAlignment="Center"/>
+                        <TextBlock Text="{Binding MethodName, UpdateSourceTrigger=PropertyChanged}" Foreground="{StaticResource MethodName}" Padding="0 0 0 0" VerticalAlignment="Center" ToolTip="The name of the method"/>
+                        <TextBlock Text="{Binding MethodDescriptor, UpdateSourceTrigger=PropertyChanged}" Foreground="{StaticResource MethodReturnType}" Padding="0 0 0 0" VerticalAlignment="Center" ToolTip="The method's descriptor (parameters and return type)"/>
+                    </StackPanel>
+                </ControlTemplate>
+            </Setter.Value>
+        </Setter>
+    </Style>
+    <Style TargetType="{x:Type editors:MultiANewArrayInstructionControl}">
+        <Setter Property="Template">
+            <Setter.Value>
+                <ControlTemplate>
+                    <StackPanel Orientation="Horizontal" d:DataContext="{d:DesignInstance vms:MultiANewArrayInstructionViewModel}">
+                        <TextBlock Text="{Binding Opcode, UpdateSourceTrigger=PropertyChanged}" Foreground="{Binding OpcodeTextBrush, RelativeSource={RelativeSource FindAncestor, AncestorType={x:Type editors:BaseInstructionControl}}}" Padding="0 0 5 0" VerticalAlignment="Center">
+                            <TextBlock.InputBindings>
+                                <MouseBinding Command="{Binding EditOpcodeCommand, RelativeSource={RelativeSource FindAncestor, AncestorType={x:Type editors:BaseInstructionControl}}}"/>
+                            </TextBlock.InputBindings>
+                        </TextBlock>
+                        <TextBlock Text="{Binding ComponentType, UpdateSourceTrigger=PropertyChanged}" Foreground="{StaticResource ClassName}" Padding="0 0 5 0" VerticalAlignment="Center"/>
+                        <TextBlock Text="{Binding Dimensions, UpdateSourceTrigger=PropertyChanged, StringFormat={}with {0} dimensions}" Foreground="{StaticResource Keyword}" Padding="0 0 0 0" VerticalAlignment="Center"/>
+                    </StackPanel>
+                </ControlTemplate>
+            </Setter.Value>
+        </Setter>
+    </Style>
+    <Style TargetType="{x:Type editors:NewArrayInstructionControl}">
+        <Setter Property="Template">
+            <Setter.Value>
+                <ControlTemplate>
+                    <StackPanel Orientation="Horizontal" d:DataContext="{d:DesignInstance vms:NewArrayInstructionViewModel}">
+                        <TextBlock Text="{Binding Opcode, UpdateSourceTrigger=PropertyChanged}" Foreground="{Binding OpcodeTextBrush, RelativeSource={RelativeSource FindAncestor, AncestorType={x:Type editors:BaseInstructionControl}}}" Padding="0 0 5 0" VerticalAlignment="Center">
+                            <TextBlock.InputBindings>
+                                <MouseBinding Command="{Binding EditOpcodeCommand, RelativeSource={RelativeSource FindAncestor, AncestorType={x:Type editors:BaseInstructionControl}}}"/>
+                            </TextBlock.InputBindings>
+                        </TextBlock>
+                        <ComboBox ItemsSource="{Binding TypeCodes}" SelectedItem="{Binding SelectedCode, UpdateSourceTrigger=PropertyChanged}" MinWidth="100" Padding="0 0 0 0" VerticalAlignment="Center" HorizontalAlignment="Stretch"/>
+                    </StackPanel>
+                </ControlTemplate>
+            </Setter.Value>
+        </Setter>
+    </Style>
+    <Style TargetType="{x:Type editors:SimpleInstructionControl}">
+        <Setter Property="Template">
+            <Setter.Value>
+                <ControlTemplate>
+                    <StackPanel Orientation="Horizontal" d:DataContext="{d:DesignInstance vms:SimpleInstructionViewModel}">
+                        <TextBlock Text="{Binding Opcode, UpdateSourceTrigger=PropertyChanged}" Foreground="{Binding OpcodeTextBrush, RelativeSource={RelativeSource FindAncestor, AncestorType={x:Type editors:BaseInstructionControl}}}" Padding="0 0 5 0" VerticalAlignment="Center">
+                            <TextBlock.InputBindings>
+                                <MouseBinding Command="{Binding EditOpcodeCommand, RelativeSource={RelativeSource FindAncestor, AncestorType={x:Type editors:BaseInstructionControl}}}"/>
+                            </TextBlock.InputBindings>
+                        </TextBlock>
+                    </StackPanel>
+                </ControlTemplate>
+            </Setter.Value>
+        </Setter>
+    </Style>
+    <Style TargetType="{x:Type editors:StackMapFrameControl}">
+        <Setter Property="Template">
+            <Setter.Value>
+                <ControlTemplate>
+                    <StackPanel Orientation="Horizontal" d:DataContext="{d:DesignInstance vms:StackMapFrameViewModel}">
+                        <TextBlock Text="FRAME" Foreground="{Binding OpcodeTextBrush, RelativeSource={RelativeSource FindAncestor, AncestorType={x:Type editors:BaseInstructionControl}}}" Padding="0 0 5 0" VerticalAlignment="Center"/>
+                        <TextBlock Text="{Binding FrameType, UpdateSourceTrigger=PropertyChanged}" Foreground="{StaticResource ConstEnum}" Padding="0 0 5 0" VerticalAlignment="Center"/>
+                        <TextBlock Text="{Binding Locals, UpdateSourceTrigger=PropertyChanged, StringFormat='{}({0} locals, '}" Foreground="{StaticResource ConstNumeric}" Padding="0 0 0 0" VerticalAlignment="Center"/>
+                        <TextBlock Text="{Binding Stack, UpdateSourceTrigger=PropertyChanged, StringFormat='{}{0} on stack)'}" Foreground="{StaticResource ConstNumeric}" Padding="0 0 0 0" VerticalAlignment="Center"/>
+                    </StackPanel>
+                </ControlTemplate>
+            </Setter.Value>
+        </Setter>
+    </Style>
+    <Style TargetType="{x:Type editors:TableSwitchInstructionControl}">
+        <Setter Property="Template">
+            <Setter.Value>
+                <ControlTemplate>
+                    <StackPanel Orientation="Horizontal" d:DataContext="{d:DesignInstance vms:TableSwitchInstructionViewModel}">
+                        <TextBlock Text="{Binding Opcode, UpdateSourceTrigger=PropertyChanged}" Foreground="{Binding OpcodeTextBrush, RelativeSource={RelativeSource FindAncestor, AncestorType={x:Type editors:BaseInstructionControl}}}" Padding="0 0 5 0" VerticalAlignment="Center">
+                            <TextBlock.InputBindings>
+                                <MouseBinding Command="{Binding EditOpcodeCommand, RelativeSource={RelativeSource FindAncestor, AncestorType={x:Type editors:BaseInstructionControl}}}"/>
+                            </TextBlock.InputBindings>
+                        </TextBlock>
+                        <TextBlock Text="{Binding ToStringValue, UpdateSourceTrigger=PropertyChanged}" Padding="0 0 0 0" VerticalAlignment="Center"/>
+                    </StackPanel>
+                </ControlTemplate>
+            </Setter.Value>
+        </Setter>
+    </Style>
+    <Style TargetType="{x:Type editors:TypeInstructionControl}">
+        <Setter Property="Template">
+            <Setter.Value>
+                <ControlTemplate>
+                    <StackPanel Orientation="Horizontal" d:DataContext="{d:DesignInstance vms:TypeInstructionViewModel}">
+                        <TextBlock Text="{Binding Opcode, UpdateSourceTrigger=PropertyChanged}" Foreground="{Binding OpcodeTextBrush, RelativeSource={RelativeSource FindAncestor, AncestorType={x:Type editors:BaseInstructionControl}}}" Padding="0 0 5 0" VerticalAlignment="Center">
+                            <TextBlock.InputBindings>
+                                <MouseBinding Command="{Binding EditOpcodeCommand, RelativeSource={RelativeSource FindAncestor, AncestorType={x:Type editors:BaseInstructionControl}}}"/>
+                            </TextBlock.InputBindings>
+                        </TextBlock>
+                        <TextBlock Text="{Binding Type, UpdateSourceTrigger=PropertyChanged}" Foreground="{StaticResource ClassName}" Padding="0 0 0 0" VerticalAlignment="Center"/>
+                    </StackPanel>
+                </ControlTemplate>
+            </Setter.Value>
+        </Setter>
+    </Style>
+    <Style TargetType="{x:Type editors:VariableInstructionControl}">
+        <Setter Property="Template">
+            <Setter.Value>
+                <ControlTemplate>
+                    <StackPanel Orientation="Horizontal" d:DataContext="{d:DesignInstance vms:VariableInstructionViewModel}">
+                        <TextBlock Text="{Binding Opcode, UpdateSourceTrigger=PropertyChanged}" Foreground="{Binding OpcodeTextBrush, RelativeSource={RelativeSource FindAncestor, AncestorType={x:Type editors:BaseInstructionControl}}}" Padding="0 0 5 0" VerticalAlignment="Center">
+                            <TextBlock.InputBindings>
+                                <MouseBinding Command="{Binding EditOpcodeCommand, RelativeSource={RelativeSource FindAncestor, AncestorType={x:Type editors:BaseInstructionControl}}}"/>
+                            </TextBlock.InputBindings>
+                        </TextBlock>
+                        <TextBlock Text="{Binding VarIndex, UpdateSourceTrigger=PropertyChanged}" Foreground="{StaticResource Keyword}" Padding="0 0 0 0" VerticalAlignment="Center"/>
+                    </StackPanel>
+                </ControlTemplate>
+            </Setter.Value>
+        </Setter>
+    </Style>
+</ResourceDictionary>
