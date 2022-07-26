@@ -6,10 +6,10 @@ Similar to jclasslib but will soon support many more features, e.g copy and past
 See the bottom of this page for a feature list... and also some bugs :(
 
 ## Preview
+### Bytecode editor
+![](6kNrfTyrQQ.png)
 ### Method general info
-![](BCEdit180_2022-07-25_22.17.51.png)
-### Bytecode editor (WIP)
-![](BCEdit180_2022-07-25_22.21.55.png)
+![](BCEdit180_2022-07-26_19.53.10.png)
 
 # Installing
 You can download the release.zip file from releases, which includes the .exe with all the dependencies
@@ -27,7 +27,7 @@ My fork of java-asm targets .NET Standard 2.0, as well as my MVVM and WPF librar
 - Interfaces list (editable, currently can't add/remove)
 - Editable class attributes (apart from bootstrap methods; they are contained in the method instructions)
 - Method list, + general method info editor (descriptor, name, max stack/locals, etc)
-- Method instruction editor (in bytecode form; currently only field, method, dynamicinvoke and LDC instructions are readily supported for modification, you can edit the opcode of almost any instruction though, but keep in mind to manually modify the stack size)
+- Method instruction editor (in bytecode form) which is (hopefully) fully functional, allowing almost everything to be modified (apart from labels). The bytecode editor also has colours, which helps the details stand out
 - Exception table and local variable table editor. Cannot add/remove exceptions or local variables currently (coming soon)
 - Field list + general field info editor (name, descriptor, signature, etc)
 - A source code generator (does not actually generate method source code, only the structure of the class (all methods will look 'abstract'))
