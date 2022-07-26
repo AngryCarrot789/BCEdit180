@@ -5,6 +5,7 @@ using System.Linq;
 using System.Windows.Input;
 using BCEdit180.Core.CodeEditing.Bytecode.Instructions;
 using BCEdit180.Core.Collections;
+using BCEdit180.Core.Searching;
 using BCEdit180.Core.Utils;
 using JavaAsm;
 using JavaAsm.Instructions;
@@ -16,12 +17,9 @@ namespace BCEdit180.Core.CodeEditing {
     public class BytecodeEditorViewModel : BaseViewModel {
         public static IListSelector<BaseInstructionViewModel> BytecodeList { get; set; }
 
-        public CodeEditorViewModel CodeEditor { get; }
-
         public ExtendedObservableCollection<BaseInstructionViewModel> Instructions { get; }
 
         private int selectedInstructionIndex;
-
         public int SelectedInstructionIndex {
             get => this.selectedInstructionIndex;
             set => RaisePropertyChanged(ref this.selectedInstructionIndex, value);
@@ -33,24 +31,20 @@ namespace BCEdit180.Core.CodeEditing {
             set => RaisePropertyChanged(ref this.selectedInstruction, value);
         }
 
-        private string searchText;
-        public string SearchText {
-            get => this.searchText;
-            set => RaisePropertyChanged(ref this.searchText, value);
-        }
-
-        public ICommand FindNextInstructionCommand { get; }
         public ICommand DeleteSelectedInstructionsCommand { get; }
-
         public ICommand InsertInstructionCommand { get; }
         public ICommand InsertCodeCommand { get; }
         public ICommand ShowHideOptionsCommand { get; }
 
+        public SearchInstructionViewModel SearchInstruction { get; }
+
+        public CodeEditorViewModel CodeEditor { get; }
+
         public BytecodeEditorViewModel(CodeEditorViewModel codeEditor) {
             this.CodeEditor = codeEditor;
             this.Instructions = new ExtendedObservableCollection<BaseInstructionViewModel>();
-            this.FindNextInstructionCommand = new RelayCommand(SearchNextElement);
             this.DeleteSelectedInstructionsCommand = new RelayCommand(DeleteSelectedInstructions);
+            this.SearchInstruction = new SearchInstructionViewModel(this);
         }
 
         public void DeleteSelectedInstructions() {
@@ -80,37 +74,6 @@ namespace BCEdit180.Core.CodeEditing {
         public void Save(MethodNode node) {
             foreach (BaseInstructionViewModel instruction in this.Instructions) {
                 instruction.Save(instruction.Instruction);
-            }
-        }
-
-        public void SearchNextElement() {
-            if (string.IsNullOrEmpty(this.SearchText)) {
-                return;
-            }
-
-            bool doExtendedSearch = false;
-            while (true) {
-                int start = doExtendedSearch ? 0 : (this.SelectedInstructionIndex + 1);
-                if (start < 0 || start >= this.Instructions.Count) {
-                    start = this.SelectedInstructionIndex = 0;
-                }
-
-                for (int i = start, size = this.Instructions.Count; i < size; i++) {
-                    BaseInstructionViewModel instruction = this.Instructions[i];
-                    if (MatchInstruction(instruction, this.SearchText)) {
-                        this.SelectedInstructionIndex = i;
-                        BytecodeList.ScrollToSelectedItem();
-                        return;
-                    }
-                }
-
-
-                if (!doExtendedSearch) {
-                    doExtendedSearch = true;
-                    continue;
-                }
-
-                break;
             }
         }
 

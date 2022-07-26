@@ -21,7 +21,9 @@ namespace BCEdit180.Dialogs {
                 return flagEditor;
             }
             else {
-                return FlagEditorForEnum[typeof(TEnum)] = new FlagEditorViewModel(value => (TEnum) Enum.Parse(typeof(TEnum), value.ToString()));
+                flagEditor = new FlagEditorViewModel(value => (TEnum) Enum.Parse(typeof(TEnum), value.ToString()));
+                flagEditor.LoadFlags<TEnum>(m => Convert.ToInt64(m));
+                return FlagEditorForEnum[typeof(TEnum)] = flagEditor;
             }
         }
 
@@ -186,11 +188,11 @@ namespace BCEdit180.Dialogs {
             return Task.FromResult(true);
         }
 
-        public Task<bool> EditEnumDialog<TEnum>(out TEnum access) where TEnum : Enum {
-            return EditEnumDialog(default, out access);
+        public Task<bool> EditEnumFlagDialog<TEnum>(out TEnum access) where TEnum : Enum {
+            return EditEnumFlagDialog(default, out access);
         }
 
-        public Task<bool> EditEnumDialog<TEnum>(in TEnum template, out TEnum access) where TEnum : Enum {
+        public Task<bool> EditEnumFlagDialog<TEnum>(in TEnum template, out TEnum access) where TEnum : Enum {
             FlagEditorWindow window = new FlagEditorWindow {Title = typeof(TEnum).Name + " Editor"};
             FlagEditorViewModel vm = GetEditorForEnum<TEnum>();
             vm.UpdateFlagItemsWithBitMask(Convert.ToInt64(template));

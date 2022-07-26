@@ -80,6 +80,18 @@ namespace BCEdit180.Core.Editors.Const {
             this.EditMethodDescriptorCommand = new RelayCommand(EditMethodDescriptorAction);
         }
 
+        public void EditClassNameAction() {
+            if (Dialog.TypeEditor.EditTypeDescriptorDialog(new TypeDescriptor(this.ValueClass ?? new ClassName(""), 0), out TypeDescriptor descriptor, true, false).Result) {
+                this.ValueClass = descriptor.ClassName;
+            }
+        }
+
+        public void EditMethodDescriptorAction() {
+            if (Dialog.TypeEditor.EditMethodDescriptorDialog(this.ValueMethodDescriptor, out MethodDescriptor typeDesc).Result) {
+                this.ValueMethodDescriptor = typeDesc;
+            }
+        }
+
         public ConstValueEditorViewModel(object defaultValue) : this() {
             if (defaultValue is byte || defaultValue is sbyte || defaultValue is ushort || defaultValue is short || defaultValue is uint || defaultValue is int) {
                 this.Type = ConstType.Integer;
@@ -129,18 +141,6 @@ namespace BCEdit180.Core.Editors.Const {
                 case ConstType.Handle:           return this.ValueHandle;
                 case ConstType.MethodDescriptor: return this.ValueMethodDescriptor;
                 default: throw new ArgumentOutOfRangeException();
-            }
-        }
-
-        public void EditClassNameAction() {
-            if (Dialog.TypeEditor.EditTypeDescriptorDialog(new TypeDescriptor(this.ValueClass ?? new ClassName(""), 0), out TypeDescriptor descriptor, true, false).Result) {
-                this.ValueClass = descriptor.ClassName;
-            }
-        }
-
-        public void EditMethodDescriptorAction() {
-            if (Dialog.TypeEditor.EditMethodDescriptorDialog(this.ValueMethodDescriptor, out MethodDescriptor typeDesc).Result) {
-                this.ValueMethodDescriptor = typeDesc;
             }
         }
     }

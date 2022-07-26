@@ -1,7 +1,11 @@
 using System.Collections;
 using System.Collections.Generic;
+using System.Windows.Input;
+using BCEdit180.Core.Commands;
+using BCEdit180.Core.Window;
 using JavaAsm.Instructions;
 using JavaAsm.Instructions.Types;
+using REghZy.MVVM.Commands;
 
 namespace BCEdit180.Core.CodeEditing.Bytecode.Instructions {
     public class StackMapFrameViewModel : BaseInstructionViewModel {
@@ -25,6 +29,18 @@ namespace BCEdit180.Core.CodeEditing.Bytecode.Instructions {
         public int Locals {
             get => this.locals;
             set => RaisePropertyChanged(ref this.locals, value);
+        }
+
+        public ICommand EditFrameTypeCommand { get; }
+
+        public StackMapFrameViewModel() {
+            this.EditFrameTypeCommand = new ExtendedRelayCommand(EditFrameTypeAction, () => false);
+        }
+
+        public void EditFrameTypeAction() {
+            if (Dialog.TypeEditor.EditEnumFlagDialog(this.FrameType, out FrameType frameType).Result) {
+                this.FrameType = frameType;
+            }
         }
 
         public override void Load(Instruction instruction) {

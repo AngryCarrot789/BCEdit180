@@ -3,7 +3,10 @@ using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Linq;
 using System.Windows.Input;
+using BCEdit180.Core.CodeEditing.Bytecode.Instructions;
 using BCEdit180.Core.Editors;
+using BCEdit180.Core.Searching;
+using BCEdit180.Core.Utils;
 using BCEdit180.Core.Window;
 using JavaAsm;
 using REghZy.MVVM.Commands;
@@ -11,6 +14,8 @@ using REghZy.MVVM.ViewModels;
 
 namespace BCEdit180.Core.ViewModels {
     public class MethodListViewModel : BaseViewModel, ISaveable<ClassNode> {
+        public static IListSelector<MethodInfoViewModel> MethodList { get; set; }
+
         public ObservableCollection<MethodInfoViewModel> RemovedMethods { get; }
         public ObservableCollection<MethodInfoViewModel> Methods { get; }
 
@@ -30,6 +35,8 @@ namespace BCEdit180.Core.ViewModels {
             }
         }
 
+        public SearchMethodNameViewModel SearchMethod { get; }
+
         public ICommand CreateMethodCommand { get; }
 
         public ClassViewModel Class { get; }
@@ -39,6 +46,7 @@ namespace BCEdit180.Core.ViewModels {
             this.Methods = new ObservableCollection<MethodInfoViewModel>();
             this.RemovedMethods = new ObservableCollection<MethodInfoViewModel>();
             this.CreateMethodCommand = new RelayCommand(ShowCreateMethodDialog);
+            this.SearchMethod = new SearchMethodNameViewModel(this);
         }
 
         public void ShowCreateMethodDialog() {

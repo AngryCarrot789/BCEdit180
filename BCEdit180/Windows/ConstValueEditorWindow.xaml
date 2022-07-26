@@ -57,7 +57,7 @@
             <TabItem Header="Method Descriptor" IsSelected="{Binding Type, Converter={StaticResource EnumConverter}, ConverterParameter={x:Static const:ConstType.MethodDescriptor}, UpdateSourceTrigger=PropertyChanged}">
                 <Grid VerticalAlignment="Stretch">
                     <TextBlock Text="Edit the Method Descriptor here" VerticalAlignment="Top" Padding="3"/>
-                    <TextBox x:Name="TextBox_MD" FontFamily="Consolas" Text="{Binding ValueMethodDescriptor, UpdateSourceTrigger=PropertyChanged}" Padding="3" Margin="0,24" Background="{DynamicResource AREghZyBrush.Deep.2.Background.Static}" BorderBrush="{DynamicResource AREghZyBrush.Primary.3.Border.Static}"/>
+                    <TextBox x:Name="TextBox_MD" FontFamily="Consolas" Text="{Binding ValueMethodDescriptor, UpdateSourceTrigger=PropertyChanged, Converter={StaticResource TypeConverter}}" Padding="3" Margin="0,24" Background="{DynamicResource AREghZyBrush.Deep.2.Background.Static}" BorderBrush="{DynamicResource AREghZyBrush.Primary.3.Border.Static}"/>
                     <Button Command="{Binding EditMethodDescriptorCommand}" Content="Edit" BorderThickness="1 0 1 1" BorderBrush="{DynamicResource AREghZyBrush.Primary.3.Border.Static}" Background="{DynamicResource AREghZyBrush.Primary.2.Background.Static}" Height="24" VerticalAlignment="Bottom"/>
                 </Grid>
             </TabItem>

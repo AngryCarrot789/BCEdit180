@@ -1,57 +1,41 @@
 using System;
+using System.Diagnostics;
 using System.Threading;
 using System.Threading.Tasks;
 using BCEdit180.Core.Window;
 
 namespace BCEdit180.Core.Searching {
-    public class SearchService {
-        public delegate void BeginSearchEvent();
+    public class SearchServiceDAMNMULTITHREADING {
+        public delegate void BeginSearchEvent_OLD();
 
-        public event BeginSearchEvent BeginSearch;
-
-        private volatile bool stop;
-
-        private volatile int state;
-
-        private int preFireEventState;
-        private int fireEventState;
+        public event BeginSearchEvent_OLD BeginSearch;
 
         private DateTime lastBump;
 
-        public TimeSpan MinimumSearchMillis { get; set; }
-        public TimeSpan SleepIntervalTime { get; set; }
+        private volatile bool canFireEvent;
 
-        private const int STATE_STOPPED = 0;
-        private const int STATE_STARTIN = 1;
-        private const int STATE_RUNNING = 2;
-        private const int STATE_STOPPIN = 3;
+        public TimeSpan MinimumTimeSinceBump { get; set; }
 
-        private const int MASK_REQUIRE_START = STATE_STOPPED | STATE_STOPPIN;
+        public TimeSpan TaskTickInterval { get; set; }
 
+        public bool CanFireNextTick {
+            get => this.canFireEvent;
+            set => this.canFireEvent = value;
+        }
 
-        public bool IsStopped => this.state == STATE_STOPPED;
-        public bool IsStartin => this.state == STATE_STARTIN;
-        public bool IsRunning => this.state == STATE_RUNNING;
-        public bool IsStoppin => this.state == STATE_STOPPIN;
-
-        public SearchService() {
-            this.preFireEventState = 1;
-            this.SleepIntervalTime = TimeSpan.FromMilliseconds(1000);
-            this.MinimumSearchMillis = TimeSpan.FromMilliseconds(1000);
+        public SearchServiceDAMNMULTITHREADING() {
+            this.MinimumTimeSinceBump = TimeSpan.FromMilliseconds(200);
+            this.TaskTickInterval = TimeSpan.FromMilliseconds(100);
+            Start();
         }
 
         private void Start() {
             Task.Run(async () => {
-                Interlocked.Exchange(ref this.state, STATE_RUNNING);
                 while (true) {
-                    if (this.IsStoppin) {
-                        Interlocked.Exchange(ref this.state, STATE_STOPPED);
-                        return;
-                    }
-
-                    if ((DateTime.Now - this.lastBump).Milliseconds > this.MinimumSearchMillis.Milliseconds) {
-                        // Set to 0 | Check if it was 1 (1 means the event can fire)
-                        if (Interlocked.CompareExchange(ref this.preFireEventState, 0, 1) == 1) {
+                    // Debug.WriteLine($"Now: {DateTime.Now.ToString("HH:mm:ss.ffff")} -> LastBump: {this.lastBump.ToString("HH:mm:ss.ffff")}");
+                    if ((DateTime.Now - this.lastBump) > this.MinimumTimeSinceBump) {
+                        if (this.canFireEvent) {
+                            this.canFireEvent = false;
                             try {
                                 OnReadySearch();
                             }
@@ -65,35 +49,27 @@ namespace BCEdit180.Core.Searching {
                         }
                     }
 
-                    await Task.Delay(this.MinimumSearchMillis);
+                    await Task.Delay(this.TaskTickInterval);
                 }
             });
         }
 
-        public void Stop() {
-            Interlocked.Exchange(ref this.state, STATE_STOPPIN);
-        }
-
         public void OnReadySearch() {
-            Interlocked.Exchange(ref this.fireEventState, 1);
             ServiceManager.GetService<IApplicationProxy>().InvokeSync(() => {
-                if (Interlocked.CompareExchange(ref this.fireEventState, 0, 1) == 1) {
-                    this.BeginSearch?.Invoke();
-                }
+                this.BeginSearch?.Invoke();
             });
         }
 
         public void Bump() {
-            this.lastBump = DateTime.Now;
-            Interlocked.Exchange(ref this.preFireEventState, 1);
-            if ((Interlocked.CompareExchange(ref this.state, STATE_STARTIN, STATE_STOPPED) & MASK_REQUIRE_START) != 0) {
-                Start();
+            if (!this.canFireEvent) {
+                this.canFireEvent = true;
             }
+
+            this.lastBump = DateTime.Now;
         }
 
         public void ForceAction() {
-            Interlocked.Exchange(ref this.preFireEventState, 0);
-            Interlocked.Exchange(ref this.fireEventState, 0);
+            this.canFireEvent = false;
             this.lastBump = DateTime.Now;
             OnReadySearch();
         }

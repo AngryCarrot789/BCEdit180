@@ -2,6 +2,7 @@
 using System.Collections.ObjectModel;
 using System.Diagnostics;
 using System.IO;
+using System.Reflection;
 using System.Windows;
 using System.Windows.Input;
 using BCEdit180.Core;
@@ -31,7 +32,9 @@ namespace BCEdit180 {
             ServiceManager.SetService<IApplicationProxy>(new WpfApplicationProxy());
             ServiceManager.SetService<IModalManager>(new WPFModalManager());
             ServiceManager.SetService<ICommandManager>(new WPFCommandManager());
-            BytecodeEditorViewModel.BytecodeList = new BytecodeMultiselectImpl(this);
+            BytecodeEditorViewModel.BytecodeList = new BytecodeListImpl(this);
+            MethodListViewModel.MethodList = new MethodListImpl(this);
+            FieldListViewModel.FieldList = new FieldListImpl(this);
             this.DataContext = new ClassViewModel();
 
             // string path = "F:\\IJProjects\\CarrotTools\\out\\production\\CarrotTools\\reghzy\\carrottools\\playerdata\\results\\custom\\tileentity\\TileEntityTimingResult.class";
@@ -73,10 +76,10 @@ namespace BCEdit180 {
 
         }
 
-        private class BytecodeMultiselectImpl : IListSelector<BaseInstructionViewModel> {
+        private class BytecodeListImpl : IListSelector<BaseInstructionViewModel> {
             private readonly MainWindow window;
 
-            public BytecodeMultiselectImpl(MainWindow window) {
+            public BytecodeListImpl(MainWindow window) {
                 this.window = window;
             }
 
@@ -97,6 +100,60 @@ namespace BCEdit180 {
 
             public void ScrollToSelectedItem() {
                 this.window.BytecodeEditorListBox.ScrollIntoView(this.window.BytecodeEditorListBox.SelectedItem);
+            }
+        }
+
+        private class MethodListImpl : IListSelector<MethodInfoViewModel> {
+            private readonly MainWindow window;
+
+            public MethodListImpl(MainWindow window) {
+                this.window = window;
+            }
+
+            public IEnumerable<MethodInfoViewModel> SelectedItems {
+                get {
+                    List<MethodInfoViewModel> instructions = new List<MethodInfoViewModel>();
+                    foreach (object item in this.window.MethodList.SelectedItems) {
+                        instructions.Add((MethodInfoViewModel) item);
+                    }
+
+                    return instructions;
+                }
+            }
+
+            public void BringIntoView(MethodInfoViewModel value) {
+                this.window.MethodList.ScrollIntoView(value);
+            }
+
+            public void ScrollToSelectedItem() {
+                this.window.MethodList.ScrollIntoView(this.window.MethodList.SelectedItem);
+            }
+        }
+
+        private class FieldListImpl : IListSelector<FieldInfoViewModel> {
+            private readonly MainWindow window;
+
+            public FieldListImpl(MainWindow window) {
+                this.window = window;
+            }
+
+            public IEnumerable<FieldInfoViewModel> SelectedItems {
+                get {
+                    List<FieldInfoViewModel> instructions = new List<FieldInfoViewModel>();
+                    foreach (object item in this.window.FieldList.SelectedItems) {
+                        instructions.Add((FieldInfoViewModel) item);
+                    }
+
+                    return instructions;
+                }
+            }
+
+            public void BringIntoView(FieldInfoViewModel value) {
+                this.window.FieldList.ScrollIntoView(value);
+            }
+
+            public void ScrollToSelectedItem() {
+                this.window.FieldList.ScrollIntoView(this.window.FieldList.SelectedItem);
             }
         }
 

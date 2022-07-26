@@ -32,8 +32,8 @@ namespace BCEdit180.Core.Window {
 
         Task<bool> ChangeInstructionDialog(IEnumerable<Opcode> opcodes, in Opcode? defaultOpcode, out Opcode opcode);
 
-        Task<bool> EditEnumDialog<TEnum>(out TEnum access) where TEnum : Enum ;
+        Task<bool> EditEnumFlagDialog<TEnum>(out TEnum access) where TEnum : Enum ;
 
-        Task<bool> EditEnumDialog<TEnum>(in TEnum template, out TEnum access) where TEnum : Enum ;
+        Task<bool> EditEnumFlagDialog<TEnum>(in TEnum template, out TEnum access) where TEnum : Enum ;
     }
 }

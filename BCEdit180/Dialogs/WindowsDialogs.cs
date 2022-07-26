@@ -6,14 +6,13 @@ using BCEdit180.Windows;
 namespace BCEdit180.Dialogs {
     public class WindowsDialogs : IDialogManager {
         public Task ShowInformationDialog(string header, string description) {
-            ErrorDialogWindow window = new ErrorDialogWindow();
-            window.Title = header;
-            window.DataContext = new ErrorDialogViewModel() {
-                Description = description
-            };
-
-            window.ShowDialog();
-            // MessageBox.Show(description, header, MessageBoxButton.OK, MessageBoxImage.Information);
+            // ErrorDialogWindow window = new ErrorDialogWindow();
+            // window.Title = header;
+            // window.DataContext = new ErrorDialogViewModel() {
+            //     Description = description
+            // };
+            // window.ShowDialog();
+            MessageBox.Show(description, header, MessageBoxButton.OK, MessageBoxImage.Information);
             return Task.CompletedTask;
         }
 

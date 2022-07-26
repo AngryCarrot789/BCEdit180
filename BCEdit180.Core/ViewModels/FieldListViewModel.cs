@@ -1,6 +1,8 @@
 ﻿using System.Collections.ObjectModel;
 using System.Windows.Input;
 using BCEdit180.Core.Editors;
+using BCEdit180.Core.Searching;
+using BCEdit180.Core.Utils;
 using BCEdit180.Core.Window;
 using JavaAsm;
 using REghZy.MVVM.Commands;
@@ -8,6 +10,8 @@ using REghZy.MVVM.ViewModels;
 
 namespace BCEdit180.Core.ViewModels {
     public class FieldListViewModel : BaseViewModel, ISaveable<ClassNode> {
+        public static IListSelector<FieldInfoViewModel> FieldList { get; set; }
+
         public ObservableCollection<FieldInfoViewModel> Fields { get; }
         public ObservableCollection<FieldInfoViewModel> RemovedFields { get; }
 
@@ -29,6 +33,8 @@ namespace BCEdit180.Core.ViewModels {
 
         public ICommand CreateFieldCommand { get; }
 
+        public SearchFieldNameViewModel SearchField { get; }
+
         public ClassViewModel Class { get; }
 
         public FieldListViewModel(ClassViewModel clazz) {
@@ -36,6 +42,7 @@ namespace BCEdit180.Core.ViewModels {
             this.Fields = new ObservableCollection<FieldInfoViewModel>();
             this.RemovedFields = new ObservableCollection<FieldInfoViewModel>();
             this.CreateFieldCommand = new RelayCommand(ShowCreateFieldDialog);
+            this.SearchField = new SearchFieldNameViewModel(this);
         }
 
         public void ShowCreateFieldDialog() {

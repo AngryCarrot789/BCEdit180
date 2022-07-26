@@ -110,6 +110,7 @@
     <Compile Include="Dialogs\WindowsAccessEditor.cs" />
     <Compile Include="Dialogs\WindowsFileDialogs.cs" />
     <Compile Include="Dialogs\WPFModalManager.cs" />
+    <Compile Include="LineNumbers\LineNumberAdorder.cs" />
     <Compile Include="Windows\ChangeInstructionWindow.xaml.cs">
       <DependentUpon>ChangeInstructionWindow.xaml</DependentUpon>
     </Compile>
@@ -180,6 +181,7 @@
       <Generator>MSBuild:Compile</Generator>
     </Page>
     <Page Include="CodeEditing\ListControls\InstructionControlStyles.xaml" />
+    <Page Include="LineNumbers\LineNumberListBox.xaml" />
     <Page Include="Themes\BaseInstructionStyles.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
@@ -305,5 +307,6 @@
       <Name>BCEdit180.Core</Name>
     </ProjectReference>
   </ItemGroup>
+  <ItemGroup />
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>

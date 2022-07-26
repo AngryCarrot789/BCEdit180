@@ -61,7 +61,7 @@ namespace BCEdit180.Core.CodeEditing.Bytecode.Instructions {
             this.BootstrapMethodArgs = new ObservableCollection<object>();
             this.EditDescriptorCommand = new ExtendedRelayCommand(EditDescriptorAction, () => true);
             this.EditBootstrapDescriptorCommand = new ExtendedRelayCommand(EditBootstrapDescriptorAction, () => true);
-            this.EditBootstrapReferenceTypeCommand = new ExtendedRelayCommand(EditBootstrapReferenceTypeAction, () => true);
+            this.EditBootstrapReferenceTypeCommand = new ExtendedRelayCommand(EditBootstrapReferenceTypeAction, () => false);
         }
 
         public void EditDescriptorAction() {
@@ -92,7 +92,7 @@ namespace BCEdit180.Core.CodeEditing.Bytecode.Instructions {
         }
 
         public void EditBootstrapReferenceTypeAction() {
-            if (Dialog.TypeEditor.EditEnumDialog<ReferenceKindType>(this.BootstrapReferenceType, out ReferenceKindType type).Result) {
+            if (Dialog.TypeEditor.EditEnumFlagDialog(this.BootstrapReferenceType, out ReferenceKindType type).Result) {
                 this.BootstrapReferenceType = type;
             }
         }
