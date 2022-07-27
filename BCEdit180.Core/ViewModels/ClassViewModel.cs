@@ -145,14 +145,12 @@ namespace BCEdit180.Core.ViewModels {
 
         public ClassViewModel(ClassNode node) {
             MessageManager.RegisterHandler<BusyStateMessage>(this);
-
             this.Node = node;
-            this.ExitCommand = new RelayCommand(()=> Environment.Exit(0));
+            this.ExitCommand = new RelayCommand(() => Environment.Exit(0));
             this.OpenFileCommand = new ExtendedRelayCommand(OpenFile, () => !this.IsBusy );
             this.ReloadFileCommand = new ExtendedRelayCommand(ReloadFile, () => !this.IsBusy );
             this.SaveFileCommand = new ExtendedRelayCommand(SaveClassFile, () => !this.IsBusy );
             this.SaveFileAsCommand = new ExtendedRelayCommand(SaveClassFileAs, () => !this.IsBusy );
-
             this.ClassInfo = new ClassInfoViewModel(this);
             this.MethodList = new MethodListViewModel(this);
             this.FieldList = new FieldListViewModel(this);
@@ -168,8 +166,8 @@ namespace BCEdit180.Core.ViewModels {
             if (this.FilePath != null && File.Exists(this.FilePath)) {
                 ReadClassFileAndShowDialog(this.FilePath);
             }
-            else {
-
+            else if (this.FilePath != null) {
+                Dialog.Message.ShowInformationDialog("File no longer exists", "Cannot reload the file, because the file no longer exists: " + this.FilePath);
             }
         }
 

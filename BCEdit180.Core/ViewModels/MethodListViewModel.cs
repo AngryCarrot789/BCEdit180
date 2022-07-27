@@ -1,9 +1,7 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Linq;
 using System.Windows.Input;
-using BCEdit180.Core.CodeEditing.Bytecode.Instructions;
 using BCEdit180.Core.Editors;
 using BCEdit180.Core.Searching;
 using BCEdit180.Core.Utils;

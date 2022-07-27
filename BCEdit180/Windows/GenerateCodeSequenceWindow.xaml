@@ -4,10 +4,12 @@
         xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:BCEdit180.Windows"
+        xmlns:EditorControls="clr-namespace:BCEdit180.CodeEditing.EditorControls"
         mc:Ignorable="d"
         Title="GenerateCodeSequenceWindow" Height="450" Width="800"
         Style="{DynamicResource CustomWindowBaseStyle}">
-    <Grid>
-        <TextBlock Text="Getfield "/>
+    <Grid Margin="10">
+        <Button Command="{Binding ConfirmCommand, RelativeSource={RelativeSource FindAncestor, AncestorType={x:Type local:WindowModal}}}" Focusable="False" Content="Okay" HorizontalAlignment="Right" Margin="0,0,79,0" VerticalAlignment="Bottom" Width="74" Background="#FF79D43A" Height="24"/>
+        <Button Command="{Binding CancelCommand, RelativeSource={RelativeSource FindAncestor, AncestorType={x:Type local:WindowModal}}}" Focusable="False" Content="Cancel" HorizontalAlignment="Right" VerticalAlignment="Bottom" Width="74" Height="24"/>
     </Grid>
 </local:WindowModal>

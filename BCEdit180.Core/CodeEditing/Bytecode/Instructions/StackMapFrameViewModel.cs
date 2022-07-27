@@ -1,11 +1,9 @@
-using System.Collections;
 using System.Collections.Generic;
 using System.Windows.Input;
 using BCEdit180.Core.Commands;
 using BCEdit180.Core.Window;
 using JavaAsm.Instructions;
 using JavaAsm.Instructions.Types;
-using REghZy.MVVM.Commands;
 
 namespace BCEdit180.Core.CodeEditing.Bytecode.Instructions {
     public class StackMapFrameViewModel : BaseInstructionViewModel {

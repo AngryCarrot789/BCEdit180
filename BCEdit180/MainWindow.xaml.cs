@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Diagnostics;
 using System.IO;
@@ -25,17 +26,6 @@ namespace BCEdit180 {
     public partial class MainWindow : WindowBase {
         public MainWindow() {
             InitializeComponent();
-            ServiceManager.SetService<IDialogManager>(new WindowsDialogs());
-            ServiceManager.SetService<ITypeEditors>(new WindowsTypeEditors());
-            ServiceManager.SetService<IAccessEditor>(new WindowsAccessEditor());
-            ServiceManager.SetService<IFileDialog>(new WindowsFileDialogs());
-            ServiceManager.SetService<IApplicationProxy>(new WpfApplicationProxy());
-            ServiceManager.SetService<IModalManager>(new WPFModalManager());
-            ServiceManager.SetService<ICommandManager>(new WPFCommandManager());
-            BytecodeEditorViewModel.BytecodeList = new BytecodeListImpl(this);
-            MethodListViewModel.MethodList = new MethodListImpl(this);
-            FieldListViewModel.FieldList = new FieldListImpl(this);
-            this.DataContext = new ClassViewModel();
 
             // string path = "F:\\IJProjects\\CarrotTools\\out\\production\\CarrotTools\\reghzy\\carrottools\\playerdata\\results\\custom\\tileentity\\TileEntityTimingResult.class";
             // string path = "F:\\MinecraftUtils\\server\\tekkitmain-1.6.4\\CarrotClassSplicer\\World.class";
@@ -74,6 +64,25 @@ namespace BCEdit180 {
             // system.Connection.Disconnect();
             // server.Close();
 
+        }
+
+        private bool setup;
+        public void SetupServices() {
+            if (this.setup) {
+                throw new InvalidOperationException("Services already setup");
+            }
+
+            this.setup = true;
+            ServiceManager.SetService<IDialogManager>(new WindowsDialogs());
+            ServiceManager.SetService<ITypeEditors>(new WindowsTypeEditors());
+            ServiceManager.SetService<IAccessEditor>(new WindowsAccessEditor());
+            ServiceManager.SetService<IFileDialog>(new WindowsFileDialogs());
+            ServiceManager.SetService<IApplicationProxy>(new WpfApplicationProxy());
+            ServiceManager.SetService<IModalManager>(new WPFModalManager());
+            ServiceManager.SetService<ICommandManager>(new WPFCommandManager());
+            BytecodeEditorViewModel.BytecodeList = new BytecodeListImpl(this);
+            MethodListViewModel.MethodList = new MethodListImpl(this);
+            FieldListViewModel.FieldList = new FieldListImpl(this);
         }
 
         private class BytecodeListImpl : IListSelector<BaseInstructionViewModel> {

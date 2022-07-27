@@ -34,6 +34,9 @@
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
   </PropertyGroup>
+  <PropertyGroup>
+    <ApplicationIcon>icon_file.ico</ApplicationIcon>
+  </PropertyGroup>
   <ItemGroup>
     <Reference Include="BinaryEncoding, Version=1.5.0.0, Culture=neutral, processorArchitecture=MSIL">
       <HintPath>..\packages\BinaryEncoding.1.5.0\lib\net452\BinaryEncoding.dll</HintPath>
@@ -145,6 +148,9 @@
     <Compile Include="Windows\FlagEditorWindow.xaml.cs">
       <DependentUpon>FlagEditorWindow.xaml</DependentUpon>
     </Compile>
+    <Compile Include="Windows\GenerateCodeSequenceWindow.xaml.cs">
+      <DependentUpon>GenerateCodeSequenceWindow.xaml</DependentUpon>
+    </Compile>
     <Compile Include="Windows\MethodDescEditorWindow.xaml.cs">
       <DependentUpon>MethodDescEditorWindow.xaml</DependentUpon>
     </Compile>
@@ -234,6 +240,10 @@
       <DependentUpon>MainWindow.xaml</DependentUpon>
       <SubType>Code</SubType>
     </Compile>
+    <Page Include="Windows\GenerateCodeSequenceWindow.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
     <Page Include="Windows\MethodDescEditorWindow.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
@@ -300,6 +310,7 @@
   </ItemGroup>
   <ItemGroup>
     <Content Include="CodeEditing\_hierarchy.txt" />
+    <Resource Include="icon_file.ico" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\BCEdit180.Core\BCEdit180.Core.csproj">

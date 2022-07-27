@@ -31,15 +31,24 @@
             <GroupBox.Header>
                 <StackPanel Orientation="Horizontal">
                     <TextBlock Text="Parameters" VerticalAlignment="Center" Padding="2" Margin="0 0 5 0"/>
-                    <Button Focusable="False" Command="{Binding AddNewParameterCommand}" Width="21" Height="21" Background="{DynamicResource AREghZyBrush.Primary.3.Background.Static}" BorderBrush="{DynamicResource AREghZyBrush.Primary.3.Border.Static}">
+                    <Button ToolTip="Show a dialog to create a new parameter" Margin="0 0 5 0" Focusable="False" Command="{Binding AddNewParameterCommand}" Width="21" Height="21" Background="{DynamicResource AREghZyBrush.Primary.3.Background.Static}" BorderBrush="{DynamicResource AREghZyBrush.Primary.3.Border.Static}">
                         <TextBlock Text="+" Margin="0 -4 0 0" FontSize="16"/>
+                    </Button>
+                    <Button ToolTip="Remove the currently selected parameter" Focusable="False" Command="{Binding RemoveSelectedCommand}" Width="21" Height="21" Background="{DynamicResource AREghZyBrush.Primary.3.Background.Static}" BorderBrush="{DynamicResource AREghZyBrush.Primary.3.Border.Static}">
+                        <TextBlock Text="-" Margin="0 -4 0 0" FontSize="16"/>
                     </Button>
                 </StackPanel>
             </GroupBox.Header>
-            <ListBox ItemsSource="{Binding Parameters}" HorizontalContentAlignment="Stretch" ScrollViewer.CanContentScroll="True">
+            <ListBox ItemsSource="{Binding Parameters}" SelectedItem="{Binding SelectedParameter, UpdateSourceTrigger=PropertyChanged}" HorizontalContentAlignment="Stretch" ScrollViewer.CanContentScroll="True">
                 <ListBox.ItemTemplate>
                     <DataTemplate>
-                        <controls:DoubleClickEditBox HorizontalContentAlignment="Stretch" Margin="-3 0" Text="{Binding Descriptor, UpdateSourceTrigger=PropertyChanged, Converter={StaticResource TypeConverter}}" Padding="0 2"/>
+                        <controls:DoubleClickEditBox HorizontalContentAlignment="Stretch" Margin="-3 0" Text="{Binding Descriptor, UpdateSourceTrigger=PropertyChanged, Converter={StaticResource TypeConverter}}" Padding="0 2">
+                            <controls:DoubleClickEditBox.ContextMenu>
+                                <ContextMenu>
+                                    <MenuItem Header="Remove"/>
+                                </ContextMenu>
+                            </controls:DoubleClickEditBox.ContextMenu>
+                        </controls:DoubleClickEditBox>
                     </DataTemplate>
                 </ListBox.ItemTemplate>
             </ListBox>

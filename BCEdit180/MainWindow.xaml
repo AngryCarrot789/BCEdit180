@@ -21,7 +21,7 @@
         d:DataContext="{d:DesignInstance viewModels:ClassViewModel}"
         Style="{DynamicResource CustomWindowBaseStyle}"
         Background="{DynamicResource AREghZyBrush.Primary.1.Background.Static}" 
-        BorderBrush="{DynamicResource AREghZyBrush.Primary.3.Border.Static}"
+        BorderBrush="{DynamicResource AREghZyBrush.Primary.4.Border.Static}"
         AllowDrop="True"
         PreviewDrop="Window_PreviewDrop"
         PreviewKeyDown="Window_PreviewKeyDown"
@@ -272,13 +272,19 @@
                         <Grid Height="24" VerticalAlignment="Bottom">
                             <Button Command="{Binding CreateMethodCommand}" BorderBrush="{DynamicResource AREghZyBrush.Primary.4.Border.Static}" BorderThickness="1 0 1 1" Grid.Column="0" Content="Create Method..." Background="{DynamicResource AREghZyBrush.Primary.3.Background.Static}"/>
                         </Grid>
-                        <TextBox Text="{Binding SearchMethod.InputText, UpdateSourceTrigger=PropertyChanged}" x:Name="FindMethodBox" Grid.Row="0" Style="{DynamicResource HintedTextBox}" Tag="Search for a method" AutoWordSelection="False" ToolTip="Searches the instructions for the given string of text" VerticalContentAlignment="Center" Padding="3 1" VerticalAlignment="Bottom" Height="24" Margin="0,0,58,24" BorderThickness="1 1 1 1" BorderBrush="{DynamicResource AREghZyBrush.Primary.4.Border.Static}" Background="{DynamicResource AREghZyBrush.Primary.1.Background.Static}" ap:TextBoxAP.ClearOnClickEsc="True">
+                        <TextBox Text="{Binding SearchMethod.InputText, UpdateSourceTrigger=PropertyChanged}"
+                                 x:Name="FindMethodBox" Grid.Row="0" Style="{DynamicResource HintedTextBox}"
+                                 Tag="Search for a method" AutoWordSelection="False"
+                                 ToolTip="Searches the instructions for the given string of text" VerticalContentAlignment="Center"
+                                 Padding="3 1" VerticalAlignment="Bottom" Height="24" Margin="0,0,58,24" BorderThickness="1 1 1 1"
+                                 BorderBrush="{DynamicResource AREghZyBrush.Primary.4.Border.Static}"
+                                 Background="{DynamicResource AREghZyBrush.Primary.1.Background.Static}">
                             <TextBox.InputBindings>
                                 <KeyBinding Key="Enter" Command="{Binding SearchMethod.SearchCommand}"/>
                                 <KeyBinding Key="Esc" Command="{Binding SearchMethod.ClearSearchCommand}"/>
                             </TextBox.InputBindings>
                         </TextBox>
-                        <Button Grid.Row="0" Command="{Binding SearchMethod.SearchCommand}" BorderThickness="0 1 1 1" BorderBrush="{DynamicResource AREghZyBrush.Primary.4.Border.Static}" Content="Search" HorizontalAlignment="Right" Width="58" Height="24" VerticalAlignment="Bottom" Margin="0,0,0,24"/>
+                        <Button Grid.Row="0" Command="{Binding SearchMethod.SearchCommand}" BorderThickness="0 1 1 1" BorderBrush="{DynamicResource AREghZyBrush.Primary.4.Border.Static}" Content="Search" HorizontalAlignment="Right" Width="58" Height="24" VerticalAlignment="Bottom" Margin="0,0,0,24" Background="{DynamicResource AREghZyBrush.Primary.3.Background.Static}"/>
                         <Label Height="23" VerticalAlignment="Top" Grid.Row="2" Padding="5 1" VerticalContentAlignment="Center" 
                                HorizontalContentAlignment="Center"
                                Background="{DynamicResource AREghZyBrush.Primary.2.Background.Static}"
@@ -365,9 +371,9 @@
                                                     <RowDefinition Height="16*"/>
                                                 </Grid.RowDefinitions>
                                                 <StackPanel Orientation="Horizontal" VerticalAlignment="Top" Height="22">
-                                                    <Button Content="Insert New Instruction (Coming soon)" Command="{Binding InsertInstructionCommand}" Padding="5 1" Margin="0 0 2 0"/>
-                                                    <Button Content="Insert Code (Coming soon)"            Command="{Binding InsertCodeCommand}" Padding="5 1" Margin="0 0 2 0"/>
-                                                    <Button Content="Hide Options Code (Coming soon)"      Command="{Binding ShowHideOptionsCommand}" Padding="5 1" Margin="0 0 2 0"/>
+                                                    <Button Content="Insert Code Sequence" Command="{Binding InsertCodeCommand}" Padding="5 1" Margin="0 0 2 0" BorderBrush="{DynamicResource AREghZyBrush.Primary.4.Border.Static}"/>
+                                                    <Button Content="Insert New Instruction (Coming soon)" Command="{Binding InsertInstructionCommand}" Padding="5 1" Margin="0 0 2 0" BorderBrush="{DynamicResource AREghZyBrush.Primary.4.Border.Static}"/>
+                                                    <Button Content="Hide Options Code (Coming soon)"      Command="{Binding ShowHideOptionsCommand}" Padding="5 1" Margin="0 0 2 0" BorderBrush="{DynamicResource AREghZyBrush.Primary.4.Border.Static}"/>
                                                 </StackPanel>
                                                 <ListBox Grid.Row="0"
                                                          ItemsSource="{Binding Instructions}"
@@ -442,7 +448,7 @@
                                                         </DataTemplate>
                                                     </ListBox.Resources>
                                                 </ListBox>
-                                                <TextBox Text="{Binding SearchInstruction.InputText, UpdateSourceTrigger=PropertyChanged}" x:Name="FindBox" Grid.Row="0" Style="{DynamicResource HintedTextBox}" Tag="Search for anything in this instruction list" AutoWordSelection="False" ToolTip="Searches the instructions for the given string of text" VerticalContentAlignment="Center" Padding="3 1" VerticalAlignment="Bottom" Height="24" Margin="-3,0,60,0" BorderThickness="0 1 0 1" BorderBrush="{DynamicResource AREghZyBrush.Primary.4.Border.Static}" ap:TextBoxAP.ClearOnClickEsc="True">
+                                                <TextBox Text="{Binding SearchInstruction.InputText, UpdateSourceTrigger=PropertyChanged}" x:Name="FindBox" Grid.Row="0" Style="{DynamicResource HintedTextBox}" Tag="Search for anything in this instruction list" AutoWordSelection="False" ToolTip="Searches the instructions for the given string of text" VerticalContentAlignment="Center" Padding="3 1" VerticalAlignment="Bottom" Height="24" Margin="-3,0,60,0" BorderThickness="0 1 0 1" BorderBrush="{DynamicResource AREghZyBrush.Primary.4.Border.Static}" >
                                                     <TextBox.InputBindings>
                                                         <KeyBinding Key="Enter" Command="{Binding SearchInstruction.SearchCommand}"/>
                                                         <KeyBinding Key="Esc" Command="{Binding SearchInstruction.ClearSearchCommand}"/>
@@ -640,13 +646,13 @@
                         <Grid Height="24" VerticalAlignment="Bottom">
                             <Button Command="{Binding CreateFieldCommand}" BorderBrush="{DynamicResource AREghZyBrush.Primary.4.Border.Static}" BorderThickness="1 0 1 1" Grid.Column="0" Content="Create Method..." Background="{DynamicResource AREghZyBrush.Primary.3.Background.Static}"/>
                         </Grid>
-                        <TextBox Text="{Binding SearchField.InputText, UpdateSourceTrigger=PropertyChanged}" x:Name="FindFieldBox" Grid.Row="0" Style="{DynamicResource HintedTextBox}" Tag="Search for a method" AutoWordSelection="False" ToolTip="Searches the instructions for the given string of text" VerticalContentAlignment="Center" Padding="3 1" VerticalAlignment="Bottom" Height="24" Margin="0,0,58,24" BorderThickness="1 1 1 1" BorderBrush="{DynamicResource AREghZyBrush.Primary.4.Border.Static}" Background="{DynamicResource AREghZyBrush.Primary.1.Background.Static}" ap:TextBoxAP.ClearOnClickEsc="True">
+                        <TextBox Text="{Binding SearchField.InputText, UpdateSourceTrigger=PropertyChanged}" x:Name="FindFieldBox" Grid.Row="0" Style="{DynamicResource HintedTextBox}" Tag="Search for a method" AutoWordSelection="False" ToolTip="Searches the instructions for the given string of text" VerticalContentAlignment="Center" Padding="3 1" VerticalAlignment="Bottom" Height="24" Margin="0,0,58,24" BorderThickness="1 1 1 1" BorderBrush="{DynamicResource AREghZyBrush.Primary.4.Border.Static}" Background="{DynamicResource AREghZyBrush.Primary.1.Background.Static}" >
                             <TextBox.InputBindings>
                                 <KeyBinding Key="Enter" Command="{Binding SearchField.SearchCommand}"/>
                                 <KeyBinding Key="Esc" Command="{Binding SearchField.ClearSearchCommand}"/>
                             </TextBox.InputBindings>
                         </TextBox>
-                        <Button Grid.Row="0" Command="{Binding FindNexTFieldCommand}" BorderThickness="0 1 1 1" BorderBrush="{DynamicResource AREghZyBrush.Primary.4.Border.Static}" Content="Search" HorizontalAlignment="Right" Width="58" Height="24" VerticalAlignment="Bottom" Margin="0,0,0,24"/>
+                        <Button Grid.Row="0" Command="{Binding SearchField.SearchCommand}" BorderThickness="0 1 1 1" BorderBrush="{DynamicResource AREghZyBrush.Primary.4.Border.Static}" Content="Search" HorizontalAlignment="Right" Width="58" Height="24" VerticalAlignment="Bottom" Margin="0,0,0,24" Background="{DynamicResource AREghZyBrush.Primary.3.Background.Static}"/>
                         <Label Height="23" VerticalAlignment="Top" Grid.Row="2" Padding="5 1" VerticalContentAlignment="Center" 
                                HorizontalContentAlignment="Center"
                                Background="{DynamicResource AREghZyBrush.Primary.2.Background.Static}"

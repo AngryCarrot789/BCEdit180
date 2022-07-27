@@ -1,5 +1,5 @@
 using System.Collections.ObjectModel;
-using System.Threading.Tasks;
+using System.Linq;
 using System.Windows.Input;
 using BCEdit180.Core.Window;
 using JavaAsm;
@@ -14,27 +14,28 @@ namespace BCEdit180.Core.Editors {
             set => RaisePropertyChanged(ref this.returnType, value);
         }
 
-        public ObservableCollection<TypeDescriptorViewModel> Parameters { get; }
-
-        private MethodAccessModifiers access;
-        public MethodAccessModifiers Access {
-            get => this.access;
-            set => RaisePropertyChanged(ref this.access, value);
+        private TypeDescriptorViewModel selectedParameter;
+        public TypeDescriptorViewModel SelectedParameter {
+            get => this.selectedParameter;
+            set => RaisePropertyChanged(ref this.selectedParameter, value);
         }
 
-        public ICommand EditReturnTypeCommand { get; }
+        public MethodDescriptor Descriptor => new MethodDescriptor(this.ReturnType, this.Parameters.Select(a => a.Descriptor).ToList());
+
+        public ObservableCollection<TypeDescriptorViewModel> Parameters { get; }
 
         public ICommand AddNewParameterCommand { get; }
 
-        public ICommand EditAccessCommand { get; }
+        public ICommand RemoveSelectedCommand { get; }
+
+        public ICommand EditReturnTypeCommand { get; }
 
         public MethodDescEditorViewModel() {
             this.Parameters = new ObservableCollection<TypeDescriptorViewModel>();
             this.ReturnType = new TypeDescriptor(PrimitiveType.Void, 0);
-            this.Access = MethodAccessModifiers.Public;
             this.AddNewParameterCommand = new RelayCommand(AddNewParameter);
+            this.RemoveSelectedCommand = new RelayCommand(RemoveSelectedAction);
             this.EditReturnTypeCommand = new RelayCommand(EditReturnType);
-            this.EditAccessCommand = new RelayCommand(EditAccess);
         }
 
         public void EditReturnType() {
@@ -45,15 +46,16 @@ namespace BCEdit180.Core.Editors {
 
         public void AddNewParameter() {
             if (Dialog.TypeEditor.EditTypeDescriptorDialog(new TypeDescriptor(PrimitiveType.Integer, 0), out TypeDescriptor descriptor).Result) {
-                this.Parameters.Add(new TypeDescriptorViewModel() {
-                    Descriptor = descriptor
-                });
+                this.Parameters.Add(new TypeDescriptorViewModel() { Descriptor = descriptor });
             }
         }
 
-        public void EditAccess() {
-            if (Dialog.AccessEditor.EditMethodAccess(this.Access, out MethodAccessModifiers access).Result) {
-                this.Access = access;
+        public void RemoveSelectedAction() {
+            if (this.SelectedParameter != null) {
+                this.Parameters.Remove(this.SelectedParameter);
+                if (this.Parameters.Count > 0) {
+                    this.SelectedParameter = this.Parameters[this.Parameters.Count - 1];
+                }
             }
         }
     }
