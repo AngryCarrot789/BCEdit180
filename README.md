@@ -32,6 +32,7 @@ My fork of java-asm targets .NET Standard 2.0, as well as my MVVM and WPF librar
 - Field list + general field info editor (name, descriptor, signature, etc)
 - A source code generator (does not actually generate method source code, only the structure of the class (all methods will look 'abstract'))
 - You can create and remove methods too. But you can't actually add instructions to the methods yet, so it's pretty much pointless
+- You can create and remove fields, which might have some use with reflection or when using custom ASM libraries
 - You can view annotations, but you can only edit the annotation type, and the name/type of the annotation's entries. Will add more to this soon though
 
 There's probably more that i've missed, but this is generally what this program can do
