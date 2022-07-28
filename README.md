@@ -36,3 +36,6 @@ My fork of java-asm targets .NET Standard 2.0, as well as my MVVM and WPF librar
 - You can view annotations, but you can only edit the annotation type, and the name/type of the annotation's entries. Will add more to this soon though
 
 There's probably more that i've missed, but this is generally what this program can do
+
+## Slight lag issues
+When loading big class files (with 100s of methods), it may lag for a split second. The bytecode editor will be the most laggiest (scrolling isn't laggy at all); when you select a new method, it has to clear a list of instructions and create new list items for each instruction. WPF controls, like ListBoxItems (which the bytecode editor use for every instruction) usually takes about half a millisecond (0.5ms~) to create and add to the bytecode editor list. Meaning when you select a method with, say, 1000 instructions, there will be a half second lag spike. This is a limit in the WPF framework and i'm 99% certain there's no way to decrease this lag :( (unless i switch to a text editor... but i don't work at JetBrains so :<   )
