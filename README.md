@@ -7,9 +7,9 @@ See the bottom of this page for a feature list... and also some bugs :(
 
 ## Preview
 ### Bytecode editor
-![](6kNrfTyrQQ.png)
-### Method general info
-![](BCEdit180_2022-07-26_19.53.10.png)
+![](GRBQicHsZ3.png)
+### Class info
+![](ydGC874C0X.png)
 
 # Installing
 You can download the release.zip file from releases, which includes the .exe with all the dependencies
