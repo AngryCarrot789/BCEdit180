@@ -24,7 +24,7 @@ My fork of java-asm targets .NET Standard 2.0, as well as my MVVM and WPF librar
 
 # Features
 - Class info viewer
-- Interfaces list (editable, currently can't add/remove)
+- Interfaces list (can edit, add and remove interfaces)
 - Editable class attributes (apart from bootstrap methods; they are contained in the method instructions)
 - Method list, + general method info editor (descriptor, name, max stack/locals, etc)
 - Method instruction editor (in bytecode form) which is (hopefully) fully functional, allowing almost everything to be modified (apart from labels). The bytecode editor also has colours, which helps the details stand out
