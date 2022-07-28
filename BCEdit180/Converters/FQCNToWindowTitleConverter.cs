@@ -8,7 +8,7 @@ namespace BCEdit180.Converters {
     public class FQCNToWindowTitleConverter : IValueConverter {
         public object Convert(object value, Type targetType, object parameter, CultureInfo culture) {
             if (value == null || value == DependencyProperty.UnsetValue) {
-                return value;
+                return DependencyProperty.UnsetValue;
             }
 
             if (value is string fullName) {

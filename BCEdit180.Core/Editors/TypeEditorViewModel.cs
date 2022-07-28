@@ -9,7 +9,7 @@ namespace BCEdit180.Core.Editors {
             get => this.className;
             set {
                 RaisePropertyChanged(ref this.className, value);
-                UpdateClassName();
+                UpdateClassName(true);
             }
         }
         
@@ -30,7 +30,7 @@ namespace BCEdit180.Core.Editors {
             get => this.isObject;
             set {
                 RaisePropertyChanged(ref this.isObject, value);
-                UpdateClassName();
+                UpdateClassName(true);
             }
         }
 
@@ -40,14 +40,12 @@ namespace BCEdit180.Core.Editors {
             set => RaisePropertyChanged(ref this.isPrimitive, value);
         }
 
-        private bool ignoreArrayDepthUpdate;
         private ushort arrayDepth;
         public ushort ArrayDepth {
             get => this.arrayDepth;
             set {
                 RaisePropertyChanged(ref this.arrayDepth, value);
-                if (!this.ignoreArrayDepthUpdate)
-                    UpdateClassName();
+                UpdateClassName(false);
             }
         }
 
@@ -69,22 +67,40 @@ namespace BCEdit180.Core.Editors {
             this.AllowClass = true;
         }
 
-        public void UpdateClassName() {
-            this.ignoreArrayDepthUpdate = true;
-            this.ArrayDepth = (ushort) (string.IsNullOrEmpty(this.ClassName) ? 0 : this.ClassName.CountCharsAtStart('['));
-            this.ignoreArrayDepthUpdate = false;
+        private bool isUpdating;
+        public void UpdateClassName(bool calculateArrayDepth) {
+            if (this.isUpdating) {
+                return;
+            }
+
+            this.isUpdating = true;
+
+            if (calculateArrayDepth) {
+                this.ArrayDepth = (ushort) (string.IsNullOrEmpty(this.ClassName) ? 0 : this.ClassName.CountCharsAtStart('['));
+            }
+
             string arrayParts = '['.Repeat(this.ArrayDepth);
             if (string.IsNullOrEmpty(this.ClassName)) {
                 this.RealClassName = arrayParts;
             }
             else {
-                string clazz = this.ClassName.Replace('.', '/');
-                if (clazz.Length > 0 && clazz[0] == 'L' && clazz[clazz.Length - 1] == ';') {
-                    clazz = clazz.Substring(1, clazz.Length - 2);
-                }
-
-                this.RealClassName = arrayParts + clazz;
+                this.RealClassName = arrayParts + GetActualClassName(this.ClassName);
             }
+
+            this.isUpdating = false;
+        }
+
+        public string GetActualClassName(string clazz) {
+            clazz = clazz.Replace('.', '/');
+            if (clazz.Length > 0 && clazz[0] == 'L' && clazz[clazz.Length - 1] == ';') {
+                clazz = clazz.Substring(1, clazz.Length - 2);
+            }
+
+            return clazz;
+        }
+
+        public string GetClassName() {
+            return GetActualClassName(this.ClassName);
         }
     }
 }

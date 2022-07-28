@@ -9,20 +9,26 @@ namespace BCEdit180 {
     public partial class App : Application {
         private void Application_Startup(object sender, StartupEventArgs e) {
             MainWindow window = new MainWindow();
-            ClassViewModel vm = new ClassViewModel();
+            ClassListViewModel classes = new ClassListViewModel();
             window.SetupServices();
-            if (e.Args != null && e.Args.Length > 0) {
+            if (e.Args.Length > 0) {
                 string path = string.Join(" ", e.Args);
                 if (File.Exists(path)) {
-                    vm.ReadClassFileAndShowDialog(path);
+                    classes.OpenAndReadClassFile(path, true);
                 }
                 else {
                     MessageBox.Show("File does not exist: " + path, "File not found");
                 }
             }
 
+            if (classes.Classes.Count < 1) {
+                classes.Classes.Add(new ClassViewModel() { ClassList = classes });
+            }
+
+            classes.SelectedClass = classes.Classes[0];
+
             this.MainWindow = window;
-            this.MainWindow.DataContext = vm;
+            this.MainWindow.DataContext = classes;
             window.Show();
         }
     }

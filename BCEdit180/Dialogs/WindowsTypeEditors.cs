@@ -28,14 +28,16 @@ namespace BCEdit180.Dialogs {
         }
 
         public Task<bool> EditTypeDescriptorDialog(out TypeDescriptor descriptor, bool allowClass = true, bool allowPrimitve = true) {
-            return EditTypeDescriptorDialog(new TypeDescriptor(PrimitiveType.Integer, 0), out descriptor, allowClass, allowPrimitve);
+            return EditTypeDescriptorDialog(allowPrimitve ? new TypeDescriptor(PrimitiveType.Integer, 0) : new TypeDescriptor(new ClassName("ClassNameHere"), 0), out descriptor, allowClass, allowPrimitve);
         }
 
         public Task<bool> EditTypeDescriptorDialog(in TypeDescriptor template, out TypeDescriptor descriptor, bool allowClass = true, bool allowPrimitve = true) {
             TypeEditorWindow window = new TypeEditorWindow();
             TypeEditorViewModel editor = new TypeEditorViewModel();
+            editor.AllowPrimitive = allowPrimitve;
+            editor.AllowClass = allowClass;
             if (template != null) {
-                if (template.PrimitiveType.HasValue) {
+                if (template.PrimitiveType.HasValue && allowPrimitve) {
                     editor.IsPrimitive = true;
                     editor.SelectedPrimitive = template.PrimitiveType.Value;
                 }
@@ -43,10 +45,10 @@ namespace BCEdit180.Dialogs {
                     editor.IsObject = true;
                     editor.ClassName = template.ClassName?.Name;
                 }
+
+                editor.ArrayDepth = (ushort) template.ArrayDepth;
             }
 
-            editor.AllowPrimitive = allowPrimitve;
-            editor.AllowClass = allowClass;
             window.DataContext = editor;
             if (window.ShowDialog() != true) {
                 descriptor = null;
@@ -57,7 +59,7 @@ namespace BCEdit180.Dialogs {
                 descriptor = new TypeDescriptor(editor.SelectedPrimitive, editor.ArrayDepth);
             }
             else {
-                descriptor = new TypeDescriptor(new ClassName(editor.RealClassName ?? ""), editor.ArrayDepth);
+                descriptor = new TypeDescriptor(new ClassName(editor.GetClassName() ?? ""), editor.ArrayDepth);
             }
 
             return Task.FromResult(true);

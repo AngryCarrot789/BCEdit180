@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Linq;
 using System.Windows.Input;
@@ -11,7 +12,7 @@ using REghZy.MVVM.Commands;
 using REghZy.MVVM.ViewModels;
 
 namespace BCEdit180.Core.ViewModels {
-    public class MethodListViewModel : BaseViewModel, ISaveable<ClassNode> {
+    public class MethodListViewModel : BaseViewModel, IDisposable, ISaveable<ClassNode> {
         public static IListSelector<MethodInfoViewModel> MethodList { get; set; }
 
         public ObservableCollection<MethodInfoViewModel> RemovedMethods { get; }
@@ -107,6 +108,13 @@ namespace BCEdit180.Core.ViewModels {
                 }
 
                 method.Save(method.Node);
+            }
+        }
+
+        public void Dispose() {
+            this.SearchMethod.Dispose();
+            foreach (MethodInfoViewModel method in this.Methods) {
+                method.Dispose();
             }
         }
     }

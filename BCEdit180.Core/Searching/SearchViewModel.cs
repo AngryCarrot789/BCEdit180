@@ -1,10 +1,12 @@
+using System;
+using System.Diagnostics.SymbolStore;
 using System.Windows.Input;
 using BCEdit180.Core.Commands;
 using REghZy.MVVM.Commands;
 using REghZy.MVVM.ViewModels;
 
 namespace BCEdit180.Core.Searching {
-    public class SearchViewModel : BaseViewModel {
+    public class SearchViewModel : BaseViewModel, IDisposable {
         private string inputText;
         public string InputText {
             get => this.inputText;
@@ -51,6 +53,10 @@ namespace BCEdit180.Core.Searching {
 
         public virtual bool CanSearchForInput() {
             return !string.IsNullOrEmpty(this.InputText);
+        }
+
+        public void Dispose() {
+            this.SearchService.Dispose();
         }
     }
 }

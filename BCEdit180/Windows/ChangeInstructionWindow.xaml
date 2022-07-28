@@ -4,36 +4,38 @@
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
              xmlns:converters="clr-namespace:BCEdit180.Converters"
+             xmlns:ce="clr-namespace:BCEdit180.Core.CodeEditing;assembly=BCEdit180.Core"
              xmlns:instructionEdit="clr-namespace:BCEdit180.Core.CodeEditing.InstructionEdit;assembly=BCEdit180.Core"
              xmlns:windows="clr-namespace:BCEdit180.Windows"
              d:DataContext="{d:DesignInstance Type=instructionEdit:ChangeInstructionViewModel}"
              mc:Ignorable="d"
-             Title="Replace Opcode" Height="350" Width="450"
+             Title="Replace Opcode" Height="400" Width="700"
              Style="{DynamicResource CustomWindowBaseStyle}" Background="{DynamicResource AREghZyBrush.Deep.3.Background.Static}">
     <Grid Margin="10">
+        <Grid.Resources>
+            <converters:OpCodeToDescriptionConverter x:Key="OpcodeToDescription"/>
+        </Grid.Resources>
+        <Grid.ColumnDefinitions>
+            <ColumnDefinition Width="173*"/>
+            <ColumnDefinition Width="10"/>
+            <ColumnDefinition Width="497*"/>
+        </Grid.ColumnDefinitions>
         <TextBlock Text="Select a new instruction" Padding="10" Margin="0,0,0,0" VerticalAlignment="Top"/>
         <ListBox ItemsSource="{Binding AvailableOpCodes}" 
                  SelectedItem="{Binding SelectedOpcode, UpdateSourceTrigger=PropertyChanged}" 
                  SelectedIndex="{Binding SelectedIndex, UpdateSourceTrigger=PropertyChanged}" 
                  FontFamily="Consolas" FontSize="16"
-                 Margin="0,36,0,0" Background="{DynamicResource AREghZyBrush.Deep.2.Background.Static}" 
-                 HorizontalAlignment="Left" Width="170"
+                 Margin="0,36,0,0" Background="{DynamicResource AREghZyBrush.Deep.2.Background.Static}"
                  x:Name="InstructionListBox" />
-        <Grid Margin="175,36,0,34">
-            <Grid.Resources>
-                <converters:OpCodeToDescriptionConverter x:Key="DescriptionConverter"/>
-            </Grid.Resources>
-            <TextBlock Text="{Binding ElementName=InstructionListBox, Path=SelectedItem, Converter={StaticResource DescriptionConverter}, FallbackValue=No description}" Padding="2" FontStyle="Italic" FontSize="14" TextWrapping="Wrap"/>
-        </Grid>
-        <Grid Height="29" VerticalAlignment="Bottom" Margin="175,0,0,0">
-            <Grid.ColumnDefinitions>
-                <ColumnDefinition Width="86*"/>
-                <ColumnDefinition Width="5"/>
-                <ColumnDefinition Width="81*"/>
-            </Grid.ColumnDefinitions>
-            <Button Command="{Binding ConfirmCommand, RelativeSource={RelativeSource FindAncestor, AncestorType={x:Type windows:WindowModal}}}" Focusable="False"  Content="Okay" Background="#FF79D43A"/>
-            <Button Command="{Binding CancelCommand, RelativeSource={RelativeSource FindAncestor, AncestorType={x:Type windows:WindowModal}}}" Focusable="False" Content="Cancel" Grid.Column="2"/>
-
+        <GridSplitter Grid.Column="1" HorizontalAlignment="Stretch" VerticalAlignment="Stretch" Background="Transparent"/>
+        <StackPanel Margin="2,0,0,29" Grid.Column="2" DataContext="{Binding SelectedOpcode, Converter={StaticResource OpcodeToDescription}}" d:DataContext="{d:DesignInstance ce:OpcodeDescriptorViewModel}">
+            <TextBlock Text="{Binding Header, UpdateSourceTrigger=PropertyChanged}" DockPanel.Dock="Top" FontSize="24" FontWeight="Bold" HorizontalAlignment="Center"/>
+            <TextBlock Text="{Binding StackTransition, UpdateSourceTrigger=PropertyChanged}" DockPanel.Dock="Top" FontFamily="Consolas" Margin="0 5" FontSize="14"/>
+            <TextBlock Text="{Binding Description, UpdateSourceTrigger=PropertyChanged}" DockPanel.Dock="Top" FontStyle="Italic" TextWrapping="Wrap"/>
+        </StackPanel>
+        <Grid Height="24" VerticalAlignment="Bottom" Grid.Column="2" HorizontalAlignment="Right" Width="153">
+            <Button Command="{Binding ConfirmCommand, RelativeSource={RelativeSource FindAncestor, AncestorType={x:Type windows:WindowModal}}}" Focusable="False" Content="Okay" HorizontalAlignment="Right" Margin="0,0,79,0" Width="74" Background="#FF79D43A"/>
+            <Button Command="{Binding CancelCommand, RelativeSource={RelativeSource FindAncestor, AncestorType={x:Type windows:WindowModal}}}" Focusable="False" Content="Cancel" HorizontalAlignment="Right" Width="74"/>
         </Grid>
     </Grid>
 </windows:WindowModal>

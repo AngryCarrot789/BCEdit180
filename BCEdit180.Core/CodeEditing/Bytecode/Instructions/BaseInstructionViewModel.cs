@@ -11,7 +11,7 @@ using REghZy.MVVM.ViewModels;
 namespace BCEdit180.Core.CodeEditing.Bytecode.Instructions {
     // non-abstract, so that opcodes can fall back to the base class and get ToString()'d instead of custom layouts
     public abstract class BaseInstructionViewModel : BaseViewModel {
-        public Instruction Instruction { get; protected set; }
+        public Instruction Node { get; protected set; }
 
         public abstract IEnumerable<Opcode> AvailableOpCodes { get; }
 
@@ -100,7 +100,7 @@ namespace BCEdit180.Core.CodeEditing.Bytecode.Instructions {
         }
 
         public virtual void Load(Instruction instruction) {
-            this.Instruction = instruction;
+            this.Node = instruction;
             this.Opcode = instruction.Opcode;
         }
 
@@ -111,7 +111,7 @@ namespace BCEdit180.Core.CodeEditing.Bytecode.Instructions {
         }
 
         public override string ToString() {
-            return this.Instruction.ToString();
+            return this.Node.ToString();
         }
     }
 }

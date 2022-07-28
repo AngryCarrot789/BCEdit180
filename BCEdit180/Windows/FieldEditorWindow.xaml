@@ -9,7 +9,7 @@
              d:DataContext="{d:DesignInstance Type=editors:FieldEditorViewModel}"
              mc:Ignorable="d"
              Title="Edit Field" Height="250" Width="320"
-             Style="{DynamicResource CustomWindowStyle}"
+             Style="{DynamicResource CustomWindowBaseStyle}"
              Background="{DynamicResource AREghZyBrush.Deep.3.Background.Static}">
     <Grid Margin="10">
         <TextBlock TextWrapping="Wrap" TextAlignment="Center" Padding="2 5" Height="42" VerticalAlignment="Top"><Run Text="Fill in the information below, regarding"/><LineBreak/><Run Text="the "/><Run Text="field "/><Run Text="to "/><Run Text="edit"/></TextBlock>

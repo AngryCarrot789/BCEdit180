@@ -1,4 +1,5 @@
-﻿using System.Collections.ObjectModel;
+﻿using System;
+using System.Collections.ObjectModel;
 using System.Windows.Input;
 using BCEdit180.Core.Editors;
 using BCEdit180.Core.Searching;
@@ -9,7 +10,7 @@ using REghZy.MVVM.Commands;
 using REghZy.MVVM.ViewModels;
 
 namespace BCEdit180.Core.ViewModels {
-    public class FieldListViewModel : BaseViewModel, ISaveable<ClassNode> {
+    public class FieldListViewModel : BaseViewModel, IDisposable, ISaveable<ClassNode> {
         public static IListSelector<FieldInfoViewModel> FieldList { get; set; }
 
         public ObservableCollection<FieldInfoViewModel> Fields { get; }
@@ -92,6 +93,10 @@ namespace BCEdit180.Core.ViewModels {
 
                 field.Save(field.Node);
             }
+        }
+
+        public void Dispose() {
+            this.SearchField.Dispose();
         }
     }
 }

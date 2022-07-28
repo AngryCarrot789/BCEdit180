@@ -47,17 +47,45 @@ namespace BCEdit180.Core.ViewModels {
 
         public ObservableCollection<ReferenceObjectViewModel<string>> Interfaces { get; }
 
+        private ReferenceObjectViewModel<string> selectedInterface;
+        public ReferenceObjectViewModel<string> SelectedInterface {
+            get => this.selectedInterface;
+            set => RaisePropertyChanged(ref this.selectedInterface, value);
+        }
+
         public int AttributeCount {
             get => this.attributeCount;
             set => RaisePropertyChanged(ref this.attributeCount, value);
         }
 
         public ICommand EditAccessCommand { get; }
+        public ICommand AddInterfaceCommand { get; }
+        public ICommand RemoveInterfaceCommand { get; }
 
         public ClassInfoViewModel(ClassViewModel classVM) {
             this.Class = classVM;
             this.Interfaces = new ObservableCollection<ReferenceObjectViewModel<string>>();
             this.EditAccessCommand = new RelayCommand(EditAccess);
+            this.AddInterfaceCommand = new RelayCommand(AddInterfaceAction);
+            this.RemoveInterfaceCommand = new RelayCommand(RemoveSelectedInterfaceAction);
+        }
+
+        public void AddInterfaceAction() {
+            if (Dialog.TypeEditor.EditTypeDescriptorDialog(out TypeDescriptor desc, true, false).Result) {
+                if (desc.ClassName != null && desc.ClassName.Name != null) {
+                    this.Interfaces.Add(new ReferenceObjectViewModel<string>(desc.ClassName.Name));
+                }
+            }
+        }
+
+        public void RemoveSelectedInterfaceAction() {
+            if (this.SelectedInterface != null) {
+                this.Interfaces.Remove(this.SelectedInterface);
+            }
+        }
+
+        public void RemoveInterfaceAction() {
+
         }
 
         public void EditAccess() {

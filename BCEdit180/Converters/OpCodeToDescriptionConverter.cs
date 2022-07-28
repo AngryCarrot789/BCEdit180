@@ -9,7 +9,7 @@ namespace BCEdit180.Converters {
     public class OpCodeToDescriptionConverter : IValueConverter {
         public object Convert(object value, Type targetType, object parameter, CultureInfo culture) {
             if (value == null || value == DependencyProperty.UnsetValue || !(value is Opcode)) {
-                return value;
+                return DependencyProperty.UnsetValue;
             }
 
             return InstructionDescriptionRegistry.GetDescription((Opcode) value);

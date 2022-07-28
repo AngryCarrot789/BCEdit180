@@ -5,6 +5,7 @@ using System.Diagnostics;
 using System.IO;
 using System.Reflection;
 using System.Windows;
+using System.Windows.Documents;
 using System.Windows.Input;
 using BCEdit180.Core;
 using BCEdit180.Core.AttributeEditor;
@@ -78,7 +79,7 @@ namespace BCEdit180 {
             ServiceManager.SetService<IAccessEditor>(new WindowsAccessEditor());
             ServiceManager.SetService<IFileDialog>(new WindowsFileDialogs());
             ServiceManager.SetService<IApplicationProxy>(new WpfApplicationProxy());
-            ServiceManager.SetService<IModalManager>(new WPFModalManager());
+            ServiceManager.SetService<IModalManager>(new WindowsModalManager());
             ServiceManager.SetService<ICommandManager>(new WPFCommandManager());
             BytecodeEditorViewModel.BytecodeList = new BytecodeListImpl(this);
             MethodListViewModel.MethodList = new MethodListImpl(this);
@@ -167,9 +168,8 @@ namespace BCEdit180 {
         }
 
         private void MenuItem_Click(object sender, RoutedEventArgs e) {
-            ClassViewModel vm = (ClassViewModel) this.DataContext;
-
-            if (File.Exists(vm.FilePath)) {
+            ClassViewModel vm = ((ClassListViewModel) this.DataContext).SelectedClass;
+            if (vm != null && File.Exists(vm.FilePath)) {
                 string folder = Path.GetDirectoryName(vm.FilePath);
                 if (folder == null) {
                     return;
@@ -187,22 +187,8 @@ namespace BCEdit180 {
                     return;
                 }
 
-                string targetFile = null;
-                foreach (string path in files) {
-                    if (path.EndsWith(".class")) {
-                        if (File.Exists(path)) {
-                            targetFile = path;
-                            break;
-                        }
-                    }
-                }
-
-                if (targetFile != null) {
-                    ((ClassViewModel) this.DataContext).ReadClassFileAndShowDialog(targetFile);
-                }
-                else {
-                    e.Handled = true;
-                }
+                ((ClassListViewModel) this.DataContext).OpenAndReadClassFiles(files);
+                e.Handled = true;
             }
         }
 
@@ -386,9 +372,9 @@ namespace BCEdit180 {
                 this.FindBox.Focus();
                 this.FindBox.SelectAll();
             }
-            else if (Keyboard.IsKeyDown(Key.S) && (Keyboard.Modifiers & ModifierKeys.Control) != 0) {
-                ((ClassViewModel) this.DataContext).SaveClassFile();
-            }
+            // else if (Keyboard.IsKeyDown(Key.S) && (Keyboard.Modifiers & ModifierKeys.Control) != 0) {
+            //     ((ClassListViewModel) this.DataContext).SelectedClass?.SaveClassFile();
+            // }
         }
     }
 }

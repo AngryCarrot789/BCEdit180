@@ -14,10 +14,12 @@ using REghZy.MVVM.Commands;
 using REghZy.MVVM.ViewModels;
 
 namespace BCEdit180.Core.CodeEditing {
-    public class BytecodeEditorViewModel : BaseViewModel {
+    public class BytecodeEditorViewModel : BaseViewModel, IDisposable {
         public static IListSelector<BaseInstructionViewModel> BytecodeList { get; set; }
 
         public ExtendedObservableCollection<BaseInstructionViewModel> Instructions { get; }
+
+        public ExtendedObservableCollection<BaseInstructionViewModel> RemovedInstructions { get; }
 
         private int selectedInstructionIndex;
         public int SelectedInstructionIndex {
@@ -43,12 +45,15 @@ namespace BCEdit180.Core.CodeEditing {
         public BytecodeEditorViewModel(CodeEditorViewModel codeEditor) {
             this.CodeEditor = codeEditor;
             this.Instructions = new ExtendedObservableCollection<BaseInstructionViewModel>();
+            this.RemovedInstructions = new ExtendedObservableCollection<BaseInstructionViewModel>();
             this.DeleteSelectedInstructionsCommand = new RelayCommand(DeleteSelectedInstructions);
             this.SearchInstruction = new SearchInstructionViewModel(this);
         }
 
         public void DeleteSelectedInstructions() {
-            this.Instructions.RemoveRange(BytecodeList.SelectedItems);
+            IEnumerable<BaseInstructionViewModel> instructions = BytecodeList.SelectedItems;
+            this.RemovedInstructions.AddRange(instructions);
+            this.Instructions.RemoveRange(instructions);
         }
 
         public BaseInstructionViewModel CreateInstructionForHandle(Instruction instruction) {
@@ -58,28 +63,24 @@ namespace BCEdit180.Core.CodeEditing {
         }
 
         public void Load(MethodNode node) {
+            this.RemovedInstructions.Clear();
             this.Instructions.Clear();
             this.Instructions.AddRange(node.Instructions.Select(CreateInstructionForHandle));
             // List<BaseInstructionViewModel> instructions = new List<BaseInstructionViewModel>(node.Instructions.Count);
             // for (Instruction instruction = node.Instructions.First; instruction != null; instruction = instruction.Next) {
             //     instructions.Add(CreateInstructionForHandle(instruction));
             // }
-
-        }
-
-        private void DoLoadInstructions(MethodNode node) {
-
         }
 
         public void Save(MethodNode node) {
-            foreach (BaseInstructionViewModel instruction in this.Instructions) {
-                instruction.Save(instruction.Instruction);
+            foreach (BaseInstructionViewModel instruction in this.RemovedInstructions) {
+                node.Instructions.Remove(instruction.Node);
             }
-        }
 
-        public static bool MatchInstruction(BaseInstructionViewModel instruction, string search) {
-            string tostr = instruction.Instruction.ToString();
-            return tostr.ToLower().Contains(search.ToLower());
+            this.RemovedInstructions.Clear();
+            foreach (BaseInstructionViewModel instruction in this.Instructions) {
+                instruction.Save(instruction.Node);
+            }
         }
 
         public static Type GetInstructionTypeForOpCode(Opcode opcode) {
@@ -296,6 +297,10 @@ namespace BCEdit180.Core.CodeEditing {
                     return typeof(JumpInstruction);
                 default: throw new ArgumentException(nameof(opcode), "Unsupported opcode: " + opcode);
             }
+        }
+
+        public void Dispose() {
+            this.SearchInstruction.Dispose();
         }
     }
 }

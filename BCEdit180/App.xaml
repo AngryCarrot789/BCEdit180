@@ -16,7 +16,8 @@
             </ResourceDictionary.MergedDictionaries>
 
             <converters:EnumToStringConverter x:Key="EnumToString"/>
-            <converters:FQCNToSimpleNameConverter x:Key="FQCNConverter"/>
+            <converters:FQCNToWindowTitleConverter x:Key="FQCNTitleConverter"/>
+            <converters:FilePathToWindowTitleConverter x:Key="FilePathTitleConverter"/>
             <converters:TypeDescriptorToStringConverter x:Key="TypeConverter"/>
             <converters:EnumBooleanConverter x:Key="EnumConverter" />
 
@@ -60,6 +61,48 @@
                                 </Border>
                                 <ContentPresenter Grid.ColumnSpan="2" Grid.Column="1" Margin="0,3,0,0" Grid.Row="2" x:Name="Contents" SnapsToDevicePixels="{TemplateBinding SnapsToDevicePixels}" />
                             </Grid>
+                        </ControlTemplate>
+                    </Setter.Value>
+                </Setter>
+            </Style>
+
+            <Style TargetType="{x:Type ListBox}" x:Key="HorizontalListbox">
+                <Setter Property="Background" Value="{DynamicResource GroupBox.Static.Background}" />
+                <Setter Property="BorderBrush" Value="{DynamicResource GroupBox.Static.Border}" />
+                <Setter Property="Foreground" Value="{DynamicResource AREghZyBrush.Foreground.Static}" />
+                <Setter Property="BorderThickness" Value="1"/>
+                <Setter Property="ScrollViewer.HorizontalScrollBarVisibility" Value="Auto"/>
+                <Setter Property="ScrollViewer.VerticalScrollBarVisibility" Value="Disabled"/>
+                <Setter Property="ScrollViewer.CanContentScroll" Value="False"/>
+                <Setter Property="ScrollViewer.PanningMode" Value="HorizontalFirst"/>
+                <Setter Property="Stylus.IsFlicksEnabled" Value="False"/>
+                <Setter Property="VerticalContentAlignment" Value="Stretch"/>
+                <Setter Property="Template">
+                    <Setter.Value>
+                        <ControlTemplate TargetType="{x:Type ListBox}">
+                            <Border x:Name="Bd" 
+                                    BorderBrush="{TemplateBinding BorderBrush}" 
+                                    BorderThickness="{TemplateBinding BorderThickness}" 
+                                    Background="{TemplateBinding Background}" 
+                                    Padding="1" 
+                                    SnapsToDevicePixels="True">
+                                <ScrollViewer Focusable="false" Padding="{TemplateBinding Padding}" Style="{DynamicResource HorizontalScroller}">
+                                    <ItemsPresenter SnapsToDevicePixels="{TemplateBinding SnapsToDevicePixels}"/>
+                                </ScrollViewer>
+                            </Border>
+                            <ControlTemplate.Triggers>
+                                <Trigger Property="IsEnabled" Value="false">
+                                    <Setter Property="Background" TargetName="Bd" Value="{DynamicResource ListBox.Disabled.Background}" />
+                                    <Setter Property="BorderBrush" TargetName="Bd" Value="{DynamicResource ListBox.Disabled.Border}" />
+                                </Trigger>
+                                <MultiTrigger>
+                                    <MultiTrigger.Conditions>
+                                        <Condition Property="IsGrouping" Value="true" />
+                                        <Condition Property="VirtualizingPanel.IsVirtualizingWhenGrouping" Value="false" />
+                                    </MultiTrigger.Conditions>
+                                    <Setter Property="ScrollViewer.CanContentScroll" Value="false" />
+                                </MultiTrigger>
+                            </ControlTemplate.Triggers>
                         </ControlTemplate>
                     </Setter.Value>
                 </Setter>

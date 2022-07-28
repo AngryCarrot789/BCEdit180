@@ -7,7 +7,7 @@ namespace BCEdit180.Converters {
     public class FilePathToWindowTitleConverter : IValueConverter {
         public object Convert(object value, Type targetType, object parameter, CultureInfo culture) {
             if (value == null || value == DependencyProperty.UnsetValue) {
-                return value;
+                return DependencyProperty.UnsetValue;
             }
 
             if (value is string fullName) {

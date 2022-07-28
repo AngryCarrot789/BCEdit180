@@ -5,6 +5,7 @@ using System.Threading.Tasks;
 using System.Windows.Input;
 using BCEdit180.Core.AttributeEditor;
 using BCEdit180.Core.Commands;
+using BCEdit180.Core.ErrorReporting;
 using BCEdit180.Core.Messaging;
 using BCEdit180.Core.Messaging.Messages;
 using BCEdit180.Core.Utils;
@@ -20,7 +21,9 @@ namespace BCEdit180.Core.ViewModels {
     /// <summary>
     /// A view model for a class file (.class). This manages the view models for fields, methods, attributes, etc
     /// </summary>
-    public class ClassViewModel : BaseViewModel, ISaveable<ClassNode>, IMessageReceiver<BusyStateMessage> {
+    public class ClassViewModel : BaseViewModel, IDisposable, ISaveable<ClassNode>, IMessageReceiver<BusyStateMessage> {
+        public ClassListViewModel ClassList { get; set; }
+
         /// <summary>
         /// The class node handle that this class will load and save into
         /// <para>
@@ -54,8 +57,15 @@ namespace BCEdit180.Core.ViewModels {
         /// </summary>
         public ClassAttributeEditorViewModel ClassAttributes { get; }
 
-        private string filePath;
+        public ErrorReporterViewModel ErrorReporter { get; }
 
+        public ExtendedRelayCommand ReloadFileCommand { get; }
+
+        public ExtendedRelayCommand SaveFileCommand { get; }
+
+        public ExtendedRelayCommand SaveFileAsCommand { get; }
+
+        private string filePath;
         public string FilePath {
             get => this.filePath;
             set => RaisePropertyChanged(ref this.filePath, value);
@@ -66,88 +76,27 @@ namespace BCEdit180.Core.ViewModels {
             get => this.isBusy;
             set {
                 RaisePropertyChanged(ref this.isBusy, value);
-                this.OpenFileCommand.RaiseCanExecuteChanged();
                 this.ReloadFileCommand.RaiseCanExecuteChanged();
                 this.SaveFileCommand.RaiseCanExecuteChanged();
                 this.SaveFileAsCommand.RaiseCanExecuteChanged();
             }
         }
 
-
-        public ExtendedRelayCommand OpenFileCommand { get; }
-
-        public ExtendedRelayCommand ReloadFileCommand { get; }
-
-        public ExtendedRelayCommand SaveFileCommand { get; }
-
-        public ExtendedRelayCommand SaveFileAsCommand { get; }
-
-        public ICommand ExitCommand { get; }
-
-        private static ClassNode CreateBlankClass() {
-            ClassNode node = new ClassNode() {
-                Name = new ClassName("BlankClass"),
-                Access = ClassAccessModifiers.Public | ClassAccessModifiers.Super,
-                MajorVersion = ClassVersion.Java8,
-                SuperName = new ClassName("java/lang/Object")
-            };
-
-            node.Methods.Add(new MethodNode() {
-                Owner = node,
-                Access = MethodAccessModifiers.Public,
-                Name = "<init>",
-                Descriptor = new MethodDescriptor(new TypeDescriptor(PrimitiveType.Void, 0), new List<TypeDescriptor>()),
-                MaxLocals = 1,
-                Instructions = new InstructionList() {
-                    new VariableInstruction(Opcode.ALOAD) { VariableIndex = 0 },
-                    new MethodInstruction(Opcode.INVOKESPECIAL) {
-                        Owner = new ClassName("java/lang/Object"),
-                        Descriptor = new MethodDescriptor(new TypeDescriptor(PrimitiveType.Void, 0), new List<TypeDescriptor>()),
-                        Name = "<init>"
-                    },
-
-                    new VariableInstruction(Opcode.ALOAD) { VariableIndex = 0 },
-                    new MethodInstruction(Opcode.INVOKEVIRTUAL) {
-                        Owner = node.Name,
-                        Descriptor = new MethodDescriptor(new TypeDescriptor(PrimitiveType.Void, 0), new List<TypeDescriptor>()),
-                        Name = "blankMethod"
-                    },
-
-                    new SimpleInstruction(Opcode.RETURN)
-                }
-            });
-
-            node.Methods.Add(new MethodNode() {
-                Owner = node,
-                Access = MethodAccessModifiers.Public,
-                Name = "blankMethod",
-                Descriptor = new MethodDescriptor(new TypeDescriptor(PrimitiveType.Void, 0), new List<TypeDescriptor>()),
-                MaxLocals = 1,
-                Instructions = new InstructionList() {
-                    new SimpleInstruction(Opcode.RETURN)
-                }
-            });
-
-            node.Fields.Add(new FieldNode() {
-                Owner = node,
-                Name = "blankField",
-                Access = FieldAccessModifiers.Public,
-                Descriptor = new TypeDescriptor(PrimitiveType.Integer, 0),
-                ConstantValue = 420
-            });
-
-            return node;
+        private bool wasOpenedByOuterClass;
+        public bool WasOpenedByOuterClass {
+            get => this.wasOpenedByOuterClass;
+            set => RaisePropertyChanged(ref this.wasOpenedByOuterClass, value);
         }
+
+        public ICommand RemoveSelfCommand { get; }
 
         public ClassViewModel() : this(CreateBlankClass()) {
 
         }
 
         public ClassViewModel(ClassNode node) {
-            MessageManager.RegisterHandler<BusyStateMessage>(this);
+            MessageDispatcher.RegisterHandler<BusyStateMessage>(this);
             this.Node = node;
-            this.ExitCommand = new RelayCommand(() => Environment.Exit(0));
-            this.OpenFileCommand = new ExtendedRelayCommand(OpenFile, () => !this.IsBusy );
             this.ReloadFileCommand = new ExtendedRelayCommand(ReloadFile, () => !this.IsBusy );
             this.SaveFileCommand = new ExtendedRelayCommand(SaveClassFile, () => !this.IsBusy );
             this.SaveFileAsCommand = new ExtendedRelayCommand(SaveClassFileAs, () => !this.IsBusy );
@@ -156,7 +105,19 @@ namespace BCEdit180.Core.ViewModels {
             this.FieldList = new FieldListViewModel(this);
             this.SourceCode = new SourceCodeViewModel(this);
             this.ClassAttributes = new ClassAttributeEditorViewModel(this);
+            this.ErrorReporter = new ErrorReporterViewModel(this);
+            this.RemoveSelfCommand = new ExtendedRelayCommand(() => this.ClassList?.RemoveClass(this), () => this.ClassList != null);
+            ServiceManager.SetService(this.ErrorReporter);
             Load(node);
+        }
+
+        public void Dispose() {
+            MessageDispatcher.UnregisterHandler<BusyStateMessage>(this);
+            // this.ClassAttributes.Dispose();
+            // this.ClassInfo.Dispose();
+            this.MethodList.Dispose();
+            this.FieldList.Dispose();
+            this.ErrorReporter.Dispose();
         }
 
         /// <summary>
@@ -171,28 +132,32 @@ namespace BCEdit180.Core.ViewModels {
             }
         }
 
-        public void ReadClassFile(string path, bool showProgressDialog = true) {
+        public void ReadClassFile(string path, bool showProgressDialog = true, ActionProgressViewModel actionProgress = null, bool closeDialog = true) {
             // my attempt at a semi-async class parser
             try {
                 this.IsBusy = true;
                 if (showProgressDialog) {
-                    ActionProgressViewModel vm = Dialog.Message.ShowProgressWindow("Loading class file", "Reading file " + path);
+                    ActionProgressViewModel vm = actionProgress ?? Dialog.Message.ShowProgressWindow("Loading class file", "Reading file " + path);
                     Task.Run(async () => {
                         await Task.Delay(100);
                         AppProxy.Proxy.InvokeSync(() => {
-                            using (BufferedStream input = new BufferedStream(File.OpenRead(path), 8192)) {
-                                this.Node = ClassFile.ParseClass(input);
-                            }
+                            if (File.Exists(path)) {
+                                using (BufferedStream input = new BufferedStream(File.OpenRead(path), 8192)) {
+                                    this.Node = ClassFile.ParseClass(input);
+                                }
 
-                            vm.Description = "Parsing classfile... ";
-                            Task.Run(async () => {
-                                await Task.Delay(100);
-                                AppProxy.Proxy.InvokeSync(() => {
-                                    this.FilePath = path;
-                                    Load(this.Node);
-                                    vm.CloseDialog();
+                                vm.Description = "Parsing classfile... ";
+                                Task.Run(async () => {
+                                    await Task.Delay(100);
+                                    AppProxy.Proxy.InvokeSync(() => {
+                                        this.FilePath = path;
+                                        Load(this.Node);
+                                        if (closeDialog) {
+                                            vm.CloseDialog();
+                                        }
+                                    });
                                 });
-                            });
+                            }
                         });
                     });
                 }
@@ -226,17 +191,6 @@ namespace BCEdit180.Core.ViewModels {
             this.ClassAttributes.Save(node);
             this.MethodList.Save(node);
             this.FieldList.Save(node);
-        }
-
-        public void OpenFile() {
-            if (Dialog.File.OpenFileDialog("Select a class file to open", "ClassFile|*.class|All|*.*", out string path).Result) {
-                if (File.Exists(path)) {
-                    ReadClassFileAndShowDialog(path);
-                }
-                else {
-                    Dialog.Message.ShowWarningDialog("No such file", "File does not exist: " + path);
-                }
-            }
         }
 
         public void SaveClassFile() {
@@ -334,6 +288,64 @@ namespace BCEdit180.Core.ViewModels {
 
         public void HandleMessage(BusyStateMessage message) {
             this.IsBusy = message.IsBusy;
+        }
+
+        private static ClassNode CreateBlankClass() {
+            ClassNode node = new ClassNode() {
+                Name = new ClassName("BlankClass"),
+                Access = ClassAccessModifiers.Public | ClassAccessModifiers.Super,
+                MajorVersion = ClassVersion.Java8,
+                SuperName = new ClassName("java/lang/Object")
+            };
+
+            node.Interfaces.Add(new ClassName("my/interface/called/MyInterface"));
+            node.Interfaces.Add(new ClassName("java/lang/Cloneable"));
+
+            node.Methods.Add(new MethodNode() {
+                Owner = node,
+                Access = MethodAccessModifiers.Public,
+                Name = "<init>",
+                Descriptor = new MethodDescriptor(new TypeDescriptor(PrimitiveType.Void, 0), new List<TypeDescriptor>()),
+                MaxLocals = 1,
+                Instructions = new InstructionList() {
+                    new VariableInstruction(Opcode.ALOAD) { VariableIndex = 0 },
+                    new MethodInstruction(Opcode.INVOKESPECIAL) {
+                        Owner = new ClassName("java/lang/Object"),
+                        Descriptor = new MethodDescriptor(new TypeDescriptor(PrimitiveType.Void, 0), new List<TypeDescriptor>()),
+                        Name = "<init>"
+                    },
+
+                    new VariableInstruction(Opcode.ALOAD) { VariableIndex = 0 },
+                    new MethodInstruction(Opcode.INVOKEVIRTUAL) {
+                        Owner = node.Name,
+                        Descriptor = new MethodDescriptor(new TypeDescriptor(PrimitiveType.Void, 0), new List<TypeDescriptor>()),
+                        Name = "blankMethod"
+                    },
+
+                    new SimpleInstruction(Opcode.RETURN)
+                }
+            });
+
+            node.Methods.Add(new MethodNode() {
+                Owner = node,
+                Access = MethodAccessModifiers.Public,
+                Name = "blankMethod",
+                Descriptor = new MethodDescriptor(new TypeDescriptor(PrimitiveType.Void, 0), new List<TypeDescriptor>()),
+                MaxLocals = 1,
+                Instructions = new InstructionList() {
+                    new SimpleInstruction(Opcode.RETURN)
+                }
+            });
+
+            node.Fields.Add(new FieldNode() {
+                Owner = node,
+                Name = "blankField",
+                Access = FieldAccessModifiers.Public,
+                Descriptor = new TypeDescriptor(PrimitiveType.Integer, 0),
+                ConstantValue = 420
+            });
+
+            return node;
         }
     }
 }

@@ -108,11 +108,14 @@
     <Compile Include="CodeEditing\ListControls\InstructionControls.cs" />
     <Compile Include="Converters\AnnontationEntryPrimitiveValueConverter.cs" />
     <Compile Include="Converters\BindLeftBorderToTabConverter.cs" />
-    <Compile Include="Converters\FQCNToSimpleNameConverter.cs" />
+    <Compile Include="Converters\ErrorColourConverter.cs" />
+    <Compile Include="Converters\FilePathToWindowTitleConverter.cs" />
+    <Compile Include="Converters\FQCNToWindowTitleConverter.cs" />
+    <Compile Include="Converters\ItemNullToEnabledConverter.cs" />
     <Compile Include="Converters\PrimitiveConverter.cs" />
     <Compile Include="Dialogs\WindowsAccessEditor.cs" />
     <Compile Include="Dialogs\WindowsFileDialogs.cs" />
-    <Compile Include="Dialogs\WPFModalManager.cs" />
+    <Compile Include="Dialogs\WindowsModalManager.cs" />
     <Compile Include="LineNumbers\LineNumberAdorder.cs" />
     <Compile Include="Windows\ChangeInstructionWindow.xaml.cs">
       <DependentUpon>ChangeInstructionWindow.xaml</DependentUpon>

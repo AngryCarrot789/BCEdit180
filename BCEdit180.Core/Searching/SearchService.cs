@@ -5,7 +5,7 @@ using System.Threading.Tasks;
 using BCEdit180.Core.Window;
 
 namespace BCEdit180.Core.Searching {
-    public class SearchService {
+    public class SearchService : IDisposable {
         public delegate void BeginSearchEvent();
 
         public event BeginSearchEvent SearchReady;
@@ -13,6 +13,8 @@ namespace BCEdit180.Core.Searching {
         private DateTime lastBump;
 
         private volatile bool canFireEvent;
+
+        private volatile bool stopTask;
 
         public TimeSpan MinimumTimeSinceBump { get; set; }
 
@@ -32,6 +34,10 @@ namespace BCEdit180.Core.Searching {
         private void Start() {
             Task.Run(async () => {
                 while (true) {
+                    if (this.stopTask) {
+                        return;
+                    }
+
                     // Debug.WriteLine($"Now: {DateTime.Now.ToString("HH:mm:ss.ffff")} -> LastBump: {this.lastBump.ToString("HH:mm:ss.ffff")}");
                     if ((DateTime.Now - this.lastBump) > this.MinimumTimeSinceBump) {
                         if (this.canFireEvent) {
@@ -73,6 +79,10 @@ namespace BCEdit180.Core.Searching {
             this.canFireEvent = false;
             this.lastBump = DateTime.Now;
             FireSearchReadyEvent();
+        }
+
+        public void Dispose() {
+            this.stopTask = true;
         }
     }
 }

@@ -57,7 +57,7 @@ namespace BCEdit180.Core.Searching {
         }
 
         public static bool MatchInstruction(BaseInstructionViewModel instruction, string search) {
-            string tostr = instruction.Instruction.ToString();
+            string tostr = instruction.Node.ToString();
             return tostr.ToLower().Contains(search.ToLower());
         }
     }

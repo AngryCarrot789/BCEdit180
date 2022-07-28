@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using System.Windows.Input;
@@ -12,7 +13,7 @@ using REghZy.MVVM.Commands;
 using REghZy.MVVM.ViewModels;
 
 namespace BCEdit180.Core.ViewModels {
-    public class MethodInfoViewModel : BaseViewModel, ISaveable<MethodNode> {
+    public class MethodInfoViewModel : BaseViewModel, IDisposable, ISaveable<MethodNode> {
         private MethodAccessModifiers access;
         public MethodAccessModifiers Access {
             get => this.access;
@@ -173,6 +174,10 @@ namespace BCEdit180.Core.ViewModels {
             node.Throws = this.Throws;
             node.AnnotationDefaultValue = this.AnnotationDefaultValue;
             this.CodeEditor.Save(node);
+        }
+
+        public void Dispose() {
+            this.CodeEditor.Dispose();
         }
     }
 }

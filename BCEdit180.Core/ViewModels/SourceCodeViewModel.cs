@@ -34,12 +34,12 @@ namespace BCEdit180.Core.ViewModels {
 
         public void GenerateCode() {
             this.IsGenerating = true;
-            MessageManager.Publish(new BusyStateMessage(true));
+            MessageDispatcher.Publish(new BusyStateMessage(true));
             Task.Run(async () => {
                 string code = await GenerateCodeAsync();
                 this.IsGenerating = false;
                 this.Text = code;
-                MessageManager.PublishUI(new BusyStateMessage(false));
+                MessageDispatcher.PublishUI(new BusyStateMessage(false));
             });
         }
 

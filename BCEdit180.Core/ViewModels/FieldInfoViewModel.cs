@@ -1,8 +1,12 @@
 ﻿using System.Collections.Generic;
+using System.Data;
 using System.Linq;
 using System.Threading.Tasks;
 using System.Windows.Input;
 using BCEdit180.Core.Annotations;
+using BCEdit180.Core.Editors.Const;
+using BCEdit180.Core.Messaging;
+using BCEdit180.Core.Messaging.Messages.ErrorReporting;
 using BCEdit180.Core.Utils;
 using BCEdit180.Core.Window;
 using JavaAsm;
@@ -27,7 +31,10 @@ namespace BCEdit180.Core.ViewModels {
         private TypeDescriptor descriptor;
         public TypeDescriptor Descriptor {
             get => this.descriptor;
-            set => RaisePropertyChanged(ref this.descriptor, value);
+            set {
+                RaisePropertyChanged(ref this.descriptor, value);
+                MessageDispatcher.Publish(new CheckField(this));
+            }
         }
 
         private List<AttributeNode> attributes;
@@ -51,7 +58,10 @@ namespace BCEdit180.Core.ViewModels {
         private object constantValue;
         public object ConstantValue {
             get => this.constantValue;
-            set => RaisePropertyChanged(ref this.constantValue, value);
+            set {
+                RaisePropertyChanged(ref this.constantValue, value);
+                MessageDispatcher.Publish(new CheckField(this));
+            }
         }
 
         private bool isCreatedRuntime;
@@ -68,6 +78,10 @@ namespace BCEdit180.Core.ViewModels {
 
         public ICommand EditAccessCommand { get; }
 
+        public ICommand EditConstValueCommand { get; }
+
+        public ICommand SetConstValueNullCommand { get; }
+
         public FieldNode Node { get; private set; }
 
         public FieldListViewModel FieldList { get; }
@@ -75,22 +89,37 @@ namespace BCEdit180.Core.ViewModels {
         public FieldInfoViewModel(FieldListViewModel list, FieldNode node) {
             this.FieldList = list;
             this.Node = node;
-            this.EditAccessCommand = new RelayCommand(EditAccess);
-            this.EditDescriptorCommand = new RelayCommand(EditDescriptor);
+            this.EditAccessCommand = new RelayCommand(EditAccessAction);
+            this.EditDescriptorCommand = new RelayCommand(EditDescriptorAction);
             this.VisibleAnnotationEditor = new AnnotationEditorViewModel();
             this.InvisibleAnnotationEditor = new AnnotationEditorViewModel();
+            this.EditConstValueCommand = new RelayCommand(EditConstValueAction);
+            this.SetConstValueNullCommand = new RelayCommand(() => this.ConstantValue = null);
             Load(node);
         }
 
-        public void EditAccess() {
+        public void EditAccessAction() {
             if (Dialog.AccessEditor.EditFieldAccess(this.Access, out FieldAccessModifiers access).Result) {
                 this.Access = access;
             }
         }
 
-        public void EditDescriptor() {
+        public void EditDescriptorAction() {
             if (Dialog.TypeEditor.EditTypeDescriptorDialog(this.Descriptor, out TypeDescriptor descriptor).Result) {
                 this.Descriptor = descriptor;
+            }
+        }
+
+        public void EditConstValueAction() {
+            ConstValueEditorViewModel vm = new ConstValueEditorViewModel(this.ConstantValue);
+            vm.IsEnabledMethodDescriptor = false;
+            vm.IsEnabledHandle = false;
+            vm.IsEnabledClass = false;
+
+            if (Dialog.TypeEditor.EditConstantDialog(vm, out ConstValueEditorViewModel editor).Result) {
+                if (editor.CheckEnabledStatesWithDialog()) {
+                    this.ConstantValue = editor.GetValue();
+                }
             }
         }
 
