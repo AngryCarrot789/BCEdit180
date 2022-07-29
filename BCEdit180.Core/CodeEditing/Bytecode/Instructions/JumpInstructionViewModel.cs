@@ -21,6 +21,13 @@ namespace BCEdit180.Core.CodeEditing.Bytecode.Instructions {
 
         public LabelViewModel JumpDestination { get; set; }
 
+        private int originalJumpOffset;
+        private int jumpOffset;
+        public int JumpOffset {
+            get => this.jumpOffset;
+            set => RaisePropertyChanged(ref this.jumpOffset, value);
+        }
+
         public JumpInstructionViewModel() {
             this.SelectJumpDestinationCommand = new RelayCommand(SelectJumpDestinationAction);
         }
@@ -34,14 +41,20 @@ namespace BCEdit180.Core.CodeEditing.Bytecode.Instructions {
 
         public override void Load(Instruction instruction) {
             base.Load(instruction);
-            JumpInstruction insn = (JumpInstruction) instruction;
-            this.Target = insn.Target.Index;
+            JumpInstruction jump = (JumpInstruction) instruction;
+            this.Target = jump.Target.Index;
+            this.JumpOffset = jump.JumpOffset;
+            this.originalJumpOffset = jump.JumpOffset;
         }
 
         public override void Save(Instruction instruction) {
             base.Save(instruction);
-            JumpInstruction insn = (JumpInstruction) instruction;
-            // insn.Target = new Label();
+            JumpInstruction jump = (JumpInstruction) instruction;
+            // jump.Target = new Label();
+            if (this.originalJumpOffset != this.JumpOffset) {
+                jump.JumpOffset = this.JumpOffset;
+                jump.UseOverrideOffset = true;
+            }
         }
     }
 }

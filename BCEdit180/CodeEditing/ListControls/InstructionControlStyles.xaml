@@ -114,6 +114,7 @@
                             </Hyperlink>
                         </TextBlock>
                         <TextBlock Foreground="{StaticResource Keyword}" Text="{Binding Target, UpdateSourceTrigger=PropertyChanged}" Visibility="{Binding JumpDestination, Converter={StaticResource NullToCollapsedConverter}, ConverterParameter=Invert}"/>
+                        <TextBlock Foreground="{StaticResource ConstNumeric}" Text="{Binding JumpOffset, UpdateSourceTrigger=PropertyChanged, StringFormat='{}(+{0})'}" Margin="3 0 0 0" Padding="1" ToolTip="The actual offset between this instruction and the target location"/>
                     </StackPanel>
                 </ControlTemplate>
             </Setter.Value>
