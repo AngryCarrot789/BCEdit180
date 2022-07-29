@@ -1,4 +1,3 @@
-using System.Security.Policy;
 using System.Threading.Tasks;
 using BCEdit180.Core.Editors;
 using BCEdit180.Core.Window;

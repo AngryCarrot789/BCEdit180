@@ -1,8 +1,6 @@
 using System;
 using System.Collections.Generic;
-using System.Reflection;
 using BCEdit180.Core.Utils;
-using BCEdit180.Core.ViewModels;
 
 namespace BCEdit180.Core.Messaging {
     public static class MessageDispatcher {

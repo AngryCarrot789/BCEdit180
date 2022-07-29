@@ -2,8 +2,8 @@
     /// <summary>
     /// Interaction logic for JumpTargetSelectorWindow.xaml
     /// </summary>
-    public partial class JumpTargetSelectorWindow : WindowModal {
-        public JumpTargetSelectorWindow() {
+    public partial class LabelSelectorWindow : WindowModal {
+        public LabelSelectorWindow() {
             InitializeComponent();
         }
     }

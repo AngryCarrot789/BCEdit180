@@ -1,6 +1,8 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Windows.Input;
+using BCEdit180.Core.CodeEditing.Bytecode;
 using BCEdit180.Core.CodeEditing.Bytecode.Instructions;
 using BCEdit180.Core.Collections;
 using BCEdit180.Core.Searching;
@@ -44,6 +46,19 @@ namespace BCEdit180.Core.CodeEditing {
 
         public CodeEditorViewModel CodeEditor { get; }
 
+        private static bool ShowAlterJumpDialog = true;
+
+        private static readonly IEnumerable<Opcode> ALL_OPCODES;
+
+        static BytecodeEditorViewModel() {
+            List<Opcode> opcodes = new List<Opcode>(256);
+            foreach (object opcode in Enum.GetValues(typeof(Opcode))) {
+                opcodes.Add((Opcode) opcode);
+            }
+
+            ALL_OPCODES = opcodes;
+        }
+
         public BytecodeEditorViewModel(CodeEditorViewModel codeEditor) {
             this.CodeEditor = codeEditor;
             this.Instructions = new ExtendedObservableCollection<BaseInstructionViewModel>();
@@ -59,19 +74,62 @@ namespace BCEdit180.Core.CodeEditing {
             this.InsertInstructionCommand = new RelayCommand(InsertInstructionAction);
         }
 
-        public void InsertCodeSequenceAction() {
+        public void SelectLabel(Label label) {
+            for (int i = 0; i < this.Instructions.Count; i++) {
+                if (this.Instructions[i] is LabelViewModel labelVM && labelVM.Label == label) {
+                    SelectAndScrollToInstruction(i);
+                    return;
+                }
+            }
+        }
+
+        public void SelectAndScrollToInstruction(int index) {
+            this.SelectedInstructionIndex = index;
+            if (this.SelectedInstruction != null) {
+                BytecodeList.ScrollToSelectedItem();
+            }
+        }
+
+        public void SelectAndScrollToInstruction(BaseInstructionViewModel instruction) {
+            this.SelectedInstruction = instruction;
+            if (this.SelectedInstruction == instruction) {
+                BytecodeList.ScrollToSelectedItem();
+            }
+        }
+
+        public void EditBranchTargetAction(JumpInstructionViewModel jump) {
+            if (EditBranchTargetActionWithDialog(out LabelViewModel label)) {
+                jump.JumpDestination = label;
+                this.SelectedInstruction = label;
+                jump.JumpOffset = -1;
+                jump.Target = label.Index;
+            }
+        }
+
+        public bool EditBranchTargetActionWithDialog(out LabelViewModel targetLabel) {
+            bool anyLabels = false;
+            foreach (BaseInstructionViewModel instruction in this.Instructions) {
+                if (instruction is LabelViewModel) {
+                    anyLabels = true;
+                    break;
+                }
+            }
+
+            if (!anyLabels) {
+                Dialog.Message.ShowInformationDialog("No labels", "There are no labels to jump to");
+                targetLabel = null;
+                return false;
+            }
+
+            return Dialog.TypeEditor.SelectLabelDialog(this, out targetLabel).Result;
+        }
+
+        public void OnSelectionChanged() {
 
         }
 
-        private static readonly IEnumerable<Opcode> ALL_OPCODES;
+        public void InsertCodeSequenceAction() {
 
-        static BytecodeEditorViewModel() {
-            List<Opcode> opcodes = new List<Opcode>(256);
-            foreach (object opcode in Enum.GetValues(typeof(Opcode))) {
-                opcodes.Add((Opcode) opcode);
-            }
-
-            ALL_OPCODES = opcodes;
         }
 
         public void InsertInstructionAction() {
@@ -187,8 +245,12 @@ namespace BCEdit180.Core.CodeEditing {
             this.Instructions.RemoveRange(instructions);
         }
 
-        public static BaseInstructionViewModel CreateInstructionForHandle(Instruction instruction) {
+        public BaseInstructionViewModel CreateInstructionForHandle(Instruction instruction) {
             BaseInstructionViewModel vm = BaseInstructionViewModel.ForInstruction(instruction);
+            if (vm is IBytecodeEditorAccess access) {
+                access.BytecodeEditor = this;
+            }
+
             vm.Load(instruction);
             return vm;
         }
@@ -211,7 +273,6 @@ namespace BCEdit180.Core.CodeEditing {
                 if (instruction is JumpInstructionViewModel jump) {
                     if (labelMap.TryGetValue(jump.Target, out LabelViewModel label)) {
                         jump.JumpDestination = label;
-                        jump.BytecodeEditor = this;
                     }
                 }
             }

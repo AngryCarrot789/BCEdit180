@@ -1,4 +1,3 @@
-using System.Threading.Tasks;
 using System.Windows.Input;
 using BCEdit180.Core.Editors.Const;
 using BCEdit180.Core.Window;

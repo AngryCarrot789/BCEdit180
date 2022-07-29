@@ -3,14 +3,8 @@ using BCEdit180.Core.CodeEditing.Bytecode.Instructions;
 using REghZy.MVVM.ViewModels;
 
 namespace BCEdit180.Core.CodeEditing {
-    public class JumpTargetSelectorViewModel : BaseViewModel, IBytecodeEditorAccess {
+    public class LabelSelectorViewModel : BaseViewModel, IBytecodeEditorAccess {
         public BytecodeEditorViewModel BytecodeEditor { get; set; }
-
-        private LabelViewModel target;
-        public LabelViewModel Target {
-            get => this.target;
-            set => RaisePropertyChanged(ref this.target, value);
-        }
 
         private BaseInstructionViewModel selectedInstruction;
         public BaseInstructionViewModel SelectedInstruction {

@@ -1,6 +1,4 @@
 using System.Collections.Generic;
-using System.Collections.ObjectModel;
-using BCEdit180.Core.Utils;
 using JavaAsm.Instructions;
 using JavaAsm.Instructions.Types;
 
@@ -15,6 +13,8 @@ namespace BCEdit180.Core.CodeEditing.Bytecode.Instructions {
             get => this.index;
             set => RaisePropertyChanged(ref this.index, value);
         }
+
+        public Label Label => (Label) base.Node;
 
         public override void Load(Instruction instruction) {
             base.Load(instruction);

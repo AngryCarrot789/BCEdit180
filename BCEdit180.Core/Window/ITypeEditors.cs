@@ -1,6 +1,8 @@
 using System;
 using System.Collections.Generic;
 using System.Threading.Tasks;
+using BCEdit180.Core.CodeEditing;
+using BCEdit180.Core.CodeEditing.Bytecode.Instructions;
 using BCEdit180.Core.Editors;
 using BCEdit180.Core.Editors.Const;
 using JavaAsm;
@@ -35,5 +37,7 @@ namespace BCEdit180.Core.Window {
         Task<bool> EditEnumFlagDialog<TEnum>(out TEnum access) where TEnum : Enum ;
 
         Task<bool> EditEnumFlagDialog<TEnum>(in TEnum template, out TEnum access) where TEnum : Enum ;
+
+        Task<bool> SelectLabelDialog(BytecodeEditorViewModel editor, out LabelViewModel label);
     }
 }

@@ -1,5 +1,4 @@
 using System;
-using System.Diagnostics.SymbolStore;
 using System.Windows.Input;
 using BCEdit180.Core.Commands;
 using REghZy.MVVM.Commands;

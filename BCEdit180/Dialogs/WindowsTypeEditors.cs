@@ -3,6 +3,8 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using System.Windows;
+using BCEdit180.Core.CodeEditing;
+using BCEdit180.Core.CodeEditing.Bytecode.Instructions;
 using BCEdit180.Core.CodeEditing.InstructionEdit;
 using BCEdit180.Core.Editors;
 using BCEdit180.Core.Editors.Const;
@@ -205,6 +207,21 @@ namespace BCEdit180.Dialogs {
             }
             else {
                 access = template;
+                return Task.FromResult(false);
+            }
+        }
+
+        public Task<bool> SelectLabelDialog(BytecodeEditorViewModel editor, out LabelViewModel label) {
+            LabelSelectorWindow window = new LabelSelectorWindow();
+            LabelSelectorViewModel vm = new LabelSelectorViewModel();
+            vm.BytecodeEditor = editor;
+            window.DataContext = vm;
+            if (window.ShowDialog() == true && vm.SelectedInstruction is LabelViewModel selectedLabel) {
+                label = selectedLabel;
+                return Task.FromResult(true);
+            }
+            else {
+                label = null;
                 return Task.FromResult(false);
             }
         }

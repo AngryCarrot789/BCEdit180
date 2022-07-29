@@ -1,6 +1,5 @@
 using System;
 using System.Collections.ObjectModel;
-using System.Diagnostics;
 using BCEdit180.Core.CodeEditing;
 using BCEdit180.Core.CodeEditing.Bytecode.Instructions;
 using BCEdit180.Core.Window;
@@ -36,8 +35,7 @@ namespace BCEdit180.Core.Searching {
 
                 for (int i = start, size = methods.Count; i < size; i++) {
                     if (MatchInstruction(methods[i], search)) {
-                        this.Editor.SelectedInstructionIndex = i;
-                        BytecodeEditorViewModel.BytecodeList.ScrollToSelectedItem();
+                        this.Editor.SelectAndScrollToInstruction(i);
                         return;
                     }
                 }

@@ -1,12 +1,12 @@
-using System;
 using System.Collections.Generic;
 using System.Windows.Input;
+using BCEdit180.Core.Commands;
 using JavaAsm.Instructions;
 using JavaAsm.Instructions.Types;
 using REghZy.MVVM.Commands;
 
 namespace BCEdit180.Core.CodeEditing.Bytecode.Instructions {
-    public class JumpInstructionViewModel : BaseInstructionViewModel {
+    public class JumpInstructionViewModel : BaseInstructionViewModel, IBytecodeEditorAccess {
         public override IEnumerable<Opcode> AvailableOpCodes => new Opcode[] {Opcode.IFEQ, Opcode.IFNE, Opcode.IFLT, Opcode.IFGE, Opcode.IFGT, Opcode.IFLE, Opcode.IF_ICMPEQ, Opcode.IF_ICMPNE, Opcode.IF_ICMPLT, Opcode.IF_ICMPGE, Opcode.IF_ICMPGT, Opcode.IF_ICMPLE, Opcode.IF_ACMPEQ, Opcode.IF_ACMPNE, Opcode.GOTO, Opcode.JSR, Opcode.IFNULL, Opcode.IFNONNULL};
 
         private long target;
@@ -17,7 +17,14 @@ namespace BCEdit180.Core.CodeEditing.Bytecode.Instructions {
 
         public ICommand SelectJumpDestinationCommand { get; }
 
-        public BytecodeEditorViewModel BytecodeEditor { get; set; }
+        private BytecodeEditorViewModel bytecodeEditor;
+        public BytecodeEditorViewModel BytecodeEditor {
+            get => this.bytecodeEditor;
+            set {
+                this.bytecodeEditor = value;
+                this.EditTargetLabelCommand.RaiseCanExecuteChanged();
+            }
+        }
 
         public LabelViewModel JumpDestination { get; set; }
 
@@ -28,8 +35,17 @@ namespace BCEdit180.Core.CodeEditing.Bytecode.Instructions {
             set => RaisePropertyChanged(ref this.jumpOffset, value);
         }
 
+        public ExtendedRelayCommand EditTargetLabelCommand { get; }
+
         public JumpInstructionViewModel() {
             this.SelectJumpDestinationCommand = new RelayCommand(SelectJumpDestinationAction);
+            this.EditTargetLabelCommand = new ExtendedRelayCommand(EditTargetLabelAction, () => this.BytecodeEditor != null);
+        }
+
+        public void EditTargetLabelAction() {
+            if (this.BytecodeEditor != null) {
+                this.BytecodeEditor.EditBranchTargetAction(this);
+            }
         }
 
         public void SelectJumpDestinationAction() {
@@ -50,6 +66,10 @@ namespace BCEdit180.Core.CodeEditing.Bytecode.Instructions {
         public override void Save(Instruction instruction) {
             base.Save(instruction);
             JumpInstruction jump = (JumpInstruction) instruction;
+            if (this.JumpDestination != null && this.JumpDestination.Node != null) {
+                jump.Target = this.JumpDestination.Label;
+            }
+
             // jump.Target = new Label();
             if (this.originalJumpOffset != this.JumpOffset) {
                 jump.JumpOffset = this.JumpOffset;

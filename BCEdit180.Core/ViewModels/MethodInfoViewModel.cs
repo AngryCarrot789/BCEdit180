@@ -1,7 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Threading.Tasks;
 using System.Windows.Input;
 using BCEdit180.Core.Annotations;
 using BCEdit180.Core.CodeEditing;

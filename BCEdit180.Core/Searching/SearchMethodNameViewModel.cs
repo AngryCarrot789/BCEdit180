@@ -1,6 +1,5 @@
 using System;
 using System.Collections.ObjectModel;
-using System.Diagnostics;
 using BCEdit180.Core.ViewModels;
 using BCEdit180.Core.Window;
 

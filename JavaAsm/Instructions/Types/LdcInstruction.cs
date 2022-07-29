@@ -1,5 +1,4 @@
-﻿using System;
-using JavaAsm.Helpers;
+﻿using JavaAsm.Helpers;
 
 namespace JavaAsm.Instructions.Types {
     public class LdcInstruction : Instruction {
