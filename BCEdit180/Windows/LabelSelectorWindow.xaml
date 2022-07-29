@@ -1,0 +1,157 @@
+﻿<windows:WindowModal x:Class="BCEdit180.Windows.JumpTargetSelectorWindow"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+             xmlns:converters="clr-namespace:BCEdit180.Converters"
+             xmlns:controls="clr-namespace:BCEdit180.Controls"
+             xmlns:editors="clr-namespace:BCEdit180.Core.Editors;assembly=BCEdit180.Core"
+             xmlns:windows="clr-namespace:BCEdit180.Windows" 
+             xmlns:listControls="clr-namespace:BCEdit180.CodeEditing.ListControls"
+             xmlns:instructions="clr-namespace:BCEdit180.Core.CodeEditing.Bytecode.Instructions;assembly=BCEdit180.Core"
+             xmlns:exceptionTable="clr-namespace:BCEdit180.Core.CodeEditing.ExceptionTable;assembly=BCEdit180.Core"
+             xmlns:locals="clr-namespace:BCEdit180.Core.CodeEditing.Bytecode.Locals;assembly=BCEdit180.Core"
+             xmlns:editorControls="clr-namespace:BCEdit180.CodeEditing.EditorControls"
+             xmlns:ap="clr-namespace:BCEdit180.AttachedProperties"
+             xmlns:codeEditing="clr-namespace:BCEdit180.Core.CodeEditing;assembly=BCEdit180.Core"
+             d:DataContext="{d:DesignInstance Type=codeEditing:LabelSelectorViewModel}"
+             mc:Ignorable="d"
+             Title="Edit Method" Height="458" Width="631"
+             Style="{DynamicResource CustomWindowBaseStyle}"
+             Background="{DynamicResource AREghZyBrush.Deep.3.Background.Static}">
+    <Grid Margin="10">
+        <TextBlock TextWrapping="Wrap" TextAlignment="Center" Padding="2 5" Height="42" VerticalAlignment="Top" Text="Select a label instruction, which will be the jump instruction's new target"/>
+        <Grid Height="24" VerticalAlignment="Bottom">
+            <Button Command="{Binding ConfirmCommand, RelativeSource={RelativeSource FindAncestor, AncestorType={x:Type windows:WindowModal}}}" Focusable="False" Content="Okay" HorizontalAlignment="Right" Margin="0,0,79,0" Width="74" Background="#FF79D43A"/>
+            <Button Command="{Binding CancelCommand, RelativeSource={RelativeSource FindAncestor, AncestorType={x:Type windows:WindowModal}}}" Focusable="False" Content="Cancel" HorizontalAlignment="Right" Width="74"/>
+        </Grid>
+        <Grid Margin="0,42,0,29">
+            <Grid.Resources>
+                <converters:TypeEqualityToTrueConverter x:Key="TypeEqualityConverter"/>
+            </Grid.Resources>
+            <GroupBox Header="Instruction list" Background="{DynamicResource AREghZyBrush.Deep.2.Background.Static}">
+                <ListBox Grid.Row="0"
+                         ItemsSource="{Binding BytecodeEditor.Instructions}"
+                         SelectedItem="{Binding SelectedInstruction, UpdateSourceTrigger=PropertyChanged}"
+                         FontFamily="Consolas"
+                         SelectionMode="Extended"
+                         x:Name="BytecodeEditorListBox"
+                         AllowDrop="True"
+                         Background="{DynamicResource AREghZyBrush.Deep.2.Background.Static}"
+                         BorderThickness="0"
+                         ap:Scrolling.ScrollHorizontallyWithShiftWheel="True">
+                    <ListBox.ItemContainerStyle>
+                        <Style TargetType="{x:Type ListBoxItem}">
+                            <Setter Property="SnapsToDevicePixels" Value="True" />
+                            <Setter Property="Padding" Value="0" />
+                            <Setter Property="HorizontalContentAlignment" Value="{Binding HorizontalContentAlignment, RelativeSource={RelativeSource AncestorType={x:Type ItemsControl}}}" />
+                            <Setter Property="VerticalContentAlignment" Value="{Binding VerticalContentAlignment, RelativeSource={RelativeSource AncestorType={x:Type ItemsControl}}}" />
+                            <Setter Property="Background" Value="Transparent" />
+                            <Setter Property="BorderBrush" Value="Transparent" />
+                            <Setter Property="BorderThickness" Value="1" />
+                            <Setter Property="IsEnabled" Value="{Binding Path=., Converter={StaticResource TypeEqualityConverter}, ConverterParameter={x:Type instructions:LabelViewModel}}" />
+                            <Setter Property="FocusVisualStyle" Value="{StaticResource FocusVisual}" />
+                            <Setter Property="Template">
+                                <Setter.Value>
+                                    <ControlTemplate TargetType="{x:Type ListBoxItem}">
+                                        <Border x:Name="Bd" BorderBrush="{TemplateBinding BorderBrush}" 
+                                                BorderThickness="{TemplateBinding BorderThickness}" 
+                                                Background="{TemplateBinding Background}" 
+                                                Padding="4,1" SnapsToDevicePixels="true">
+                                            <ContentPresenter HorizontalAlignment="{TemplateBinding HorizontalContentAlignment}" SnapsToDevicePixels="{TemplateBinding SnapsToDevicePixels}" VerticalAlignment="{TemplateBinding VerticalContentAlignment}" />
+                                        </Border>
+                                        <ControlTemplate.Triggers>
+                                            <DataTrigger Binding="{Binding IsNewInstruction, UpdateSourceTrigger=PropertyChanged}" Value="True">
+                                                <Setter Property="Background" Value="{DynamicResource NewInstructionBackground}"/>
+                                            </DataTrigger>
+                                            <MultiTrigger>
+                                                <MultiTrigger.Conditions>
+                                                    <Condition Property="IsMouseOver" Value="True" />
+                                                </MultiTrigger.Conditions>
+                                                <Setter Property="Background" TargetName="Bd" Value="{DynamicResource Item.MouseOver.Background}" />
+                                                <Setter Property="BorderBrush" TargetName="Bd" Value="{DynamicResource Item.MouseOver.Border}" />
+                                            </MultiTrigger>
+                                            <MultiTrigger>
+                                                <MultiTrigger.Conditions>
+                                                    <Condition Property="Selector.IsSelectionActive" Value="False" />
+                                                    <Condition Property="IsSelected" Value="True" />
+                                                </MultiTrigger.Conditions>
+                                                <Setter Property="Background" TargetName="Bd" Value="{DynamicResource Item.SelectedInactive.Background}" />
+                                                <Setter Property="BorderBrush" TargetName="Bd" Value="{DynamicResource Item.SelectedInactive.Border}" />
+                                            </MultiTrigger>
+                                            <MultiTrigger>
+                                                <MultiTrigger.Conditions>
+                                                    <Condition Property="Selector.IsSelectionActive" Value="True" />
+                                                    <Condition Property="IsSelected" Value="True" />
+                                                </MultiTrigger.Conditions>
+                                                <Setter Property="Background" TargetName="Bd" Value="{DynamicResource Item.SelectedActive.Background}" />
+                                                <Setter Property="BorderBrush" TargetName="Bd" Value="{DynamicResource Item.SelectedActive.Border}" />
+                                            </MultiTrigger>
+                                            <Trigger Property="IsEnabled" Value="False">
+                                                <Setter Property="TextElement.Foreground" TargetName="Bd" Value="{DynamicResource AREghZyBrush.Foreground.Disabled}" />
+                                                <Setter Property="Opacity" Value="0.75" />
+                                            </Trigger>
+                                        </ControlTemplate.Triggers>
+                                    </ControlTemplate>
+                                </Setter.Value>
+                            </Setter>
+                        </Style>
+                    </ListBox.ItemContainerStyle>
+                    <ListBox.Resources>
+                        <DataTemplate DataType="{x:Type instructions:FieldInstructionViewModel}">
+                            <listControls:FieldInstructionControl DataContext="{Binding}"/>
+                        </DataTemplate>
+                        <DataTemplate DataType="{x:Type instructions:IncrementInstructionViewModel}">
+                            <listControls:IncrementInstructionControl DataContext="{Binding}"/>
+                        </DataTemplate>
+                        <DataTemplate DataType="{x:Type instructions:IntegerPushInstructionViewModel}">
+                            <listControls:IntegerPushInstructionControl DataContext="{Binding}"/>
+                        </DataTemplate>
+                        <DataTemplate DataType="{x:Type instructions:InvokeDynamicInstructionViewModel}">
+                            <listControls:InvokeDynamicInstructionControl DataContext="{Binding}"/>
+                        </DataTemplate>
+                        <DataTemplate DataType="{x:Type instructions:JumpInstructionViewModel}">
+                            <listControls:JumpInstructionControl DataContext="{Binding}"/>
+                        </DataTemplate>
+                        <DataTemplate DataType="{x:Type instructions:LabelViewModel}">
+                            <listControls:LabelControl DataContext="{Binding}"/>
+                        </DataTemplate>
+                        <DataTemplate DataType="{x:Type instructions:LdcInstructionViewModel}">
+                            <listControls:LdcInstructionControl DataContext="{Binding}"/>
+                        </DataTemplate>
+                        <DataTemplate DataType="{x:Type instructions:LineNumberViewModel}">
+                            <listControls:LineNumberControl DataContext="{Binding}"/>
+                        </DataTemplate>
+                        <DataTemplate DataType="{x:Type instructions:LookupSwitchInstructionViewModel}">
+                            <listControls:LookupSwitchInstructionControl DataContext="{Binding}"/>
+                        </DataTemplate>
+                        <DataTemplate DataType="{x:Type instructions:MethodInstructionViewModel}">
+                            <listControls:MethodInstructionControl DataContext="{Binding}"/>
+                        </DataTemplate>
+                        <DataTemplate DataType="{x:Type instructions:MultiANewArrayInstructionViewModel}">
+                            <listControls:MultiANewArrayInstructionControl DataContext="{Binding}"/>
+                        </DataTemplate>
+                        <DataTemplate DataType="{x:Type instructions:NewArrayInstructionViewModel}">
+                            <listControls:NewArrayInstructionControl DataContext="{Binding}"/>
+                        </DataTemplate>
+                        <DataTemplate DataType="{x:Type instructions:SimpleInstructionViewModel}">
+                            <listControls:SimpleInstructionControl DataContext="{Binding}"/>
+                        </DataTemplate>
+                        <DataTemplate DataType="{x:Type instructions:StackMapFrameViewModel}">
+                            <listControls:StackMapFrameControl DataContext="{Binding}"/>
+                        </DataTemplate>
+                        <DataTemplate DataType="{x:Type instructions:TableSwitchInstructionViewModel}">
+                            <listControls:TableSwitchInstructionControl DataContext="{Binding}"/>
+                        </DataTemplate>
+                        <DataTemplate DataType="{x:Type instructions:TypeInstructionViewModel}">
+                            <listControls:TypeInstructionControl DataContext="{Binding}"/>
+                        </DataTemplate>
+                        <DataTemplate DataType="{x:Type instructions:VariableInstructionViewModel}">
+                            <listControls:VariableInstructionControl DataContext="{Binding}"/>
+                        </DataTemplate>
+                    </ListBox.Resources>
+                </ListBox>
+            </GroupBox>
+        </Grid>
+    </Grid>
+</windows:WindowModal>
