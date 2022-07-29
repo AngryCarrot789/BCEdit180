@@ -65,7 +65,27 @@ namespace BCEdit180.Core.CodeEditing {
         public void Load(MethodNode node) {
             this.RemovedInstructions.Clear();
             this.Instructions.Clear();
-            this.Instructions.AddRange(node.Instructions.Select(CreateInstructionForHandle));
+            Dictionary<long, LabelViewModel> labelMap = new Dictionary<long, LabelViewModel>();
+            List<BaseInstructionViewModel> instructions = new List<BaseInstructionViewModel>();
+            foreach(Instruction instruction in node.Instructions) {
+                BaseInstructionViewModel baseInstruction = CreateInstructionForHandle(instruction);
+                if (baseInstruction is LabelViewModel label) {
+                    labelMap[label.Index] = label;
+                }
+
+                instructions.Add(baseInstruction);
+            }
+
+            foreach(BaseInstructionViewModel instruction in instructions) {
+                if (instruction is JumpInstructionViewModel jump) {
+                    if (labelMap.TryGetValue(jump.Target, out LabelViewModel label)) {
+                        jump.JumpDestination = label;
+                        jump.BytecodeEditor = this;
+                    }
+                }
+            }
+
+            this.Instructions.AddRange(instructions);
             // List<BaseInstructionViewModel> instructions = new List<BaseInstructionViewModel>(node.Instructions.Count);
             // for (Instruction instruction = node.Instructions.First; instruction != null; instruction = instruction.Next) {
             //     instructions.Add(CreateInstructionForHandle(instruction));

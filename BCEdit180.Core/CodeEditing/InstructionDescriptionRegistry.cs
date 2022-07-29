@@ -114,22 +114,22 @@ namespace BCEdit180.Core.CodeEditing {
             SetDescription(Opcode.ICONST_4, "(Header to be added)", "(Operand stack to be added)", "(Description to be added)");
             SetDescription(Opcode.ICONST_5, "(Header to be added)", "(Operand stack to be added)", "(Description to be added)");
             SetDescription(Opcode.IDIV, "(Header to be added)", "(Operand stack to be added)", "(Description to be added)");
-            SetDescription(Opcode.IF_ACMPEQ, "(Header to be added)", "(Operand stack to be added)", "(Description to be added)");
-            SetDescription(Opcode.IF_ACMPNE, "(Header to be added)", "(Operand stack to be added)", "(Description to be added)");
-            SetDescription(Opcode.IF_ICMPEQ, "(Header to be added)", "(Operand stack to be added)", "(Description to be added)");
-            SetDescription(Opcode.IF_ICMPGE, "(Header to be added)", "(Operand stack to be added)", "(Description to be added)");
-            SetDescription(Opcode.IF_ICMPGT, "(Header to be added)", "(Operand stack to be added)", "(Description to be added)");
-            SetDescription(Opcode.IF_ICMPLE, "(Header to be added)", "(Operand stack to be added)", "(Description to be added)");
-            SetDescription(Opcode.IF_ICMPLT, "(Header to be added)", "(Operand stack to be added)", "(Description to be added)");
-            SetDescription(Opcode.IF_ICMPNE, "(Header to be added)", "(Operand stack to be added)", "(Description to be added)");
-            SetDescription(Opcode.IFEQ, "(Header to be added)", "(Operand stack to be added)", "(Description to be added)");
-            SetDescription(Opcode.IFGE, "(Header to be added)", "(Operand stack to be added)", "(Description to be added)");
-            SetDescription(Opcode.IFGT, "(Header to be added)", "(Operand stack to be added)", "(Description to be added)");
-            SetDescription(Opcode.IFLE, "(Header to be added)", "(Operand stack to be added)", "(Description to be added)");
-            SetDescription(Opcode.IFLT, "(Header to be added)", "(Operand stack to be added)", "(Description to be added)");
-            SetDescription(Opcode.IFNE, "(Header to be added)", "(Operand stack to be added)", "(Description to be added)");
-            SetDescription(Opcode.IFNONNULL, "(Header to be added)", "(Operand stack to be added)", "(Description to be added)");
-            SetDescription(Opcode.IFNULL, "(Header to be added)", "(Operand stack to be added)", "(Description to be added)");
+            SetDescription(Opcode.IF_ACMPEQ, "Branch if a == b", "..., a, b -> ...", "Jumps to a label if the references are equal (a == b)");
+            SetDescription(Opcode.IF_ACMPNE, "Branch if a != b", "..., a, b -> ...", "Jumps to a label if the references are not equal (a != b)");
+            SetDescription(Opcode.IF_ICMPEQ, "Branch if a == b", "..., a, b -> ...", "Jumps to a label if the integers are equal (a == b)");
+            SetDescription(Opcode.IF_ICMPGE, "Branch if a >= b", "..., a, b -> ...", "Jumps to a label if the integers are bigger than or equal to (a >= b)");
+            SetDescription(Opcode.IF_ICMPGT, "Branch if a > b", "..., a, b -> ...", "Jumps to a label if the integers are bigger than (a > b)");
+            SetDescription(Opcode.IF_ICMPLE, "Branch if a <= b", "..., a, b -> ...", "Jumps to a label if the integers are less than or equal to (a <= b)");
+            SetDescription(Opcode.IF_ICMPLT, "Branch if a < b", "..., a, b -> ...", "Jumps to a label if the integers are less than (a < b)");
+            SetDescription(Opcode.IF_ICMPNE, "Branch if a != b", "..., a, b -> ...", "Jumps to a label if the integers are not equal (a != b)");
+            SetDescription(Opcode.IFEQ, "Branch if a == 0", "..., a -> ...", "(Description to be added)");
+            SetDescription(Opcode.IFGE, "Branch if a >= 0", "..., a -> ...", "(Description to be added)");
+            SetDescription(Opcode.IFGT, "Branch if a > 0", "..., a -> ...", "(Description to be added)");
+            SetDescription(Opcode.IFLE, "Branch if a <= 0", "..., a -> ...", "(Description to be added)");
+            SetDescription(Opcode.IFLT, "Branch if a < 0", "..., a -> ...", "(Description to be added)");
+            SetDescription(Opcode.IFNE, "Branch if a != 0", "..., a -> ...", "(Description to be added)");
+            SetDescription(Opcode.IFNONNULL, "Branch if reference not null", "..., value -> ...", "(Description to be added)");
+            SetDescription(Opcode.IFNULL, "Branch if reference is null", "..., value -> ...", "(Description to be added)");
             SetDescription(Opcode.IINC, "(Header to be added)", "(Operand stack to be added)", "(Description to be added)");
             SetDescription(Opcode.ILOAD, "(Header to be added)", "(Operand stack to be added)", "(Description to be added)");
             SetDescription(Opcode.ILOAD_0, "(Header to be added)", "(Operand stack to be added)", "(Description to be added)");
@@ -232,6 +232,10 @@ namespace BCEdit180.Core.CodeEditing {
             }
 
             throw new Exception("Missing description for opcode: " + opcode);
+        }
+
+        public static OpcodeDescriptorViewModel TryGetDescription(Opcode opcode) {
+            return DescriptorMap.TryGetValue(opcode, out OpcodeDescriptorViewModel vm) ? vm : null;
         }
     }
 }

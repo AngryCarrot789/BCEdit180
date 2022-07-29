@@ -112,6 +112,8 @@
     <Compile Include="Converters\FilePathToWindowTitleConverter.cs" />
     <Compile Include="Converters\FQCNToWindowTitleConverter.cs" />
     <Compile Include="Converters\ItemNullToEnabledConverter.cs" />
+    <Compile Include="Converters\NullToCollapsed.cs" />
+    <Compile Include="Converters\OpCodeToSimpleDescriptionConverter.cs" />
     <Compile Include="Converters\PrimitiveConverter.cs" />
     <Compile Include="Dialogs\WindowsAccessEditor.cs" />
     <Compile Include="Dialogs\WindowsFileDialogs.cs" />

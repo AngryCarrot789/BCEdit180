@@ -10,7 +10,7 @@
     <SolidColorBrush x:Key="InterfaceName" Color="{StaticResource InterfaceColour}"/>
     <SolidColorBrush x:Key="FieldName" Color="{StaticResource ThingyThingKeywordThatsIt}"/>
     <SolidColorBrush x:Key="MethodName" Color="{StaticResource ThingyThingKeywordThatsIt}"/>
-    <SolidColorBrush x:Key="MethodReturnType" Color="{StaticResource Descriptor}"/>
+    <SolidColorBrush x:Key="MethodDescriptor" Color="{StaticResource Descriptor}"/>
     <SolidColorBrush x:Key="FieldDescriptor" Color="{StaticResource Descriptor}"/>
     <SolidColorBrush x:Key="Keyword" Color="{StaticResource ThingyThingKeywordThatsIt}"/>
     <SolidColorBrush x:Key="ConstNumeric" Color="{StaticResource NumberColour}"/>

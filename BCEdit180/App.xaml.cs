@@ -22,7 +22,7 @@ namespace BCEdit180 {
             }
 
             if (classes.Classes.Count < 1) {
-                classes.Classes.Add(new ClassViewModel() { ClassList = classes });
+                classes.CreateBalnkClass();
             }
 
             classes.SelectedClass = classes.Classes[0];

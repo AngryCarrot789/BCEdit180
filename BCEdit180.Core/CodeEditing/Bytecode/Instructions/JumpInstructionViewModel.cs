@@ -1,6 +1,9 @@
+using System;
 using System.Collections.Generic;
+using System.Windows.Input;
 using JavaAsm.Instructions;
 using JavaAsm.Instructions.Types;
+using REghZy.MVVM.Commands;
 
 namespace BCEdit180.Core.CodeEditing.Bytecode.Instructions {
     public class JumpInstructionViewModel : BaseInstructionViewModel {
@@ -10,6 +13,23 @@ namespace BCEdit180.Core.CodeEditing.Bytecode.Instructions {
         public long Target {
             get => this.target;
             set => RaisePropertyChanged(ref this.target, value);
+        }
+
+        public ICommand SelectJumpDestinationCommand { get; }
+
+        public BytecodeEditorViewModel BytecodeEditor { get; set; }
+
+        public LabelViewModel JumpDestination { get; set; }
+
+        public JumpInstructionViewModel() {
+            this.SelectJumpDestinationCommand = new RelayCommand(SelectJumpDestinationAction);
+        }
+
+        public void SelectJumpDestinationAction() {
+            if (this.BytecodeEditor != null && this.JumpDestination != null) {
+                this.BytecodeEditor.SelectedInstruction = this.JumpDestination;
+                BytecodeEditorViewModel.BytecodeList.ScrollToSelectedItem();
+            }
         }
 
         public override void Load(Instruction instruction) {

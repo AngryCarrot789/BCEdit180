@@ -23,15 +23,9 @@ namespace BCEdit180.AttachedProperties {
 
         private static void UseHorizontalScrollingChangedCallback(DependencyObject d, DependencyPropertyChangedEventArgs e) {
             if (d is UIElement element) {
-                if (e.OldValue == e.NewValue) {
-                    return;
-                }
-
+                element.PreviewMouseWheel -= OnPreviewMouseWheel;
                 if ((bool) e.NewValue) {
                     element.PreviewMouseWheel += OnPreviewMouseWheel;
-                }
-                else {
-                    element.PreviewMouseWheel -= OnPreviewMouseWheel;
                 }
             }
             else {
@@ -40,14 +34,13 @@ namespace BCEdit180.AttachedProperties {
         }
 
         private static void OnPreviewMouseWheel(object sender, MouseWheelEventArgs args) {
-            ScrollViewer scrollViewer = ((UIElement) sender).FindDescendant<ScrollViewer>();
+            if (Keyboard.Modifiers != ModifierKeys.Shift)
+                return;
 
+            ScrollViewer scrollViewer = sender is ScrollViewer ? ((ScrollViewer) sender) : ((UIElement) sender).FindDescendant<ScrollViewer>();
             if (scrollViewer == null) {
                 return;
             }
-
-            if (Keyboard.Modifiers != ModifierKeys.Shift)
-                return;
 
             // by default, windows scrolls 3 times per horizontal shift (there's a way
             // to get the count dynamically using windows forms but i forgot how to)

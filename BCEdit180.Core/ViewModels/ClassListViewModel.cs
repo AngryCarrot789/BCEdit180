@@ -21,11 +21,17 @@ namespace BCEdit180.Core.ViewModels {
             set => RaisePropertyChanged(ref this.selectedClass, value);
         }
 
+        private ClassViewModel blankClass;
+
         public ICommand OpenFileCommand { get; }
 
         public ClassListViewModel() {
             this.Classes = new ExtendedObservableCollection<ClassViewModel>();
             this.OpenFileCommand = new RelayCommand(OpenFileAction);
+        }
+
+        public void CreateBalnkClass() {
+            this.Classes.Add(this.blankClass = new ClassViewModel() { ClassList = this });
         }
 
         private void OpenFileAction() {
@@ -59,9 +65,15 @@ namespace BCEdit180.Core.ViewModels {
         }
 
         public void OpenAndReadClassFile(string path, bool showDialog = true, bool readInner = true, ActionProgressViewModel actionProgress = null, bool closeDialog = true) {
+            if (this.blankClass != null) {
+                RemoveClass(this.blankClass);
+                this.blankClass = null;
+            }
+
             ClassViewModel viewModel = new ClassViewModel();
             viewModel.FilePath = path;
             viewModel.ClassList = this;
+            viewModel.ClassInfo.ClassName = "Loading Class...";
             this.Classes.Add(viewModel);
             this.SelectedClass = viewModel;
             AppProxy.Proxy.InvokeSync(() => {
@@ -79,7 +91,6 @@ namespace BCEdit180.Core.ViewModels {
             }
 
             List<string> classes = new List<string>();
-
             string path = clazz.FilePath;
             string url = clazz.ClassInfo.ClassName.Replace('.', '\\') + ".class";
             int index = path.IndexOf(url);
@@ -98,12 +109,19 @@ namespace BCEdit180.Core.ViewModels {
                 }
             }
 
+            if (classes.Count < 1) {
+                return;
+            }
+
+            if (this.blankClass != null) {
+                RemoveClass(this.blankClass);
+                this.blankClass = null;
+            }
+
             if (showDialog) {
-
-                ActionProgressViewModel vm = Dialog.Message.ShowProgressWindow($"Loading {classes.Count} inner classes");
-
                 int i = 0;
                 Task[] tasks = new Task[classes.Count];
+                ActionProgressViewModel vm = Dialog.Message.ShowProgressWindow($"Loading {classes.Count} inner classes");
                 foreach (string innerPath in classes) {
                     tasks[i++] = Task.Run(async () => {
                         ClassViewModel classViewModel = new ClassViewModel();
