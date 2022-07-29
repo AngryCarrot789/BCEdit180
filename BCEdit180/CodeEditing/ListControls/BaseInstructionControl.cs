@@ -21,6 +21,10 @@ namespace BCEdit180.CodeEditing.ListControls {
             set => SetValue(OpcodeTextBrushProperty, value);
         }
 
+        public BaseInstructionViewModel ViewModel {
+            get => (BaseInstructionViewModel) this.DataContext;
+        }
+
         public BaseInstructionControl() {
 
         }

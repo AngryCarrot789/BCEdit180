@@ -8,6 +8,16 @@
                     xmlns:converters="clr-namespace:BCEdit180.Converters"
                     mc:Ignorable="d">
     <converters:TypeDescriptorToStringConverter x:Key="TypeDescriptorConverter"/>
+    <converters:BooleanToColourConverter x:Key="NewInstructionBackgroundConverter" TrueColour="{StaticResource ClassName}" FalseColour="{StaticResource ConstNumeric}"/>
+
+    <Style TargetType="{x:Type editors:BaseInstructionControl}">
+        <Setter Property="Background" Value="Red"/>
+    </Style>
+
+    <!--
+        Background="{Binding IsNewInstruction, Converter={StaticResource NewInstructionBackgroundConverter}}"
+    -->
+
     <Style TargetType="{x:Type editors:FieldInstructionControl}">
         <Setter Property="Template">
             <Setter.Value>
@@ -31,6 +41,31 @@
             </Setter.Value>
         </Setter>
     </Style>
+
+    <Style TargetType="{x:Type editors:MethodInstructionControl}">
+        <Setter Property="Template">
+            <Setter.Value>
+                <ControlTemplate>
+                    <StackPanel Background="{TemplateBinding Background}" Orientation="Horizontal" d:DataContext="{d:DesignInstance vms:MethodInstructionViewModel}">
+                        <TextBlock Text="{Binding Opcode, UpdateSourceTrigger=PropertyChanged}" Foreground="{Binding OpcodeTextBrush, RelativeSource={RelativeSource FindAncestor, AncestorType={x:Type editors:BaseInstructionControl}}}" Padding="0 0 5 0" VerticalAlignment="Center" ToolTip="The method instruction">
+                            <TextBlock.InputBindings>
+                                <MouseBinding MouseAction="LeftDoubleClick"  Command="{Binding EditOpcodeCommand}"/>
+                            </TextBlock.InputBindings>
+                        </TextBlock>
+                        <TextBlock Text="{Binding MethodOwner, UpdateSourceTrigger=PropertyChanged}" Foreground="{StaticResource ClassName}" Padding="0 0 0 0" VerticalAlignment="Center" ToolTip="The class that owns the method"/>
+                        <TextBlock Text="." Padding="0" VerticalAlignment="Center"/>
+                        <TextBlock Text="{Binding MethodName, UpdateSourceTrigger=PropertyChanged}" Foreground="{StaticResource MethodName}" Padding="0 0 0 0" VerticalAlignment="Center" ToolTip="The name of the method"/>
+                        <TextBlock Text="{Binding MethodDescriptor, UpdateSourceTrigger=PropertyChanged}" Foreground="{StaticResource MethodDescriptor}" Padding="0 0 0 0" VerticalAlignment="Center" ToolTip="The method's descriptor (parameters and return type)">
+                            <TextBlock.InputBindings>
+                                <MouseBinding MouseAction="LeftDoubleClick" Command="{Binding EditDescriptorCommand}"/>
+                            </TextBlock.InputBindings>
+                        </TextBlock>
+                    </StackPanel>
+                </ControlTemplate>
+            </Setter.Value>
+        </Setter>
+    </Style>
+
     <Style TargetType="{x:Type editors:IncrementInstructionControl}">
         <Setter Property="Template">
             <Setter.Value>
@@ -175,29 +210,6 @@
                             </TextBlock.InputBindings>
                         </TextBlock>
                         <TextBlock Text="{Binding MatchLabelsString, UpdateSourceTrigger=PropertyChanged}" Foreground="{StaticResource Keyword}" Padding="0 0 0 0" VerticalAlignment="Center"/>
-                    </StackPanel>
-                </ControlTemplate>
-            </Setter.Value>
-        </Setter>
-    </Style>
-    <Style TargetType="{x:Type editors:MethodInstructionControl}">
-        <Setter Property="Template">
-            <Setter.Value>
-                <ControlTemplate>
-                    <StackPanel Orientation="Horizontal" d:DataContext="{d:DesignInstance vms:MethodInstructionViewModel}">
-                        <TextBlock Text="{Binding Opcode, UpdateSourceTrigger=PropertyChanged}" Foreground="{Binding OpcodeTextBrush, RelativeSource={RelativeSource FindAncestor, AncestorType={x:Type editors:BaseInstructionControl}}}" Padding="0 0 5 0" VerticalAlignment="Center" ToolTip="The method instruction">
-                            <TextBlock.InputBindings>
-                                <MouseBinding MouseAction="LeftDoubleClick"  Command="{Binding EditOpcodeCommand}"/>
-                            </TextBlock.InputBindings>
-                        </TextBlock>
-                        <TextBlock Text="{Binding MethodOwner, UpdateSourceTrigger=PropertyChanged}" Foreground="{StaticResource ClassName}" Padding="0 0 0 0" VerticalAlignment="Center" ToolTip="The class that owns the method"/>
-                        <TextBlock Text="." Padding="0" VerticalAlignment="Center"/>
-                        <TextBlock Text="{Binding MethodName, UpdateSourceTrigger=PropertyChanged}" Foreground="{StaticResource MethodName}" Padding="0 0 0 0" VerticalAlignment="Center" ToolTip="The name of the method"/>
-                        <TextBlock Text="{Binding MethodDescriptor, UpdateSourceTrigger=PropertyChanged}" Foreground="{StaticResource MethodDescriptor}" Padding="0 0 0 0" VerticalAlignment="Center" ToolTip="The method's descriptor (parameters and return type)">
-                            <TextBlock.InputBindings>
-                                <MouseBinding MouseAction="LeftDoubleClick" Command="{Binding EditDescriptorCommand}"/>
-                            </TextBlock.InputBindings>
-                        </TextBlock>
                     </StackPanel>
                 </ControlTemplate>
             </Setter.Value>

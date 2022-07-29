@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Threading.Tasks;
 using System.Windows.Input;
+using BCEdit180.Core.Commands;
 using BCEdit180.Core.Window;
 using JavaAsm.Instructions;
 using JavaAsm.Instructions.Types;
@@ -21,18 +22,21 @@ namespace BCEdit180.Core.CodeEditing.Bytecode.Instructions {
             set => RaisePropertyChanged(ref this.opCode, value);
         }
 
-        public virtual bool CanEditOpCode { get; } = true;
+        private bool isNewInstruction;
+        public bool IsNewInstruction {
+            get => this.isNewInstruction;
+            set => RaisePropertyChanged(ref this.isNewInstruction, value);
+        }
+
+        public virtual bool CanEditOpCode => true;
 
         public ICommand EditOpcodeCommand { get; }
 
         protected BaseInstructionViewModel() {
-            this.EditOpcodeCommand = new RelayCommand(() => {
-                if (this.CanEditOpCode) {
-                    EditOpcode();
-                }
-            });
+            this.EditOpcodeCommand = new ExtendedRelayCommand(EditOpcode, () => this.CanEditOpCode);
         }
 
+        // Always check CanEditOpCode
         public void EditOpcode() {
             if (this.CanEditOpCode && Dialog.TypeEditor.ChangeInstructionDialog(this.AvailableOpCodes, this.Opcode, out Opcode code).Result) {
                 this.Opcode = code;
@@ -111,7 +115,7 @@ namespace BCEdit180.Core.CodeEditing.Bytecode.Instructions {
         }
 
         public override string ToString() {
-            return this.Node.ToString();
+            return this.Node?.ToString() ?? $"[Instruction handle unavailable. Opcode = {this.Opcode}]";
         }
     }
 }

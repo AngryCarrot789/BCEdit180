@@ -103,11 +103,16 @@ namespace BCEdit180.Core.CodeEditing.Bytecode.Instructions {
             this.BootstrapMethodArgs.Clear();
             this.Name = insn.Name;
             this.Descriptor = insn.Descriptor;
-            this.BootstrapReferenceType = insn.BootstrapMethod.Type;
-            this.BootstrapMethodOwner = insn.BootstrapMethod.Owner.Name;
-            this.BootstrapMethodName = insn.BootstrapMethod.Name;
-            this.BootstrapMethodDescriptor = insn.BootstrapMethod.Descriptor;
-            this.BootstrapMethodArgs.AddAll(insn.BootstrapMethodArgs);
+            if (insn.BootstrapMethod != null) {
+                this.BootstrapReferenceType = insn.BootstrapMethod.Type;
+                this.BootstrapMethodOwner = insn.BootstrapMethod.Owner.Name;
+                this.BootstrapMethodName = insn.BootstrapMethod.Name;
+                this.BootstrapMethodDescriptor = insn.BootstrapMethod.Descriptor;
+            }
+
+            if (insn.BootstrapMethodArgs != null) {
+                this.BootstrapMethodArgs.AddAll(insn.BootstrapMethodArgs);
+            }
         }
 
         public override void Save(Instruction instruction) {
@@ -115,10 +120,13 @@ namespace BCEdit180.Core.CodeEditing.Bytecode.Instructions {
             InvokeDynamicInstruction insn = (InvokeDynamicInstruction) instruction;
             insn.Name = this.Name;
             insn.Descriptor = this.Descriptor;
+            if (insn.BootstrapMethod == null) {
+                insn.BootstrapMethod = new Handle();
+            }
+
             insn.BootstrapMethod.Type = this.BootstrapReferenceType;
             insn.BootstrapMethod.Owner = new ClassName(this.BootstrapMethodOwner);
             insn.BootstrapMethod.Name = this.BootstrapMethodName;
-
             insn.BootstrapMethod.Descriptor = this.BootstrapMethodDescriptor;
             // switch (this.BootstrapReferenceType) {
             //     case ReferenceKindType.GetField:

@@ -1,12 +1,11 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Collections.ObjectModel;
-using System.Linq;
 using System.Windows.Input;
 using BCEdit180.Core.CodeEditing.Bytecode.Instructions;
 using BCEdit180.Core.Collections;
 using BCEdit180.Core.Searching;
 using BCEdit180.Core.Utils;
+using BCEdit180.Core.Window;
 using JavaAsm;
 using JavaAsm.Instructions;
 using JavaAsm.Instructions.Types;
@@ -38,6 +37,9 @@ namespace BCEdit180.Core.CodeEditing {
         public ICommand InsertCodeCommand { get; }
         public ICommand ShowHideOptionsCommand { get; }
 
+        public ICommand MoveSelectedInstructionUpCommand { get; }
+        public ICommand MoveSelectedInstructionDownCommand { get; }
+
         public SearchInstructionViewModel SearchInstruction { get; }
 
         public CodeEditorViewModel CodeEditor { get; }
@@ -48,15 +50,144 @@ namespace BCEdit180.Core.CodeEditing {
             this.RemovedInstructions = new ExtendedObservableCollection<BaseInstructionViewModel>();
             this.DeleteSelectedInstructionsCommand = new RelayCommand(DeleteSelectedInstructions);
             this.SearchInstruction = new SearchInstructionViewModel(this);
+
+            this.InsertCodeCommand = new RelayCommand(() => {
+                // this.Instructions.Add(new FieldInstructionViewModel() {
+                //     FieldName = "TestField101", Opcode = Opcode.GETFIELD, FieldOwner = "Joe", IsNewInstruction = true, FieldDescriptor = new TypeDescriptor(PrimitiveType.Boolean, 0)
+                // });
+            });
+            this.InsertInstructionCommand = new RelayCommand(InsertInstructionAction);
+        }
+
+        public void InsertCodeSequenceAction() {
+
+        }
+
+        private static readonly IEnumerable<Opcode> ALL_OPCODES;
+
+        static BytecodeEditorViewModel() {
+            List<Opcode> opcodes = new List<Opcode>(256);
+            foreach (object opcode in Enum.GetValues(typeof(Opcode))) {
+                opcodes.Add((Opcode) opcode);
+            }
+
+            ALL_OPCODES = opcodes;
+        }
+
+        public void InsertInstructionAction() {
+            if (Dialog.TypeEditor.ChangeInstructionDialog(ALL_OPCODES, out Opcode opcode).Result) {
+                Instruction instruction = null;
+                Type instructionType = GetInstructionTypeForOpCode(opcode);
+                if (instructionType == null) {
+                    Dialog.Message.ShowInformationDialog("Unknown instruction", $"The opcode '{opcode}' is unrecognised");
+                    return;
+                }
+
+                if (instructionType == typeof(FieldInstruction)) {
+                    instruction = new FieldInstruction(opcode) {
+                        Descriptor = new TypeDescriptor(PrimitiveType.Integer, 0),
+                        Name = "newField",
+                        Opcode = opcode,
+                        Owner = new ClassName(this.CodeEditor.MethodInfo.MethodList.Class.ClassInfo.ClassName)
+                    };
+                }
+                else if (instructionType == typeof(IncrementInstruction)) {
+                    instruction = new IncrementInstruction();
+                }
+                else if (instructionType == typeof(IntegerPushInstruction)) {
+                    instruction = new IntegerPushInstruction(opcode);
+                }
+                else if (instructionType == typeof(InvokeDynamicInstruction)) {
+                    instruction = new InvokeDynamicInstruction() {
+                        Descriptor = new MethodDescriptor(new TypeDescriptor(PrimitiveType.Integer, 0)),
+                        Name = "invokeDynamicMethod",
+                        Opcode = opcode
+                    };
+                }
+                else if (instructionType == typeof(JumpInstruction)) {
+                    instruction = new JumpInstruction(opcode);
+                }
+                else if (instructionType == typeof(Label)) {
+                    instruction = new Label();
+                }
+                else if (instructionType == typeof(LdcInstruction)) {
+                    instruction = new LdcInstruction();
+                }
+                else if (instructionType == typeof(LineNumber)) {
+                    instruction = new LineNumber();
+                }
+                else if (instructionType == typeof(LookupSwitchInstruction)) {
+                    instruction = new LookupSwitchInstruction();
+                }
+                else if (instructionType == typeof(MethodInstruction)) {
+                    instruction = new MethodInstruction(opcode) {
+                        Descriptor = new MethodDescriptor(new TypeDescriptor(PrimitiveType.Integer, 0)),
+                        Name = "newMethod",
+                        Opcode = opcode,
+                        Owner = new ClassName(this.CodeEditor.MethodInfo.MethodList.Class.ClassInfo.ClassName)
+                    };
+                }
+                else if (instructionType == typeof(MultiANewArrayInstruction)) {
+                    instruction = new MultiANewArrayInstruction() {
+                        Opcode = opcode,
+                        Dimensions = 1,
+                        Type = new ClassName("java/lang/String")
+                    };
+                }
+                else if (instructionType == typeof(NewArrayInstruction)) {
+                    instruction = new NewArrayInstruction() {
+                        Opcode = opcode,
+                        ArrayType = NewArrayTypeCode.Integer
+                    };
+                }
+                else if (instructionType == typeof(SimpleInstruction)) {
+                    instruction = new SimpleInstruction(opcode);
+                }
+                else if (instructionType == typeof(StackMapFrame)) {
+                    instruction = new StackMapFrame();
+                }
+                else if (instructionType == typeof(TableSwitchInstruction)) {
+                    instruction = new TableSwitchInstruction();
+                }
+                else if (instructionType == typeof(TypeInstruction)) {
+                    instruction = new TypeInstruction(opcode);
+                }
+                else if (instructionType == typeof(VariableInstruction)) {
+                    instruction = new VariableInstruction(opcode);
+                }
+                else {
+                    Dialog.Message.ShowInformationDialog("Failed to create instruction", "Failed to create instruction for opcode: " + opcode);
+                    return;
+                }
+
+                bool insert = false;
+                instruction.Opcode = opcode;
+                if (this.SelectedInstruction != null && this.SelectedInstruction.Node != null) {
+                    this.CodeEditor.MethodInfo.Node.Instructions.InsertBefore(this.SelectedInstruction.Node, instruction);
+                    insert = true;
+                }
+                else {
+                    this.CodeEditor.MethodInfo.Node.Instructions.Add(instruction);
+                }
+
+                BaseInstructionViewModel instructionViewModel = CreateInstructionForHandle(instruction);
+                instructionViewModel.IsNewInstruction = true;
+                if (insert) {
+                    this.Instructions.Insert(this.SelectedInstructionIndex, instructionViewModel);
+                }
+                else {
+                    this.Instructions.Add(instructionViewModel);
+                }
+            }
         }
 
         public void DeleteSelectedInstructions() {
-            IEnumerable<BaseInstructionViewModel> instructions = BytecodeList.SelectedItems;
+            List<BaseInstructionViewModel> instructions = new List<BaseInstructionViewModel>(BytecodeList.SelectedItems);
             this.RemovedInstructions.AddRange(instructions);
             this.Instructions.RemoveRange(instructions);
         }
 
-        public BaseInstructionViewModel CreateInstructionForHandle(Instruction instruction) {
+        public static BaseInstructionViewModel CreateInstructionForHandle(Instruction instruction) {
             BaseInstructionViewModel vm = BaseInstructionViewModel.ForInstruction(instruction);
             vm.Load(instruction);
             return vm;

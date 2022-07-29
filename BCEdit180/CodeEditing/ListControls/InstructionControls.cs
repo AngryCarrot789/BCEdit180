@@ -1,6 +1,3 @@
-using BCEdit180.Core.CodeEditing.Bytecode.Instructions;
-using JavaAsm.Instructions.Types;
-
 namespace BCEdit180.CodeEditing.ListControls {
     public class FieldInstructionControl : BaseInstructionControl {}
     public class IncrementInstructionControl : BaseInstructionControl {}

@@ -2,6 +2,8 @@
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
+using System.Runtime.CompilerServices;
+using System.Text;
 using BinaryEncoding;
 using JavaAsm.CustomAttributes;
 using JavaAsm.Helpers;
@@ -9,20 +11,18 @@ using JavaAsm.Instructions.Types;
 using JavaAsm.IO;
 using JavaAsm.IO.ConstantPoolEntries;
 
-namespace JavaAsm.Instructions
-{
-    internal static class InstructionListConverter
-    {
-        private static AttributeNode GetAttribute(ICollection<AttributeNode> attributes, string name)
-        {
+namespace JavaAsm.Instructions {
+    internal static class InstructionListConverter {
+        private static AttributeNode GetAttribute(ICollection<AttributeNode> attributes, string name) {
             AttributeNode attribute = attributes.FirstOrDefault(a => a.Name == name);
             if (attribute != null)
                 attributes.Remove(attribute);
             return attribute;
         }
 
-        public static void ParseCodeAttribute(MethodNode parseTo, ClassReaderState readerState, CodeAttribute codeAttribute)
-        {
+        public static void ParseCodeAttribute(MethodNode parseTo, ClassReaderState readerState, CodeAttribute codeAttribute) {
+            Label.GlobalLabelIndex = 0;
+
             parseTo.MaxStack = codeAttribute.MaxStack;
             parseTo.MaxLocals = codeAttribute.MaxLocals;
             parseTo.CodeAttributes = codeAttribute.Attributes;
@@ -30,8 +30,7 @@ namespace JavaAsm.Instructions
             if (codeAttribute.Code.Length == 0)
                 return;
 
-            BootstrapMethodsAttribute bootstrapMethodsAttribute = readerState.ClassNode.Attributes
-                .FirstOrDefault(x => x.Name == PredefinedAttributeNames.BootstrapMethods)?.ParsedAttribute as BootstrapMethodsAttribute;
+            BootstrapMethodsAttribute bootstrapMethodsAttribute = readerState.ClassNode.Attributes.FirstOrDefault(x => x.Name == PredefinedAttributeNames.BootstrapMethods)?.ParsedAttribute as BootstrapMethodsAttribute;
 
             Dictionary<long, Instruction> instructions = new Dictionary<long, Instruction>();
             Dictionary<long, Label> labels = new Dictionary<long, Label>();
@@ -172,15 +171,19 @@ namespace JavaAsm.Instructions
                     case Opcode.JSR:
                     case Opcode.IFNULL:
                     case Opcode.IFNONNULL: {
+                        int jumpOffset = Binary.BigEndian.ReadInt16(codeStream);
                         instructions.Add(currentPosition, new JumpInstruction(opcode) {
-                            Target = labels.GetOrAdd(currentPosition + Binary.BigEndian.ReadInt16(codeStream), new Label())
+                            Target = labels.GetOrAdd(currentPosition + jumpOffset, () => new Label()),
+                            JumpOffset = jumpOffset
                         });
                     }
                         break;
                     case Opcode.JSR_W:
                     case Opcode.GOTO_W: {
+                        int jumpOffset = Binary.BigEndian.ReadInt32(codeStream);
                         instructions.Add(currentPosition, new JumpInstruction(opcode == Opcode.JSR_W ? Opcode.JSR : Opcode.GOTO) {
-                            Target = labels.GetOrAdd(currentPosition + Binary.BigEndian.ReadInt32(codeStream), new Label())
+                            Target = labels.GetOrAdd(currentPosition + jumpOffset, () => new Label()),
+                            JumpOffset = jumpOffset
                         });
                     }
                         break;
@@ -189,14 +192,14 @@ namespace JavaAsm.Instructions
                         while (codeStream.Position % 4 != 0)
                             codeStream.ReadByteFully();
                         LookupSwitchInstruction lookupSwitchInstruction = new LookupSwitchInstruction {
-                            Default = labels.GetOrAdd(currentPosition + Binary.BigEndian.ReadInt32(codeStream), new Label())
+                            Default = labels.GetOrAdd(currentPosition + Binary.BigEndian.ReadInt32(codeStream), () => new Label())
                         };
                         int nPairs = Binary.BigEndian.ReadInt32(codeStream);
                         lookupSwitchInstruction.MatchLabels.Capacity = nPairs;
                         for (int i = 0; i < nPairs; i++) {
                             lookupSwitchInstruction.MatchLabels.Add(new KeyValuePair<int, Label>(
                                 Binary.BigEndian.ReadInt32(codeStream),
-                                labels.GetOrAdd(currentPosition + Binary.BigEndian.ReadInt32(codeStream), new Label())));
+                                labels.GetOrAdd(currentPosition + Binary.BigEndian.ReadInt32(codeStream), () => new Label())));
                         }
 
                         instructions.Add(currentPosition, lookupSwitchInstruction);
@@ -207,13 +210,13 @@ namespace JavaAsm.Instructions
                         while (codeStream.Position % 4 != 0)
                             codeStream.ReadByteFully();
                         TableSwitchInstruction tableSwitchInstruction = new TableSwitchInstruction {
-                            Default = labels.GetOrAdd(currentPosition + Binary.BigEndian.ReadInt32(codeStream), new Label()),
+                            Default = labels.GetOrAdd(currentPosition + Binary.BigEndian.ReadInt32(codeStream), () => new Label()),
                             LowValue = Binary.BigEndian.ReadInt32(codeStream),
                             HighValue = Binary.BigEndian.ReadInt32(codeStream)
                         };
                         for (int i = tableSwitchInstruction.LowValue; i <= tableSwitchInstruction.HighValue; i++) {
                             tableSwitchInstruction.Labels.Add(
-                                labels.GetOrAdd(currentPosition + Binary.BigEndian.ReadInt32(codeStream), new Label()));
+                                labels.GetOrAdd(currentPosition + Binary.BigEndian.ReadInt32(codeStream), () => new Label()));
                         }
 
                         instructions.Add(currentPosition, tableSwitchInstruction);
@@ -436,16 +439,28 @@ namespace JavaAsm.Instructions
 
                         object ldcVal;
                         switch (constantPoolEntry) {
-                            case IntegerEntry ie:       ldcVal = ie.Value; break;
-                            case FloatEntry fe:         ldcVal = fe.Value; break;
-                            case StringEntry se:        ldcVal = se.Value.String; break;
-                            case ClassEntry ce:         ldcVal = new ClassName(ce.Name.String); break;
-                            case MethodTypeEntry mte:   ldcVal = MethodDescriptor.Parse(mte.Descriptor.String); break;
-                            case MethodHandleEntry mhe: ldcVal = Handle.FromConstantPool(mhe); break;
+                            case IntegerEntry ie:
+                                ldcVal = ie.Value;
+                                break;
+                            case FloatEntry fe:
+                                ldcVal = fe.Value;
+                                break;
+                            case StringEntry se:
+                                ldcVal = se.Value.String;
+                                break;
+                            case ClassEntry ce:
+                                ldcVal = new ClassName(ce.Name.String);
+                                break;
+                            case MethodTypeEntry mte:
+                                ldcVal = MethodDescriptor.Parse(mte.Descriptor.String);
+                                break;
+                            case MethodHandleEntry mhe:
+                                ldcVal = Handle.FromConstantPool(mhe);
+                                break;
                             default: throw new ArgumentOutOfRangeException(nameof(constantPoolEntry), $"Tried to {opcode} wrong type of CP entry: {constantPoolEntry.Tag}");
                         }
 
-                        instructions.Add(currentPosition, new LdcInstruction {Value = ldcVal});
+                        instructions.Add(currentPosition, new LdcInstruction {Value = ldcVal, Opcode = opcode});
                     }
                         break;
                     case Opcode.LDC_W:
@@ -453,19 +468,36 @@ namespace JavaAsm.Instructions
                         Entry constantPoolEntry = readerState.ConstantPool.GetEntry<Entry>(Binary.BigEndian.ReadUInt16(codeStream));
                         object ldcValue;
                         switch (constantPoolEntry) {
-                            case IntegerEntry ie when opcode == Opcode.LDC_W:       ldcValue = ie.Value; break;
-                            case FloatEntry fe when opcode == Opcode.LDC_W:         ldcValue = fe.Value; break;
-                            case StringEntry se when opcode == Opcode.LDC_W:        ldcValue = se.Value.String; break;
-                            case ClassEntry ce when opcode == Opcode.LDC_W:         ldcValue = new ClassName(ce.Name.String); break;
-                            case MethodTypeEntry mte when opcode == Opcode.LDC_W:   ldcValue = MethodDescriptor.Parse(mte.Descriptor.String); break;
-                            case MethodHandleEntry mhe when opcode == Opcode.LDC_W: ldcValue = new Handle {Descriptor = mhe.ReferenceKind.IsFieldReference() ? TypeDescriptor.Parse(mhe.Reference.NameAndType.Descriptor.String) : (IDescriptor) MethodDescriptor.Parse(mhe.Reference.NameAndType.Descriptor.String), Name = mhe.Reference.NameAndType.Name.String, Owner = new ClassName(mhe.Reference.Class.Name.String)}; break;
-                            case DoubleEntry de when opcode == Opcode.LDC2_W:       ldcValue = de.Value; break;
-                            case LongEntry le when opcode == Opcode.LDC2_W:         ldcValue = le.Value; break;
+                            case IntegerEntry ie when opcode == Opcode.LDC_W:
+                                ldcValue = ie.Value;
+                                break;
+                            case FloatEntry fe when opcode == Opcode.LDC_W:
+                                ldcValue = fe.Value;
+                                break;
+                            case StringEntry se when opcode == Opcode.LDC_W:
+                                ldcValue = se.Value.String;
+                                break;
+                            case ClassEntry ce when opcode == Opcode.LDC_W:
+                                ldcValue = new ClassName(ce.Name.String);
+                                break;
+                            case MethodTypeEntry mte when opcode == Opcode.LDC_W:
+                                ldcValue = MethodDescriptor.Parse(mte.Descriptor.String);
+                                break;
+                            case MethodHandleEntry mhe when opcode == Opcode.LDC_W:
+                                ldcValue = new Handle {Descriptor = mhe.ReferenceKind.IsFieldReference() ? TypeDescriptor.Parse(mhe.Reference.NameAndType.Descriptor.String) : (IDescriptor) MethodDescriptor.Parse(mhe.Reference.NameAndType.Descriptor.String), Name = mhe.Reference.NameAndType.Name.String, Owner = new ClassName(mhe.Reference.Class.Name.String)};
+                                break;
+                            case DoubleEntry de when opcode == Opcode.LDC2_W:
+                                ldcValue = de.Value;
+                                break;
+                            case LongEntry le when opcode == Opcode.LDC2_W:
+                                ldcValue = le.Value;
+                                break;
                             default: throw new ArgumentOutOfRangeException(nameof(constantPoolEntry), $"Tried to {opcode} wrong type of CP entry: {constantPoolEntry.GetType()}");
                         }
 
                         instructions.Add(currentPosition, new LdcInstruction {
-                            Value = ldcValue
+                            Value = ldcValue,
+                            Opcode = opcode
                         });
                     }
                         break;
@@ -489,74 +521,78 @@ namespace JavaAsm.Instructions
                 throw new ArgumentException("Label key is not at the beginning of instruction");
 
             parseTo.Instructions = new InstructionList();
-
             parseTo.TryCatches.Capacity = codeAttribute.ExceptionTable.Count;
 
-            foreach (CodeAttribute.ExceptionTableEntry exceptionTableEntry in codeAttribute.ExceptionTable)
-            {
-                parseTo.TryCatches.Add(new TryCatchNode
-                {
+            foreach (CodeAttribute.ExceptionTableEntry exceptionTableEntry in codeAttribute.ExceptionTable) {
+                parseTo.TryCatches.Add(new TryCatchNode {
                     ExceptionClassName = exceptionTableEntry.CatchType,
-                    Start = labels.GetOrAdd(exceptionTableEntry.StartPc, new Label()),
-                    End = labels.GetOrAdd(exceptionTableEntry.EndPc, new Label()),
-                    Handler = labels.GetOrAdd(exceptionTableEntry.HandlerPc, new Label())
+                    Start = labels.GetOrAdd(exceptionTableEntry.StartPc, () => new Label()),
+                    End = labels.GetOrAdd(exceptionTableEntry.EndPc, () => new Label()),
+                    Handler = labels.GetOrAdd(exceptionTableEntry.HandlerPc, () => new Label())
                 });
             }
 
             List<KeyValuePair<long, Instruction>> instructionList = instructions.OrderBy(x => x.Key).ToList();
-
             List<KeyValuePair<long, Label>> labelList = labels.OrderBy(x => x.Key).ToList();
-            int labelListPosition = 0;
-
-            List<LineNumberTableAttribute.LineNumberTableEntry> lineNumberTable = ((GetAttribute(codeAttribute.Attributes, PredefinedAttributeNames.LineNumberTable)?.ParsedAttribute
-                as LineNumberTableAttribute)?.LineNumberTable ?? new List<LineNumberTableAttribute.LineNumberTableEntry>()).OrderBy(x => x.StartPc).ToList();
+            List<LineNumberTableAttribute.LineNumberTableEntry> lineNumberTable = ((GetAttribute(codeAttribute.Attributes, PredefinedAttributeNames.LineNumberTable)?.ParsedAttribute as LineNumberTableAttribute)?.LineNumberTable ?? new List<LineNumberTableAttribute.LineNumberTableEntry>()).OrderBy(x => x.StartPc).ToList();
             if (lineNumberTable.Any(position => !instructions.ContainsKey(position.StartPc)))
                 throw new ArgumentException("Line number is not at the beginning of instruction");
-            int lineNumberTablePosition = 0;
 
+            if (parseTo.LocalVariableNames == null) {
+                parseTo.LocalVariableNames = new Dictionary<int, LocalVariableTableAttribute.LocalVariableTableEntry>();
+            }
+            else {
+                parseTo.LocalVariableNames.Clear();
+            }
+
+            if (GetAttribute(codeAttribute.Attributes, PredefinedAttributeNames.LocalVariableTable)?.ParsedAttribute is LocalVariableTableAttribute lvt && lvt.LocalVariableTable != null) {
+                List<LocalVariableTableAttribute.LocalVariableTableEntry> localVariableTable = lvt.LocalVariableTable.OrderBy(x => x.Index).ToList();
+                foreach (LocalVariableTableAttribute.LocalVariableTableEntry entry in localVariableTable) {
+                    parseTo.LocalVariableNames[entry.Index] = new LocalVariableTableAttribute.LocalVariableTableEntry() {
+                        StartPc = entry.StartPc,
+                        Length = entry.Length,
+                        Name = entry.Name,
+                        Descriptor = entry.Descriptor,
+                        Index = entry.Index
+                    };
+                }
+            }
+
+            int labelListPosition = 0;
+            int lineNumberTablePosition = 0;
             List<(int Position, StackMapFrame Frame)> stackMapFrames = new List<(int Position, StackMapFrame Frame)>();
             int stackMapFramesPosition = 0;
 
             {
-                List<StackMapTableAttribute.StackMapFrame> stackMapTable = (GetAttribute(codeAttribute.Attributes, PredefinedAttributeNames.StackMapTable)?.ParsedAttribute
-                        as StackMapTableAttribute)?.Entries;
-                if (stackMapTable != null)
-                {
+                List<StackMapTableAttribute.StackMapFrame> stackMapTable = (GetAttribute(codeAttribute.Attributes, PredefinedAttributeNames.StackMapTable)?.ParsedAttribute as StackMapTableAttribute)?.Entries;
+                if (stackMapTable != null) {
                     stackMapFrames.Capacity = stackMapTable.Count;
                     int position = 0;
                     bool hasProcessedFirst = false;
-                    foreach (StackMapTableAttribute.StackMapFrame entry in stackMapTable)
-                    {
-                        VerificationElement ConvertVerificationElement(StackMapTableAttribute.VerificationElement sourceVerificationElement)
-                        {
+                    foreach (StackMapTableAttribute.StackMapFrame entry in stackMapTable) {
+                        VerificationElement ConvertVerificationElement(StackMapTableAttribute.VerificationElement sourceVerificationElement) {
                             VerificationElement verificationElement;
 
-                            switch (sourceVerificationElement)
-                            {
+                            switch (sourceVerificationElement) {
                                 case StackMapTableAttribute.SimpleVerificationElement simpleVerificationElement:
-                                    verificationElement = new SimpleVerificationElement((VerificationElementType)simpleVerificationElement.Type);
+                                    verificationElement = new SimpleVerificationElement((VerificationElementType) simpleVerificationElement.Type);
                                     break;
                                 case StackMapTableAttribute.ObjectVerificationElement objectVerificationElement:
-                                    verificationElement = new ObjectVerificationElement
-                                    {
+                                    verificationElement = new ObjectVerificationElement {
                                         ObjectClass = objectVerificationElement.ObjectClass
                                     };
                                     break;
-                                case StackMapTableAttribute.UninitializedVerificationElement uninitializedVerificationElement:
-                                {
+                                case StackMapTableAttribute.UninitializedVerificationElement uninitializedVerificationElement: {
                                     Instruction newInstruction = instructions[uninitializedVerificationElement.NewInstructionOffset];
                                     if (newInstruction.Opcode != Opcode.NEW)
                                         throw new ArgumentException(
                                             $"New instruction required by verification element is not NEW: {newInstruction.Opcode}", nameof(newInstruction));
-                                    verificationElement = new UninitializedVerificationElement
-                                    {
+                                    verificationElement = new UninitializedVerificationElement {
                                         NewInstruction = (TypeInstruction) newInstruction
                                     };
                                     break;
                                 }
-                                default:
-                                    throw new ArgumentOutOfRangeException(nameof(verificationElement));
-
+                                default: throw new ArgumentOutOfRangeException(nameof(verificationElement));
                             }
 
                             return verificationElement;
@@ -564,8 +600,7 @@ namespace JavaAsm.Instructions
 
                         position += entry.OffsetDelta + (hasProcessedFirst ? 1 : 0);
 
-                        StackMapFrame stackMapFrame = new StackMapFrame
-                        {
+                        StackMapFrame stackMapFrame = new StackMapFrame {
                             Type = (FrameType) entry.Type,
                             ChopK = entry.ChopK
                         };
@@ -588,12 +623,10 @@ namespace JavaAsm.Instructions
                 GetAttribute(codeAttribute.Attributes, PredefinedAttributeNames.LocalVariableTypeTable);
             }
 
-            foreach (KeyValuePair<long, Instruction> pair in instructionList)
-            {
+            foreach (KeyValuePair<long, Instruction> pair in instructionList) {
                 while (lineNumberTablePosition < lineNumberTable.Count &&
                        pair.Key >= lineNumberTable[lineNumberTablePosition].StartPc)
-                    parseTo.Instructions.Add(new LineNumber
-                    {
+                    parseTo.Instructions.Add(new LineNumber {
                         Line = lineNumberTable[lineNumberTablePosition++].LineNumber
                     });
                 while (labelListPosition < labelList.Count && pair.Key >= labelList[labelListPosition].Key)
@@ -602,25 +635,22 @@ namespace JavaAsm.Instructions
                     parseTo.Instructions.Add(stackMapFrames[stackMapFramesPosition++].Frame);
                 parseTo.Instructions.Add(pair.Value);
             }
+
             while (labelListPosition < labelList.Count)
                 parseTo.Instructions.Add(labelList[labelListPosition++].Value);
             while (stackMapFramesPosition < stackMapFrames.Count)
                 parseTo.Instructions.Add(stackMapFrames[stackMapFramesPosition++].Frame);
         }
 
-        public static CodeAttribute SaveCodeAttribute(MethodNode source, ClassWriterState writerState)
-        {
-            CodeAttribute codeAttribute = new CodeAttribute
-            {
+        public static CodeAttribute SaveCodeAttribute(MethodNode source, ClassWriterState writerState) {
+            CodeAttribute codeAttribute = new CodeAttribute {
                 Attributes = source.CodeAttributes,
                 MaxLocals = source.MaxLocals,
                 MaxStack = source.MaxStack
             };
 
-            foreach (Instruction instruction in source.Instructions)
-            {
-                switch (instruction)
-                {
+            foreach (Instruction instruction in source.Instructions) {
+                switch (instruction) {
                     case FieldInstruction fieldInstruction:
                         writerState.ConstantPool.Find(new FieldReferenceEntry(
                             new ClassEntry(new Utf8Entry(fieldInstruction.Owner.Name)),
@@ -639,14 +669,30 @@ namespace JavaAsm.Instructions
                     case LdcInstruction ldcInstruction:
                         Entry entry;
                         switch (ldcInstruction.Value) {
-                            case int integerValue:                  entry = new IntegerEntry(integerValue); break;
-                            case float floatValue:                  entry = new FloatEntry(floatValue); break;
-                            case string stringValue:                entry = new StringEntry(new Utf8Entry(stringValue)); break;
-                            case long longValue:                    entry = new LongEntry(longValue); break;
-                            case double doubleValue:                entry = new DoubleEntry(doubleValue); break;
-                            case ClassName className:               entry = new ClassEntry(new Utf8Entry(className.Name)); break;
-                            case Handle handle:                     entry = handle.ToConstantPool(); break;
-                            case MethodDescriptor methodDescriptor: entry = new MethodTypeEntry(new Utf8Entry(methodDescriptor.ToString())); break;
+                            case int integerValue:
+                                entry = new IntegerEntry(integerValue);
+                                break;
+                            case float floatValue:
+                                entry = new FloatEntry(floatValue);
+                                break;
+                            case string stringValue:
+                                entry = new StringEntry(new Utf8Entry(stringValue));
+                                break;
+                            case long longValue:
+                                entry = new LongEntry(longValue);
+                                break;
+                            case double doubleValue:
+                                entry = new DoubleEntry(doubleValue);
+                                break;
+                            case ClassName className:
+                                entry = new ClassEntry(new Utf8Entry(className.Name));
+                                break;
+                            case Handle handle:
+                                entry = handle.ToConstantPool();
+                                break;
+                            case MethodDescriptor methodDescriptor:
+                                entry = new MethodTypeEntry(new Utf8Entry(methodDescriptor.ToString()));
+                                break;
                             default: throw new ArgumentOutOfRangeException(nameof(ldcInstruction.Value), $"Can't encode value of type {ldcInstruction.Value.GetType()}");
                         }
 
@@ -660,8 +706,7 @@ namespace JavaAsm.Instructions
                             writerState.ClassNode.Attributes.FirstOrDefault(x =>
                                 x.Name == PredefinedAttributeNames.BootstrapMethods);
                         if (bootstrapMethodAttributeNode == null)
-                            writerState.ClassNode.Attributes.Add(bootstrapMethodAttributeNode = new AttributeNode
-                            {
+                            writerState.ClassNode.Attributes.Add(bootstrapMethodAttributeNode = new AttributeNode {
                                 Name = PredefinedAttributeNames.BootstrapMethods,
                                 ParsedAttribute = new BootstrapMethodsAttribute()
                             });
@@ -686,25 +731,19 @@ namespace JavaAsm.Instructions
                     case VariableInstruction _:
                     case StackMapFrame _:
                         break;
-                    default:
-                        throw new ArgumentOutOfRangeException(nameof(instruction));
+                    default: throw new ArgumentOutOfRangeException(nameof(instruction));
                 }
             }
 
             List<LineNumberTableAttribute.LineNumberTableEntry> lineNumbers = new List<LineNumberTableAttribute.LineNumberTableEntry>();
-
             List<StackMapTableAttribute.StackMapFrame> stackMapFrames = new List<StackMapTableAttribute.StackMapFrame>();
-            int previousStackMapFramePosition = -1;
-
             Dictionary<Instruction, ushort> instructions = new Dictionary<Instruction, ushort>();
-
             int currentPosition = 0;
-            foreach (Instruction instruction in source.Instructions)
-            {
+            int previousStackMapFramePosition = -1;
+            foreach (Instruction instruction in source.Instructions) {
                 instructions.Add(instruction, (ushort) currentPosition);
                 currentPosition += instruction.Opcode == Opcode.None ? 0 : sizeof(byte);
-                switch (instruction)
-                {
+                switch (instruction) {
                     case FieldInstruction _:
                         currentPosition += sizeof(ushort);
                         break;
@@ -715,10 +754,10 @@ namespace JavaAsm.Instructions
                         currentPosition += sizeof(ushort);
                         break;
                     case IncrementInstruction incrementInstruction:
-                        currentPosition += incrementInstruction.VariableIndex > byte.MaxValue || 
+                        currentPosition += incrementInstruction.VariableIndex > byte.MaxValue ||
                                            incrementInstruction.Value > sbyte.MaxValue || incrementInstruction.Value < sbyte.MinValue
-                                ? sizeof(ushort) * 2 + sizeof(byte)
-                                : sizeof(byte) * 2;
+                            ? sizeof(ushort) * 2 + sizeof(byte)
+                            : sizeof(byte) * 2;
                         break;
                     case IntegerPushInstruction integerPushInstruction:
                         currentPosition += integerPushInstruction.Opcode == Opcode.SIPUSH
@@ -729,10 +768,13 @@ namespace JavaAsm.Instructions
                         currentPosition += sizeof(ushort);
                         break;
                     case LdcInstruction ldcInstruction:
-                        if (ldcInstruction.Value is long || ldcInstruction.Value is double)
+                        if (ldcInstruction.Value is long || ldcInstruction.Value is double) {
                             currentPosition += sizeof(ushort);
-                        else
-                        {
+                        }
+                        else if (ldcInstruction.Opcode == Opcode.LDC2_W || ldcInstruction.Opcode == Opcode.LDC_W) {
+                            currentPosition += sizeof(ushort);
+                        }
+                        else {
                             ushort constantPoolEntryIndex;
                             switch (ldcInstruction.Value) {
                                 case int integerValue:
@@ -756,12 +798,21 @@ namespace JavaAsm.Instructions
                                 default: throw new ArgumentOutOfRangeException(nameof(ldcInstruction.Value), $"Can't encode value of type {ldcInstruction.Value.GetType()}");
                             }
 
-                            currentPosition += constantPoolEntryIndex > byte.MaxValue ? sizeof(ushort) : sizeof(byte);
+                            // There's this too... it just has to mutate the LDC instruction, otherwise verification fails
+                            // But then this will probably offset the LVT more so :/
+                            // it's probably easier to figure out a replacement for the LVT
+                            if (constantPoolEntryIndex > byte.MaxValue) {
+                                currentPosition += sizeof(ushort);
+                                ldcInstruction.Opcode = Opcode.LDC_W;
+                            }
+                            else {
+                                currentPosition += sizeof(byte);
+                            }
                         }
+
                         break;
                     case LineNumber lineNumber:
-                        lineNumbers.Add(new LineNumberTableAttribute.LineNumberTableEntry
-                        {
+                        lineNumbers.Add(new LineNumberTableAttribute.LineNumberTableEntry {
                             LineNumber = lineNumber.Line,
                             StartPc = (ushort) currentPosition
                         });
@@ -780,8 +831,7 @@ namespace JavaAsm.Instructions
                     case NewArrayInstruction _:
                         currentPosition += sizeof(byte);
                         break;
-                    case SimpleInstruction _:
-                        break;
+                    case SimpleInstruction _: break;
                     case TableSwitchInstruction tableSwitchInstruction:
                         while (currentPosition % 4 != 0)
                             currentPosition++;
@@ -797,32 +847,27 @@ namespace JavaAsm.Instructions
                     case InvokeDynamicInstruction _:
                         currentPosition += sizeof(ushort) + sizeof(ushort);
                         break;
-                    default:
-                        throw new ArgumentOutOfRangeException(nameof(instruction));
+                    default: throw new ArgumentOutOfRangeException(nameof(instruction));
                 }
 
                 if (currentPosition > ushort.MaxValue)
                     throw new ArgumentOutOfRangeException(nameof(currentPosition));
             }
 
-            if (lineNumbers.Count > 0)
-            {
+            if (lineNumbers.Count > 0) {
                 if (codeAttribute.Attributes.Any(x => x.Name == PredefinedAttributeNames.LineNumberTable))
                     throw new ArgumentException($"There is already a {PredefinedAttributeNames.LineNumberTable} attribute");
                 codeAttribute.Attributes.Add(new AttributeNode {
                     Name = PredefinedAttributeNames.LineNumberTable,
-                    ParsedAttribute = new LineNumberTableAttribute
-                    {
+                    ParsedAttribute = new LineNumberTableAttribute {
                         LineNumberTable = lineNumbers
                     }
                 });
             }
 
             codeAttribute.ExceptionTable.Capacity = source.TryCatches.Count;
-            foreach (TryCatchNode tryCatchNode in source.TryCatches)
-            {
-                codeAttribute.ExceptionTable.Add(new CodeAttribute.ExceptionTableEntry
-                {
+            foreach (TryCatchNode tryCatchNode in source.TryCatches) {
+                codeAttribute.ExceptionTable.Add(new CodeAttribute.ExceptionTableEntry {
                     CatchType = tryCatchNode.ExceptionClassName,
                     StartPc = instructions[tryCatchNode.Start],
                     EndPc = instructions[tryCatchNode.End],
@@ -830,16 +875,53 @@ namespace JavaAsm.Instructions
                 });
             }
 
+            if (source.LocalVariableNames != null && source.LocalVariableNames.Count > 0) {
+                if (codeAttribute.Attributes.Any(x => x.Name == PredefinedAttributeNames.LocalVariableTable))
+                    throw new ArgumentException($"There is already a {PredefinedAttributeNames.LocalVariableTable} attribute");
+                codeAttribute.Attributes.Add(new AttributeNode {
+                    Name = PredefinedAttributeNames.LocalVariableTable,
+                    ParsedAttribute = new LocalVariableTableAttribute() {
+                        LocalVariableTable = source.LocalVariableNames.ToList().Select(e => e.Value).ToList()
+                    }
+                });
+            }
+
             MemoryStream codeDataStream = new MemoryStream(currentPosition);
 
-            foreach (Instruction instruction in source.Instructions)
-            {
+            Dictionary<Instruction, ushort> actualInstructions = new Dictionary<Instruction, ushort>();
+            Instruction prevInstruction = null;
+            foreach (Instruction instruction in source.Instructions) {
                 ushort position = (ushort) codeDataStream.Position;
+                actualInstructions[instruction] = position;
 
-                if (position != instructions[instruction])
-                    throw new Exception($"Wrong position: {position} != {instructions[instruction]}");
-                switch (instruction)
-                {
+                if (position != instructions[instruction]) {
+                    StringBuilder sb = new StringBuilder();
+                    sb.AppendLine($"Error writing instructions for {source}");
+                    sb.AppendLine($"Wrong position: {position} != {instructions[instruction]}");
+                    if (prevInstruction != null) {
+                        sb.AppendLine($"    Previous instruction: {prevInstruction.GetType()} -> {prevInstruction}");
+                    }
+
+                    if (prevInstruction != null) {
+                        sb.AppendLine($"    Current instruction: {instruction.GetType()} -> {instruction}");
+                    }
+
+                    sb.AppendLine($"    Verification Instruction map:");
+                    foreach (KeyValuePair<Instruction, ushort> entry in instructions) {
+                        sb.AppendLine($"        {entry.Key.GetType().Name} ({entry.Key}) at position {entry.Value}");
+                    }
+
+                    sb.AppendLine($"    Actual Instruction map:");
+                    foreach (KeyValuePair<Instruction, ushort> entry in actualInstructions) {
+                        sb.AppendLine($"        {entry.Key.GetType().Name} ({entry.Key}) at position {entry.Value}");
+                    }
+
+                    throw new Exception(sb.ToString());
+                }
+
+                prevInstruction = instruction;
+
+                switch (instruction) {
                     case FieldInstruction fieldInstruction:
                         codeDataStream.WriteByte((byte) fieldInstruction.Opcode);
                         Binary.BigEndian.Write(codeDataStream, writerState.ConstantPool.Find(new FieldReferenceEntry(
@@ -849,25 +931,24 @@ namespace JavaAsm.Instructions
                         break;
                     case MethodInstruction methodInstruction:
                         codeDataStream.WriteByte((byte) methodInstruction.Opcode);
-                        if (methodInstruction.Opcode == Opcode.INVOKEINTERFACE)
-                        {
+                        if (methodInstruction.Opcode == Opcode.INVOKEINTERFACE) {
                             Binary.BigEndian.Write(codeDataStream, writerState.ConstantPool.Find(new InterfaceMethodReferenceEntry(
                                 new ClassEntry(new Utf8Entry(methodInstruction.Owner.Name)),
                                 new NameAndTypeEntry(new Utf8Entry(methodInstruction.Name),
                                     new Utf8Entry(methodInstruction.Descriptor.ToString())))));
                             if (methodInstruction.Descriptor.ArgumentTypes.Sum(x => x.SizeOnStack) + 1 > byte.MaxValue)
-                                throw new ArgumentOutOfRangeException(nameof(methodInstruction.Descriptor.ArgumentTypes.Count), 
+                                throw new ArgumentOutOfRangeException(nameof(methodInstruction.Descriptor.ArgumentTypes.Count),
                                     $"Too many arguments: {methodInstruction.Descriptor.ArgumentTypes.Sum(x => x.SizeOnStack) + 1} > {byte.MaxValue}");
                             codeDataStream.WriteByte((byte) (methodInstruction.Descriptor.ArgumentTypes.Sum(x => x.SizeOnStack) + 1));
                             codeDataStream.WriteByte(0);
-                        } 
-                        else
-                        {
+                        }
+                        else {
                             Binary.BigEndian.Write(codeDataStream, writerState.ConstantPool.Find(new MethodReferenceEntry(
                                 new ClassEntry(new Utf8Entry(methodInstruction.Owner.Name)),
                                 new NameAndTypeEntry(new Utf8Entry(methodInstruction.Name),
                                     new Utf8Entry(methodInstruction.Descriptor.ToString())))));
                         }
+
                         break;
                     case TypeInstruction typeInstruction:
                         codeDataStream.WriteByte((byte) typeInstruction.Opcode);
@@ -879,16 +960,15 @@ namespace JavaAsm.Instructions
                             codeDataStream.WriteByte((byte) Opcode.WIDE);
                         codeDataStream.WriteByte((byte) incrementInstruction.Opcode);
                         if (incrementInstruction.VariableIndex > byte.MaxValue ||
-                            incrementInstruction.Value > sbyte.MaxValue || incrementInstruction.Value < sbyte.MinValue)
-                        {
+                            incrementInstruction.Value > sbyte.MaxValue || incrementInstruction.Value < sbyte.MinValue) {
                             Binary.BigEndian.Write(codeDataStream, incrementInstruction.VariableIndex);
                             Binary.BigEndian.Write(codeDataStream, incrementInstruction.Value);
                         }
-                        else
-                        {
+                        else {
                             codeDataStream.WriteByte((byte) incrementInstruction.VariableIndex);
                             codeDataStream.WriteByte(unchecked((byte) incrementInstruction.Value));
                         }
+
                         break;
                     case IntegerPushInstruction integerPushInstruction:
                         codeDataStream.WriteByte((byte) integerPushInstruction.Opcode);
@@ -899,7 +979,13 @@ namespace JavaAsm.Instructions
                         break;
                     case JumpInstruction jumpInstruction:
                         codeDataStream.WriteByte((byte) jumpInstruction.Opcode);
-                        Binary.BigEndian.Write(codeDataStream, (short) (instructions[jumpInstruction.Target] - instructions[jumpInstruction]));
+                        if (jumpInstruction.UseOverrideOffset) {
+                            Binary.BigEndian.Write(codeDataStream, jumpInstruction.JumpOffset);
+                        }
+                        else {
+                            Binary.BigEndian.Write(codeDataStream, (short) (instructions[jumpInstruction.Target] - instructions[jumpInstruction]));
+                        }
+
                         break;
                     case LdcInstruction ldcInstruction:
                         ushort constantPoolEntryIndex;
@@ -931,19 +1017,51 @@ namespace JavaAsm.Instructions
                             default: throw new ArgumentOutOfRangeException(nameof(ldcInstruction.Value), $"Can't encode value of type {ldcInstruction.Value.GetType()}");
                         }
 
-                        if (ldcInstruction.Value is long || ldcInstruction.Value is double)
-                        {
+                        if (ldcInstruction.Value is long || ldcInstruction.Value is double) {
+                            if (ldcInstruction.Opcode == Opcode.LDC) {
+                                throw new InvalidOperationException($"LDC value is a long/double, but it's op-code is not LDC2_W ({ldcInstruction.Opcode}). Value: " + ldcInstruction.Value);
+                            }
+
                             codeDataStream.WriteByte((byte) Opcode.LDC2_W);
                             Binary.BigEndian.Write(codeDataStream, constantPoolEntryIndex);
                         }
-                        else
-                        {
-                            codeDataStream.WriteByte((byte) (constantPoolEntryIndex > byte.MaxValue ? Opcode.LDC_W : Opcode.LDC));
-                            if (constantPoolEntryIndex > byte.MaxValue)
+                        else {
+                            // TODO: What to do here?
+                            // If the original const pool index was, for example, below or equal to 255, but the new
+                            // index is is above 255, LDC_W will be required and therefore may lead to the LVT (local variable table) being offset
+                            // Overall problem: The LVT may contain an entry whose length is near or at the end of the code
+                            // Therefore, if LDC_W is converted to LDC, then the LVT length is past the size of the bytecode,
+                            // which can cause errors in in asm libraries and possibly in classloading (usually array index out of bounds)
+
+                            // Old code:
+                            //  codeDataStream.WriteByte((byte) ((constantPoolEntryIndex > byte.MaxValue) ? Opcode.LDC_W : Opcode.LDC));
+                            // New code:
+                            //  write the instruction's original opcode only if wide is not required
+                            //  the original opcode may be wide anyway. To clarify, this is to prefent an original LDC_W being
+                            //  converted to LDC, possilby causing the LVT being offset
+                            //  The way the LVT is stored could be modified in this library, so it's not actually a table/map,
+                            //  but is actually stored in the instructions themselves maybe? not sure... but the way it is,
+                            //  seems very fiddily to actually fix this problem
+
+
+                            bool isWideRequired = (byte) constantPoolEntryIndex > byte.MaxValue;
+                            if (isWideRequired || ldcInstruction.Opcode != Opcode.LDC) {
+                                codeDataStream.WriteByte((byte) Opcode.LDC_W);
                                 Binary.BigEndian.Write(codeDataStream, constantPoolEntryIndex);
-                            else
+                            }
+                            // else if (isWideRequired) {
+                            //     // throwing an exception seems bad, because the user has no
+                            //     // control over the precise constant pool index
+                            //     codeDataStream.WriteByte((byte) Opcode.LDC_W);
+                            //     Binary.BigEndian.Write(codeDataStream, constantPoolEntryIndex);
+                            // }
+                            else {
+                                // should always be LDC
+                                codeDataStream.WriteByte((byte) ldcInstruction.Opcode);
                                 codeDataStream.WriteByte((byte) constantPoolEntryIndex);
+                            }
                         }
+
                         break;
                     case LookupSwitchInstruction lookupSwitchInstruction:
                         codeDataStream.WriteByte((byte) lookupSwitchInstruction.Opcode);
@@ -951,11 +1069,11 @@ namespace JavaAsm.Instructions
                             codeDataStream.WriteByte(0);
                         Binary.BigEndian.Write(codeDataStream, instructions[lookupSwitchInstruction.Default] - position);
                         Binary.BigEndian.Write(codeDataStream, lookupSwitchInstruction.MatchLabels.Count);
-                        foreach (KeyValuePair<int, Label> pair in lookupSwitchInstruction.MatchLabels)
-                        {
+                        foreach (KeyValuePair<int, Label> pair in lookupSwitchInstruction.MatchLabels) {
                             Binary.BigEndian.Write(codeDataStream, pair.Key);
                             Binary.BigEndian.Write(codeDataStream, instructions[pair.Value] - position);
                         }
+
                         break;
                     case MultiANewArrayInstruction multiANewArrayInstruction:
                         codeDataStream.WriteByte((byte) multiANewArrayInstruction.Opcode);
@@ -983,11 +1101,9 @@ namespace JavaAsm.Instructions
                             Binary.BigEndian.Write(codeDataStream, instructions[label] - position);
                         break;
                     case VariableInstruction variableInstruction:
-                        if (variableInstruction.Opcode != Opcode.RET && variableInstruction.VariableIndex < 4)
-                        {
+                        if (variableInstruction.Opcode != Opcode.RET && variableInstruction.VariableIndex < 4) {
                             // ReSharper disable once SwitchStatementMissingSomeCases
-                            switch (variableInstruction.Opcode)
-                            {
+                            switch (variableInstruction.Opcode) {
                                 case Opcode.ASTORE:
                                     codeDataStream.WriteByte((byte) ((byte) Opcode.ASTORE_0 + variableInstruction.VariableIndex));
                                     break;
@@ -1018,12 +1134,10 @@ namespace JavaAsm.Instructions
                                 case Opcode.LLOAD:
                                     codeDataStream.WriteByte((byte) ((byte) Opcode.LLOAD_0 + variableInstruction.VariableIndex));
                                     break;
-                                default:
-                                    throw new ArgumentOutOfRangeException(nameof(variableInstruction.Opcode));
+                                default: throw new ArgumentOutOfRangeException(nameof(variableInstruction.Opcode));
                             }
                         }
-                        else
-                        {
+                        else {
                             if (variableInstruction.VariableIndex > byte.MaxValue)
                                 codeDataStream.WriteByte((byte) Opcode.WIDE);
                             codeDataStream.WriteByte((byte) variableInstruction.Opcode);
@@ -1032,6 +1146,7 @@ namespace JavaAsm.Instructions
                             else
                                 codeDataStream.WriteByte((byte) variableInstruction.VariableIndex);
                         }
+
                         break;
                     case InvokeDynamicInstruction invokeDynamicInstruction:
                         codeDataStream.WriteByte((byte) invokeDynamicInstruction.Opcode);
@@ -1041,85 +1156,73 @@ namespace JavaAsm.Instructions
 
                         BootstrapMethod bootstrapMethod = new BootstrapMethod(invokeDynamicInstruction.BootstrapMethod, invokeDynamicInstruction.BootstrapMethodArgs);
                         Binary.BigEndian.Write(codeDataStream, writerState.ConstantPool.Find(new InvokeDynamicEntry(
-                                (ushort) bootstrapMethodAttribute.BootstrapMethods.FindIndex(x => x.Equals(bootstrapMethod)),
-                                new NameAndTypeEntry(new Utf8Entry(invokeDynamicInstruction.Name),
-                                    new Utf8Entry(invokeDynamicInstruction.Descriptor.ToString())))));
+                            (ushort) bootstrapMethodAttribute.BootstrapMethods.FindIndex(x => x.Equals(bootstrapMethod)),
+                            new NameAndTypeEntry(new Utf8Entry(invokeDynamicInstruction.Name),
+                                new Utf8Entry(invokeDynamicInstruction.Descriptor.ToString())))));
                         Binary.BigEndian.Write(codeDataStream, (ushort) 0);
                         break;
                     case StackMapFrame stackMapFrame:
 
-                        StackMapTableAttribute.VerificationElement ConvertVerificationElement(
-                            VerificationElement sourceVerificationElement)
-                        {
+                        StackMapTableAttribute.VerificationElement ConvertVerificationElement(VerificationElement sourceVerificationElement) {
                             StackMapTableAttribute.VerificationElement verificationElement;
-                            switch (sourceVerificationElement)
-                            {
+                            switch (sourceVerificationElement) {
                                 case ObjectVerificationElement objectVerificationElement:
-                                    verificationElement = new StackMapTableAttribute.ObjectVerificationElement
-                                    {
+                                    verificationElement = new StackMapTableAttribute.ObjectVerificationElement {
                                         ObjectClass = objectVerificationElement.ObjectClass
                                     };
                                     break;
                                 case SimpleVerificationElement simpleVerificationElement:
                                     verificationElement = new StackMapTableAttribute.SimpleVerificationElement(
-                                            (StackMapTableAttribute.VerificationElementType) simpleVerificationElement.Type);
+                                        (StackMapTableAttribute.VerificationElementType) simpleVerificationElement.Type);
                                     break;
                                 case UninitializedVerificationElement uninitializedVerificationElement:
                                     if (uninitializedVerificationElement.NewInstruction.Opcode != Opcode.NEW)
                                         throw new ArgumentOutOfRangeException(nameof(uninitializedVerificationElement.NewInstruction),
                                             $"New instruction is not NEW: {uninitializedVerificationElement.NewInstruction.Opcode}");
-                                    verificationElement = new StackMapTableAttribute.UninitializedVerificationElement
-                                    {
+                                    verificationElement = new StackMapTableAttribute.UninitializedVerificationElement {
                                         NewInstructionOffset = instructions[uninitializedVerificationElement.NewInstruction]
                                     };
                                     break;
-                                default:
-                                    throw new ArgumentOutOfRangeException(nameof(sourceVerificationElement));
+                                default: throw new ArgumentOutOfRangeException(nameof(sourceVerificationElement));
                             }
+
                             return verificationElement;
                         }
 
                         StackMapTableAttribute.StackMapFrame stackMapTableEntry;
 
-                        switch (stackMapFrame.Type)
-                        {
+                        switch (stackMapFrame.Type) {
                             case FrameType.Same:
-                                stackMapTableEntry = new StackMapTableAttribute.StackMapFrame
-                                {
+                                stackMapTableEntry = new StackMapTableAttribute.StackMapFrame {
                                     Type = StackMapTableAttribute.FrameType.Same
                                 };
                                 break;
                             case FrameType.SameLocals1StackItem:
-                                stackMapTableEntry = new StackMapTableAttribute.StackMapFrame
-                                {
+                                stackMapTableEntry = new StackMapTableAttribute.StackMapFrame {
                                     Type = StackMapTableAttribute.FrameType.SameLocals1StackItem
                                 };
                                 stackMapTableEntry.Stack.Add(ConvertVerificationElement(stackMapFrame.Stack[0]));
                                 break;
                             case FrameType.Chop:
-                                stackMapTableEntry = new StackMapTableAttribute.StackMapFrame
-                                {
+                                stackMapTableEntry = new StackMapTableAttribute.StackMapFrame {
                                     Type = StackMapTableAttribute.FrameType.Chop,
                                     ChopK = stackMapFrame.ChopK
                                 };
                                 break;
                             case FrameType.Append:
-                                stackMapTableEntry = new StackMapTableAttribute.StackMapFrame
-                                {
+                                stackMapTableEntry = new StackMapTableAttribute.StackMapFrame {
                                     Type = StackMapTableAttribute.FrameType.Append
                                 };
                                 stackMapTableEntry.Locals.AddRange(stackMapFrame.Locals.Select(ConvertVerificationElement));
                                 break;
                             case FrameType.Full:
-                                stackMapTableEntry = new StackMapTableAttribute.StackMapFrame
-                                {
+                                stackMapTableEntry = new StackMapTableAttribute.StackMapFrame {
                                     Type = StackMapTableAttribute.FrameType.Full
                                 };
                                 stackMapTableEntry.Locals.AddRange(stackMapFrame.Locals.Select(ConvertVerificationElement));
                                 stackMapTableEntry.Stack.AddRange(stackMapFrame.Stack.Select(ConvertVerificationElement));
                                 break;
-                            default:
-                                throw new ArgumentOutOfRangeException(nameof(stackMapFrame.Type));
+                            default: throw new ArgumentOutOfRangeException(nameof(stackMapFrame.Type));
                         }
 
                         if (position - previousStackMapFramePosition <= 0)
@@ -1132,20 +1235,16 @@ namespace JavaAsm.Instructions
                     case LineNumber _:
                     case Label _:
                         break;
-                    default:
-                        throw new ArgumentOutOfRangeException(nameof(instruction));
+                    default: throw new ArgumentOutOfRangeException(nameof(instruction));
                 }
             }
 
-            if (stackMapFrames.Count > 0)
-            {
+            if (stackMapFrames.Count > 0) {
                 if (codeAttribute.Attributes.Any(x => x.Name == PredefinedAttributeNames.StackMapTable))
                     throw new ArgumentException($"There is already a {PredefinedAttributeNames.StackMapTable} attribute");
-                codeAttribute.Attributes.Add(new AttributeNode
-                {
+                codeAttribute.Attributes.Add(new AttributeNode {
                     Name = PredefinedAttributeNames.StackMapTable,
-                    ParsedAttribute = new StackMapTableAttribute
-                    {
+                    ParsedAttribute = new StackMapTableAttribute {
                         Entries = stackMapFrames
                     }
                 });

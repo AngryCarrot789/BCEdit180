@@ -122,7 +122,7 @@
                                 <TabItem>
                                     <TabItem.Header>
                                         <StackPanel Orientation="Horizontal">
-                                            <TextBlock Text="{Binding Interfaces.Count, Mode=OneWay, UpdateSourceTrigger=PropertyChanged, StringFormat={}Interfaces ({0}), FallbackValue=Interfaces}" HorizontalAlignment="Center" Padding="1 1 5 1" FontWeight="Bold" VerticalAlignment="Center"/>
+                                            <TextBlock Text="{Binding Interfaces.Count, Mode=OneWay, UpdateSourceTrigger=PropertyChanged, StringFormat={}Interfaces ({0}), FallbackValue=Interfaces}" HorizontalAlignment="Center" Padding="1 1 7 1" FontWeight="Bold" VerticalAlignment="Center"/>
                                             <Button Command="{Binding AddInterfaceCommand}" ToolTip="Add interface" Width="20" Height="20" Background="{DynamicResource AREghZyBrush.Primary.3.Background.Static}" BorderBrush="{DynamicResource AREghZyBrush.Primary.3.Border.Static}" Margin="0 0 5 0">
                                                 <TextBlock Text="+" Margin="0 -2 0 0"/>
                                             </Button>
@@ -429,11 +429,13 @@
                                                             <RowDefinition Height="3"/>
                                                             <RowDefinition Height="16*"/>
                                                         </Grid.RowDefinitions>
-                                                        <StackPanel Orientation="Horizontal" VerticalAlignment="Top" Height="22">
-                                                            <Button Content="Insert Code Sequence" Command="{Binding InsertCodeCommand}" Padding="5 1" Margin="0 0 2 0" BorderBrush="{DynamicResource AREghZyBrush.Primary.4.Border.Static}"/>
-                                                            <Button Content="Insert New Instruction (Coming soon)" Command="{Binding InsertInstructionCommand}" Padding="5 1" Margin="0 0 2 0" BorderBrush="{DynamicResource AREghZyBrush.Primary.4.Border.Static}"/>
-                                                            <Button Content="Hide Options Code (Coming soon)"      Command="{Binding ShowHideOptionsCommand}" Padding="5 1" Margin="0 0 2 0" BorderBrush="{DynamicResource AREghZyBrush.Primary.4.Border.Static}"/>
-                                                        </StackPanel>
+                                                        <Grid VerticalAlignment="Top" Height="22">
+                                                            <Button IsEnabled="False" Content="Insert Code Sequence" Command="{Binding InsertCodeCommand}" Padding="5 1" BorderBrush="{DynamicResource AREghZyBrush.Primary.4.Border.Static}" HorizontalAlignment="Left" Width="150"/>
+                                                            <Button Content="Insert New Instruction"                 Command="{Binding InsertInstructionCommand}" Padding="5 1" Margin="155,0,0,0" BorderBrush="{DynamicResource AREghZyBrush.Primary.4.Border.Static}" HorizontalAlignment="Left" Width="135"/>
+                                                            <Button IsEnabled="False" Content="Hide Options Code"    Command="{Binding ShowHideOptionsCommand}" Padding="5 1" Margin="295,0,0,0" BorderBrush="{DynamicResource AREghZyBrush.Primary.4.Border.Static}" HorizontalAlignment="Left" Width="200"/>
+                                                            <Button IsEnabled="False" Content="↑"                    Command="{Binding MoveSelectedInstructionUpCommand}" Padding="5 1" BorderBrush="{DynamicResource AREghZyBrush.Primary.4.Border.Static}" HorizontalAlignment="Right" Width="22" Margin="0,0,25,0"/>
+                                                            <Button IsEnabled="False" Content="↓"                    Command="{Binding MoveSelectedInstructionDownCommand}" Padding="5 1" BorderBrush="{DynamicResource AREghZyBrush.Primary.4.Border.Static}" HorizontalAlignment="Right" Width="22"/>
+                                                        </Grid>
                                                         <ListBox Grid.Row="0"
                                                                  ItemsSource="{Binding Instructions}"
                                                                  SelectedItem="{Binding SelectedInstruction, UpdateSourceTrigger=PropertyChanged}"
@@ -446,6 +448,61 @@
                                                                  Background="{DynamicResource AREghZyBrush.Deep.2.Background.Static}"
                                                                  BorderBrush="{DynamicResource AREghZyBrush.Primary.4.Border.Static}"
                                                                  ap:Scrolling.ScrollHorizontallyWithShiftWheel="True">
+                                                            <ListBox.ItemContainerStyle>
+                                                                <Style TargetType="{x:Type ListBoxItem}">
+                                                                    <Setter Property="SnapsToDevicePixels" Value="True" />
+                                                                    <Setter Property="Padding" Value="0" />
+                                                                    <Setter Property="HorizontalContentAlignment" Value="{Binding HorizontalContentAlignment, RelativeSource={RelativeSource AncestorType={x:Type ItemsControl}}}" />
+                                                                    <Setter Property="VerticalContentAlignment" Value="{Binding VerticalContentAlignment, RelativeSource={RelativeSource AncestorType={x:Type ItemsControl}}}" />
+                                                                    <Setter Property="Background" Value="Transparent" />
+                                                                    <Setter Property="BorderBrush" Value="Transparent" />
+                                                                    <Setter Property="BorderThickness" Value="1" />
+                                                                    <Setter Property="FocusVisualStyle" Value="{StaticResource FocusVisual}" />
+                                                                    <Setter Property="Template">
+                                                                        <Setter.Value>
+                                                                            <ControlTemplate TargetType="{x:Type ListBoxItem}">
+                                                                                <Border x:Name="Bd" BorderBrush="{TemplateBinding BorderBrush}" 
+                                                                                        BorderThickness="{TemplateBinding BorderThickness}" 
+                                                                                        Background="{TemplateBinding Background}" 
+                                                                                        Padding="4,1" SnapsToDevicePixels="true">
+                                                                                    <ContentPresenter HorizontalAlignment="{TemplateBinding HorizontalContentAlignment}" SnapsToDevicePixels="{TemplateBinding SnapsToDevicePixels}" VerticalAlignment="{TemplateBinding VerticalContentAlignment}" />
+                                                                                </Border>
+                                                                                <ControlTemplate.Triggers>
+                                                                                    <DataTrigger Binding="{Binding IsNewInstruction, UpdateSourceTrigger=PropertyChanged}" Value="True">
+                                                                                        <Setter Property="Background" Value="{DynamicResource NewInstructionBackground}"/>
+                                                                                    </DataTrigger>
+                                                                                    <MultiTrigger>
+                                                                                        <MultiTrigger.Conditions>
+                                                                                            <Condition Property="IsMouseOver" Value="True" />
+                                                                                        </MultiTrigger.Conditions>
+                                                                                        <Setter Property="Background" TargetName="Bd" Value="{DynamicResource Item.MouseOver.Background}" />
+                                                                                        <Setter Property="BorderBrush" TargetName="Bd" Value="{DynamicResource Item.MouseOver.Border}" />
+                                                                                    </MultiTrigger>
+                                                                                    <MultiTrigger>
+                                                                                        <MultiTrigger.Conditions>
+                                                                                            <Condition Property="Selector.IsSelectionActive" Value="False" />
+                                                                                            <Condition Property="IsSelected" Value="True" />
+                                                                                        </MultiTrigger.Conditions>
+                                                                                        <Setter Property="Background" TargetName="Bd" Value="{DynamicResource Item.SelectedInactive.Background}" />
+                                                                                        <Setter Property="BorderBrush" TargetName="Bd" Value="{DynamicResource Item.SelectedInactive.Border}" />
+                                                                                    </MultiTrigger>
+                                                                                    <MultiTrigger>
+                                                                                        <MultiTrigger.Conditions>
+                                                                                            <Condition Property="Selector.IsSelectionActive" Value="True" />
+                                                                                            <Condition Property="IsSelected" Value="True" />
+                                                                                        </MultiTrigger.Conditions>
+                                                                                        <Setter Property="Background" TargetName="Bd" Value="{DynamicResource Item.SelectedActive.Background}" />
+                                                                                        <Setter Property="BorderBrush" TargetName="Bd" Value="{DynamicResource Item.SelectedActive.Border}" />
+                                                                                    </MultiTrigger>
+                                                                                    <Trigger Property="IsEnabled" Value="False">
+                                                                                        <Setter Property="TextElement.Foreground" TargetName="Bd" Value="{DynamicResource AREghZyBrush.Foreground.Disabled}" />
+                                                                                    </Trigger>
+                                                                                </ControlTemplate.Triggers>
+                                                                            </ControlTemplate>
+                                                                        </Setter.Value>
+                                                                    </Setter>
+                                                                </Style>
+                                                            </ListBox.ItemContainerStyle>
                                                             <ListBox.ContextMenu>
                                                                 <ContextMenu>
                                                                     <MenuItem Header="Change Opcode" DataContext="{Binding SelectedInstruction, UpdateSourceTrigger=PropertyChanged}" IsEnabled="{Binding CanEditOpCode}" Command="{Binding EditOpcodeCommand}"/>

@@ -1,6 +1,5 @@
 using System.Collections.Generic;
 using System.Windows.Input;
-using BCEdit180.Core.Editors;
 using BCEdit180.Core.Window;
 using JavaAsm;
 using JavaAsm.Instructions;

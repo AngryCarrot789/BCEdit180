@@ -15,4 +15,5 @@
     <SolidColorBrush x:Key="Keyword" Color="{StaticResource ThingyThingKeywordThatsIt}"/>
     <SolidColorBrush x:Key="ConstNumeric" Color="{StaticResource NumberColour}"/>
     <SolidColorBrush x:Key="ConstEnum" Color="{StaticResource EnumColour}"/>
+    <SolidColorBrush x:Key="NewInstructionBackground" Color="{DynamicResource AREghZyColour.Primary.1.Background.Static}"/>
 </ResourceDictionary>

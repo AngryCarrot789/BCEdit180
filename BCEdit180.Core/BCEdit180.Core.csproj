@@ -9,12 +9,13 @@
   </ItemGroup>
 
   <ItemGroup>
-    <Reference Include="JavaAsm">
-      <HintPath>..\..\java-asm\JavaAsm\bin\Release\netstandard2.0\JavaAsm.dll</HintPath>
-    </Reference>
     <Reference Include="REghZy.MVVM">
       <HintPath>..\..\REghZy\DLL\REghZy.MVVM.dll</HintPath>
     </Reference>
+  </ItemGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\JavaAsm\JavaAsm.csproj" />
   </ItemGroup>
 
 </Project>

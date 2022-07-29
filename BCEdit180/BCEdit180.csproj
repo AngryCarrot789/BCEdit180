@@ -41,9 +41,6 @@
     <Reference Include="BinaryEncoding, Version=1.5.0.0, Culture=neutral, processorArchitecture=MSIL">
       <HintPath>..\packages\BinaryEncoding.1.5.0\lib\net452\BinaryEncoding.dll</HintPath>
     </Reference>
-    <Reference Include="JavaAsm">
-      <HintPath>..\..\java-asm\JavaAsm\bin\Release\netstandard2.0\JavaAsm.dll</HintPath>
-    </Reference>
     <Reference Include="PresentationFramework.Aero2" />
     <Reference Include="REghZy.MVVM">
       <HintPath>..\..\REghZy\DLL\REghZy.MVVM.dll</HintPath>
@@ -109,6 +106,7 @@
     <Compile Include="CodeEditing\ListControls\InstructionControls.cs" />
     <Compile Include="Converters\AnnontationEntryPrimitiveValueConverter.cs" />
     <Compile Include="Converters\BindLeftBorderToTabConverter.cs" />
+    <Compile Include="Converters\BooleanToColourConverter.cs" />
     <Compile Include="Converters\ErrorColourConverter.cs" />
     <Compile Include="Converters\FilePathToWindowTitleConverter.cs" />
     <Compile Include="Converters\FQCNToWindowTitleConverter.cs" />
@@ -326,6 +324,10 @@
     <ProjectReference Include="..\BCEdit180.Core\BCEdit180.Core.csproj">
       <Project>{2ce7c3a0-6c59-4f7a-9c1d-3168e0bf8ef8}</Project>
       <Name>BCEdit180.Core</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\JavaAsm\JavaAsm.csproj">
+      <Project>{90862785-97c5-4145-a62e-7afc123c82b6}</Project>
+      <Name>JavaAsm</Name>
     </ProjectReference>
   </ItemGroup>
   <ItemGroup />
