@@ -1,12 +1,15 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
+using System.ComponentModel;
 using System.Diagnostics;
 using System.IO;
 using System.Reflection;
 using System.Windows;
 using System.Windows.Documents;
 using System.Windows.Input;
+using System.Xml.Serialization;
+using BCEdit180.AppSettings;
 using BCEdit180.Core;
 using BCEdit180.Core.AttributeEditor;
 using BCEdit180.Core.AttributeEditor.Classes;
@@ -18,6 +21,7 @@ using BCEdit180.Core.Utils;
 using BCEdit180.Core.ViewModels;
 using BCEdit180.Core.Window;
 using BCEdit180.Dialogs;
+using BCEdit180.Themes;
 using BCEdit180.Windows;
 
 namespace BCEdit180 {
@@ -25,8 +29,16 @@ namespace BCEdit180 {
     /// Interaction logic for MainWindow.xaml
     /// </summary>
     public partial class MainWindow : WindowBase {
+        private static readonly XmlSerializer XMLSerialiser = new XmlSerializer(typeof(AppSettingsXML));
+        private static readonly string ConfigFolder = Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.MyDocuments), "BCEditor");
+        private static readonly string ConfigFile = Path.Combine(ConfigFolder, "config.xml");
+
+        static MainWindow() {
+        }
+
         public MainWindow() {
             InitializeComponent();
+            this.LoadXML();
 
             // string path = "F:\\IJProjects\\CarrotTools\\out\\production\\CarrotTools\\reghzy\\carrottools\\playerdata\\results\\custom\\tileentity\\TileEntityTimingResult.class";
             // string path = "F:\\MinecraftUtils\\server\\tekkitmain-1.6.4\\CarrotClassSplicer\\World.class";
@@ -65,6 +77,15 @@ namespace BCEdit180 {
             // system.Connection.Disconnect();
             // server.Close();
 
+        }
+
+        protected override void OnClosed(EventArgs e) {
+            base.OnClosed(e);
+            this.SaveXML();
+        }
+
+        protected override void OnClosing(CancelEventArgs e) {
+            base.OnClosing(e);
         }
 
         private bool setup;
@@ -375,6 +396,39 @@ namespace BCEdit180 {
             // else if (Keyboard.IsKeyDown(Key.S) && (Keyboard.Modifiers & ModifierKeys.Control) != 0) {
             //     ((ClassListViewModel) this.DataContext).SelectedClass?.SaveClassFile();
             // }
+        }
+
+        public void LoadXML() {
+            try {
+                if (File.Exists(ConfigFile)) {
+                    using (BufferedStream stream = new BufferedStream(File.OpenRead(ConfigFile))) {
+                        AppSettingsXML settings = (AppSettingsXML) XMLSerialiser.Deserialize(stream);
+                        this.ClassListToggle.IsChecked = settings.ShowClassListByDefault;
+                        ThemesController.SetTheme((ThemeType) settings.Theme);
+                    }
+                }
+            }
+            catch (Exception e) {
+                MessageBox.Show("Failed to load application config file at " + ConfigFile + "\n" + e, "Error loading config");
+            }
+        }
+
+        public void SaveXML() {
+            try {
+                if (!Directory.Exists(ConfigFolder)) {
+                    Directory.CreateDirectory(ConfigFolder);
+                }
+
+                using (BufferedStream stream = new BufferedStream(File.OpenWrite(ConfigFile))) {
+                    XMLSerialiser.Serialize(stream, new AppSettingsXML() {
+                        Theme = (int) ThemesController.CurrentTheme,
+                        ShowClassListByDefault = this.ClassListToggle.IsChecked == true
+                    });
+                }
+            }
+            catch (Exception e) {
+                MessageBox.Show("Failed to load application config file at " + ConfigFile + "\n" + e, "Error loading config");
+            }
         }
     }
 }

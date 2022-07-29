@@ -97,6 +97,7 @@
     <Compile Include="Annotations\AnnotationItemControl.xaml.cs">
       <DependentUpon>AnnotationItemControl.xaml</DependentUpon>
     </Compile>
+    <Compile Include="AppSettings\AppSettingsXML.cs" />
     <Compile Include="AttachedProperties\Scrolling.cs" />
     <Compile Include="AttachedProperties\TextBoxAP.cs" />
     <Compile Include="CodeEditing\EditorControls\BaseInstructionEditorControl.cs" />
@@ -196,6 +197,10 @@
     <Page Include="Themes\BaseInstructionStyles.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Themes\LightTheme.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
     </Page>
     <Page Include="Windows\ChangeInstructionWindow.xaml">
       <SubType>Designer</SubType>

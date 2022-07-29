@@ -29,7 +29,7 @@
                  x:Name="InstructionListBox" />
         <GridSplitter Grid.Column="1" HorizontalAlignment="Stretch" VerticalAlignment="Stretch" Background="Transparent"/>
         <StackPanel Margin="2,0,0,29" Grid.Column="2" DataContext="{Binding SelectedOpcode, Converter={StaticResource OpcodeToDescription}}" d:DataContext="{d:DesignInstance ce:OpcodeDescriptorViewModel}">
-            <TextBlock Text="{Binding Header, UpdateSourceTrigger=PropertyChanged}" DockPanel.Dock="Top" FontSize="24" FontWeight="Bold" HorizontalAlignment="Center"/>
+            <TextBlock Text="{Binding Header, UpdateSourceTrigger=PropertyChanged}" DockPanel.Dock="Top" FontSize="24" FontWeight="Bold" HorizontalAlignment="Center" TextWrapping="Wrap"/>
             <TextBlock Text="{Binding StackTransition, UpdateSourceTrigger=PropertyChanged}" DockPanel.Dock="Top" FontFamily="Consolas" Margin="0 5" FontSize="14"/>
             <TextBlock Text="{Binding Description, UpdateSourceTrigger=PropertyChanged}" DockPanel.Dock="Top" FontStyle="Italic" TextWrapping="Wrap"/>
         </StackPanel>

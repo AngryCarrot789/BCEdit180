@@ -15,6 +15,7 @@
         xmlns:locals="clr-namespace:BCEdit180.Core.CodeEditing.Bytecode.Locals;assembly=BCEdit180.Core"
         xmlns:listControls="clr-namespace:BCEdit180.CodeEditing.ListControls"
         xmlns:editorControls="clr-namespace:BCEdit180.CodeEditing.EditorControls"
+        xmlns:themes="clr-namespace:BCEdit180.Themes"
         xmlns:a="clr-namespace:BCEdit180.LineNumbers"
         mc:Ignorable="d"
         Width="1280" Height="720" 
@@ -43,8 +44,11 @@
                 <Separator Style="{DynamicResource MenuItemSeparator}"/>
                 <MenuItem Header="Save class"           Command="{Binding SelectedClass.SaveFileCommand}"  />
                 <MenuItem Header="Save class As..."     Command="{Binding SelectedClass.SaveFileAsCommand}"/>
-                <Separator Style="{DynamicResource MenuItemSeparator}"/>
-                <MenuItem Header="Exit"                 Command="Close" InputGestureText="Alt + F4"/>
+            </MenuItem>
+            <MenuItem Header="Themes">
+                <MenuItem Header="Light (VERY WIP)" Command="{x:Static themes:ThemesController.SetThemeCommand}" CommandParameter="Light" InputGestureText="Alt + F4"/>
+                <MenuItem Header="Dark" Command="{x:Static themes:ThemesController.SetThemeCommand}" CommandParameter="Dark" InputGestureText="Alt + F4"/>
+                <MenuItem Header="Red" Command="{x:Static themes:ThemesController.SetThemeCommand}" CommandParameter="Red" InputGestureText="Alt + F4"/>
             </MenuItem>
         </Menu>
         <Border Background="{DynamicResource AREghZyBrush.Primary.2.Background.Static}" BorderThickness="0 0 1 0" Margin="0,18,0,0" HorizontalAlignment="Left" Width="20" BorderBrush="{DynamicResource AREghZyBrush.Primary.4.Border.Static}">
@@ -61,14 +65,13 @@
                 </ToggleButton>
             </Grid>
         </Border>
-        <DockPanel Margin="20,0,0,24">
+        <DockPanel Margin="20,19,0,24">
             <DockPanel.Resources>
                 <converters:BooleanToVisibilityConverter x:Key="BoolToVisibility"/>
             </DockPanel.Resources>
             <ListBox ItemsSource="{Binding Classes}"
                      SelectedItem="{Binding SelectedClass, UpdateSourceTrigger=PropertyChanged}" 
                      BorderBrush="{DynamicResource AREghZyBrush.Primary.4.Border.Static}"
-                     Margin="0,19,0,0"
                      VerticalContentAlignment="Stretch" 
                      BorderThickness="0 0 1 0"
                      ScrollViewer.HorizontalScrollBarVisibility="Disabled" 
@@ -90,7 +93,7 @@
                     </DataTemplate>
                 </ItemsControl.ItemTemplate>
             </ListBox>
-            <Grid Margin="2,21,0,0" IsEnabled="{Binding SelectedClass, Converter={StaticResource NullToDisabledConverter}, UpdateSourceTrigger=PropertyChanged}">
+            <Grid Margin="2,2,0,0" IsEnabled="{Binding SelectedClass, Converter={StaticResource NullToDisabledConverter}, UpdateSourceTrigger=PropertyChanged}">
                 <TabControl DataContext="{Binding SelectedClass, UpdateSourceTrigger=PropertyChanged}" BorderThickness="1 1 0 1" Background="{DynamicResource AREghZyBrush.Primary.1.Background.Static}" Margin="0,0,0,2">
                     <TabItem Header="Class Info">
                         <Grid DataContext="{Binding ClassInfo}">

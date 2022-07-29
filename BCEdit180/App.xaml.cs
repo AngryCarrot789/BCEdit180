@@ -27,6 +27,7 @@ namespace BCEdit180 {
 
             classes.SelectedClass = classes.Classes[0];
 
+            window.LoadXML();
             this.MainWindow = window;
             this.MainWindow.DataContext = classes;
             window.Show();

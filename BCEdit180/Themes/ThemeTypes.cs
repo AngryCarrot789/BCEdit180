@@ -9,9 +9,9 @@
         public static string GetName(this ThemeType type) {
             switch (type) {
                 case ThemeType.Light:
-                    return "Dark_DarkBackLightBorder";
+                    return "LightTheme";
                 case ThemeType.Dark:
-                    return "Dark_DarkBackDarkBorder";
+                    return "SoftDark";
                 case ThemeType.Red:
                     return "RedBlackTheme";
                 default:

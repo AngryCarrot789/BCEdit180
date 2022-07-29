@@ -12,6 +12,10 @@
              Title="Edit Method" Height="450" Width="320"
              Style="{DynamicResource CustomWindowBaseStyle}"
              Background="{DynamicResource AREghZyBrush.Deep.3.Background.Static}">
+    <Window.InputBindings>
+        <KeyBinding Key="Add" Modifiers="Ctrl" Command="{Binding AddNewParameterCommand}"/>
+        <KeyBinding Key="Subtract" Modifiers="Ctrl" Command="{Binding RemoveSelectedCommand}"/>
+    </Window.InputBindings>
     <Grid Margin="10">
         <Label Padding="3" Width="100" VerticalAlignment="Top" HorizontalAlignment="Left" Height="24" VerticalContentAlignment="Center" Margin="0,42,0,0">
             <TextBlock Text="Method Name"/>
