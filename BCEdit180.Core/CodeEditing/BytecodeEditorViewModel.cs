@@ -1,6 +1,5 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.IO;
 using System.Windows.Input;
 using BCEdit180.Core.CodeEditing.Bytecode;
 using BCEdit180.Core.CodeEditing.Bytecode.Instructions;

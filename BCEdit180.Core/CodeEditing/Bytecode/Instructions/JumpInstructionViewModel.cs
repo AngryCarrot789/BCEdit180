@@ -71,9 +71,8 @@ namespace BCEdit180.Core.CodeEditing.Bytecode.Instructions {
             }
 
             // jump.Target = new Label();
-            if (this.originalJumpOffset != this.JumpOffset) {
+            if (this.JumpOffset != -1 && this.originalJumpOffset != this.JumpOffset) {
                 jump.JumpOffset = this.JumpOffset;
-                jump.UseOverrideOffset = true;
             }
         }
     }

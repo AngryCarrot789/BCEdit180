@@ -24,14 +24,11 @@ namespace BCEdit180.Core.ViewModels {
             set => RaisePropertyChanged(ref this.selectedMethod, value);
         }
 
-        private int previousIndex;
+        private int lastSaveIndex;
         private int selectedIndex;
         public int SelectedIndex {
             get => this.selectedIndex;
-            set {
-                this.previousIndex = this.selectedIndex;
-                RaisePropertyChanged(ref this.selectedIndex, value);
-            }
+            set => RaisePropertyChanged(ref this.selectedIndex, value);
         }
 
         public SearchMethodNameViewModel SearchMethod { get; }
@@ -90,12 +87,15 @@ namespace BCEdit180.Core.ViewModels {
                 this.Methods.Add(new MethodInfoViewModel(this, method));
             }
 
-            if (this.previousIndex >= 0 && this.previousIndex < this.Methods.Count) {
-                this.SelectedIndex = this.previousIndex;
+            if (this.lastSaveIndex >= 0 && this.lastSaveIndex < this.Methods.Count) {
+                this.SelectedIndex = this.lastSaveIndex;
             }
+
+            this.lastSaveIndex = 0;
         }
 
         public void Save(ClassNode node) {
+            this.lastSaveIndex = this.SelectedIndex;
             foreach (MethodInfoViewModel removedMethod in this.RemovedMethods) {
                 node.Methods.Remove(removedMethod.Node);
             }

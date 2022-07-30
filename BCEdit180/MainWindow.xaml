@@ -419,7 +419,7 @@
                                             </GroupBox>
                                         </Grid>
                                     </TabItem>
-                                    <TabItem Header="Code Editor">
+                                    <TabItem Header="Bytecode Editor">
                                         <Grid DataContext="{Binding CodeEditor}">
                                             <TabControl BorderBrush="{DynamicResource AREghZyBrush.Primary.4.Border.Static}" Margin="1">
                                                 <TabItem Header="Bytecode Editor" DataContext="{Binding ByteCodeEditor}">

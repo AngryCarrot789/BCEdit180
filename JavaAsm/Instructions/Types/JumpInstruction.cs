@@ -15,14 +15,6 @@ namespace JavaAsm.Instructions.Types {
 
         public Label Target { get; set; }
 
-        /// <summary>
-        /// Use a manual branch offset, instead of a calculated offset
-        /// <para>
-        /// <see cref="JumpOffset"/> will not be checked or verified
-        /// </para>
-        /// </summary>
-        public bool UseOverrideOffset { get; set; }
-
         public int JumpOffset { get; set; }
 
         public JumpInstruction(Opcode opcode) {

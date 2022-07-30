@@ -978,13 +978,7 @@ namespace JavaAsm.Instructions {
                         break;
                     case JumpInstruction jumpInstruction:
                         codeDataStream.WriteByte((byte) jumpInstruction.Opcode);
-                        if (jumpInstruction.UseOverrideOffset) {
-                            Binary.BigEndian.Write(codeDataStream, jumpInstruction.JumpOffset);
-                        }
-                        else {
-                            Binary.BigEndian.Write(codeDataStream, (short) (instructions[jumpInstruction.Target] - instructions[jumpInstruction]));
-                        }
-
+                        Binary.BigEndian.Write(codeDataStream, (short) (instructions[jumpInstruction.Target] - instructions[jumpInstruction]));
                         break;
                     case LdcInstruction ldcInstruction:
                         ushort constantPoolEntryIndex;
