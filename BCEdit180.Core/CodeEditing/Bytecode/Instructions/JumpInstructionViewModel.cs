@@ -9,10 +9,10 @@ namespace BCEdit180.Core.CodeEditing.Bytecode.Instructions {
     public class JumpInstructionViewModel : BaseInstructionViewModel, IBytecodeEditorAccess {
         public override IEnumerable<Opcode> AvailableOpCodes => new Opcode[] {Opcode.IFEQ, Opcode.IFNE, Opcode.IFLT, Opcode.IFGE, Opcode.IFGT, Opcode.IFLE, Opcode.IF_ICMPEQ, Opcode.IF_ICMPNE, Opcode.IF_ICMPLT, Opcode.IF_ICMPGE, Opcode.IF_ICMPGT, Opcode.IF_ICMPLE, Opcode.IF_ACMPEQ, Opcode.IF_ACMPNE, Opcode.GOTO, Opcode.JSR, Opcode.IFNULL, Opcode.IFNONNULL};
 
-        private long target;
-        public long Target {
-            get => this.target;
-            set => RaisePropertyChanged(ref this.target, value);
+        private long labelIndex;
+        public long LabelIndex {
+            get => this.labelIndex;
+            set => RaisePropertyChanged(ref this.labelIndex, value);
         }
 
         public ICommand SelectJumpDestinationCommand { get; }
@@ -26,7 +26,11 @@ namespace BCEdit180.Core.CodeEditing.Bytecode.Instructions {
             }
         }
 
-        public LabelViewModel JumpDestination { get; set; }
+        private LabelViewModel jumpDestination;
+        public LabelViewModel JumpDestination {
+            get => this.jumpDestination;
+            set => RaisePropertyChanged(ref this.jumpDestination, value);
+        }
 
         private int originalJumpOffset;
         private int jumpOffset;
@@ -58,7 +62,13 @@ namespace BCEdit180.Core.CodeEditing.Bytecode.Instructions {
         public override void Load(Instruction instruction) {
             base.Load(instruction);
             JumpInstruction jump = (JumpInstruction) instruction;
-            this.Target = jump.Target.Index;
+            if (jump.Target != null) {
+                this.LabelIndex = jump.Target.Index;
+            }
+            else {
+                this.LabelIndex = -1;
+            }
+
             this.JumpOffset = jump.JumpOffset;
             this.originalJumpOffset = jump.JumpOffset;
         }

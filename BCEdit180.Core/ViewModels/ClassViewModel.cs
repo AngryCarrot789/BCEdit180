@@ -1,6 +1,7 @@
 using System;
 using System.Collections.Generic;
 using System.IO;
+using System.Linq;
 using System.Threading.Tasks;
 using System.Windows.Input;
 using BCEdit180.Core.AttributeEditor;
@@ -181,6 +182,7 @@ namespace BCEdit180.Core.ViewModels {
         }
 
         public void Save(ClassNode node) {
+            node.Attributes.Clear();
             this.ClassInfo.Save(node);
             this.ClassAttributes.Save(node);
             this.MethodList.Save(node);
@@ -190,6 +192,9 @@ namespace BCEdit180.Core.ViewModels {
         public void SaveClassFile() {
             #if DEBUG
             this.IsBusy = true;
+
+            ActionProgressViewModel progress = Dialog.Message.ShowProgressWindow("Saving file...", "Backing up file: " + this.FilePath);
+
             if (this.FilePath != null) {
                 if (File.Exists(this.FilePath)) {
                     string backupPath = Path.Combine(Path.GetDirectoryName(this.FilePath) ?? "", "backup_" + Path.GetFileName(this.FilePath));
@@ -200,14 +205,24 @@ namespace BCEdit180.Core.ViewModels {
                     File.Copy(this.FilePath, backupPath);
                 }
 
-                SaveClass();
+                progress.Description = "Saving to file: " + this.FilePath;
+                Task.Run(async () => {
+                    await Task.Delay(200);
+                    await AppProxy.Proxy.InvokeSyncAsync(SaveClassToFile);
+                    await AppProxy.Proxy.InvokeSyncAsync(()=> progress.CloseDialog());
+                });
 
+                // fixed:
                 // ClassFile.WriteClass mutates ClassNode's attributes,
                 // so reloading will fix
-                ReadClassFileAndShowDialog(this.FilePath);
+                // ReadClassFileAndShowDialog(this.FilePath);
             }
             else {
-                SaveClassFileAs();
+                Task.Run(async () => {
+                    await Task.Delay(200);
+                    await AppProxy.Proxy.InvokeSyncAsync(SaveClassFileAs);
+                    await AppProxy.Proxy.InvokeSyncAsync(()=> progress.CloseDialog());
+                });
             }
 
             this.IsBusy = false;
@@ -224,7 +239,7 @@ namespace BCEdit180.Core.ViewModels {
                         File.Copy(this.FilePath, backupPath);
                     }
 
-                    SaveClass();
+                    SaveClassToFile();
 
                     // ClassFile.WriteClass mutates ClassNode's attributes,
                     // so reloading will fix
@@ -259,11 +274,11 @@ namespace BCEdit180.Core.ViewModels {
                             File.Copy(this.FilePath, backupPath);
                         }
 
-                        SaveClass();
+                        SaveClassToFile();
 
                         // ClassFile.WriteClass mutates ClassNode's attributes,
                         // so reloading will fix
-                        ReadClassFileAndShowDialog(this.FilePath);
+                        // ReadClassFileAndShowDialog(this.FilePath);
                     }
                 }
             }
@@ -275,15 +290,16 @@ namespace BCEdit180.Core.ViewModels {
             }
         }
 
-        public void SaveClass() {
+        public void SaveClassToFile(string classFile) {
+            // Makes debugging easier; using #if DEBUG inside a catch block to rethrow is literally almost useless
+
             #if DEBUG
 
+            this.FilePath = classFile;
             Save(this.Node);
-            using (BufferedStream output = new BufferedStream(File.OpenWrite(this.FilePath))) {
+            using (BufferedStream output = new BufferedStream(File.OpenWrite(classFile))) {
                 ClassFile.WriteClass(output, this.Node);
             }
-
-            // Makes debugging easier; using #if DEBUG inside a catch block to rethrow is literally almost useless
 
             #else
 
@@ -305,6 +321,10 @@ namespace BCEdit180.Core.ViewModels {
             }
 
             #endif
+        }
+
+        public void SaveClassToFile() {
+            SaveClassToFile(this.FilePath);
         }
 
         public void HandleMessage(BusyStateMessage message) {

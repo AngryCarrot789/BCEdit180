@@ -103,6 +103,8 @@ namespace BCEdit180.Core.ViewModels {
 
         public MethodNode Node { get; private set; }
 
+        public ClassViewModel Class => this.MethodList.Class;
+
         public MethodInfoViewModel(MethodListViewModel methodList, MethodNode node) {
             this.MethodList = methodList;
             this.Node = node;

@@ -1,4 +1,5 @@
-﻿using System.Xml.Serialization;
+﻿using System.Collections.Generic;
+using System.Xml.Serialization;
 
 namespace BCEdit180.AppSettings {
     public class AppSettingsXML {
@@ -7,5 +8,7 @@ namespace BCEdit180.AppSettings {
 
         [XmlElement]
         public bool ShowClassListByDefault { get; set; }
+
+        public List<string> ClassPath { get; set; }
     }
 }

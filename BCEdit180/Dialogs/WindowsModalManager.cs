@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Threading.Tasks;
+using BCEdit180.Core.ClasspathEditor;
 using BCEdit180.Core.CodeEditing.InstructionEdit;
 using BCEdit180.Core.Editors;
 using BCEdit180.Core.Modals;
@@ -17,6 +18,7 @@ namespace BCEdit180.Dialogs {
             RegisterType<MethodDescEditorViewModel,  MethodDescEditorWindow>();
             RegisterType<MethodEditorViewModel,      MethodEditorWindow>();
             RegisterType<TypeEditorViewModel,        TypeEditorWindow>();
+            RegisterType<ClassPathListViewModel,     ClassPathListWindow>();
         }
 
         private static void RegisterType<TViewModel, TWindow>() where TViewModel : BaseViewModel, new() where TWindow : WindowModal {
@@ -28,8 +30,8 @@ namespace BCEdit180.Dialogs {
                 WindowModal window = (WindowModal) Activator.CreateInstance(windowType);
                 T vm = new T();
                 window.DataContext = vm;
-                if (window.ShowDialog() == true) {
-                    result = (T) window.DataContext;
+                if (window.ShowDialog() == true && window.DataContext is T t) {
+                    result = t;
                     return Task.FromResult(true);
                 }
                 else {
@@ -46,8 +48,8 @@ namespace BCEdit180.Dialogs {
             if (ViewModelToWindow.TryGetValue(typeof(T), out Type windowType)) {
                 WindowModal window = (WindowModal) Activator.CreateInstance(windowType);
                 window.DataContext = template;
-                if (window.ShowDialog() == true) {
-                    result = (T) window.DataContext;
+                if (window.ShowDialog() == true && window.DataContext is T t) {
+                    result = t;
                     return Task.FromResult(true);
                 }
                 else {

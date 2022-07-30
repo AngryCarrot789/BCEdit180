@@ -173,23 +173,24 @@ namespace BCEdit180.Dialogs {
             ChangeInstructionWindow window = new ChangeInstructionWindow();
             window.Title = "Replace Opcode";
 
-            ChangeInstructionViewModel vm = new ChangeInstructionViewModel();
-            vm.SetAvailableInstructions(opcodes);
-            window.DataContext = vm;
-            if (defaultOpcode.HasValue) {
-                Opcode code = defaultOpcode.Value;
-                Application.Current.Dispatcher.Invoke(() => {
-                    vm.SelectedOpcode = code;
-                }, System.Windows.Threading.DispatcherPriority.Loaded);
-            }
+            using (ChangeInstructionViewModel vm = new ChangeInstructionViewModel()) {
+                vm.SetAvailableInstructions(opcodes);
+                window.DataContext = vm;
+                if (defaultOpcode.HasValue) {
+                    Opcode code = defaultOpcode.Value;
+                    Application.Current.Dispatcher.Invoke(() => {
+                        vm.SelectedOpcode = code;
+                    }, System.Windows.Threading.DispatcherPriority.Loaded);
+                }
 
-            if (window.ShowDialog() != true || !vm.IsValidSelection()) {
-                opcode = Opcode.None;
-                return Task.FromResult(false);
-            }
+                if (window.ShowDialog() != true || !vm.IsValidSelection()) {
+                    opcode = Opcode.None;
+                    return Task.FromResult(false);
+                }
 
-            opcode = vm.SelectedOpcode;
-            return Task.FromResult(true);
+                opcode = vm.SelectedOpcode;
+                return Task.FromResult(true);
+            }
         }
 
         public Task<bool> EditEnumFlagDialog<TEnum>(out TEnum access) where TEnum : Enum {

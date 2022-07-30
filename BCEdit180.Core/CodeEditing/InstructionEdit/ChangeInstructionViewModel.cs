@@ -1,12 +1,16 @@
-﻿using System.Collections.Generic;
-using System.Collections.ObjectModel;
-using BCEdit180.Core.Utils;
+﻿using System;
+using System.Collections.Generic;
+using BCEdit180.Core.Collections;
 using JavaAsm.Instructions;
 using REghZy.MVVM.ViewModels;
 
 namespace BCEdit180.Core.CodeEditing.InstructionEdit {
-    public class ChangeInstructionViewModel : BaseViewModel {
-        public ObservableCollection<Opcode> AvailableOpCodes { get; }
+    public class ChangeInstructionViewModel : BaseViewModel, IDisposable {
+        public ExtendedObservableCollection<Opcode> AvailableOpCodes { get; }
+
+        public ExtendedObservableCollection<Opcode> ActualOpcodeList { get; }
+
+        public OpcodeSearchViewModel Search { get; }
 
         private int selectedIndex;
         public int SelectedIndex{
@@ -21,16 +25,24 @@ namespace BCEdit180.Core.CodeEditing.InstructionEdit {
         }
 
         public ChangeInstructionViewModel() {
-            this.AvailableOpCodes = new ObservableCollection<Opcode>();
+            this.AvailableOpCodes = new ExtendedObservableCollection<Opcode>();
+            this.ActualOpcodeList = new ExtendedObservableCollection<Opcode>();
+            this.Search = new OpcodeSearchViewModel(this);
         }
 
         public void SetAvailableInstructions(IEnumerable<Opcode> opcodes) {
             this.AvailableOpCodes.Clear();
-            this.AvailableOpCodes.AddAll(opcodes);
+            this.AvailableOpCodes.AddRange(opcodes);
+            this.ActualOpcodeList.Clear();
+            this.ActualOpcodeList.AddRange(opcodes);
         }
 
         public bool IsValidSelection() {
             return this.selectedIndex >= 0 && this.selectedIndex < this.AvailableOpCodes.Count;
+        }
+
+        public void Dispose() {
+            this.Search.Dispose();
         }
     }
 }

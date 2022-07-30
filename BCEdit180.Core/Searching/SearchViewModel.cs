@@ -15,8 +15,7 @@ namespace BCEdit180.Core.Searching {
                     this.IdleEventService.OnInput();
                 }
                 else {
-                    this.IdleEventService.CanFireNextTick = false;
-                    this.SearchCommand.RaiseCanExecuteChanged();
+                    OnSearchReset();
                 }
             }
         }
@@ -52,6 +51,11 @@ namespace BCEdit180.Core.Searching {
 
         public virtual bool CanSearchForInput() {
             return !string.IsNullOrEmpty(this.InputText);
+        }
+
+        public virtual void OnSearchReset() {
+            this.IdleEventService.CanFireNextTick = false;
+            this.SearchCommand.RaiseCanExecuteChanged();
         }
 
         public void Dispose() {

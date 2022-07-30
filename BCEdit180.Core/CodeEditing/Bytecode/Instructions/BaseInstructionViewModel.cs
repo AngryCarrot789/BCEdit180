@@ -5,6 +5,7 @@ using BCEdit180.Core.Commands;
 using BCEdit180.Core.Window;
 using JavaAsm.Instructions;
 using JavaAsm.Instructions.Types;
+using REghZy.MVVM.Commands;
 using REghZy.MVVM.ViewModels;
 
 namespace BCEdit180.Core.CodeEditing.Bytecode.Instructions {
@@ -28,17 +29,39 @@ namespace BCEdit180.Core.CodeEditing.Bytecode.Instructions {
 
         public virtual bool CanEditOpCode => true;
 
-        public ICommand EditOpcodeCommand { get; }
-
         private bool isEnabled;
         public bool IsEnabled {
             get => this.isEnabled;
             set => RaisePropertyChanged(ref this.isEnabled, value);
         }
 
+        private int instructionIndex;
+
+        public int InstructionIndex {
+            get => this.instructionIndex;
+            set => RaisePropertyChanged(ref this.instructionIndex, value);
+        }
+
+        public Action<BaseInstructionViewModel> DuplicateCallback { get; set; }
+        public Action<BaseInstructionViewModel> RemoveSelfCallback { get; set; }
+
+        public ICommand EditOpcodeCommand { get; }
+        public ICommand DuplicateCommand { get; }
+        public ICommand RemoveSelfCommand { get; }
+
         protected BaseInstructionViewModel() {
             this.EditOpcodeCommand = new ExtendedRelayCommand(EditOpcode, () => this.CanEditOpCode);
+            this.DuplicateCommand = new RelayCommand(DuplicateAction);
+            this.RemoveSelfCommand = new RelayCommand(RemoveSelfAction);
             this.IsEnabled = true;
+        }
+
+        private void RemoveSelfAction() {
+            this.RemoveSelfCallback?.Invoke(this);
+        }
+
+        public void DuplicateAction() {
+            this.DuplicateCallback?.Invoke(this);
         }
 
         // Always check CanEditOpCode
@@ -129,6 +152,10 @@ namespace BCEdit180.Core.CodeEditing.Bytecode.Instructions {
             }
 
             throw new InvalidOperationException($"This function requires {typeof(T).Name} but {instruction?.GetType()?.Name ?? "null"} was used instead");
+        }
+
+        public virtual bool OnMoving(int curIndex, int newIndex) {
+            return true;
         }
     }
 }

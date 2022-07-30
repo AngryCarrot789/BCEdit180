@@ -83,6 +83,7 @@ namespace BCEdit180.Core.ViewModels {
         public void Load(ClassNode node) {
             this.RemovedMethods.Clear();
             this.Methods.Clear();
+
             foreach (MethodNode method in node.Methods) {
                 this.Methods.Add(new MethodInfoViewModel(this, method));
             }
@@ -107,6 +108,8 @@ namespace BCEdit180.Core.ViewModels {
                     node.Methods.Add(method.Node);
                 }
 
+                method.Node.Attributes.Clear();
+                method.Node.CodeAttributes.Clear();
                 method.Save(method.Node);
             }
         }

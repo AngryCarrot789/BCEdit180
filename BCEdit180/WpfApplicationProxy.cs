@@ -1,4 +1,5 @@
 using System;
+using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Threading;
 using BCEdit180.Core;
@@ -11,6 +12,18 @@ namespace BCEdit180 {
 
         public void InvokeSync(Action action) {
             Application.Current.Dispatcher.Invoke(action);
+        }
+
+        public async Task InvokeSyncAsync(Action action) {
+            object isComplete = new bool();
+            Application.Current.Dispatcher.Invoke(() => {
+                action();
+                isComplete = true;
+            });
+
+            do {
+                await Task.Delay(1);
+            } while (!(bool) isComplete);
         }
 
         // was checking if this would improve performance while adding items...

@@ -459,7 +459,7 @@ namespace JavaAsm.Instructions {
                             default: throw new ArgumentOutOfRangeException(nameof(constantPoolEntry), $"Tried to {opcode} wrong type of CP entry: {constantPoolEntry.Tag}");
                         }
 
-                        instructions.Add(currentPosition, new LdcInstruction {Value = ldcVal, Opcode = opcode});
+                        instructions.Add(currentPosition, new LdcInstruction(opcode) {Value = ldcVal});
                     }
                         break;
                     case Opcode.LDC_W:

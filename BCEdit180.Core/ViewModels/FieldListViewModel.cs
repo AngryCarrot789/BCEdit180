@@ -91,6 +91,7 @@ namespace BCEdit180.Core.ViewModels {
                     node.Fields.Add(field.Node);
                 }
 
+                field.Node.Attributes.Clear();
                 field.Save(field.Node);
             }
         }

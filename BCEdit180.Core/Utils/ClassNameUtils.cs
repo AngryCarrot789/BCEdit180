@@ -27,5 +27,17 @@ namespace BCEdit180.Core.Utils {
                 return new ClassName("L" + name.Name + ";");
             }
         }
+
+        public static string GetPackage(string className) {
+            className = className.Replace('/', '.');
+            int lastSplit = className.LastIndexOf('.');
+            return lastSplit == -1 ? null : className.Substring(0, lastSplit);
+        }
+
+        public static string GetName(string className) {
+            className = className.Replace('/', '.');
+            int lastSplit = className.LastIndexOf('.');
+            return lastSplit == -1 ? className : className.Substring(lastSplit + 1);
+        }
     }
 }

@@ -27,5 +27,9 @@ namespace JavaAsm {
         public override int GetHashCode() {
             return this.Name.GetHashCode();
         }
+
+        public ClassName Copy() {
+            return new ClassName(this.Name);
+        }
     }
 }

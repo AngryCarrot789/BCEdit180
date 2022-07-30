@@ -12,7 +12,19 @@
     <converters:TypeDescriptorToStringConverter x:Key="TypeDescriptorConverter"/>
     <converters:BooleanToColourConverter x:Key="NewInstructionBackgroundConverter" TrueColour="{StaticResource ClassName}" FalseColour="{StaticResource ConstNumeric}"/>
 
-    <Style TargetType="{x:Type editors:FieldInstructionControl}">
+    <Style TargetType="{x:Type editors:BaseInstructionControl}">
+        <Setter Property="ContextMenu">
+            <Setter.Value>
+                <ContextMenu d:DataContext="{d:DesignInstance vms:FieldInstructionViewModel}">
+                    <MenuItem Header="Change Opcode" Command="{Binding EditOpcodeCommand}"/>
+                    <MenuItem Header="Duplicate" Command="{Binding DuplicateCommand}"/>
+                    <MenuItem Header="Remove" Command="{Binding RemoveSelfCommand}"/>
+                </ContextMenu>
+            </Setter.Value>
+        </Setter>
+    </Style>
+
+    <Style TargetType="{x:Type editors:FieldInstructionControl}" BasedOn="{StaticResource {x:Type editors:BaseInstructionControl}}">
         <Setter Property="Template">
             <Setter.Value>
                 <ControlTemplate>
@@ -36,7 +48,7 @@
         </Setter>
     </Style>
 
-    <Style TargetType="{x:Type editors:MethodInstructionControl}">
+    <Style TargetType="{x:Type editors:MethodInstructionControl}" BasedOn="{StaticResource {x:Type editors:BaseInstructionControl}}">
         <Setter Property="Template">
             <Setter.Value>
                 <ControlTemplate>
@@ -60,7 +72,7 @@
         </Setter>
     </Style>
 
-    <Style TargetType="{x:Type editors:IncrementInstructionControl}">
+    <Style TargetType="{x:Type editors:IncrementInstructionControl}" BasedOn="{StaticResource {x:Type editors:BaseInstructionControl}}">
         <Setter Property="Template">
             <Setter.Value>
                 <ControlTemplate>
@@ -78,7 +90,7 @@
             </Setter.Value>
         </Setter>
     </Style>
-    <Style TargetType="{x:Type editors:IntegerPushInstructionControl}">
+    <Style TargetType="{x:Type editors:IntegerPushInstructionControl}" BasedOn="{StaticResource {x:Type editors:BaseInstructionControl}}">
         <Setter Property="Template">
             <Setter.Value>
                 <ControlTemplate>
@@ -94,7 +106,7 @@
             </Setter.Value>
         </Setter>
     </Style>
-    <Style TargetType="{x:Type editors:InvokeDynamicInstructionControl}">
+    <Style TargetType="{x:Type editors:InvokeDynamicInstructionControl}" BasedOn="{StaticResource {x:Type editors:BaseInstructionControl}}">
         <Setter Property="Template">
             <Setter.Value>
                 <ControlTemplate>
@@ -126,7 +138,7 @@
     <converters:NullToCollapsed x:Key="NullToCollapsedConverter"/>
     <converters:OpCodeToSimpleDescriptionConverter x:Key="DescriptionConverter"/>
 
-    <Style TargetType="{x:Type editors:JumpInstructionControl}">
+    <Style TargetType="{x:Type editors:JumpInstructionControl}" BasedOn="{StaticResource {x:Type editors:BaseInstructionControl}}">
         <Setter Property="Template">
             <Setter.Value>
                 <ControlTemplate>
@@ -137,9 +149,9 @@
                                 <MouseBinding MouseAction="LeftDoubleClick"  Command="{Binding EditOpcodeCommand}"/>
                             </TextBlock.InputBindings>
                         </TextBlock>
-                        <TextBlock Visibility="{Binding JumpDestination, Converter={StaticResource NullToCollapsedConverter}}" Padding="0 0 0 0" VerticalAlignment="Center">
+                        <TextBlock Visibility="{Binding JumpDestination, Converter={StaticResource NullToCollapsedConverter}, UpdateSourceTrigger=PropertyChanged}" Padding="0 0 0 0" VerticalAlignment="Center">
                             <Hyperlink Command="{Binding SelectJumpDestinationCommand}">
-                                <TextBlock Text="{Binding Target, UpdateSourceTrigger=PropertyChanged, StringFormat='{}[Target: {0}]'}" Foreground="{StaticResource Keyword}" ToolTip="Select and scroll to the target label (which this instruction may jump to)" ToolTipService.ShowDuration="30000">
+                                <TextBlock Text="{Binding LabelIndex, UpdateSourceTrigger=PropertyChanged, StringFormat='{}[Target: {0}]'}" Foreground="{StaticResource Keyword}" ToolTip="Select and scroll to the target label (which this instruction may jump to)" ToolTipService.ShowDuration="30000">
                                     <TextBlock.ContextMenu>
                                         <ContextMenu>
                                             <MenuItem Command="{Binding EditTargetLabelCommand}" Header="Edit target label"/>
@@ -148,14 +160,14 @@
                                 </TextBlock>
                             </Hyperlink>
                         </TextBlock>
-                        <TextBlock Foreground="{StaticResource Keyword}" Text="{Binding Target, UpdateSourceTrigger=PropertyChanged}" Visibility="{Binding JumpDestination, Converter={StaticResource NullToCollapsedConverter}, ConverterParameter=Invert}"/>
+                        <TextBlock Foreground="Red" Text="[Invalid Target]" Visibility="{Binding JumpDestination, Converter={StaticResource NullToCollapsedConverter}, ConverterParameter=Invert, UpdateSourceTrigger=PropertyChanged}"/>
                         <TextBlock Foreground="{StaticResource ConstNumeric}" Text="{Binding JumpOffset, UpdateSourceTrigger=PropertyChanged, StringFormat='{}[byte offset: {0}]'}" Margin="3 0 0 0" Padding="1" ToolTip="The actual offset between this instruction and the target location"/>
                     </StackPanel>
                 </ControlTemplate>
             </Setter.Value>
         </Setter>
     </Style>
-    <Style TargetType="{x:Type editors:LabelControl}">
+    <Style TargetType="{x:Type editors:LabelControl}" BasedOn="{StaticResource {x:Type editors:BaseInstructionControl}}">
         <Setter Property="Template">
             <Setter.Value>
                 <ControlTemplate>
@@ -167,7 +179,7 @@
             </Setter.Value>
         </Setter>
     </Style>
-    <Style TargetType="{x:Type editors:LdcInstructionControl}">
+    <Style TargetType="{x:Type editors:LdcInstructionControl}" BasedOn="{StaticResource {x:Type editors:BaseInstructionControl}}">
         <Setter Property="Template">
             <Setter.Value>
                 <ControlTemplate>
@@ -187,7 +199,7 @@
             </Setter.Value>
         </Setter>
     </Style>
-    <Style TargetType="{x:Type editors:LineNumberControl}">
+    <Style TargetType="{x:Type editors:LineNumberControl}" BasedOn="{StaticResource {x:Type editors:BaseInstructionControl}}">
         <Setter Property="Template">
             <Setter.Value>
                 <ControlTemplate>
@@ -199,7 +211,7 @@
             </Setter.Value>
         </Setter>
     </Style>
-    <Style TargetType="{x:Type editors:LookupSwitchInstructionControl}">
+    <Style TargetType="{x:Type editors:LookupSwitchInstructionControl}" BasedOn="{StaticResource {x:Type editors:BaseInstructionControl}}">
         <Setter Property="Template">
             <Setter.Value>
                 <ControlTemplate>
@@ -228,7 +240,7 @@
             </Setter.Value>
         </Setter>
     </Style>
-    <Style TargetType="{x:Type editors:MultiANewArrayInstructionControl}">
+    <Style TargetType="{x:Type editors:MultiANewArrayInstructionControl}" BasedOn="{StaticResource {x:Type editors:BaseInstructionControl}}">
         <Setter Property="Template">
             <Setter.Value>
                 <ControlTemplate>
@@ -245,7 +257,7 @@
             </Setter.Value>
         </Setter>
     </Style>
-    <Style TargetType="{x:Type editors:NewArrayInstructionControl}">
+    <Style TargetType="{x:Type editors:NewArrayInstructionControl}" BasedOn="{StaticResource {x:Type editors:BaseInstructionControl}}">
         <Setter Property="Template">
             <Setter.Value>
                 <ControlTemplate>
@@ -261,7 +273,7 @@
             </Setter.Value>
         </Setter>
     </Style>
-    <Style TargetType="{x:Type editors:SimpleInstructionControl}">
+    <Style TargetType="{x:Type editors:SimpleInstructionControl}" BasedOn="{StaticResource {x:Type editors:BaseInstructionControl}}">
         <Setter Property="Template">
             <Setter.Value>
                 <ControlTemplate>
@@ -276,7 +288,7 @@
             </Setter.Value>
         </Setter>
     </Style>
-    <Style TargetType="{x:Type editors:StackMapFrameControl}">
+    <Style TargetType="{x:Type editors:StackMapFrameControl}" BasedOn="{StaticResource {x:Type editors:BaseInstructionControl}}">
         <Setter Property="Template">
             <Setter.Value>
                 <ControlTemplate>
@@ -290,7 +302,7 @@
             </Setter.Value>
         </Setter>
     </Style>
-    <Style TargetType="{x:Type editors:TableSwitchInstructionControl}">
+    <Style TargetType="{x:Type editors:TableSwitchInstructionControl}" BasedOn="{StaticResource {x:Type editors:BaseInstructionControl}}">
         <Setter Property="Template">
             <Setter.Value>
                 <ControlTemplate>
@@ -319,7 +331,7 @@
             </Setter.Value>
         </Setter>
     </Style>
-    <Style TargetType="{x:Type editors:TypeInstructionControl}">
+    <Style TargetType="{x:Type editors:TypeInstructionControl}" BasedOn="{StaticResource {x:Type editors:BaseInstructionControl}}">
         <Setter Property="Template">
             <Setter.Value>
                 <ControlTemplate>
@@ -335,7 +347,7 @@
             </Setter.Value>
         </Setter>
     </Style>
-    <Style TargetType="{x:Type editors:VariableInstructionControl}">
+    <Style TargetType="{x:Type editors:VariableInstructionControl}" BasedOn="{StaticResource {x:Type editors:BaseInstructionControl}}">
         <Setter Property="Template">
             <Setter.Value>
                 <ControlTemplate>

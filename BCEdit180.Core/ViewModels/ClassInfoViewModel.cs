@@ -52,11 +52,6 @@ namespace BCEdit180.Core.ViewModels {
             set => RaisePropertyChanged(ref this.selectedInterface, value);
         }
 
-        public int AttributeCount {
-            get => this.attributeCount;
-            set => RaisePropertyChanged(ref this.attributeCount, value);
-        }
-
         public ICommand EditAccessCommand { get; }
         public ICommand AddInterfaceCommand { get; }
         public ICommand RemoveInterfaceCommand { get; }
@@ -101,7 +96,6 @@ namespace BCEdit180.Core.ViewModels {
             this.SuperName = node.SuperName.Name;
             this.Interfaces.Clear();
             this.Interfaces.AddAll(node.Interfaces.Select(c => new ReferenceObjectViewModel<string>(c.Name)));
-            this.AttributeCount = node.Attributes.Count;
         }
 
         public void Save(ClassNode node) {

@@ -36,5 +36,20 @@ namespace BCEdit180.Dialogs {
                 return Task.FromResult(false);
             }
         }
+
+        public Task<bool> OpenFolderDialog(string title, out string path) {
+            FolderPickerDialog picker = new FolderPickerDialog() {
+                Title = title
+            };
+
+            if (picker.ShowDialog() == true && Directory.Exists(picker.ResultPath)) {
+                path = picker.ResultPath;
+                return Task.FromResult(true);
+            }
+            else {
+                path = null;
+                return Task.FromResult(false);
+            }
+        }
     }
 }

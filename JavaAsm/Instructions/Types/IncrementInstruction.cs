@@ -7,6 +7,13 @@ namespace JavaAsm.Instructions.Types {
             set => throw new InvalidOperationException(GetType().Name + " only has 1 opcode");
         }
 
+        public override Instruction Copy() {
+            return new IncrementInstruction() {
+                VariableIndex = this.VariableIndex,
+                Value = this.Value
+            };
+        }
+
         public ushort VariableIndex { get; set; }
 
         public short Value { get; set; }

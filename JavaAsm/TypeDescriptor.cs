@@ -166,6 +166,10 @@ namespace JavaAsm {
             return result;
         }
 
+        public IDescriptor Copy() {
+            return CopyTypeDescriptor();
+        }
+
         private bool Equals(TypeDescriptor other) {
             return this.ArrayDepth == other.ArrayDepth && Equals(this.ClassName, other.ClassName) && this.PrimitiveType == other.PrimitiveType;
         }
@@ -187,6 +191,10 @@ namespace JavaAsm {
                 hashCode = (hashCode * 397) ^ (this.PrimitiveType?.GetHashCode() ?? 0);
                 return hashCode;
             }
+        }
+
+        public TypeDescriptor CopyTypeDescriptor() {
+            return this.PrimitiveType.HasValue ? new TypeDescriptor(this.PrimitiveType.Value, this.ArrayDepth) : new TypeDescriptor(this.ClassName, this.ArrayDepth);
         }
     }
 

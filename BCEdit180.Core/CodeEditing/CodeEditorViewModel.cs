@@ -1,6 +1,7 @@
 ﻿using System;
 using BCEdit180.Core.CodeEditing.Bytecode.Locals;
 using BCEdit180.Core.CodeEditing.ExceptionTable;
+using BCEdit180.Core.CodeEditing.Splicing;
 using BCEdit180.Core.ViewModels;
 using JavaAsm;
 using REghZy.MVVM.ViewModels;
@@ -10,6 +11,7 @@ namespace BCEdit180.Core.CodeEditing {
         public BytecodeEditorViewModel ByteCodeEditor { get; }
         public ExceptionTableViewModel ExceptionEditor { get; }
         public LocalVariableTableViewModel LocalVariableTable { get; }
+        public CodeSplicerViewModel CodeSplicer { get; }
 
         public MethodInfoViewModel MethodInfo { get; }
 
@@ -18,6 +20,7 @@ namespace BCEdit180.Core.CodeEditing {
             this.ByteCodeEditor = new BytecodeEditorViewModel(this);
             this.ExceptionEditor = new ExceptionTableViewModel(this);
             this.LocalVariableTable = new LocalVariableTableViewModel(this);
+            this.CodeSplicer = new CodeSplicerViewModel(this);
         }
 
         public void Load(MethodNode node) {

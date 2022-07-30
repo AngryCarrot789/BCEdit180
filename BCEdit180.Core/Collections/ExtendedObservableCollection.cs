@@ -1,6 +1,7 @@
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Collections.Specialized;
+using BCEdit180.Core.CodeEditing.Bytecode.Instructions;
 
 namespace BCEdit180.Core.Collections {
     public class ExtendedObservableCollection<T> : ObservableCollection<T> {

@@ -18,4 +18,8 @@
     <ProjectReference Include="..\JavaAsm\JavaAsm.csproj" />
   </ItemGroup>
 
+  <ItemGroup>
+    <Folder Include="Classes" />
+  </ItemGroup>
+
 </Project>

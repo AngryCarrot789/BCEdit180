@@ -1,5 +1,8 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Collections.ObjectModel;
+using System.Collections.Specialized;
+using System.Linq;
 using System.Windows.Input;
 using BCEdit180.Core.CodeEditing.Bytecode;
 using BCEdit180.Core.CodeEditing.Bytecode.Instructions;
@@ -36,6 +39,7 @@ namespace BCEdit180.Core.CodeEditing {
         public ICommand DeleteSelectedInstructionsCommand { get; }
         public ICommand InsertInstructionCommand { get; }
         public ICommand InsertCodeCommand { get; }
+        public ICommand InsertLabelCommand { get; }
         public ICommand ShowHideOptionsCommand { get; }
 
         public ICommand MoveSelectedInstructionUpCommand { get; }
@@ -44,6 +48,8 @@ namespace BCEdit180.Core.CodeEditing {
         public SearchInstructionViewModel SearchInstruction { get; }
 
         public CodeEditorViewModel CodeEditor { get; }
+
+        private int nextInstructionIndex;
 
         private static bool ShowAlterJumpDialog = true;
 
@@ -71,6 +77,80 @@ namespace BCEdit180.Core.CodeEditing {
                 // });
             });
             this.InsertInstructionCommand = new RelayCommand(InsertInstructionAction);
+
+
+            this.MoveSelectedInstructionUpCommand = new RelayCommand(MoveSelectedInstructionUpAction);
+            this.MoveSelectedInstructionDownCommand = new RelayCommand(MoveSelectedInstructionDownAction);
+            this.InsertLabelCommand = new RelayCommand(InsertLabelAction);
+        }
+
+        private void InsertLabelAction() {
+            bool insert = false;
+            Label instruction = new Label();
+            if (this.SelectedInstruction != null && this.SelectedInstruction.Node != null) {
+                insert = true;
+            }
+
+            BaseInstructionViewModel instructionVM = CreateInstructionForHandle(instruction);
+            instructionVM.IsNewInstruction = true;
+            if (insert) {
+                this.Instructions.Insert(this.SelectedInstructionIndex, instructionVM);
+            }
+            else {
+                this.Instructions.Add(instructionVM);
+            }
+
+            CalculateInstructionIndices();
+        }
+
+        private void MoveSelectedInstructionUpAction() {
+            if (this.SelectedInstruction == null || this.SelectedInstructionIndex <= 0) {
+                return;
+            }
+
+            int curIndex = this.SelectedInstructionIndex;
+            int newIndex = this.SelectedInstructionIndex - 1;
+            BaseInstructionViewModel curInstruction = this.Instructions[curIndex];
+            BaseInstructionViewModel newInstruction = this.Instructions[newIndex];
+
+            if (CanMoveInstructions(curIndex, newIndex, curInstruction, newInstruction)) {
+                curInstruction.InstructionIndex--;
+                newInstruction.InstructionIndex++;
+                this.Instructions.Move(curIndex, newIndex);
+            }
+        }
+
+        private void MoveSelectedInstructionDownAction() {
+            if (this.SelectedInstruction == null || (this.SelectedInstructionIndex + 1) >= this.Instructions.Count) {
+                return;
+            }
+
+            int curIndex = this.SelectedInstructionIndex;
+            int newIndex = this.SelectedInstructionIndex + 1;
+            BaseInstructionViewModel curInstruction = this.Instructions[curIndex];
+            BaseInstructionViewModel newInstruction = this.Instructions[newIndex];
+
+            if (CanMoveInstructions(curIndex, newIndex, curInstruction, newInstruction)) {
+                curInstruction.InstructionIndex++;
+                newInstruction.InstructionIndex--;
+                this.Instructions.Move(curIndex, newIndex);
+            }
+        }
+
+        private bool CanMoveInstructions(int curIndex, int newIndex, BaseInstructionViewModel curInsn, BaseInstructionViewModel newInsn) {
+            if (curInsn.OnMoving(curIndex, newIndex)) {
+                if (newInsn.OnMoving(newIndex, curIndex)) {
+                    return true;
+                }
+                else {
+                    Dialog.Message.ShowInformationDialog("Immovable instruction", $"The instruction ({(curIndex > newIndex ? "above" : "below")}) the selected instruction cannot be moved: " + newInsn.Opcode);
+                }
+            }
+            else {
+                Dialog.Message.ShowInformationDialog("Immovable instruction", "The selected instruction cannot be moved: " + curInsn.Opcode);
+            }
+
+            return false;
         }
 
         public void SelectLabel(Label label) {
@@ -101,7 +181,7 @@ namespace BCEdit180.Core.CodeEditing {
                 jump.JumpDestination = label;
                 this.SelectedInstruction = label;
                 jump.JumpOffset = -1;
-                jump.Target = label.Index;
+                jump.LabelIndex = label.Index;
             }
         }
 
@@ -144,7 +224,6 @@ namespace BCEdit180.Core.CodeEditing {
                     instruction = new FieldInstruction(opcode) {
                         Descriptor = new TypeDescriptor(PrimitiveType.Integer, 0),
                         Name = "newField",
-                        Opcode = opcode,
                         Owner = new ClassName(this.CodeEditor.MethodInfo.MethodList.Class.ClassInfo.ClassName)
                     };
                 }
@@ -157,8 +236,7 @@ namespace BCEdit180.Core.CodeEditing {
                 else if (instructionType == typeof(InvokeDynamicInstruction)) {
                     instruction = new InvokeDynamicInstruction() {
                         Descriptor = new MethodDescriptor(new TypeDescriptor(PrimitiveType.Integer, 0)),
-                        Name = "invokeDynamicMethod",
-                        Opcode = opcode
+                        Name = "invokeDynamicMethod"
                     };
                 }
                 else if (instructionType == typeof(JumpInstruction)) {
@@ -168,7 +246,7 @@ namespace BCEdit180.Core.CodeEditing {
                     instruction = new Label();
                 }
                 else if (instructionType == typeof(LdcInstruction)) {
-                    instruction = new LdcInstruction();
+                    instruction = new LdcInstruction(opcode);
                 }
                 else if (instructionType == typeof(LineNumber)) {
                     instruction = new LineNumber();
@@ -180,20 +258,17 @@ namespace BCEdit180.Core.CodeEditing {
                     instruction = new MethodInstruction(opcode) {
                         Descriptor = new MethodDescriptor(new TypeDescriptor(PrimitiveType.Integer, 0)),
                         Name = "newMethod",
-                        Opcode = opcode,
                         Owner = new ClassName(this.CodeEditor.MethodInfo.MethodList.Class.ClassInfo.ClassName)
                     };
                 }
                 else if (instructionType == typeof(MultiANewArrayInstruction)) {
                     instruction = new MultiANewArrayInstruction() {
-                        Opcode = opcode,
                         Dimensions = 1,
                         Type = new ClassName("java/lang/String")
                     };
                 }
                 else if (instructionType == typeof(NewArrayInstruction)) {
                     instruction = new NewArrayInstruction() {
-                        Opcode = opcode,
                         ArrayType = NewArrayTypeCode.Integer
                     };
                 }
@@ -235,6 +310,8 @@ namespace BCEdit180.Core.CodeEditing {
                 else {
                     this.Instructions.Add(instructionViewModel);
                 }
+
+                CalculateInstructionIndices();
             }
         }
 
@@ -242,13 +319,51 @@ namespace BCEdit180.Core.CodeEditing {
             List<BaseInstructionViewModel> instructions = new List<BaseInstructionViewModel>(BytecodeList.SelectedItems);
             this.RemovedInstructions.AddRange(instructions);
             this.Instructions.RemoveRange(instructions);
+            CalculateInstructionIndices();
         }
 
-        public BaseInstructionViewModel CreateInstructionForHandle(Instruction instruction) {
+        private void SetupCallbacks(BaseInstructionViewModel instruction) {
+            instruction.DuplicateCallback = DuplicateInstructionAbove;
+            instruction.RemoveSelfCallback = RemoveInstruction;
+        }
+
+        public void RemoveInstruction(BaseInstructionViewModel instruction) {
+            int index = this.SelectedInstructionIndex - 1;
+            if (index < 0) {
+                index = 0;
+            }
+
+            this.Instructions.Remove(instruction);
+
+            if (this.Instructions.Count > 0) {
+                this.SelectedInstructionIndex = index;
+            }
+
+            CalculateInstructionIndices();
+        }
+
+        public void DuplicateInstructionAbove(BaseInstructionViewModel instruction) {
+            int index = this.Instructions.IndexOf(instruction);
+            if (index == -1 || instruction.Node == null) {
+                return;
+            }
+
+            Instruction instructionHandle = instruction.Node.Copy();
+            instruction.Save(instructionHandle);
+            BaseInstructionViewModel copy = CreateInstructionForHandle(instructionHandle);
+            copy.IsNewInstruction = true;
+            this.Instructions.Insert(index, copy);
+            CalculateInstructionIndices();
+        }
+
+        public BaseInstructionViewModel CreateInstructionForHandle(Instruction instruction, int index = -1) {
             BaseInstructionViewModel vm = BaseInstructionViewModel.ForInstruction(instruction);
             if (vm is IBytecodeEditorAccess access) {
                 access.BytecodeEditor = this;
             }
+
+            SetupCallbacks(vm);
+            vm.InstructionIndex = index != -1 ? index : this.nextInstructionIndex++;
 
             vm.Load(instruction);
             return vm;
@@ -257,6 +372,7 @@ namespace BCEdit180.Core.CodeEditing {
         public void Load(MethodNode node) {
             this.RemovedInstructions.Clear();
             this.Instructions.Clear();
+            this.nextInstructionIndex = 0;
             Dictionary<long, LabelViewModel> labelMap = new Dictionary<long, LabelViewModel>();
             List<BaseInstructionViewModel> instructions = new List<BaseInstructionViewModel>();
             foreach(Instruction instruction in node.Instructions) {
@@ -270,7 +386,7 @@ namespace BCEdit180.Core.CodeEditing {
 
             foreach(BaseInstructionViewModel instruction in instructions) {
                 if (instruction is JumpInstructionViewModel jump) {
-                    if (labelMap.TryGetValue(jump.Target, out LabelViewModel label)) {
+                    if (labelMap.TryGetValue(jump.LabelIndex, out LabelViewModel label)) {
                         jump.JumpDestination = label;
                     }
                 }
@@ -284,14 +400,43 @@ namespace BCEdit180.Core.CodeEditing {
         }
 
         public void Save(MethodNode node) {
-            foreach (BaseInstructionViewModel instruction in this.RemovedInstructions) {
-                node.Instructions.Remove(instruction.Node);
-            }
-
+            node.Instructions = new InstructionList();
             this.RemovedInstructions.Clear();
             foreach (BaseInstructionViewModel instruction in this.Instructions) {
                 instruction.Save(instruction.Node);
             }
+
+            // juuust in case...
+            // CalculateInstructionIndices();
+            IEnumerable<BaseInstructionViewModel> instructions = this.Instructions;
+            int lastIndex = -1;
+            foreach (BaseInstructionViewModel viewModel in this.Instructions) {
+                if ((viewModel.InstructionIndex - 1) != lastIndex) {
+                    Dialog.Message.ShowInformationDialog(
+                        "Corrupt instruction order",
+                        "Bug: some of the instructions were out of order. Report this to REghZy :)\n" +
+                            string.Join("\n", this.Instructions.Select(i => i.Node?.ToString() ?? i.Opcode.ToString())));
+                    CalculateInstructionIndices();
+                    instructions = this.Instructions.OrderBy(x => x.InstructionIndex);
+                    break;
+                }
+
+                lastIndex = viewModel.InstructionIndex;
+            }
+
+            // i trust the order will not be corrupt, because it can't get corrupt unless there's a binding failure...
+            foreach (BaseInstructionViewModel instruction in instructions) {
+                node.Instructions.Add(instruction.Node);
+            }
+        }
+
+        public void CalculateInstructionIndices(int startIndex = 0) {
+            Collection<BaseInstructionViewModel> instructions = this.Instructions;
+            for (int i = startIndex; i < instructions.Count; i++) {
+                instructions[i].InstructionIndex = i;
+            }
+
+            this.nextInstructionIndex = instructions.Count;
         }
 
         public static Type GetInstructionTypeForOpCode(Opcode opcode) {

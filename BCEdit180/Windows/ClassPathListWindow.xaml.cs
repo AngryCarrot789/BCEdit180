@@ -1,11 +1,8 @@
-$HEADER$using System.Windows;
+using System.Windows;
 
-namespace $NAMESPACE$
-{
-    public partial class $CLASS$ : Window
-    {
-        public $CLASS$()
-        {
+namespace BCEdit180.Windows {
+    public partial class ClassPathListWindow : WindowModal {
+        public ClassPathListWindow() {
             InitializeComponent();
         }
     }
