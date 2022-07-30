@@ -20,16 +20,16 @@
              Style="{DynamicResource CustomWindowBaseStyle}"
              Background="{DynamicResource AREghZyBrush.Deep.3.Background.Static}">
     <Grid Margin="10">
-        <TextBlock TextWrapping="Wrap" TextAlignment="Center" Padding="2 5" Height="42" VerticalAlignment="Top" Text="Select a label instruction, which will be the jump instruction's new target"/>
+        <TextBlock TextWrapping="Wrap" TextAlignment="Center" Padding="2 5" Height="28" VerticalAlignment="Top"><Run Text="Select a label instruction, which will be the "/><Run Text="new branch "/><Run Text="target"/></TextBlock>
         <Grid Height="24" VerticalAlignment="Bottom">
             <Button Command="{Binding ConfirmCommand, RelativeSource={RelativeSource FindAncestor, AncestorType={x:Type windows:WindowModal}}}" Focusable="False" Content="Okay" HorizontalAlignment="Right" Margin="0,0,79,0" Width="74" Background="#FF79D43A"/>
             <Button Command="{Binding CancelCommand, RelativeSource={RelativeSource FindAncestor, AncestorType={x:Type windows:WindowModal}}}" Focusable="False" Content="Cancel" HorizontalAlignment="Right" Width="74"/>
         </Grid>
-        <Grid Margin="0,42,0,29">
+        <Grid Margin="0,33,0,29">
             <Grid.Resources>
                 <converters:TypeEqualityToTrueConverter x:Key="TypeEqualityConverter"/>
             </Grid.Resources>
-            <GroupBox Header="Instruction list" Background="{DynamicResource AREghZyBrush.Deep.2.Background.Static}">
+            <GroupBox Header="Instruction list" Background="{DynamicResource AREghZyBrush.Deep.2.Background.Static}" BorderThickness="1">
                 <ListBox Grid.Row="0"
                          ItemsSource="{Binding BytecodeEditor.Instructions}"
                          SelectedItem="{Binding SelectedInstruction, UpdateSourceTrigger=PropertyChanged}"
@@ -39,7 +39,8 @@
                          AllowDrop="True"
                          Background="{DynamicResource AREghZyBrush.Deep.2.Background.Static}"
                          BorderThickness="0"
-                         ap:Scrolling.ScrollHorizontallyWithShiftWheel="True">
+                         ap:Scrolling.ScrollHorizontallyWithShiftWheel="True"
+                         Margin="-3 -3 -3 -4">
                     <ListBox.ItemContainerStyle>
                         <Style TargetType="{x:Type ListBoxItem}">
                             <Setter Property="SnapsToDevicePixels" Value="True" />

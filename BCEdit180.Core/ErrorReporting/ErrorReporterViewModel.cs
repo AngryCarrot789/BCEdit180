@@ -1,12 +1,13 @@
 using System;
 using BCEdit180.Core.Messaging;
+using BCEdit180.Core.Messaging.Messages;
 using BCEdit180.Core.Messaging.Messages.ErrorReporting;
 using BCEdit180.Core.ViewModels;
 using JavaAsm;
 using REghZy.MVVM.ViewModels;
 
 namespace BCEdit180.Core.ErrorReporting {
-    public class ErrorReporterViewModel : BaseViewModel, IDisposable, IMessageReceiver<CheckField> {
+    public class ErrorReporterViewModel : BaseViewModel, IDisposable, IMessageReceiver<CheckField>, IMessageReceiver<AddMessage> {
         private string simpleDescription;
         public string SimpleDescription {
             get => this.simpleDescription;
@@ -19,15 +20,14 @@ namespace BCEdit180.Core.ErrorReporting {
             set => RaisePropertyChanged(ref this.isWarning, value);
         }
 
-        public ClassViewModel Class { get; }
-
-        public ErrorReporterViewModel(ClassViewModel classViewModel) {
-            this.Class = classViewModel;
+        public ErrorReporterViewModel(ClassListViewModel list) {
             MessageDispatcher.RegisterHandler<CheckField>(this);
+            MessageDispatcher.RegisterHandler<AddMessage>(this);
         }
 
         public void Dispose() {
             MessageDispatcher.UnregisterHandler<CheckField>(this);
+            MessageDispatcher.UnregisterHandler<AddMessage>(this);
         }
 
         public void CheckFieldState(FieldInfoViewModel field) {
@@ -85,6 +85,10 @@ namespace BCEdit180.Core.ErrorReporting {
             else {
                 throw new ArgumentException("Message's field was null");
             }
+        }
+
+        public void HandleMessage(AddMessage message) {
+            this.SetWarning(message.Message);
         }
     }
 }

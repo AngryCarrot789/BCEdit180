@@ -97,11 +97,13 @@
     <Compile Include="AppSettings\AppSettingsXML.cs" />
     <Compile Include="AttachedProperties\Scrolling.cs" />
     <Compile Include="AttachedProperties\TextBoxAP.cs" />
+    <Compile Include="CodeEditing\BaseInnerControl.cs" />
     <Compile Include="CodeEditing\EditorControls\BaseInstructionEditorControl.cs" />
     <Compile Include="CodeEditing\EditorControls\InstructionEditorControls.cs" />
     <Compile Include="CodeEditing\Ignore__UC_for_designer.xaml.cs">
       <DependentUpon>Ignore__UC_for_designer.xaml</DependentUpon>
     </Compile>
+    <Compile Include="CodeEditing\InnerControlls.cs" />
     <Compile Include="CodeEditing\ListControls\BaseInstructionControl.cs" />
     <Compile Include="CodeEditing\ListControls\InstructionControls.cs" />
     <Compile Include="Converters\AnnontationEntryPrimitiveValueConverter.cs" />
@@ -194,6 +196,7 @@
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
+    <Page Include="CodeEditing\InnerControlStyles.xaml" />
     <Page Include="CodeEditing\ListControls\InstructionControlStyles.xaml" />
     <Page Include="LineNumbers\LineNumberListBox.xaml" />
     <Page Include="Themes\BaseInstructionStyles.xaml">

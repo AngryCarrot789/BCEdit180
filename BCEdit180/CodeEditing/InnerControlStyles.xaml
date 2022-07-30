@@ -1,4 +1,46 @@
 <ResourceDictionary xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
-                    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml">
-    
+                    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+                    xmlns:codeEditing="clr-namespace:BCEdit180.CodeEditing"
+                    xmlns:editors="clr-namespace:BCEdit180.CodeEditing.EditorControls"
+                    xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+                    xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+                    xmlns:vms="clr-namespace:BCEdit180.Core.CodeEditing.Bytecode.Instructions;assembly=BCEdit180.Core"
+                    xmlns:controls="clr-namespace:BCEdit180.Controls"
+                    xmlns:converters="clr-namespace:BCEdit180.Converters"
+                    xmlns:bytecode="clr-namespace:BCEdit180.Core.CodeEditing.Bytecode;assembly=BCEdit180.Core"
+                    mc:Ignorable="d">
+    <Style TargetType="{x:Type codeEditing:MatchLabelControl}">
+        <Setter Property="Template">
+            <Setter.Value>
+                <ControlTemplate d:DataContext="{d:DesignInstance bytecode:MatchLabelViewModel}">
+                    <StackPanel Orientation="Horizontal" ToolTip="A switch case">
+                        <TextBox x:Name="PART_caseBox" FontFamily="Consolas" VerticalAlignment="Center" Text="{Binding SwitchIndex, UpdateSourceTrigger=PropertyChanged}" Background="Transparent" BorderThickness="0" Foreground="{StaticResource Keyword}" ToolTip="The switch case index (e.g case 0)" Padding="2 0"/>
+                        <TextBlock x:Name="PART_defaultBox" FontFamily="Consolas" VerticalAlignment="Center" Text="default" Foreground="{StaticResource ClassName}" ToolTip="The default case" Padding="2 0" Visibility="Collapsed"/>
+                        <TextBlock FontFamily="Consolas" VerticalAlignment="Center" Text="→" Foreground="{DynamicResource AREghZyBrush.Foreground.Deeper}"/>
+                        <TextBlock FontFamily="Consolas" VerticalAlignment="Center" Padding="2 0">
+                            <Hyperlink Command="{Binding SelectJumpDestinationCommand}">
+                                <TextBlock Text="{Binding LabelIndex, UpdateSourceTrigger=PropertyChanged}" Foreground="{DynamicResource ConstNumeric}" ToolTip="The target branch label (which is where this case branches to). Click to scroll to the label" ToolTipService.ShowDuration="30000" Padding="2 0">
+                                    <TextBlock.ContextMenu>
+                                        <ContextMenu>
+                                            <MenuItem Command="{Binding EditTargetLabelCommand}" Header="Edit target label" ToolTip="Edit the label which this case will branch to"/>
+                                        </ContextMenu>
+                                    </TextBlock.ContextMenu>
+                                </TextBlock>
+                            </Hyperlink>
+                        </TextBlock>
+                    </StackPanel>
+                    <ControlTemplate.Triggers>
+                        <DataTrigger Binding="{Binding IsDefault, UpdateSourceTrigger=PropertyChanged}" Value="True">
+                            <Setter Property="Visibility" TargetName="PART_caseBox" Value="Collapsed"/>
+                            <Setter Property="Visibility" TargetName="PART_defaultBox" Value="Visible"/>
+                        </DataTrigger>
+                        <DataTrigger Binding="{Binding IsDefault, UpdateSourceTrigger=PropertyChanged}" Value="False">
+                            <Setter Property="Visibility" TargetName="PART_caseBox" Value="Visible"/>
+                            <Setter Property="Visibility" TargetName="PART_defaultBox" Value="Collapsed"/>
+                        </DataTrigger>
+                    </ControlTemplate.Triggers>
+                </ControlTemplate>
+            </Setter.Value>
+        </Setter>
+    </Style>
 </ResourceDictionary>

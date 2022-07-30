@@ -3,12 +3,11 @@ using JavaAsm.CustomAttributes.Annotation;
 namespace BCEdit180.Core.Annotations.Entries {
     public class BooleanValueAnnotationEntryViewModel : BaseAnnotationEntryViewModel {
         private bool state;
-
         public bool State {
             get => this.state;
             set {
                 RaisePropertyChanged(ref this.state, value);
-                this.value.ConstValue = this.value;
+                this.value.ConstValue = this.value?.ConstValue ?? false;
             }
         }
 

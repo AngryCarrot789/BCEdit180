@@ -12,10 +12,10 @@ namespace BCEdit180.Core.Searching {
             set {
                 RaisePropertyChanged(ref this.inputText, value);
                 if (CanSearchForInput()) {
-                    this.SearchService.Bump();
+                    this.IdleEventService.OnInput();
                 }
                 else {
-                    this.SearchService.CanFireNextTick = false;
+                    this.IdleEventService.CanFireNextTick = false;
                     this.SearchCommand.RaiseCanExecuteChanged();
                 }
             }
@@ -25,13 +25,13 @@ namespace BCEdit180.Core.Searching {
 
         public ICommand ClearSearchCommand { get; }
 
-        public SearchService SearchService { get; }
+        public IdleEventService IdleEventService { get; }
 
         private bool wasLastSearchForced;
         public bool WasLastSearchForced => this.wasLastSearchForced;
 
         public SearchViewModel() {
-            this.SearchService = new SearchService();
+            this.IdleEventService = new IdleEventService();
             this.SearchCommand = new ExtendedRelayCommand(ForceSearchAction, CanSearchForInput);
             this.ClearSearchCommand = new RelayCommand(ClearSearchAction);
         }
@@ -39,7 +39,7 @@ namespace BCEdit180.Core.Searching {
         public virtual void ForceSearchAction() {
             this.wasLastSearchForced = true;
             try {
-                this.SearchService.ForceAction();
+                this.IdleEventService.ForceAction();
             }
             finally {
                 this.wasLastSearchForced = false;
@@ -55,7 +55,7 @@ namespace BCEdit180.Core.Searching {
         }
 
         public void Dispose() {
-            this.SearchService.Dispose();
+            this.IdleEventService.Dispose();
         }
     }
 }

@@ -5,6 +5,7 @@ using System.Threading.Tasks;
 using System.Windows.Input;
 using BCEdit180.Core.AttributeEditor.Classes;
 using BCEdit180.Core.Collections;
+using BCEdit180.Core.ErrorReporting;
 using BCEdit180.Core.Utils;
 using BCEdit180.Core.Window;
 using REghZy.MVVM.Commands;
@@ -22,11 +23,14 @@ namespace BCEdit180.Core.ViewModels {
 
         private ClassViewModel blankClass;
 
+        public ErrorReporterViewModel ErrorReporter { get; }
+
         public ICommand OpenFileCommand { get; }
 
         public ClassListViewModel() {
             this.Classes = new ExtendedObservableCollection<ClassViewModel>();
             this.OpenFileCommand = new RelayCommand(OpenFileAction);
+            this.ErrorReporter = new ErrorReporterViewModel(this);
         }
 
         public void CreateBalnkClass() {

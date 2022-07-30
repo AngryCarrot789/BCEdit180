@@ -7,6 +7,7 @@
                     xmlns:controls="clr-namespace:BCEdit180.Controls"
                     xmlns:converters="clr-namespace:BCEdit180.Converters"
                     xmlns:bytecode="clr-namespace:BCEdit180.Core.CodeEditing.Bytecode;assembly=BCEdit180.Core"
+                    xmlns:codeEditing="clr-namespace:BCEdit180.CodeEditing"
                     mc:Ignorable="d">
     <converters:TypeDescriptorToStringConverter x:Key="TypeDescriptorConverter"/>
     <converters:BooleanToColourConverter x:Key="NewInstructionBackgroundConverter" TrueColour="{StaticResource ClassName}" FalseColour="{StaticResource ConstNumeric}"/>
@@ -216,39 +217,12 @@
                             </ItemsControl.ItemsPanel>
                             <ItemsControl.ItemTemplate>
                                 <DataTemplate>
-                                    <StackPanel Margin="2 0" Orientation="Horizontal" d:DataContext="{d:DesignInstance bytecode:MatchLabelViewModel}" ToolTip="A switch case">
-                                        <TextBox Text="{Binding SwitchIndex, UpdateSourceTrigger=PropertyChanged}" Background="Transparent" BorderThickness="0" Foreground="{StaticResource Keyword}" ToolTip="The switch case index (e.g case 0)"/>
-                                        <TextBlock Text="→"/>
-                                        <TextBlock VerticalAlignment="Center" Padding="2 0">
-                                            <Hyperlink Command="{Binding SelectJumpDestinationCommand}">
-                                                <TextBlock Text="{Binding LabelIndex, UpdateSourceTrigger=PropertyChanged}" Foreground="{StaticResource ConstNumeric}" ToolTip="The target branch label (which is where this case branches to). Click to scroll to the label" ToolTipService.ShowDuration="30000">
-                                                    <TextBlock.ContextMenu>
-                                                        <ContextMenu>
-                                                            <MenuItem Command="{Binding EditTargetLabelCommand}" Header="Edit target label" ToolTip="Edit the label which this case will branch to"/>
-                                                        </ContextMenu>
-                                                    </TextBlock.ContextMenu>
-                                                </TextBlock>
-                                            </Hyperlink>
-                                        </TextBlock>
-                                    </StackPanel>
+                                    <codeEditing:MatchLabelControl DataContext="{Binding}"/>
                                 </DataTemplate>
                             </ItemsControl.ItemTemplate>
                         </ItemsControl>
-                        <StackPanel DataContext="{Binding DefaultLabel, UpdateSourceTrigger=PropertyChanged}" Margin="2 0" Orientation="Horizontal" d:DataContext="{d:DesignInstance bytecode:MatchLabelViewModel}" VerticalAlignment="Center">
-                            <TextBlock Text="default" Foreground="{StaticResource ClassName}" ToolTip="The default switch case. You should know what this is for :-)"/>
-                            <TextBlock Text="→"/>
-                            <TextBlock VerticalAlignment="Center" Padding="2 0">
-                                <Hyperlink Command="{Binding SelectJumpDestinationCommand}">
-                                    <TextBlock Text="{Binding LabelIndex, UpdateSourceTrigger=PropertyChanged}" Foreground="{StaticResource ConstNumeric}" ToolTip="The target branch label (which is where the default case branches to). Click to scroll to the label" ToolTipService.ShowDuration="30000">
-                                        <TextBlock.ContextMenu>
-                                            <ContextMenu>
-                                                <MenuItem Command="{Binding EditTargetLabelCommand}" Header="Edit target label" ToolTip="Edit the label which this default case will branch to"/>
-                                            </ContextMenu>
-                                        </TextBlock.ContextMenu>
-                                    </TextBlock>
-                                </Hyperlink>
-                            </TextBlock>
-                        </StackPanel>
+                        <!-- Not sure if MatchLabelControl should own IsDefault (as in the switch case default), or if the ViewModel should... -->
+                        <codeEditing:MatchLabelControl DataContext="{Binding DefaultLabel, UpdateSourceTrigger=PropertyChanged}" Margin="2 0" VerticalAlignment="Center"/>
                     </StackPanel>
                 </ControlTemplate>
             </Setter.Value>
@@ -321,7 +295,7 @@
             <Setter.Value>
                 <ControlTemplate>
                     <StackPanel Orientation="Horizontal" d:DataContext="{d:DesignInstance vms:TableSwitchInstructionViewModel}">
-                        <TextBlock Text="{Binding Opcode, UpdateSourceTrigger=PropertyChanged}" Foreground="{Binding OpcodeTextBrush, RelativeSource={RelativeSource FindAncestor, AncestorType={x:Type editors:BaseInstructionControl}}}" Padding="0 0 5 0" VerticalAlignment="Center" ToolTip="The lookup switch instruction">
+                        <TextBlock Text="{Binding Opcode, UpdateSourceTrigger=PropertyChanged}" Foreground="{Binding OpcodeTextBrush, RelativeSource={RelativeSource FindAncestor, AncestorType={x:Type editors:BaseInstructionControl}}}" Padding="0 0 5 0" VerticalAlignment="Center" ToolTip="The table switch instruction">
                             <TextBlock.InputBindings>
                                 <MouseBinding MouseAction="LeftDoubleClick"  Command="{Binding EditOpcodeCommand}"/>
                             </TextBlock.InputBindings>
@@ -334,39 +308,12 @@
                             </ItemsControl.ItemsPanel>
                             <ItemsControl.ItemTemplate>
                                 <DataTemplate>
-                                    <StackPanel Margin="2 0" Orientation="Horizontal" d:DataContext="{d:DesignInstance bytecode:MatchLabelViewModel}" ToolTip="A switch case">
-                                        <TextBox Text="{Binding SwitchIndex, UpdateSourceTrigger=PropertyChanged}" Background="Transparent" BorderThickness="0" Foreground="{StaticResource Keyword}" ToolTip="The switch case index (e.g case 0)"/>
-                                        <TextBlock Text="→"/>
-                                        <TextBlock VerticalAlignment="Center" Padding="2 0">
-                                            <Hyperlink Command="{Binding SelectJumpDestinationCommand}">
-                                                <TextBlock Text="{Binding LabelIndex, UpdateSourceTrigger=PropertyChanged}" Foreground="{StaticResource ConstNumeric}" ToolTip="The target branch label (which is where this case branches to). Click to scroll to the label" ToolTipService.ShowDuration="30000">
-                                                    <TextBlock.ContextMenu>
-                                                        <ContextMenu>
-                                                            <MenuItem Command="{Binding EditTargetLabelCommand}" Header="Edit target label" ToolTip="Edit the label which this case will branch to"/>
-                                                        </ContextMenu>
-                                                    </TextBlock.ContextMenu>
-                                                </TextBlock>
-                                            </Hyperlink>
-                                        </TextBlock>
-                                    </StackPanel>
+                                    <codeEditing:MatchLabelControl DataContext="{Binding}"/>
                                 </DataTemplate>
                             </ItemsControl.ItemTemplate>
                         </ItemsControl>
-                        <StackPanel DataContext="{Binding DefaultLabel, UpdateSourceTrigger=PropertyChanged}" Margin="2 0" Orientation="Horizontal" d:DataContext="{d:DesignInstance bytecode:MatchLabelViewModel}" VerticalAlignment="Center">
-                            <TextBlock Text="default" Foreground="{StaticResource ClassName}" ToolTip="The default switch case. You should know what this is for :-)"/>
-                            <TextBlock Text="→"/>
-                            <TextBlock VerticalAlignment="Center" Padding="2 0">
-                                <Hyperlink Command="{Binding SelectJumpDestinationCommand}">
-                                    <TextBlock Text="{Binding LabelIndex, UpdateSourceTrigger=PropertyChanged}" Foreground="{StaticResource ConstNumeric}" ToolTip="The target branch label (which is where the default case branches to). Click to scroll to the label" ToolTipService.ShowDuration="30000">
-                                        <TextBlock.ContextMenu>
-                                            <ContextMenu>
-                                                <MenuItem Command="{Binding EditTargetLabelCommand}" Header="Edit target label" ToolTip="Edit the label which this default case will branch to"/>
-                                            </ContextMenu>
-                                        </TextBlock.ContextMenu>
-                                    </TextBlock>
-                                </Hyperlink>
-                            </TextBlock>
-                        </StackPanel>
+                        <!-- Not sure if MatchLabelControl should own IsDefault (as in the switch case default), or if the ViewModel should... -->
+                        <codeEditing:MatchLabelControl DataContext="{Binding DefaultLabel, UpdateSourceTrigger=PropertyChanged}" Margin="2 0" VerticalAlignment="Center"/>
                     </StackPanel>
                 </ControlTemplate>
             </Setter.Value>

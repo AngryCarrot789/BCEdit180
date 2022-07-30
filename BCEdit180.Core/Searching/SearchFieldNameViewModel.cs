@@ -9,13 +9,13 @@ namespace BCEdit180.Core.Searching {
 
         public SearchFieldNameViewModel(FieldListViewModel fieldList) {
             this.FieldList = fieldList;
-            this.SearchService.SearchReady += FindNextMethod;
-            this.SearchService.MinimumTimeSinceBump = TimeSpan.FromMilliseconds(200);
+            this.IdleEventService.OnIdle += FindNextMethod;
+            this.IdleEventService.MinimumTimeSinceInput = TimeSpan.FromMilliseconds(200);
         }
 
         ~SearchFieldNameViewModel() {
             // is this even necessary though?
-            this.SearchService.SearchReady -= FindNextMethod;
+            this.IdleEventService.OnIdle -= FindNextMethod;
         }
 
         public void FindNextMethod() {

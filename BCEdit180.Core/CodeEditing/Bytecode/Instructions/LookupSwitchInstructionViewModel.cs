@@ -15,7 +15,7 @@ namespace BCEdit180.Core.CodeEditing.Bytecode.Instructions {
         public override void Load(Instruction instruction) {
             base.Load(instruction);
             LookupSwitchInstruction insn = (LookupSwitchInstruction) instruction;
-            this.DefaultLabel = new MatchLabelViewModel();
+            this.DefaultLabel = new MatchLabelViewModel() {IsDefault = true};
             SetCallbacks(this.DefaultLabel);
             this.DefaultLabel.Load(-2, insn.Default);
             this.DefaultIndex = insn.Default?.Index ?? -1;

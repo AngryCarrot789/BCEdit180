@@ -874,7 +874,7 @@
                     <Separator Style="{DynamicResource VerticalSeparator}" Margin="0 0 0 0"/>
                 </StackPanel>
                 <Grid Margin="5 0">
-                    <TextBlock Text="{Binding ErrorReporter.SimpleDescription, UpdateSourceTrigger=PropertyChanged}" VerticalAlignment="Center"/>
+                    <TextBlock Text="{Binding DataContext.ErrorReporter.SimpleDescription, RelativeSource={RelativeSource FindAncestor, AncestorType={x:Type Window}}}" VerticalAlignment="Center"/>
                 </Grid>
             </DockPanel>
         </Border>

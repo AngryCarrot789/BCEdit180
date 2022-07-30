@@ -10,8 +10,8 @@ namespace BCEdit180.Core.Searching {
 
         public SearchInstructionViewModel(BytecodeEditorViewModel editor) {
             this.Editor = editor;
-            this.SearchService.SearchReady += FindNextInstruction;
-            this.SearchService.MinimumTimeSinceBump = TimeSpan.FromMilliseconds(200);
+            this.IdleEventService.OnIdle += FindNextInstruction;
+            this.IdleEventService.MinimumTimeSinceInput = TimeSpan.FromMilliseconds(200);
         }
 
         public void FindNextInstruction() {

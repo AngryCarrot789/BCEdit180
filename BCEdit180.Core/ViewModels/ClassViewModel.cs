@@ -55,9 +55,7 @@ namespace BCEdit180.Core.ViewModels {
         /// Class attributes
         /// </summary>
         public ClassAttributeEditorViewModel ClassAttributes { get; }
-
-        public ErrorReporterViewModel ErrorReporter { get; }
-
+        
         public ExtendedRelayCommand ReloadFileCommand { get; }
 
         public ExtendedRelayCommand SaveFileCommand { get; }
@@ -104,9 +102,7 @@ namespace BCEdit180.Core.ViewModels {
             this.FieldList = new FieldListViewModel(this);
             this.SourceCode = new SourceCodeViewModel(this);
             this.ClassAttributes = new ClassAttributeEditorViewModel(this);
-            this.ErrorReporter = new ErrorReporterViewModel(this);
             this.RemoveSelfCommand = new ExtendedRelayCommand(() => this.ClassList?.RemoveClass(this), () => this.ClassList != null);
-            ServiceManager.SetService(this.ErrorReporter);
             Load(node);
         }
 
@@ -116,7 +112,6 @@ namespace BCEdit180.Core.ViewModels {
             // this.ClassInfo.Dispose();
             this.MethodList.Dispose();
             this.FieldList.Dispose();
-            this.ErrorReporter.Dispose();
         }
 
         /// <summary>
@@ -193,6 +188,30 @@ namespace BCEdit180.Core.ViewModels {
         }
 
         public void SaveClassFile() {
+            #if DEBUG
+            this.IsBusy = true;
+            if (this.FilePath != null) {
+                if (File.Exists(this.FilePath)) {
+                    string backupPath = Path.Combine(Path.GetDirectoryName(this.FilePath) ?? "", "backup_" + Path.GetFileName(this.FilePath));
+                    if (File.Exists(backupPath)) {
+                        File.Delete(backupPath);
+                    }
+
+                    File.Copy(this.FilePath, backupPath);
+                }
+
+                SaveClass();
+
+                // ClassFile.WriteClass mutates ClassNode's attributes,
+                // so reloading will fix
+                ReadClassFileAndShowDialog(this.FilePath);
+            }
+            else {
+                SaveClassFileAs();
+            }
+
+            this.IsBusy = false;
+            #else
             try {
                 this.IsBusy = true;
                 if (this.FilePath != null) {
@@ -205,22 +224,7 @@ namespace BCEdit180.Core.ViewModels {
                         File.Copy(this.FilePath, backupPath);
                     }
 
-                    try {
-                        Save(this.Node);
-                    }
-                    catch (Exception e) {
-                        Dialog.Message.ShowWarningDialog("Failed to process class", "Failed to process/save class before writing to file: " + this.FilePath + "\n" + e);
-                        return;
-                    }
-
-                    try {
-                        using (BufferedStream output = new BufferedStream(File.OpenWrite(this.FilePath))) {
-                            ClassFile.WriteClass(output, this.Node);
-                        }
-                    }
-                    catch (Exception e) {
-                        Dialog.Message.ShowWarningDialog("Failed to write to file", "Failed to write class to file: " + this.FilePath + "\n" + e);
-                    }
+                    SaveClass();
 
                     // ClassFile.WriteClass mutates ClassNode's attributes,
                     // so reloading will fix
@@ -236,6 +240,7 @@ namespace BCEdit180.Core.ViewModels {
             finally {
                 this.IsBusy = false;
             }
+            #endif
         }
 
         public void SaveClassFileAs() {
@@ -254,22 +259,7 @@ namespace BCEdit180.Core.ViewModels {
                             File.Copy(this.FilePath, backupPath);
                         }
 
-                        try {
-                            Save(this.Node);
-                        }
-                        catch (Exception e) {
-                            Dialog.Message.ShowWarningDialog("Failed to process class", "Failed to process/save class before writing to file: " + this.FilePath + "\n" + e);
-                            return;
-                        }
-
-                        try {
-                            using (BufferedStream output = new BufferedStream(File.OpenWrite(this.FilePath))) {
-                                ClassFile.WriteClass(output, this.Node);
-                            }
-                        }
-                        catch (Exception e) {
-                            Dialog.Message.ShowWarningDialog("Failed to write to file", "Failed to write class to file: " + this.FilePath + "\n" + e);
-                        }
+                        SaveClass();
 
                         // ClassFile.WriteClass mutates ClassNode's attributes,
                         // so reloading will fix
@@ -283,6 +273,38 @@ namespace BCEdit180.Core.ViewModels {
             finally {
                 this.IsBusy = false;
             }
+        }
+
+        public void SaveClass() {
+            #if DEBUG
+
+            Save(this.Node);
+            using (BufferedStream output = new BufferedStream(File.OpenWrite(this.FilePath))) {
+                ClassFile.WriteClass(output, this.Node);
+            }
+
+            // Makes debugging easier; using #if DEBUG inside a catch block to rethrow is literally almost useless
+
+            #else
+
+            try {
+                Save(this.Node);
+            }
+            catch (Exception e) {
+                Dialog.Message.ShowWarningDialog("Failed to process class", "Failed to process/save class before writing to file: " + this.FilePath + "\n" + e);
+                return;
+            }
+
+            try {
+                using (BufferedStream output = new BufferedStream(File.OpenWrite(this.FilePath))) {
+                    ClassFile.WriteClass(output, this.Node);
+                }
+            }
+            catch (Exception e) {
+                Dialog.Message.ShowWarningDialog("Failed to write to file", "Failed to write class to file: " + this.FilePath + "\n" + e);
+            }
+
+            #endif
         }
 
         public void HandleMessage(BusyStateMessage message) {

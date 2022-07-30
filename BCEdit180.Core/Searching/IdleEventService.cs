@@ -4,18 +4,18 @@ using System.Threading.Tasks;
 using BCEdit180.Core.Window;
 
 namespace BCEdit180.Core.Searching {
-    public class SearchService : IDisposable {
-        public delegate void BeginSearchEvent();
+    public class IdleEventService : IDisposable {
+        public delegate void BeginActionEvent();
 
-        public event BeginSearchEvent SearchReady;
+        public event BeginActionEvent OnIdle;
 
-        private DateTime lastBump;
+        private DateTime lastInput;
 
         private volatile bool canFireEvent;
 
         private volatile bool stopTask;
 
-        public TimeSpan MinimumTimeSinceBump { get; set; }
+        public TimeSpan MinimumTimeSinceInput { get; set; }
 
         public TimeSpan TaskTickInterval { get; set; }
 
@@ -24,8 +24,8 @@ namespace BCEdit180.Core.Searching {
             set => this.canFireEvent = value;
         }
 
-        public SearchService() {
-            this.MinimumTimeSinceBump = TimeSpan.FromMilliseconds(200);
+        public IdleEventService() {
+            this.MinimumTimeSinceInput = TimeSpan.FromMilliseconds(200);
             this.TaskTickInterval = TimeSpan.FromMilliseconds(100);
             Start();
         }
@@ -37,12 +37,11 @@ namespace BCEdit180.Core.Searching {
                         return;
                     }
 
-                    // Debug.WriteLine($"Now: {DateTime.Now.ToString("HH:mm:ss.ffff")} -> LastBump: {this.lastBump.ToString("HH:mm:ss.ffff")}");
-                    if ((DateTime.Now - this.lastBump) > this.MinimumTimeSinceBump) {
+                    if ((DateTime.Now - this.lastInput) > this.MinimumTimeSinceInput) {
                         if (this.canFireEvent) {
                             this.canFireEvent = false;
                             try {
-                                ServiceManager.GetService<IApplicationProxy>().InvokeSync(FireSearchReadyEvent);
+                                ServiceManager.GetService<IApplicationProxy>().InvokeSync(FireEvent);
                             }
                             catch (ThreadAbortException) {
                                 return;
@@ -62,22 +61,22 @@ namespace BCEdit180.Core.Searching {
             });
         }
 
-        public void FireSearchReadyEvent() {
-            this.SearchReady?.Invoke();
+        public void FireEvent() {
+            this.OnIdle?.Invoke();
         }
 
-        public void Bump() {
+        public void OnInput() {
             if (!this.canFireEvent) {
                 this.canFireEvent = true;
             }
 
-            this.lastBump = DateTime.Now;
+            this.lastInput = DateTime.Now;
         }
 
         public void ForceAction() {
             this.canFireEvent = false;
-            this.lastBump = DateTime.Now;
-            FireSearchReadyEvent();
+            this.lastInput = DateTime.Now;
+            FireEvent();
         }
 
         public void Dispose() {
