@@ -14,9 +14,8 @@ See the bottom of this page for a feature list... and also some bugs :(
 # Installing
 You can download the release.zip file from releases, which includes the .exe with all the dependencies
 
-You will also need to build the projects REghZy.MVVM and REghZy.WPF from https://github.com/AngryCarrot789/REghZyUtilsCS
-
-That leaves you with 3 DLL files you need to reference in this project. Once you reference them, you should be able to build
+If you want to build it yourself, you will need to build the projects REghZy.MVVM and REghZy.WPF from https://github.com/AngryCarrot789/REghZyUtilsCS,
+and reference those 2 DLL files in this project. Once you reference them, you should be able to build
 
 You don't need to download my fork of the JavaAsm library, as i moved it into this solution. But it can be found here: https://github.com/AngryCarrot789/java-asm
 My fork of java-asm targets .NET Standard 2.0 (instead of 2.1 which the original creator used), as well as my MVVM and WPF libraries, which works fine with .NET Framework 4.7.2 which this project uses (i think... i didn't really look)
