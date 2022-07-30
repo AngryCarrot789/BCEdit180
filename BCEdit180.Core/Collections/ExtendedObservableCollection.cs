@@ -1,7 +1,5 @@
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
-using System.Collections.Specialized;
-using BCEdit180.Core.CodeEditing.Bytecode.Instructions;
 
 namespace BCEdit180.Core.Collections {
     public class ExtendedObservableCollection<T> : ObservableCollection<T> {
@@ -15,21 +13,35 @@ namespace BCEdit180.Core.Collections {
         }
 
         public void AddRange(IEnumerable<T> collection) {
-            CheckReentrancy();
             foreach (T item in collection) {
-                this.Items.Add(item);
+                this.Add(item);
+            }
+            // CheckReentrancy();
+            // foreach (T item in collection) {
+            //     this.Items.Add(item);
+            // }
+            // 
+            // OnCollectionChanged(new NotifyCollectionChangedEventArgs(NotifyCollectionChangedAction.Reset));
+        }
+
+        public void InsertRange(int index, IEnumerable<T> collection) {
+            // CheckReentrancy();
+
+            int i = index;
+            foreach (T item in collection) {
+                this.Insert(i++, item);
             }
 
-            OnCollectionChanged(new NotifyCollectionChangedEventArgs(NotifyCollectionChangedAction.Reset));
+            // OnCollectionChanged(new NotifyCollectionChangedEventArgs(NotifyCollectionChangedAction.Reset));
         }
 
         public void RemoveRange(IEnumerable<T> collection) {
-            CheckReentrancy();
+            // CheckReentrancy();
             foreach (T item in collection) {
-                this.Items.Remove(item);
+                this.Remove(item);
             }
 
-            OnCollectionChanged(new NotifyCollectionChangedEventArgs(NotifyCollectionChangedAction.Reset));
+            // OnCollectionChanged(new NotifyCollectionChangedEventArgs(NotifyCollectionChangedAction.Reset));
         }
     }
 }

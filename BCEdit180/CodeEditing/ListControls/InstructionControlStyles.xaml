@@ -151,7 +151,7 @@
                         </TextBlock>
                         <TextBlock Visibility="{Binding JumpDestination, Converter={StaticResource NullToCollapsedConverter}, UpdateSourceTrigger=PropertyChanged}" Padding="0 0 0 0" VerticalAlignment="Center">
                             <Hyperlink Command="{Binding SelectJumpDestinationCommand}">
-                                <TextBlock Text="{Binding LabelIndex, UpdateSourceTrigger=PropertyChanged, StringFormat='{}[Target: {0}]'}" Foreground="{StaticResource Keyword}" ToolTip="Select and scroll to the target label (which this instruction may jump to)" ToolTipService.ShowDuration="30000">
+                                <TextBlock Text="{Binding JumpDestination.Index, UpdateSourceTrigger=PropertyChanged, StringFormat='{}[Target: {0}]'}" Foreground="{StaticResource Keyword}" ToolTip="Select and scroll to the target label (which this instruction may jump to)" ToolTipService.ShowDuration="30000">
                                     <TextBlock.ContextMenu>
                                         <ContextMenu>
                                             <MenuItem Command="{Binding EditTargetLabelCommand}" Header="Edit target label"/>

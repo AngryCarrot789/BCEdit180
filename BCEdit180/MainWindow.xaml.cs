@@ -4,6 +4,7 @@ using System.Collections.ObjectModel;
 using System.ComponentModel;
 using System.Diagnostics;
 using System.IO;
+using System.Linq;
 using System.Windows;
 using System.Windows.Input;
 using System.Xml.Serialization;
@@ -21,6 +22,7 @@ using BCEdit180.Core.Window;
 using BCEdit180.Dialogs;
 using BCEdit180.Themes;
 using BCEdit180.Windows;
+using JavaAsm.Instructions;
 
 namespace BCEdit180 {
     /// <summary>
@@ -427,6 +429,19 @@ namespace BCEdit180 {
             catch (Exception e) {
                 MessageBox.Show("Failed to load application config file at " + ConfigFile + "\n" + e, "Error loading config");
             }
+        }
+
+        private void MenuItem_OnClick(object sender, RoutedEventArgs e) {
+            // Collection<BaseInstructionViewModel> instructions = ((ClassListViewModel) this.DataContext).SelectedClass.MethodList.SelectedMethod.CodeEditor.ByteCodeEditor.Instructions;
+            // List<Instruction> instructionHandles = instructions.Select(i => i.Node).ToList();
+            // 
+            // StringWriter writer = new StringWriter();
+            // JsonTextWriter jsonWriter = new JsonTextWriter(writer);
+            // JsonSerializer serializer = new JsonSerializer();
+            // serializer.Formatting = Formatting.Indented;
+            // serializer.Serialize(jsonWriter, instructionHandles);
+            // 
+            // Dialog.Message.ShowWarningDialog("Tetx", writer.ToString());
         }
     }
 }

@@ -25,10 +25,14 @@ namespace BCEdit180.Core.ViewModels {
 
         public ErrorReporterViewModel ErrorReporter { get; }
 
+        public InstructionClipboardViewModel Clipboard { get; }
+
         public ICommand OpenFileCommand { get; }
 
         public ClassListViewModel() {
             this.Classes = new ExtendedObservableCollection<ClassViewModel>();
+            this.Clipboard = new InstructionClipboardViewModel();
+            ServiceManager.SetService(this.Clipboard);
             this.OpenFileCommand = new RelayCommand(OpenFileAction);
             this.ErrorReporter = new ErrorReporterViewModel(this);
         }

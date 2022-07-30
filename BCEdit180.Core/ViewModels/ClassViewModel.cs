@@ -135,18 +135,39 @@ namespace BCEdit180.Core.ViewModels {
                     ActionProgressViewModel vm = actionProgress ?? Dialog.Message.ShowProgressWindow("Loading class file", "Reading file " + path);
                     Task.Run(async () => {
                         await Task.Delay(100);
-                        AppProxy.Proxy.InvokeSync(() => {
+                        await AppProxy.Proxy.InvokeSyncAsync(() => {
                             if (File.Exists(path)) {
-                                using (BufferedStream input = new BufferedStream(File.OpenRead(path), 8192)) {
-                                    this.Node = ClassFile.ParseClass(input);
+                                try {
+                                    using (BufferedStream input = new BufferedStream(File.OpenRead(path), 8192)) {
+                                        this.Node = ClassFile.ParseClass(input);
+                                    }
+                                }
+                                catch (Exception e) {
+                                    vm.Description = "Fail: " + e.Message;
+                                    Dialog.Message.ShowWarningDialog("Error reading classfile", "Error while parsing class from file: " + e.Message + "\n" + e);
+                                    if (closeDialog) {
+                                        vm.CloseDialog();
+                                    }
+                                    return;
                                 }
 
                                 vm.Description = "Parsing classfile... ";
                                 Task.Run(async () => {
                                     await Task.Delay(100);
-                                    AppProxy.Proxy.InvokeSync(() => {
+                                    await AppProxy.Proxy.InvokeSyncAsync(() => {
                                         this.FilePath = path;
-                                        Load(this.Node);
+                                        try {
+                                            Load(this.Node);
+                                        }
+                                        catch (Exception e) {
+                                            vm.Description = "Fail: " + e.Message;
+                                            Dialog.Message.ShowWarningDialog("Error loading class", "Error while loading class from ClassNode: " + e.Message + "\n" + e);
+                                            if (closeDialog) {
+                                                vm.CloseDialog();
+                                            }
+                                            return;
+                                        }
+
                                         if (closeDialog) {
                                             vm.CloseDialog();
                                         }

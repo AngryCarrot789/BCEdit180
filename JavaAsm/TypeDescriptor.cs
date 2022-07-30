@@ -1,11 +1,13 @@
 ﻿using System;
 using System.Linq;
+using System.Runtime.Serialization;
 using System.Text;
 
 namespace JavaAsm {
     /// <summary>
     /// Type descriptor
     /// </summary>
+    [Serializable]
     public class TypeDescriptor : IDescriptor {
         /// <summary>
         /// Class name. Equals to null if type is primitive

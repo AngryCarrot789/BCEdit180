@@ -9,6 +9,7 @@ using BCEdit180.Core.CodeEditing.Bytecode.Instructions;
 using BCEdit180.Core.Collections;
 using BCEdit180.Core.Searching;
 using BCEdit180.Core.Utils;
+using BCEdit180.Core.ViewModels;
 using BCEdit180.Core.Window;
 using JavaAsm;
 using JavaAsm.Instructions;
@@ -45,13 +46,16 @@ namespace BCEdit180.Core.CodeEditing {
         public ICommand MoveSelectedInstructionUpCommand { get; }
         public ICommand MoveSelectedInstructionDownCommand { get; }
 
+        public ICommand CopyCodeCommand { get; }
+
+        public ICommand PasteCodeAboveCommand { get; }
+        public ICommand PasteCodeBelowCommand { get; }
+
         public SearchInstructionViewModel SearchInstruction { get; }
 
         public CodeEditorViewModel CodeEditor { get; }
 
         private int nextInstructionIndex;
-
-        private static bool ShowAlterJumpDialog = true;
 
         private static readonly IEnumerable<Opcode> ALL_OPCODES;
 
@@ -82,6 +86,40 @@ namespace BCEdit180.Core.CodeEditing {
             this.MoveSelectedInstructionUpCommand = new RelayCommand(MoveSelectedInstructionUpAction);
             this.MoveSelectedInstructionDownCommand = new RelayCommand(MoveSelectedInstructionDownAction);
             this.InsertLabelCommand = new RelayCommand(InsertLabelAction);
+            this.CopyCodeCommand = new RelayCommand(CopyCodeAction);
+            this.PasteCodeAboveCommand = new RelayCommand(() => PasteCodeAction(false));
+            this.PasteCodeBelowCommand = new RelayCommand(() => PasteCodeAction(true));
+        }
+
+        private void PasteCodeAction(bool below) {
+            if (this.SelectedInstruction == null) {
+                Dialog.Message.ShowInformationDialog("Select an instruction", "Select an instruction to paste the code");
+                return;
+            }
+
+            int index = this.SelectedInstructionIndex;
+            if (below && (index + 1) <= this.Instructions.Count) {
+                index++;
+            }
+
+            List<BaseInstructionViewModel> list = ServiceManager.GetService<InstructionClipboardViewModel>().Instructions.ToList();
+            if (list.Count > 0) {
+                foreach (BaseInstructionViewModel item in list) {
+                    SetupCallbacks(item);
+                }
+
+                this.Instructions.InsertRange(index, list);
+            }
+
+            CalculateInstructionIndices();
+            ResolveBranchLabels();
+        }
+
+        private void CopyCodeAction() {
+            List<BaseInstructionViewModel> list = BytecodeList.SelectedItems.ToList();
+            if (list.Count > 0) {
+                ServiceManager.GetService<InstructionClipboardViewModel>().SetClipboard(list);
+            }
         }
 
         private void InsertLabelAction() {
@@ -328,15 +366,21 @@ namespace BCEdit180.Core.CodeEditing {
         }
 
         public void RemoveInstruction(BaseInstructionViewModel instruction) {
-            int index = this.SelectedInstructionIndex - 1;
-            if (index < 0) {
-                index = 0;
+            List<BaseInstructionViewModel> selected = BytecodeList.SelectedItems.ToList();
+            if (selected.Count > 1) {
+                this.Instructions.RemoveRange(selected);
             }
+            else {
+                int index = this.SelectedInstructionIndex - 1;
+                if (index < 0) {
+                    index = 0;
+                }
 
-            this.Instructions.Remove(instruction);
+                this.Instructions.Remove(instruction);
 
-            if (this.Instructions.Count > 0) {
-                this.SelectedInstructionIndex = index;
+                if (this.Instructions.Count > 0) {
+                    this.SelectedInstructionIndex = index;
+                }
             }
 
             CalculateInstructionIndices();
@@ -369,6 +413,27 @@ namespace BCEdit180.Core.CodeEditing {
             return vm;
         }
 
+        public void ResolveBranchLabels() {
+            Dictionary<long, LabelViewModel> labelMap = new Dictionary<long, LabelViewModel>();
+            foreach(BaseInstructionViewModel instruction in this.Instructions) {
+                if (instruction is LabelViewModel label && label.Node != null) {
+                    labelMap[label.Index] = label;
+                }
+            }
+
+            foreach(BaseInstructionViewModel instruction in this.Instructions) {
+                if (instruction is JumpInstructionViewModel jump) {
+                    if (labelMap.TryGetValue(jump.LabelIndex, out LabelViewModel label)) {
+                        jump.JumpDestination = label;
+                    }
+                    else {
+                        jump.JumpDestination = null;
+                        jump.LabelIndex = -1;
+                    }
+                }
+            }
+        }
+
         public void Load(MethodNode node) {
             this.RemovedInstructions.Clear();
             this.Instructions.Clear();
@@ -388,6 +453,10 @@ namespace BCEdit180.Core.CodeEditing {
                 if (instruction is JumpInstructionViewModel jump) {
                     if (labelMap.TryGetValue(jump.LabelIndex, out LabelViewModel label)) {
                         jump.JumpDestination = label;
+                    }
+                    else {
+                        jump.JumpDestination = null;
+                        jump.LabelIndex = -1;
                     }
                 }
             }

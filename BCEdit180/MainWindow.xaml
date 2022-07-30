@@ -37,7 +37,7 @@
             <converters:EnumToStringConverter x:Key="EnumToString"/>
             <converters:ItemNullToEnabledConverter x:Key="NullToDisabledConverter"/>
         </Grid.Resources>
-        <Menu VerticalAlignment="Top" Background="{DynamicResource AREghZyBrush.Primary.2.Background.Static}" BorderBrush="{DynamicResource AREghZyBrush.Primary.4.Border.Static}" BorderThickness="0 0 0 1">
+        <Menu VerticalAlignment="Top" Background="{DynamicResource AREghZyBrush.Primary.2.Background.Static}" BorderBrush="{DynamicResource AREghZyBrush.Primary.4.Border.Static}" BorderThickness="0 0 0 1" Margin="0,0,676,0">
             <MenuItem Header="File">
                 <MenuItem Header="Open class file..."   Command="{Binding OpenFileCommand}"  />
                 <MenuItem Header="Reload current class" Command="{Binding SelectedClass.ReloadFileCommand}"/>
@@ -54,6 +54,15 @@
                 <MenuItem Header="Edit ClassPath" Command="{Binding Source=classpathEditor:ClassPathListViewModel, Path=ShowEditorCommand}" CommandParameter="Light" InputGestureText="Alt + F4"/>
             </MenuItem>
         </Menu>
+        <Border Margin="594,0,0,0" Background="{DynamicResource AREghZyBrush.Primary.2.Background.Static}" BorderBrush="{DynamicResource AREghZyBrush.Primary.4.Border.Static}" BorderThickness="0 0 0 1" Height="19" VerticalAlignment="Top">
+            <Grid>
+                <StackPanel HorizontalAlignment="Right" Orientation="Horizontal" VerticalAlignment="Center" Margin="5 0">
+                    <TextBlock Text="Clipboard: "/>
+                    <TextBlock DataContext="{Binding Clipboard}" Text="{Binding Instructions.Count, UpdateSourceTrigger=PropertyChanged}"/>
+                    <TextBlock Text=" instructions"/>
+                </StackPanel>
+            </Grid>
+        </Border>
         <Border Background="{DynamicResource AREghZyBrush.Primary.2.Background.Static}" BorderThickness="0 0 1 0" Margin="0,18,0,0" HorizontalAlignment="Left" Width="20" BorderBrush="{DynamicResource AREghZyBrush.Primary.4.Border.Static}">
             <Grid>
                 <ToggleButton IsChecked="True" x:Name="ClassListToggle" VerticalAlignment="Top" RenderTransformOrigin="0.5,0.5" Height="76" BorderBrush="{DynamicResource AREghZyBrush.Primary.4.Border.Static}" BorderThickness="0 1 0 1">
@@ -439,10 +448,12 @@
                                                         <Grid VerticalAlignment="Top" Height="22">
                                                             <Button Content="Insert New Instruction Above Selection" Command="{Binding InsertInstructionCommand}" Padding="5 1" BorderBrush="{DynamicResource AREghZyBrush.Primary.4.Border.Static}" HorizontalAlignment="Left" Width="225"/>
                                                             <Button Content="Insert Label" Command="{Binding InsertLabelCommand}" Padding="5 1" BorderBrush="{DynamicResource AREghZyBrush.Primary.4.Border.Static}" HorizontalAlignment="Left" Width="80" Margin="228,0,0,0"/>
-                                                            <Button IsEnabled="False" Content="Insert Code Sequence" Command="{Binding InsertCodeCommand}" Padding="5 1" BorderBrush="{DynamicResource AREghZyBrush.Primary.4.Border.Static}" HorizontalAlignment="Left" Width="150" Margin="311,0,0,0"/>
-                                                            <Button IsEnabled="False" Content="Hide Options Code"    Command="{Binding ShowHideOptionsCommand}" Padding="5 1" Margin="464,0,0,0" BorderBrush="{DynamicResource AREghZyBrush.Primary.4.Border.Static}" HorizontalAlignment="Left" Width="140"/>
                                                             <Button Content="↑" Command="{Binding MoveSelectedInstructionUpCommand}" Padding="5 1" BorderBrush="{DynamicResource AREghZyBrush.Primary.4.Border.Static}" HorizontalAlignment="Right" Width="22" Margin="0,0,25,0"/>
                                                             <Button Content="↓" Command="{Binding MoveSelectedInstructionDownCommand}" Padding="5 1" BorderBrush="{DynamicResource AREghZyBrush.Primary.4.Border.Static}" HorizontalAlignment="Right" Width="22"/>
+                                                            <Button Content="↑" Command="{Binding MoveSelectedInstructionUpCommand}" Padding="5 1" BorderBrush="{DynamicResource AREghZyBrush.Primary.4.Border.Static}" HorizontalAlignment="Right" Width="22" Margin="0,0,25,0"/>
+                                                            <Button Content="Paste Above" Command="{Binding PasteCodeAboveCommand}" Padding="5 1" BorderBrush="{DynamicResource AREghZyBrush.Primary.4.Border.Static}" HorizontalAlignment="Right" Width="90" Margin="0,0,50,0"/>
+                                                            <Button Content="Copy" ToolTip="Copy your selected instructions. These can be pasted into any method, including different classes" Command="{Binding CopyCodeCommand}" Padding="5 1" BorderBrush="{DynamicResource AREghZyBrush.Primary.4.Border.Static}" HorizontalAlignment="Right" Width="75" Margin="0,0,236,0"/>
+                                                            <Button Content="Paste Below" Command="{Binding PasteCodeBelowCommand}" Padding="5 1" BorderBrush="{DynamicResource AREghZyBrush.Primary.4.Border.Static}" HorizontalAlignment="Right" Width="90" Margin="0,0,143,0"/>
                                                         </Grid>
                                                         <ListBox Grid.Row="0"
                                                                  ItemsSource="{Binding Instructions}"
