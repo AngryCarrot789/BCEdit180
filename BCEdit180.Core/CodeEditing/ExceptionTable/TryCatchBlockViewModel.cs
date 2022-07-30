@@ -30,6 +30,13 @@ namespace BCEdit180.Core.CodeEditing.ExceptionTable {
             set => RaisePropertyChanged(ref this.handlerType, value);
         }
 
+        private bool isFinallyBlock;
+
+        public bool IsFinallyBlock {
+            get => this.isFinallyBlock;
+            set => RaisePropertyChanged(ref this.isFinallyBlock, value);
+        }
+
         public TryCatchBlockViewModel(TryCatchNode node) {
             this.Node = node;
             Load(node);
@@ -42,11 +49,20 @@ namespace BCEdit180.Core.CodeEditing.ExceptionTable {
             // this actually can be null in some very rare cases
             // and im 100.1% sure it's only when a classfile is externally
             // modified... e.g via this program or any other program or asm library
-            this.HandlerType = node.ExceptionClassName?.Name ?? "[Null Exception Name]";
+            this.IsFinallyBlock = node.ExceptionClassName == null;
+            if (node.ExceptionClassName != null) {
+                this.HandlerType = node.ExceptionClassName.Name;
+            }
         }
 
         public void Save(TryCatchNode node) {
-            node.ExceptionClassName = new ClassName(this.HandlerType);
+            if (this.IsFinallyBlock || string.IsNullOrEmpty(this.HandlerType)) {
+                node.ExceptionClassName = null;
+            }
+            else {
+                node.ExceptionClassName = new ClassName(this.HandlerType);
+            }
+
             // node.Start.Index = this.StartIndex;
             // node.End.Index = this.EndIndex;
             // node.Handler.Index = this.HandlerIndex;

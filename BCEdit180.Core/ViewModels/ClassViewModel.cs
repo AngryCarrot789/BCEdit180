@@ -211,42 +211,32 @@ namespace BCEdit180.Core.ViewModels {
         }
 
         public void SaveClassFile() {
-            #if DEBUG
-            this.IsBusy = true;
+            #if !DEBUG
 
-            ActionProgressViewModel progress = Dialog.Message.ShowProgressWindow("Saving file...", "Backing up file: " + this.FilePath);
+            try {
+                this.IsBusy = true;
+                if (this.FilePath != null) {
+                    if (File.Exists(this.FilePath)) {
+                        string backupPath = Path.Combine(Path.GetDirectoryName(this.FilePath) ?? "", "backup_" + Path.GetFileName(this.FilePath));
+                        if (File.Exists(backupPath)) {
+                            File.Delete(backupPath);
+                        }
 
-            if (this.FilePath != null) {
-                if (File.Exists(this.FilePath)) {
-                    string backupPath = Path.Combine(Path.GetDirectoryName(this.FilePath) ?? "", "backup_" + Path.GetFileName(this.FilePath));
-                    if (File.Exists(backupPath)) {
-                        File.Delete(backupPath);
+                        File.Copy(this.FilePath, backupPath);
                     }
 
-                    File.Copy(this.FilePath, backupPath);
+                    // ClassFile.WriteClass mutates ClassNode's attributes,
+                    // so reloading will fix
+                    ReadClassFileAndShowDialog(this.FilePath);
                 }
-
-                progress.Description = "Saving to file: " + this.FilePath;
-                Task.Run(async () => {
-                    await Task.Delay(200);
-                    await AppProxy.Proxy.InvokeSyncAsync(SaveClassToFile);
-                    await AppProxy.Proxy.InvokeSyncAsync(()=> progress.CloseDialog());
-                });
-
-                // fixed:
-                // ClassFile.WriteClass mutates ClassNode's attributes,
-                // so reloading will fix
-                // ReadClassFileAndShowDialog(this.FilePath);
+                else {
+                    SaveClassFileAs();
+                }
             }
-            else {
-                Task.Run(async () => {
-                    await Task.Delay(200);
-                    await AppProxy.Proxy.InvokeSyncAsync(SaveClassFileAs);
-                    await AppProxy.Proxy.InvokeSyncAsync(()=> progress.CloseDialog());
-                });
+            finally {
+                this.IsBusy = false;
             }
 
-            this.IsBusy = false;
             #else
             try {
                 this.IsBusy = true;

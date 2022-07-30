@@ -108,7 +108,7 @@ namespace BCEdit180.Core.CodeEditing {
                     SetupCallbacks(item);
                 }
 
-                this.Instructions.InsertRange(index, list);
+                this.Instructions.InsertRange(index, list.OrderBy(i => i.InstructionIndex));
             }
 
             CalculateInstructionIndices();

@@ -493,13 +493,13 @@
                                                                                         BorderThickness="{TemplateBinding BorderThickness}" 
                                                                                         Background="{TemplateBinding Background}" 
                                                                                         Padding="4,1" SnapsToDevicePixels="true">
-                                                                                    <!--
                                                                                     <Grid>
                                                                                         <TextBlock HorizontalAlignment="Left" Text="{Binding InstructionIndex, UpdateSourceTrigger=PropertyChanged}"/>
                                                                                         <ContentPresenter Margin="15 0 0 0" HorizontalAlignment="{TemplateBinding HorizontalContentAlignment}" SnapsToDevicePixels="{TemplateBinding SnapsToDevicePixels}" VerticalAlignment="{TemplateBinding VerticalContentAlignment}" />
                                                                                     </Grid>
-                                                                                    -->
+                                                                                    <!--
                                                                                     <ContentPresenter HorizontalAlignment="{TemplateBinding HorizontalContentAlignment}" SnapsToDevicePixels="{TemplateBinding SnapsToDevicePixels}" VerticalAlignment="{TemplateBinding VerticalContentAlignment}" />
+                                                                                    -->
                                                                                 </Border>
                                                                                 <ControlTemplate.Triggers>
                                                                                     <DataTrigger Binding="{Binding IsNewInstruction, UpdateSourceTrigger=PropertyChanged}" Value="True">
@@ -697,7 +697,10 @@
                                                                     <GridViewColumn Header="Exception Type" Width="400">
                                                                         <GridViewColumn.CellTemplate>
                                                                             <DataTemplate>
-                                                                                <controls:DoubleClickEditBox d:DataContext="{d:DesignInstance exceptionTable:TryCatchBlockViewModel}" Text="{Binding HandlerType, UpdateSourceTrigger=PropertyChanged}" FontFamily="Consolas"/>
+                                                                                <Grid>
+                                                                                    <controls:DoubleClickEditBox Visibility="{Binding IsFinallyBlock, UpdateSourceTrigger=PropertyChanged, Converter={StaticResource VisibilityConverter}, ConverterParameter=Invert}" d:DataContext="{d:DesignInstance exceptionTable:TryCatchBlockViewModel}" Text="{Binding HandlerType, UpdateSourceTrigger=PropertyChanged}" FontFamily="Consolas"/>
+                                                                                    <TextBlock Visibility="{Binding IsFinallyBlock, UpdateSourceTrigger=PropertyChanged, Converter={StaticResource VisibilityConverter}}" d:DataContext="{d:DesignInstance exceptionTable:TryCatchBlockViewModel}" Text="[Finally Block]" Foreground="{DynamicResource ConstNumeric}" FontFamily="Consolas"/>
+                                                                                </Grid>
                                                                             </DataTemplate>
                                                                         </GridViewColumn.CellTemplate>
                                                                     </GridViewColumn>
