@@ -342,6 +342,8 @@ namespace BCEdit180.Core.ViewModels {
             node.Interfaces.Add(new ClassName("my/interface/called/MyInterface"));
             node.Interfaces.Add(new ClassName("java/lang/Cloneable"));
 
+            Label label = new Label() { Index = 1 };
+
             node.Methods.Add(new MethodNode() {
                 Owner = node,
                 Access = MethodAccessModifiers.Public,
@@ -355,6 +357,15 @@ namespace BCEdit180.Core.ViewModels {
                         Descriptor = new MethodDescriptor(new TypeDescriptor(PrimitiveType.Void, 0), new List<TypeDescriptor>()),
                         Name = "<init>"
                     },
+
+                    new LdcInstruction(Opcode.LDC) {
+                        Value = (int) 1
+                    },
+                    new JumpInstruction(Opcode.IF_ICMPEQ) {
+                        Target = label
+                    },
+
+                    label,
 
                     new VariableInstruction(Opcode.ALOAD) { VariableIndex = 0 },
                     new MethodInstruction(Opcode.INVOKEVIRTUAL) {
