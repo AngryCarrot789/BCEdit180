@@ -20,11 +20,11 @@ namespace BCEdit180.Core.CodeEditing.Bytecode.Locals {
         public void Load(MethodNode node) {
             this.LocalVariables.Clear();
             this.LocalVariables.AddAll(node.LocalVariableNames.Select(t => new LocalVariableViewModel() {
-                Index = (ushort) t.Key,
-                StartPC = t.Value.StartPc,
-                Length = t.Value.Length,
-                VariableName = t.Value.Name,
-                Descriptor = t.Value.Descriptor,
+                Index = t.Index,
+                StartPC = t.StartPc,
+                Length = t.Length,
+                VariableName = t.Name,
+                Descriptor = t.Descriptor,
             }));
         }
 
@@ -35,16 +35,18 @@ namespace BCEdit180.Core.CodeEditing.Bytecode.Locals {
 
             // It will let you edit the handler type, so that's a +
             // not sure how useful that is though but meh
-            node.LocalVariableNames = new Dictionary<int, LocalVariableTableAttribute.LocalVariableTableEntry>();
+            node.LocalVariableNames = new List<LocalVariableTableAttribute.LocalVariableTableEntry>();
             foreach (LocalVariableViewModel vm in this.LocalVariables) {
-                node.LocalVariableNames[vm.Index] = new LocalVariableTableAttribute.LocalVariableTableEntry() {
+                node.LocalVariableNames.Add(new LocalVariableTableAttribute.LocalVariableTableEntry() {
                     Index = vm.Index,
                     StartPc = vm.StartPC,
                     Length = vm.Length,
                     Name = vm.VariableName,
                     Descriptor = vm.Descriptor,
-                };
+                });
             }
+
+            node.LocalVariableNames = node.LocalVariableNames.OrderBy(a => a.Index).ToList();
         }
     }
 }

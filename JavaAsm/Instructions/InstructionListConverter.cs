@@ -538,7 +538,7 @@ namespace JavaAsm.Instructions {
                 throw new ArgumentException("Line number is not at the beginning of instruction");
 
             if (parseTo.LocalVariableNames == null) {
-                parseTo.LocalVariableNames = new Dictionary<int, LocalVariableTableAttribute.LocalVariableTableEntry>();
+                parseTo.LocalVariableNames = new List<LocalVariableTableAttribute.LocalVariableTableEntry>();
             }
             else {
                 parseTo.LocalVariableNames.Clear();
@@ -547,13 +547,13 @@ namespace JavaAsm.Instructions {
             if (GetAttribute(codeAttribute.Attributes, PredefinedAttributeNames.LocalVariableTable)?.ParsedAttribute is LocalVariableTableAttribute lvt && lvt.LocalVariableTable != null) {
                 List<LocalVariableTableAttribute.LocalVariableTableEntry> localVariableTable = lvt.LocalVariableTable.OrderBy(x => x.Index).ToList();
                 foreach (LocalVariableTableAttribute.LocalVariableTableEntry entry in localVariableTable) {
-                    parseTo.LocalVariableNames[entry.Index] = new LocalVariableTableAttribute.LocalVariableTableEntry() {
+                    parseTo.LocalVariableNames.Add(new LocalVariableTableAttribute.LocalVariableTableEntry() {
                         StartPc = entry.StartPc,
                         Length = entry.Length,
                         Name = entry.Name,
                         Descriptor = entry.Descriptor,
                         Index = entry.Index
-                    };
+                    });
                 }
             }
 
@@ -880,7 +880,7 @@ namespace JavaAsm.Instructions {
                 codeAttribute.Attributes.Add(new AttributeNode {
                     Name = PredefinedAttributeNames.LocalVariableTable,
                     ParsedAttribute = new LocalVariableTableAttribute() {
-                        LocalVariableTable = source.LocalVariableNames.ToList().Select(e => e.Value).ToList()
+                        LocalVariableTable = source.LocalVariableNames.ToList()
                     }
                 });
             }

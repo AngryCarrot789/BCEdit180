@@ -495,7 +495,7 @@
                                                                                         Padding="4,1" SnapsToDevicePixels="true">
                                                                                     <Grid>
                                                                                         <TextBlock HorizontalAlignment="Left" Text="{Binding InstructionIndex, UpdateSourceTrigger=PropertyChanged}"/>
-                                                                                        <ContentPresenter Margin="15 0 0 0" HorizontalAlignment="{TemplateBinding HorizontalContentAlignment}" SnapsToDevicePixels="{TemplateBinding SnapsToDevicePixels}" VerticalAlignment="{TemplateBinding VerticalContentAlignment}" />
+                                                                                        <ContentPresenter Margin="25 0 0 0" HorizontalAlignment="{TemplateBinding HorizontalContentAlignment}" SnapsToDevicePixels="{TemplateBinding SnapsToDevicePixels}" VerticalAlignment="{TemplateBinding VerticalContentAlignment}" />
                                                                                     </Grid>
                                                                                     <!--
                                                                                     <ContentPresenter HorizontalAlignment="{TemplateBinding HorizontalContentAlignment}" SnapsToDevicePixels="{TemplateBinding SnapsToDevicePixels}" VerticalAlignment="{TemplateBinding VerticalContentAlignment}" />

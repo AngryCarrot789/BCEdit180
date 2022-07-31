@@ -93,7 +93,7 @@ namespace JavaAsm {
         /// </summary>
         public ElementValue AnnotationDefaultValue { get; set; }
 
-        public Dictionary<int, LocalVariableTableAttribute.LocalVariableTableEntry> LocalVariableNames { get; set; } = new Dictionary<int, LocalVariableTableAttribute.LocalVariableTableEntry>();
+        public List<LocalVariableTableAttribute.LocalVariableTableEntry> LocalVariableNames { get; set; } = new List<LocalVariableTableAttribute.LocalVariableTableEntry>();
 
         /// <summary>
         /// Returns and deletes attribute. Used for internal methods to parse contents

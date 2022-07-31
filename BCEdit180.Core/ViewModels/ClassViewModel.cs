@@ -9,6 +9,7 @@ using BCEdit180.Core.Commands;
 using BCEdit180.Core.ErrorReporting;
 using BCEdit180.Core.Messaging;
 using BCEdit180.Core.Messaging.Messages;
+using BCEdit180.Core.Messaging.Messages.ErrorReporting;
 using BCEdit180.Core.Utils;
 using BCEdit180.Core.Window;
 using JavaAsm;
@@ -129,6 +130,22 @@ namespace BCEdit180.Core.ViewModels {
 
         public void ReadClassFile(string path, bool showProgressDialog = true, ActionProgressViewModel actionProgress = null, bool closeDialog = true) {
             // my attempt at a semi-async class parser
+
+            #if DEBUG
+
+            this.IsBusy = true;
+            MessageDispatcher.Publish(new AddMessage() { Message = "Reading file..."});
+            using (BufferedStream input = new BufferedStream(File.OpenRead(path))) {
+                this.Node = ClassFile.ParseClass(input);
+            }
+
+            this.FilePath = path;
+            Load(this.Node);
+            MessageDispatcher.Publish(new AddMessage() { Message = "Successfully read file"});
+            this.IsBusy = false;
+
+            #else
+
             try {
                 this.IsBusy = true;
                 if (showProgressDialog) {
@@ -148,6 +165,7 @@ namespace BCEdit180.Core.ViewModels {
                                     if (closeDialog) {
                                         vm.CloseDialog();
                                     }
+
                                     return;
                                 }
 
@@ -189,6 +207,8 @@ namespace BCEdit180.Core.ViewModels {
             finally {
                 this.IsBusy = false;
             }
+
+            #endif
         }
 
         public void ReadClassFileAndShowDialog(string path) {
@@ -211,34 +231,13 @@ namespace BCEdit180.Core.ViewModels {
         }
 
         public void SaveClassFile() {
-            #if !DEBUG
+            // DEBUG MODE will allow exceptions to be thrown, so the debugger can catch them
+            // RELEASE MODE shows a dialog with the errors
+
+            #if DEBUG
 
             try {
-                this.IsBusy = true;
-                if (this.FilePath != null) {
-                    if (File.Exists(this.FilePath)) {
-                        string backupPath = Path.Combine(Path.GetDirectoryName(this.FilePath) ?? "", "backup_" + Path.GetFileName(this.FilePath));
-                        if (File.Exists(backupPath)) {
-                            File.Delete(backupPath);
-                        }
-
-                        File.Copy(this.FilePath, backupPath);
-                    }
-
-                    // ClassFile.WriteClass mutates ClassNode's attributes,
-                    // so reloading will fix
-                    ReadClassFileAndShowDialog(this.FilePath);
-                }
-                else {
-                    SaveClassFileAs();
-                }
-            }
-            finally {
-                this.IsBusy = false;
-            }
-
-            #else
-            try {
+                MessageDispatcher.Publish(new AddMessage() { Message = "Saving file..." });
                 this.IsBusy = true;
                 if (this.FilePath != null) {
                     if (File.Exists(this.FilePath)) {
@@ -252,9 +251,41 @@ namespace BCEdit180.Core.ViewModels {
 
                     SaveClassToFile();
 
+                    // Fixed :)
                     // ClassFile.WriteClass mutates ClassNode's attributes,
                     // so reloading will fix
-                    ReadClassFileAndShowDialog(this.FilePath);
+                    // ReadClassFileAndShowDialog(this.FilePath);
+                    MessageDispatcher.Publish(new AddMessage() { Message = "Saved successfully :)" });
+                }
+                else {
+                    SaveClassFileAs();
+                }
+            }
+            finally {
+                this.IsBusy = false;
+            }
+
+            #else
+
+            try {
+                MessageDispatcher.Publish(new AddMessage("Saving file..."));
+                this.IsBusy = true;
+                if (this.FilePath != null) {
+                    if (File.Exists(this.FilePath)) {
+                        string backupPath = Path.Combine(Path.GetDirectoryName(this.FilePath) ?? "", "backup_" + Path.GetFileName(this.FilePath));
+                        if (File.Exists(backupPath)) {
+                            File.Delete(backupPath);
+                        }
+
+                        File.Copy(this.FilePath, backupPath);
+                    }
+
+                    SaveClassToFile();
+                    MessageDispatcher.Publish(new AddMessage("Successfully saved file"));
+                    // Fixed :)
+                    // ClassFile.WriteClass mutates ClassNode's attributes,
+                    // so reloading will fix
+                    // ReadClassFileAndShowDialog(this.FilePath);
                 }
                 else {
                     SaveClassFileAs();
@@ -266,16 +297,19 @@ namespace BCEdit180.Core.ViewModels {
             finally {
                 this.IsBusy = false;
             }
+
             #endif
         }
 
         public void SaveClassFileAs() {
             this.IsBusy = true;
             try {
+                MessageDispatcher.Publish(new AddMessage("Selecting file from dialog..."));
                 if (Dialog.File.OpenSaveDialog("Save a class file", "ClassFile|*.class|All|*.*", out string path).Result) {
                     if (!File.Exists(path) || Dialog.Message.ConfirmOkCancel("Overwrite file", "File already exists. Overwrite " + path + "?", true).Result) {
                         this.FilePath = path;
 
+                        MessageDispatcher.Publish(new AddMessage("Saving file..."));
                         if (File.Exists(this.FilePath)) {
                             string backupPath = Path.Combine(Path.GetDirectoryName(this.FilePath) ?? "", "backup_" + Path.GetFileName(this.FilePath));
                             if (File.Exists(backupPath)) {
@@ -286,7 +320,8 @@ namespace BCEdit180.Core.ViewModels {
                         }
 
                         SaveClassToFile();
-
+                        MessageDispatcher.Publish(new AddMessage("Successfully saved file"));
+                        // Fixed :)
                         // ClassFile.WriteClass mutates ClassNode's attributes,
                         // so reloading will fix
                         // ReadClassFileAndShowDialog(this.FilePath);
@@ -294,11 +329,16 @@ namespace BCEdit180.Core.ViewModels {
                 }
             }
             catch (Exception e) {
+                MessageDispatcher.Publish(new AddMessage("Failed to save file"));
                 Dialog.Message.ShowWarningDialog("Failed to save", "Failed to save file: " + e);
             }
             finally {
                 this.IsBusy = false;
             }
+        }
+
+        public void SaveClassToFile() {
+            SaveClassToFile(this.FilePath);
         }
 
         public void SaveClassToFile(string classFile) {
@@ -332,10 +372,6 @@ namespace BCEdit180.Core.ViewModels {
             }
 
             #endif
-        }
-
-        public void SaveClassToFile() {
-            SaveClassToFile(this.FilePath);
         }
 
         public void HandleMessage(BusyStateMessage message) {

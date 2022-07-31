@@ -2,6 +2,7 @@ using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using BCEdit180.Core.Messaging;
 using BCEdit180.Core.Messaging.Messages;
+using BCEdit180.Core.Messaging.Messages.ErrorReporting;
 using JavaAsm.Instructions.Types;
 using REghZy.MVVM.Commands;
 
