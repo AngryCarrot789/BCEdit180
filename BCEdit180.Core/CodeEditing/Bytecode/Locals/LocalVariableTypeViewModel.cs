@@ -1,12 +1,11 @@
-﻿using JavaAsm;
-using REghZy.MVVM.ViewModels;
+﻿using REghZy.MVVM.ViewModels;
 
 namespace BCEdit180.Core.CodeEditing.Bytecode.Locals {
-    public class LocalVariableViewModel : BaseViewModel {
+    public class LocalVariableTypeViewModel : BaseViewModel {
         private ushort startPc;
         private ushort length;
         private string variableName;
-        private TypeDescriptor descriptor;
+        private string signature;
         private ushort index;
 
         public ushort StartPC {
@@ -24,9 +23,9 @@ namespace BCEdit180.Core.CodeEditing.Bytecode.Locals {
             set => RaisePropertyChanged(ref this.variableName, value);
         }
 
-        public TypeDescriptor Descriptor {
-            get => this.descriptor;
-            set => RaisePropertyChanged(ref this.descriptor, value);
+        public string Signature {
+            get => this.signature;
+            set => RaisePropertyChanged(ref this.signature, value);
         }
 
         public ushort Index {

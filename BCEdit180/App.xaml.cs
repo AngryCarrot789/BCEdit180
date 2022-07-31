@@ -1,4 +1,5 @@
-﻿using System.Windows;
+﻿using System;
+using System.Windows;
 using BCEdit180.Core.ViewModels;
 using System.IO;
 

@@ -1,9 +1,11 @@
 ﻿using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Linq;
+using System.Windows.Input;
 using BCEdit180.Core.Utils;
 using JavaAsm;
 using JavaAsm.CustomAttributes;
+using REghZy.MVVM.Commands;
 using REghZy.MVVM.ViewModels;
 
 namespace BCEdit180.Core.CodeEditing.Bytecode.Locals {
@@ -12,14 +14,34 @@ namespace BCEdit180.Core.CodeEditing.Bytecode.Locals {
 
         public ObservableCollection<LocalVariableViewModel> LocalVariables { get; }
 
+        private LocalVariableViewModel selectedEntry;
+        public LocalVariableViewModel SelectedEntry {
+            get => this.selectedEntry;
+            set => RaisePropertyChanged(ref this.selectedEntry, value);
+        }
+
+        public ICommand AddLVTEntryCommand { get; }
+        public ICommand RemoveSelectedEntryCommand { get; }
+        public ICommand ClearLVTCommand { get; }
+
         public LocalVariableTableViewModel(CodeEditorViewModel codeEditor) {
             this.CodeEditor = codeEditor;
             this.LocalVariables = new ObservableCollection<LocalVariableViewModel>();
+            this.AddLVTEntryCommand = new RelayCommand(() => this.LocalVariables.Add(new LocalVariableViewModel() {
+                Descriptor =new TypeDescriptor(PrimitiveType.Integer, 0),
+                StartPC = 0,
+                Length = 0,
+                Index = (ushort) this.LocalVariables.Count,
+                VariableName = "myVariableName"
+            }));
+
+            this.RemoveSelectedEntryCommand = new RelayCommand(() => this.LocalVariables.Remove(this.SelectedEntry));
+            this.ClearLVTCommand = new RelayCommand(() => this.LocalVariables.Clear());
         }
 
         public void Load(MethodNode node) {
             this.LocalVariables.Clear();
-            this.LocalVariables.AddAll(node.LocalVariableNames.Select(t => new LocalVariableViewModel() {
+            this.LocalVariables.AddAll(node.LocalVariableTable.Select(t => new LocalVariableViewModel() {
                 Index = t.Index,
                 StartPC = t.StartPc,
                 Length = t.Length,
@@ -35,9 +57,9 @@ namespace BCEdit180.Core.CodeEditing.Bytecode.Locals {
 
             // It will let you edit the handler type, so that's a +
             // not sure how useful that is though but meh
-            node.LocalVariableNames = new List<LocalVariableTableAttribute.LocalVariableTableEntry>();
+            node.LocalVariableTable = new List<LocalVariableTableAttribute.LocalVariableTableEntry>();
             foreach (LocalVariableViewModel vm in this.LocalVariables) {
-                node.LocalVariableNames.Add(new LocalVariableTableAttribute.LocalVariableTableEntry() {
+                node.LocalVariableTable.Add(new LocalVariableTableAttribute.LocalVariableTableEntry() {
                     Index = vm.Index,
                     StartPc = vm.StartPC,
                     Length = vm.Length,
@@ -46,7 +68,7 @@ namespace BCEdit180.Core.CodeEditing.Bytecode.Locals {
                 });
             }
 
-            node.LocalVariableNames = node.LocalVariableNames.OrderBy(a => a.Index).ToList();
+            node.LocalVariableTable = node.LocalVariableTable.ToList();
         }
     }
 }

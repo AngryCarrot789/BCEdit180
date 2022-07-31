@@ -698,7 +698,7 @@
                                                                         <GridViewColumn.CellTemplate>
                                                                             <DataTemplate>
                                                                                 <Grid>
-                                                                                    <controls:DoubleClickEditBox Visibility="{Binding IsFinallyBlock, UpdateSourceTrigger=PropertyChanged, Converter={StaticResource VisibilityConverter}, ConverterParameter=Invert}" d:DataContext="{d:DesignInstance exceptionTable:TryCatchBlockViewModel}" Text="{Binding HandlerType, UpdateSourceTrigger=PropertyChanged}" FontFamily="Consolas"/>
+                                                                                    <controls:DoubleClickEditBox Visibility="{Binding IsFinallyBlock, UpdateSourceTrigger=PropertyChanged, Converter={StaticResource VisibilityConverter}, ConverterParameter=Invert}" d:DataContext="{d:DesignInstance exceptionTable:TryCatchBlockViewModel}" Text="{Binding HandlerType, UpdateSourceTrigger=PropertyChanged}" FontFamily="Consolas" Foreground="{DynamicResource ClassName}"/>
                                                                                     <TextBlock Visibility="{Binding IsFinallyBlock, UpdateSourceTrigger=PropertyChanged, Converter={StaticResource VisibilityConverter}}" d:DataContext="{d:DesignInstance exceptionTable:TryCatchBlockViewModel}" Text="[Finally Block]" Foreground="{DynamicResource ConstNumeric}" FontFamily="Consolas"/>
                                                                                 </Grid>
                                                                             </DataTemplate>
@@ -710,34 +710,74 @@
                                                     </ListView>
                                                 </TabItem>
                                                 <TabItem Header="Local Variables" DataContext="{Binding LocalVariableTable}">
-                                                    <ListView ItemsSource="{Binding LocalVariables}" 
-                                                      Background="{DynamicResource AREghZyBrush.Deep.3.Background.Static}" 
-                                                      BorderBrush="{DynamicResource AREghZyBrush.Primary.4.Border.Static}"
-                                                      ap:Scrolling.ScrollHorizontallyWithShiftWheel="True">
-                                                        <ListView.View>
-                                                            <GridView>
-                                                                <GridView.Columns>
-                                                                    <GridViewColumn Header="Index" Width="75" DisplayMemberBinding="{Binding Index, UpdateSourceTrigger=PropertyChanged}"/>
-                                                                    <GridViewColumn Header="Start PC" Width="75" DisplayMemberBinding="{Binding StartPC, UpdateSourceTrigger=PropertyChanged}"/>
-                                                                    <GridViewColumn Header="Length" Width="75" DisplayMemberBinding="{Binding Length, UpdateSourceTrigger=PropertyChanged}"/>
-                                                                    <GridViewColumn Header="Variable Name" Width="175">
-                                                                        <GridViewColumn.CellTemplate>
-                                                                            <DataTemplate>
-                                                                                <controls:DoubleClickEditBox DataContext="{Binding}" Text="{Binding VariableName, UpdateSourceTrigger=PropertyChanged}" d:DataContext="{d:DesignInstance locals:LocalVariableViewModel}"/>
-                                                                            </DataTemplate>
-                                                                        </GridViewColumn.CellTemplate>
-                                                                    </GridViewColumn>
-                                                                    <GridViewColumn Header="Descriptor" Width="400">
-                                                                        <GridViewColumn.CellTemplate>
-                                                                            <DataTemplate>
-                                                                                <controls:DoubleClickEditBox DataContext="{Binding}" Text="{Binding Descriptor, UpdateSourceTrigger=PropertyChanged, Converter={StaticResource TypeConverter}}" d:DataContext="{d:DesignInstance locals:LocalVariableViewModel}"/>
-                                                                            </DataTemplate>
-                                                                        </GridViewColumn.CellTemplate>
-                                                                    </GridViewColumn>
-                                                                </GridView.Columns>
-                                                            </GridView>
-                                                        </ListView.View>
-                                                    </ListView>
+                                                    <Grid>
+                                                        <Button Command="{Binding AddLVTEntryCommand}" Content="Add LVT Entry" VerticalAlignment="Top" HorizontalAlignment="Left" Width="100" Height="24" BorderBrush="{DynamicResource AREghZyBrush.Primary.4.Border.Static}"/>
+                                                        <Button Command="{Binding RemoveSelectedEntryCommand}" Content="Remove Selected Entry" VerticalAlignment="Top" HorizontalAlignment="Left" Width="145" Height="24" BorderBrush="{DynamicResource AREghZyBrush.Primary.4.Border.Static}" Margin="102,0,0,0"/>
+                                                        <Button Command="{Binding ClearLVTCommand}" Content="Clear LVT" VerticalAlignment="Top" HorizontalAlignment="Right" Width="85" Height="24" BorderBrush="{DynamicResource AREghZyBrush.Primary.4.Border.Static}"/>
+                                                        <ListView ItemsSource="{Binding LocalVariables}" SelectedItem="{Binding SelectedEntry, UpdateSourceTrigger=PropertyChanged}"
+                                                                  Background="{DynamicResource AREghZyBrush.Deep.3.Background.Static}" 
+                                                                  BorderBrush="{DynamicResource AREghZyBrush.Primary.4.Border.Static}"
+                                                                  ap:Scrolling.ScrollHorizontallyWithShiftWheel="True" Margin="0,26,0,0">
+                                                            <ListView.View>
+                                                                <GridView>
+                                                                    <GridView.Columns>
+                                                                        <GridViewColumn Header="Index" Width="75" DisplayMemberBinding="{Binding Index, UpdateSourceTrigger=PropertyChanged}"/>
+                                                                        <GridViewColumn Header="Start PC" Width="75" DisplayMemberBinding="{Binding StartPC, UpdateSourceTrigger=PropertyChanged}"/>
+                                                                        <GridViewColumn Header="Length" Width="75" DisplayMemberBinding="{Binding Length, UpdateSourceTrigger=PropertyChanged}"/>
+                                                                        <GridViewColumn Header="Variable Name" Width="175">
+                                                                            <GridViewColumn.CellTemplate>
+                                                                                <DataTemplate>
+                                                                                    <controls:DoubleClickEditBox Foreground="{DynamicResource Keyword}" DataContext="{Binding}" Text="{Binding VariableName, UpdateSourceTrigger=PropertyChanged}" d:DataContext="{d:DesignInstance locals:LocalVariableViewModel}"/>
+                                                                                </DataTemplate>
+                                                                            </GridViewColumn.CellTemplate>
+                                                                        </GridViewColumn>
+                                                                        <GridViewColumn Header="Descriptor" Width="350">
+                                                                            <GridViewColumn.CellTemplate>
+                                                                                <DataTemplate>
+                                                                                    <controls:DoubleClickEditBox Foreground="{DynamicResource ClassName}" DataContext="{Binding}" Text="{Binding Descriptor, UpdateSourceTrigger=PropertyChanged, Converter={StaticResource TypeConverter}}" d:DataContext="{d:DesignInstance locals:LocalVariableViewModel}"/>
+                                                                                </DataTemplate>
+                                                                            </GridViewColumn.CellTemplate>
+                                                                        </GridViewColumn>
+                                                                    </GridView.Columns>
+                                                                </GridView>
+                                                            </ListView.View>
+                                                        </ListView>
+                                                    </Grid>
+                                                </TabItem>
+                                                <TabItem Header="Local Variable Signatures" DataContext="{Binding LocalVariableTypeTable}">
+                                                    <Grid>
+                                                        <Button Command="{Binding AddLVTEntryCommand}" Content="Add LVT Entry" VerticalAlignment="Top" HorizontalAlignment="Left" Width="100" Height="24" BorderBrush="{DynamicResource AREghZyBrush.Primary.4.Border.Static}"/>
+                                                        <Button Command="{Binding RemoveSelectedEntryCommand}" Content="Remove Selected Entry" VerticalAlignment="Top" HorizontalAlignment="Left" Width="145" Height="24" BorderBrush="{DynamicResource AREghZyBrush.Primary.4.Border.Static}" Margin="102,0,0,0"/>
+                                                        <Button Command="{Binding ClearLVTCommand}" Content="Clear LVT" VerticalAlignment="Top" HorizontalAlignment="Right" Width="85" Height="24" BorderBrush="{DynamicResource AREghZyBrush.Primary.4.Border.Static}"/>
+                                                        <ListView ItemsSource="{Binding LocalVariables}" SelectedItem="{Binding SelectedEntry, UpdateSourceTrigger=PropertyChanged}"
+                                                                  Background="{DynamicResource AREghZyBrush.Deep.3.Background.Static}"
+                                                                  BorderBrush="{DynamicResource AREghZyBrush.Primary.4.Border.Static}"
+                                                                  ap:Scrolling.ScrollHorizontallyWithShiftWheel="True" Margin="0,26,0,0">
+                                                            <ListView.View>
+                                                                <GridView>
+                                                                    <GridView.Columns>
+                                                                        <GridViewColumn Header="Index" Width="75" DisplayMemberBinding="{Binding Index, UpdateSourceTrigger=PropertyChanged}"/>
+                                                                        <GridViewColumn Header="Start PC" Width="75" DisplayMemberBinding="{Binding StartPC, UpdateSourceTrigger=PropertyChanged}"/>
+                                                                        <GridViewColumn Header="Length" Width="75" DisplayMemberBinding="{Binding Length, UpdateSourceTrigger=PropertyChanged}"/>
+                                                                        <GridViewColumn Header="Variable Name" Width="175">
+                                                                            <GridViewColumn.CellTemplate>
+                                                                                <DataTemplate>
+                                                                                    <controls:DoubleClickEditBox Foreground="{DynamicResource Keyword}" DataContext="{Binding}" Text="{Binding VariableName, UpdateSourceTrigger=PropertyChanged}" d:DataContext="{d:DesignInstance locals:LocalVariableTypeViewModel}"/>
+                                                                                </DataTemplate>
+                                                                            </GridViewColumn.CellTemplate>
+                                                                        </GridViewColumn>
+                                                                        <GridViewColumn Header="Signature" Width="350">
+                                                                            <GridViewColumn.CellTemplate>
+                                                                                <DataTemplate>
+                                                                                    <controls:DoubleClickEditBox Foreground="{DynamicResource ClassName}" DataContext="{Binding}" Text="{Binding Signature, UpdateSourceTrigger=PropertyChanged}" d:DataContext="{d:DesignInstance locals:LocalVariableTypeViewModel}"/>
+                                                                                </DataTemplate>
+                                                                            </GridViewColumn.CellTemplate>
+                                                                        </GridViewColumn>
+                                                                    </GridView.Columns>
+                                                                </GridView>
+                                                            </ListView.View>
+                                                        </ListView>
+                                                    </Grid>
                                                 </TabItem>
                                                 <TabItem>
                                                     <TabItem.Header>

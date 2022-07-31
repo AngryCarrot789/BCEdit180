@@ -537,22 +537,33 @@ namespace JavaAsm.Instructions {
             if (lineNumberTable.Any(position => !instructions.ContainsKey(position.StartPc)))
                 throw new ArgumentException("Line number is not at the beginning of instruction");
 
-            if (parseTo.LocalVariableNames == null) {
-                parseTo.LocalVariableNames = new List<LocalVariableTableAttribute.LocalVariableTableEntry>();
+            if (parseTo.LocalVariableTable == null) {
+                parseTo.LocalVariableTable = new List<LocalVariableTableAttribute.LocalVariableTableEntry>();
             }
             else {
-                parseTo.LocalVariableNames.Clear();
+                parseTo.LocalVariableTable.Clear();
             }
 
             if (GetAttribute(codeAttribute.Attributes, PredefinedAttributeNames.LocalVariableTable)?.ParsedAttribute is LocalVariableTableAttribute lvt && lvt.LocalVariableTable != null) {
-                List<LocalVariableTableAttribute.LocalVariableTableEntry> localVariableTable = lvt.LocalVariableTable.OrderBy(x => x.Index).ToList();
-                foreach (LocalVariableTableAttribute.LocalVariableTableEntry entry in localVariableTable) {
-                    parseTo.LocalVariableNames.Add(new LocalVariableTableAttribute.LocalVariableTableEntry() {
+                foreach (LocalVariableTableAttribute.LocalVariableTableEntry entry in lvt.LocalVariableTable) {
+                    parseTo.LocalVariableTable.Add(new LocalVariableTableAttribute.LocalVariableTableEntry() {
                         StartPc = entry.StartPc,
                         Length = entry.Length,
                         Name = entry.Name,
                         Descriptor = entry.Descriptor,
                         Index = entry.Index
+                    });
+                }
+            }
+
+            if (GetAttribute(codeAttribute.Attributes, PredefinedAttributeNames.LocalVariableTypeTable)?.ParsedAttribute is LocalVariableTypeTableAttribute lvtt && lvtt.LocalVariableTypeTable != null) {
+                foreach (LocalVariableTypeTableAttribute.LocalVariableTypeTableEntry entry in lvtt.LocalVariableTypeTable) {
+                    parseTo.LocalVariableTypeTable.Add(new LocalVariableTypeTableAttribute.LocalVariableTypeTableEntry() {
+                        Index = entry.Index,
+                        StartPc = entry.StartPc,
+                        Length = entry.Length,
+                        Name = entry.Name,
+                        Signature = entry.Signature
                     });
                 }
             }
@@ -874,13 +885,24 @@ namespace JavaAsm.Instructions {
                 });
             }
 
-            if (source.LocalVariableNames != null && source.LocalVariableNames.Count > 0) {
+            if (source.LocalVariableTable != null && source.LocalVariableTable.Count > 0) {
                 if (codeAttribute.Attributes.Any(x => x.Name == PredefinedAttributeNames.LocalVariableTable))
                     throw new ArgumentException($"There is already a {PredefinedAttributeNames.LocalVariableTable} attribute");
                 codeAttribute.Attributes.Add(new AttributeNode {
                     Name = PredefinedAttributeNames.LocalVariableTable,
                     ParsedAttribute = new LocalVariableTableAttribute() {
-                        LocalVariableTable = source.LocalVariableNames.ToList()
+                        LocalVariableTable = source.LocalVariableTable.ToList()
+                    }
+                });
+            }
+
+            if (source.LocalVariableTypeTable != null && source.LocalVariableTypeTable.Count > 0) {
+                if (codeAttribute.Attributes.Any(x => x.Name == PredefinedAttributeNames.LocalVariableTypeTable))
+                    throw new ArgumentException($"There is already a {PredefinedAttributeNames.LocalVariableTypeTable} attribute");
+                codeAttribute.Attributes.Add(new AttributeNode {
+                    Name = PredefinedAttributeNames.LocalVariableTypeTable,
+                    ParsedAttribute = new LocalVariableTypeTableAttribute() {
+                        LocalVariableTypeTable = source.LocalVariableTypeTable.ToList()
                     }
                 });
             }
@@ -1039,6 +1061,7 @@ namespace JavaAsm.Instructions {
 
                             bool isWideRequired = (byte) constantPoolEntryIndex > byte.MaxValue;
                             if (isWideRequired || ldcInstruction.Opcode != Opcode.LDC) {
+                                // LDC2_W is only used for long/double... afaik
                                 codeDataStream.WriteByte((byte) Opcode.LDC_W);
                                 Binary.BigEndian.Write(codeDataStream, constantPoolEntryIndex);
                             }
