@@ -6,7 +6,9 @@ A java classfile viewer and editor, written in C#.
 Similar to jclasslib but will soon support many more features, e.g copy and pasting bytecode, adding and removing methods and fields, etc
 
 [Click here](#installing) for downloading/building
+
 [Click here](#features) for a feature list
+
 [Click here](#copying-code-between-methods) for insertion/removal and also copying instructions between methods/classes
 
 
@@ -52,3 +54,6 @@ But if you don't fancy inserting instructions 1-by-1:
 - Drag and drop the class you want to modify, and MyClass (or whatever you called it) into the app
 - Then, in MyClass, goto Methods > Bytecode Editor and select the instructions you want to copy, then click Copy.
 - Then goto the target class and into it's bytecode editor, and click either Paste Below or Paste Above (the selected instruction). Branches will keep their target, but you have to re-link branches if you copied a jump instruction or switch table/lookup but not it's target
+
+The screenshots above probably don't show the copy/paste buttons, i have yet to update them:
+![](asdfbe.png)
