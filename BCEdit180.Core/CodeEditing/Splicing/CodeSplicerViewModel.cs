@@ -83,7 +83,7 @@ namespace BCEdit180.Core.CodeEditing.Splicing {
                 ClassViewModel dupeClass = new ClassViewModel();
                 progress.Description = "Loading dupe class";
                 await Task.Delay(100);
-                await AppProxy.Proxy.InvokeSyncAsync(() => dupeClass.ReadClassFile(backupFile, true, progress));
+                await AppProxy.Proxy.DispatchInvokeAsync(() => dupeClass.ReadClassFile(backupFile, true, progress));
 
                 dupeClass.ClassInfo.AccessFlags &= ~ClassAccessModifiers.Final;
                 dupeClass.ClassInfo.AccessFlags &= ~ClassAccessModifiers.Abstract; // super duper dirty way to make this work

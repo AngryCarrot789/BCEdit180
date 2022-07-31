@@ -32,9 +32,9 @@ namespace BCEdit180.Core.CodeEditing.InstructionEdit {
 
         public void SetAvailableInstructions(IEnumerable<Opcode> opcodes) {
             this.AvailableOpCodes.Clear();
-            this.AvailableOpCodes.AddRange(opcodes);
             this.ActualOpcodeList.Clear();
-            this.ActualOpcodeList.AddRange(opcodes);
+            this.AvailableOpCodes.AddRange(opcodes);
+            this.ActualOpcodeList.AddRange(this.AvailableOpCodes);
         }
 
         public bool IsValidSelection() {

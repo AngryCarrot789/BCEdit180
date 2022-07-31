@@ -7,6 +7,7 @@ using System.IO;
 using System.Linq;
 using System.Windows;
 using System.Windows.Input;
+using System.Xml;
 using System.Xml.Serialization;
 using BCEdit180.AppSettings;
 using BCEdit180.Core;
@@ -409,7 +410,13 @@ namespace BCEdit180 {
                 }
             }
             catch (Exception e) {
-                MessageBox.Show("Failed to load application config file at " + ConfigFile + "\n" + e, "Error loading config");
+                try {
+                    if (File.Exists(ConfigFile)) {
+                        File.Delete(ConfigFile);
+                    }
+                }
+                catch { }
+                // MessageBox.Show("Failed to load application config file at " + ConfigFile + "\n" + e, "Error loading config");
             }
         }
 
@@ -419,11 +426,13 @@ namespace BCEdit180 {
                     Directory.CreateDirectory(ConfigFolder);
                 }
 
-                using (BufferedStream stream = new BufferedStream(File.OpenWrite(ConfigFile))) {
-                    XMLSerialiser.Serialize(stream, new AppSettingsXML() {
-                        Theme = (int) ThemesController.CurrentTheme,
-                        ShowClassListByDefault = this.ClassListToggle.IsChecked == true
-                    });
+                using (FileStream stream = new FileStream(ConfigFile, FileMode.Create, FileAccess.Write, FileShare.None, 1024, FileOptions.WriteThrough)) {
+                    using (XmlWriter writer = XmlWriter.Create(stream, new XmlWriterSettings() { Indent = true, OmitXmlDeclaration = true })) {
+                        XMLSerialiser.Serialize(writer, new AppSettingsXML() {
+                            Theme = (int) ThemesController.CurrentTheme,
+                            ShowClassListByDefault = this.ClassListToggle.IsChecked == true
+                        });
+                    }
                 }
             }
             catch (Exception e) {

@@ -83,7 +83,7 @@ namespace BCEdit180.Core.ViewModels {
             viewModel.ClassInfo.ClassName = "Loading Class...";
             this.Classes.Add(viewModel);
             this.SelectedClass = viewModel;
-            AppProxy.Proxy.InvokeSync(() => {
+            AppProxy.Proxy.DispatchInvoke(() => {
                 viewModel.ReadClassFile(path, showDialog, actionProgress, closeDialog);
                 //if (readInner) {
                 //    OpenAdditionalInnerClasses(viewModel, showDialog);
@@ -134,12 +134,12 @@ namespace BCEdit180.Core.ViewModels {
                         ClassViewModel classViewModel = new ClassViewModel();
                         classViewModel.FilePath = innerPath;
                         classViewModel.ClassList = this;
-                        AppProxy.Proxy.InvokeSync(() => {
+                        AppProxy.Proxy.DispatchInvoke(() => {
                             vm.Description = "Loading file " + innerPath;
                         });
 
                         await Task.Delay(100);
-                        AppProxy.Proxy.InvokeSync(() => {
+                        AppProxy.Proxy.DispatchInvoke(() => {
                             classViewModel.ReadClassFile(innerPath, false);
                             this.Classes.Add(classViewModel);
                         });
@@ -147,7 +147,7 @@ namespace BCEdit180.Core.ViewModels {
                 }
 
                 Task.Run(() => Task.WaitAll(tasks)).ContinueWith((t) => {
-                    AppProxy.Proxy.InvokeSync(() => {
+                    AppProxy.Proxy.DispatchInvoke(() => {
                         vm.CloseDialog();
                     });
                 });

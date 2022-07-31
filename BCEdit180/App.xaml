@@ -12,6 +12,7 @@
                 <ResourceDictionary Source="Themes/SoftDark.xaml"/>
                 <ResourceDictionary Source="Themes/ControlColours.xaml"/>
                 <ResourceDictionary Source="Themes/Controls.xaml"/>
+                <ResourceDictionary Source="Controls/Bars/ButtonBarStyles.xaml"/>
                 <ResourceDictionary Source="Themes/BaseInstructionStyles.xaml"/>
                 <ResourceDictionary Source="LineNumbers/LineNumberListBox.xaml"/>
                 <ResourceDictionary Source="Controls/InfoControlStyle.xaml"/>

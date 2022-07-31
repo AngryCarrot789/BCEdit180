@@ -40,7 +40,7 @@ namespace BCEdit180.Core.Messaging {
         }
 
         public static void PublishUI<T>(T message) {
-            AppProxy.Proxy.InvokeSync(() => Publish(message));
+            AppProxy.Proxy.DispatchInvoke(() => Publish(message));
         }
     }
 }

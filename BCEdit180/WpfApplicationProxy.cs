@@ -1,4 +1,5 @@
 using System;
+using System.Threading;
 using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Threading;
@@ -10,20 +11,40 @@ namespace BCEdit180 {
             Application.Current.Shutdown();
         }
 
-        public void InvokeSync(Action action) {
+        /// <summary>
+        /// Runs the given action on the main thread. This method may return before the action is complete
+        /// </summary>
+        public void DispatchInvoke(Action action) {
             Application.Current.Dispatcher.Invoke(action);
         }
 
-        public async Task InvokeSyncAsync(Action action) {
-            object isComplete = new bool();
+        /// <summary>
+        /// Runs the given action on the main thread, and waits for it to complete.
+        /// This method will never return before the action is complete
+        /// </summary>
+        /// <param name="action"></param>
+        public async Task DispatchInvokeAsync(Action action) {
+            int state = 0;
+            Exception error = null;
             Application.Current.Dispatcher.Invoke(() => {
-                action();
-                isComplete = true;
+                try {
+                    action();
+                }
+                catch (Exception e) {
+                    error = e;
+                }
+                finally {
+                    state = 1;
+                }
             });
 
             do {
                 await Task.Delay(1);
-            } while (!(bool) isComplete);
+            } while (state == 0);
+
+            if (error != null) {
+                throw error;
+            }
         }
 
         // was checking if this would improve performance while adding items...

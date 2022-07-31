@@ -152,7 +152,7 @@ namespace BCEdit180.Core.ViewModels {
                     ActionProgressViewModel vm = actionProgress ?? Dialog.Message.ShowProgressWindow("Loading class file", "Reading file " + path);
                     Task.Run(async () => {
                         await Task.Delay(100);
-                        await AppProxy.Proxy.InvokeSyncAsync(() => {
+                        await AppProxy.Proxy.DispatchInvokeAsync(() => {
                             if (File.Exists(path)) {
                                 try {
                                     using (BufferedStream input = new BufferedStream(File.OpenRead(path), 8192)) {
@@ -172,7 +172,7 @@ namespace BCEdit180.Core.ViewModels {
                                 vm.Description = "Parsing classfile... ";
                                 Task.Run(async () => {
                                     await Task.Delay(100);
-                                    await AppProxy.Proxy.InvokeSyncAsync(() => {
+                                    await AppProxy.Proxy.DispatchInvokeAsync(() => {
                                         this.FilePath = path;
                                         try {
                                             Load(this.Node);

@@ -41,7 +41,7 @@ namespace BCEdit180.Core.Searching {
                         if (this.canFireEvent) {
                             this.canFireEvent = false;
                             try {
-                                ServiceManager.GetService<IApplicationProxy>().InvokeSync(FireEvent);
+                                await ServiceManager.GetService<IApplicationProxy>().DispatchInvokeAsync(FireEvent);
                             }
                             catch (ThreadAbortException) {
                                 return;

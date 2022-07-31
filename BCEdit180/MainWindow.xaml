@@ -17,7 +17,7 @@
         xmlns:editorControls="clr-namespace:BCEdit180.CodeEditing.EditorControls"
         xmlns:themes="clr-namespace:BCEdit180.Themes"
         xmlns:a="clr-namespace:BCEdit180.LineNumbers"
-        xmlns:classpathEditor="clr-namespace:BCEdit180.Core.ClasspathEditor;assembly=BCEdit180.Core"
+        xmlns:classpathEditor="clr-namespace:BCEdit180.Core.ClasspathEditor;assembly=BCEdit180.Core" xmlns:bars="clr-namespace:BCEdit180.Controls.Bars"
         mc:Ignorable="d"
         Width="1280" Height="720" 
         d:DataContext="{d:DesignInstance viewModels:ClassListViewModel}"
@@ -77,6 +77,11 @@
                 </ToggleButton>
             </Grid>
         </Border>
+        <!--
+        <bars:VerticalButtonBar HorizontalAlignment="Right" Width="40" Margin="0,18,0,23" Direction="Left">
+            <bars:VerticalButtonBarItem Header="Okay Then" Height="75"/>
+        </bars:VerticalButtonBar>
+        -->
         <DockPanel Margin="20,19,0,24">
             <DockPanel.Resources>
                 <converters:BooleanToVisibilityConverter x:Key="BoolToVisibility"/>

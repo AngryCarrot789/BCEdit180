@@ -26,26 +26,25 @@ namespace BCEdit180.Core.Searching {
 
         public IdleEventService IdleEventService { get; }
 
-        private bool wasLastSearchForced;
-        public bool WasLastSearchForced => this.wasLastSearchForced;
+        public bool WasLastSearchForced { get; private set; }
 
         public SearchViewModel() {
             this.IdleEventService = new IdleEventService();
             this.SearchCommand = new ExtendedRelayCommand(ForceSearchAction, CanSearchForInput);
-            this.ClearSearchCommand = new RelayCommand(ClearSearchAction);
+            this.ClearSearchCommand = new RelayCommand(ClearSearchInputAction);
         }
 
         public virtual void ForceSearchAction() {
-            this.wasLastSearchForced = true;
+            this.WasLastSearchForced = true;
             try {
                 this.IdleEventService.ForceAction();
             }
             finally {
-                this.wasLastSearchForced = false;
+                this.WasLastSearchForced = false;
             }
         }
 
-        public virtual void ClearSearchAction() {
+        public virtual void ClearSearchInputAction() {
             this.InputText = "";
         }
 
@@ -53,6 +52,9 @@ namespace BCEdit180.Core.Searching {
             return !string.IsNullOrEmpty(this.InputText);
         }
 
+        /// <summary>
+        /// Called when the search is no longer active; reset everything to it's original state
+        /// </summary>
         public virtual void OnSearchReset() {
             this.IdleEventService.CanFireNextTick = false;
             this.SearchCommand.RaiseCanExecuteChanged();
