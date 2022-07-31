@@ -268,7 +268,7 @@ namespace JavaAsm.Instructions {
                         else {
                             instructions.Add(currentPosition, new IncrementInstruction {
                                 VariableIndex = codeStream.ReadByteFully(),
-                                Value = codeStream.ReadByteFully()
+                                Value = (sbyte) codeStream.ReadByteFully()
                             });
                         }
 
