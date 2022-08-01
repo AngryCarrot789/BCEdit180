@@ -40,7 +40,7 @@
                          Background="{DynamicResource AREghZyBrush.Deep.2.Background.Static}"
                          BorderThickness="0"
                          ap:Scrolling.ScrollHorizontallyWithShiftWheel="True"
-                         Margin="-3 -3 -3 -4">
+                         Margin="-4,-3,-4,-5">
                     <ListBox.ItemContainerStyle>
                         <Style TargetType="{x:Type ListBoxItem}">
                             <Setter Property="SnapsToDevicePixels" Value="True" />

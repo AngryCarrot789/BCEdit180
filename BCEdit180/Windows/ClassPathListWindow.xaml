@@ -9,7 +9,7 @@
         mc:Ignorable="d"
         d:DataContext="{d:DesignInstance classpathEditor:ClassPathListViewModel}"
         Title="ClassPathListWindow" Height="500" Width="500"
-        Style="{DynamicResource CustomWindowBaseStyle}">
+        Style="{DynamicResource CustomWindowBaseStyle}" Background="{DynamicResource AREghZyBrush.Deep.3.Background.Static}">
     <Grid Margin="10">
         <TextBlock Padding="2" Height="20" VerticalAlignment="Top"><Run Text="Classpath "/><Run Text="edit"/><Run Text=" (click enter to regenerate the classpath list)"/></TextBlock>
         <TextBox Text="{Binding ClassPathString, UpdateSourceTrigger=Default}" 
@@ -30,7 +30,7 @@
                     <Button Command="{Binding AddFileCommand}" Content="Add File" Width="80" Height="22" Margin="5 0 0 0" Background="{DynamicResource AREghZyBrush.Primary.3.Background.Static}" BorderBrush="{DynamicResource AREghZyBrush.Primary.3.Border.Static}"/>
                 </StackPanel>
             </GroupBox.Header>
-            <ListBox Background="Transparent" BorderThickness="0"/>
+            <ListBox Background="{DynamicResource AREghZyBrush.Deep.2.Background.Static}" BorderThickness="0" Margin="-4,-3,-4,-5"/>
         </GroupBox>
     </Grid>
 </local:WindowModal>

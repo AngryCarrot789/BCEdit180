@@ -25,6 +25,7 @@
             <converters:FQCNToWindowTitleConverter x:Key="FQCNTitleConverter"/>
             <converters:FilePathToWindowTitleConverter x:Key="FilePathTitleConverter"/>
             <converters:TypeDescriptorToStringConverter x:Key="TypeConverter"/>
+            <converters:TypeDescriptorToReadableConverter x:Key="TypeToReadableConverter"/>
             <converters:EnumBooleanConverter x:Key="EnumConverter" />
 
             <Style x:Key="FreeHeaderGroupBox" TargetType="{x:Type GroupBox}">

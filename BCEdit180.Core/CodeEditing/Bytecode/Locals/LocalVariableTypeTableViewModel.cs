@@ -57,7 +57,7 @@ namespace BCEdit180.Core.CodeEditing.Bytecode.Locals {
 
             // It will let you edit the handler type, so that's a +
             // not sure how useful that is though but meh
-            node.LocalVariableTable = new List<LocalVariableTableAttribute.LocalVariableTableEntry>();
+            node.LocalVariableTypeTable = new List<LocalVariableTypeTableAttribute.LocalVariableTypeTableEntry>();
             foreach (LocalVariableTypeViewModel vm in this.LocalVariables) {
                 node.LocalVariableTypeTable.Add(new LocalVariableTypeTableAttribute.LocalVariableTypeTableEntry() {
                     Index = vm.Index,
@@ -67,8 +67,6 @@ namespace BCEdit180.Core.CodeEditing.Bytecode.Locals {
                     Signature = vm.Signature,
                 });
             }
-
-            node.LocalVariableTable = node.LocalVariableTable.ToList();
         }
     }
 }

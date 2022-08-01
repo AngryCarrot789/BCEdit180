@@ -29,46 +29,46 @@
     <Color x:Key="AREghZyColour.Primary.2.Border.Static"          R="195" G="195" B="195" A="255"/>
     <Color x:Key="AREghZyColour.Primary.3.Border.Static"          R="180" G="180" B="180" A="255"/>
     <Color x:Key="AREghZyColour.Primary.4.Border.Static"          R="170" G="170" B="170" A="255"/>
-    <Color x:Key="AREghZyColour.Primary.1.Background.MouseOver"   R="50" G="50" B="50" A="255"/>
-    <Color x:Key="AREghZyColour.Primary.2.Background.MouseOver"   R="60" G="60" B="60" A="255"/>
-    <Color x:Key="AREghZyColour.Primary.3.Background.MouseOver"   R="68" G="68" B="68" A="255"/>
-    <Color x:Key="AREghZyColour.Primary.4.Background.MouseOver"   R="80" G="80" B="80" A="255"/>
-    <Color x:Key="AREghZyColour.Primary.1.Border.MouseOver"       R="60" G="60" B="60" A="255"/>
-    <Color x:Key="AREghZyColour.Primary.2.Border.MouseOver"       R="70" G="70" B="70" A="255"/>
-    <Color x:Key="AREghZyColour.Primary.3.Border.MouseOver"       R="88" G="88" B="88" A="255"/>
-    <Color x:Key="AREghZyColour.Primary.4.Border.MouseOver"       R="90" G="90" B="90" A="255"/>
-    <Color x:Key="AREghZyColour.Primary.1.Background.MouseDown"   R="44" G="44" B="44" A="255"/>
-    <Color x:Key="AREghZyColour.Primary.2.Background.MouseDown"   R="54" G="54" B="54" A="255"/>
-    <Color x:Key="AREghZyColour.Primary.3.Background.MouseDown"   R="62" G="62" B="62" A="255"/>
-    <Color x:Key="AREghZyColour.Primary.4.Background.MouseDown"   R="70" G="70" B="70" A="255"/>
-    <Color x:Key="AREghZyColour.Primary.1.Border.MouseDown"       R="54" G="54" B="54" A="255"/>
-    <Color x:Key="AREghZyColour.Primary.2.Border.MouseDown"       R="64" G="64" B="64" A="255"/>
-    <Color x:Key="AREghZyColour.Primary.3.Border.MouseDown"       R="72" G="72" B="72" A="255"/>
-    <Color x:Key="AREghZyColour.Primary.4.Border.MouseDown"       R="80" G="80" B="80" A="255"/>
-    <Color x:Key="AREghZyColour.Primary.1.Background.Selected"    R="48" G="48" B="48" A="255"/>
-    <Color x:Key="AREghZyColour.Primary.2.Background.Selected"    R="58" G="58" B="58" A="255"/>
-    <Color x:Key="AREghZyColour.Primary.3.Background.Selected"    R="66" G="66" B="66" A="255"/>
-    <Color x:Key="AREghZyColour.Primary.4.Background.Selected"    R="75" G="75" B="75" A="255"/>
-    <Color x:Key="AREghZyColour.Primary.1.Background.Selected.Inactive"  R="44"   G="44"  B="44"  A="255"/>
-    <Color x:Key="AREghZyColour.Primary.2.Background.Selected.Inactive"  R="54"   G="54"  B="54"  A="255"/>
-    <Color x:Key="AREghZyColour.Primary.3.Background.Selected.Inactive"  R="62"   G="62"  B="62"  A="255"/>
-    <Color x:Key="AREghZyColour.Primary.4.Background.Selected.Inactive"  R="71"   G="71"  B="71"  A="255"/>
-    <Color x:Key="AREghZyColour.Primary.1.Border.Selected"               R="58"   G="58"  B="58"  A="255"/>
-    <Color x:Key="AREghZyColour.Primary.2.Border.Selected"               R="68"   G="68"  B="68"  A="255"/>
-    <Color x:Key="AREghZyColour.Primary.3.Border.Selected"               R="76"   G="76"  B="76"  A="255"/>
-    <Color x:Key="AREghZyColour.Primary.4.Border.Selected"               R="85"   G="85"  B="85"  A="255"/>
-    <Color x:Key="AREghZyColour.Primary.1.Border.Selected.Inactive"      R="54"   G="54"  B="54"  A="255"/>
-    <Color x:Key="AREghZyColour.Primary.2.Border.Selected.Inactive"      R="64"   G="64"  B="64"  A="255"/>
-    <Color x:Key="AREghZyColour.Primary.3.Border.Selected.Inactive"      R="72"   G="72"  B="72"  A="255"/>
-    <Color x:Key="AREghZyColour.Primary.4.Border.Selected.Inactive"      R="81"   G="81"  B="81"  A="255"/>
-    <Color x:Key="AREghZyColour.Primary.1.Background.Disabled"           R="80"   G="80"  B="80"  A="255"/>
-    <Color x:Key="AREghZyColour.Primary.2.Background.Disabled"           R="90"   G="90"  B="90"  A="255"/>
-    <Color x:Key="AREghZyColour.Primary.3.Background.Disabled"           R="100"  G="100" B="100" A="255"/>
+    <Color x:Key="AREghZyColour.Primary.1.Background.MouseOver"   R="200" G="200" B="200" A="255"/>
+    <Color x:Key="AREghZyColour.Primary.2.Background.MouseOver"   R="185" G="185" B="185" A="255"/>
+    <Color x:Key="AREghZyColour.Primary.3.Background.MouseOver"   R="170" G="170" B="170" A="255"/>
+    <Color x:Key="AREghZyColour.Primary.4.Background.MouseOver"   R="155" G="155" B="155" A="255"/>
+    <Color x:Key="AREghZyColour.Primary.1.Border.MouseOver"       R="218" G="218" B="218" A="255"/>
+    <Color x:Key="AREghZyColour.Primary.2.Border.MouseOver"       R="205" G="205" B="205" A="255"/>
+    <Color x:Key="AREghZyColour.Primary.3.Border.MouseOver"       R="195" G="195" B="195" A="255"/>
+    <Color x:Key="AREghZyColour.Primary.4.Border.MouseOver"       R="190" G="190" B="190" A="255"/>
+    <Color x:Key="AREghZyColour.Primary.1.Background.MouseDown"   R="190" G="190" B="190" A="255"/>
+    <Color x:Key="AREghZyColour.Primary.2.Background.MouseDown"   R="180" G="180" B="180" A="255"/>
+    <Color x:Key="AREghZyColour.Primary.3.Background.MouseDown"   R="172" G="172" B="172" A="255"/>
+    <Color x:Key="AREghZyColour.Primary.4.Background.MouseDown"   R="165" G="165" B="165" A="255"/>
+    <Color x:Key="AREghZyColour.Primary.1.Border.MouseDown"       R="165" G="165" B="165" A="255"/>
+    <Color x:Key="AREghZyColour.Primary.2.Border.MouseDown"       R="150" G="150" B="150" A="255"/>
+    <Color x:Key="AREghZyColour.Primary.3.Border.MouseDown"       R="140" G="140" B="140" A="255"/>
+    <Color x:Key="AREghZyColour.Primary.4.Border.MouseDown"       R="125" G="125" B="125" A="255"/>
+    <Color x:Key="AREghZyColour.Primary.1.Background.Selected"    R="185" G="185" B="185" A="255"/>
+    <Color x:Key="AREghZyColour.Primary.2.Background.Selected"    R="175" G="175" B="175" A="255"/>
+    <Color x:Key="AREghZyColour.Primary.3.Background.Selected"    R="165" G="165" B="165" A="255"/>
+    <Color x:Key="AREghZyColour.Primary.4.Background.Selected"    R="155" G="155" B="155" A="255"/>
+    <Color x:Key="AREghZyColour.Primary.1.Background.Selected.Inactive"  R="180"  G="180" B="180"  A="255"/>
+    <Color x:Key="AREghZyColour.Primary.2.Background.Selected.Inactive"  R="170"  G="170" B="170"  A="255"/>
+    <Color x:Key="AREghZyColour.Primary.3.Background.Selected.Inactive"  R="160"  G="160" B="160"  A="255"/>
+    <Color x:Key="AREghZyColour.Primary.4.Background.Selected.Inactive"  R="150"  G="150" B="150"  A="255"/>
+    <Color x:Key="AREghZyColour.Primary.1.Border.Selected"               R="160"  G="160" B="160"  A="255"/>
+    <Color x:Key="AREghZyColour.Primary.2.Border.Selected"               R="150"  G="150" B="150"  A="255"/>
+    <Color x:Key="AREghZyColour.Primary.3.Border.Selected"               R="140"  G="140" B="140"  A="255"/>
+    <Color x:Key="AREghZyColour.Primary.4.Border.Selected"               R="130"  G="130" B="130"  A="255"/>
+    <Color x:Key="AREghZyColour.Primary.1.Border.Selected.Inactive"      R="165"  G="165" B="165"  A="255"/>
+    <Color x:Key="AREghZyColour.Primary.2.Border.Selected.Inactive"      R="155"  G="155" B="155"  A="255"/>
+    <Color x:Key="AREghZyColour.Primary.3.Border.Selected.Inactive"      R="145"  G="145" B="145"  A="255"/>
+    <Color x:Key="AREghZyColour.Primary.4.Border.Selected.Inactive"      R="135"  G="135" B="135"  A="255"/>
+    <Color x:Key="AREghZyColour.Primary.1.Background.Disabled"           R="140"  G="140" B="140"  A="255"/>
+    <Color x:Key="AREghZyColour.Primary.2.Background.Disabled"           R="130"  G="130" B="130"  A="255"/>
+    <Color x:Key="AREghZyColour.Primary.3.Background.Disabled"           R="120"  G="120" B="120" A="255"/>
     <Color x:Key="AREghZyColour.Primary.4.Background.Disabled"           R="110"  G="110" B="110" A="255"/>
-    <Color x:Key="AREghZyColour.Primary.1.Border.Disabled"               R="90"   G="90"  B="90"  A="255"/>
-    <Color x:Key="AREghZyColour.Primary.2.Border.Disabled"               R="100"  G="100" B="100" A="255"/>
-    <Color x:Key="AREghZyColour.Primary.3.Border.Disabled"               R="110"  G="110" B="110" A="255"/>
-    <Color x:Key="AREghZyColour.Primary.4.Border.Disabled"               R="120"  G="120" B="120" A="255"/>
+    <Color x:Key="AREghZyColour.Primary.1.Border.Disabled"               R="120"  G="120" B="120" A="255"/>
+    <Color x:Key="AREghZyColour.Primary.2.Border.Disabled"               R="110"  G="110" B="110" A="255"/>
+    <Color x:Key="AREghZyColour.Primary.3.Border.Disabled"               R="100"  G="100" B="100" A="255"/>
+    <Color x:Key="AREghZyColour.Primary.4.Border.Disabled"               R="90"  G="90" B="90" A="255"/>
 
     <!-- Primary.1 would be containers, aka control that have a deep background (that sinks into the view) -->
     <!-- Primary.2 would be regular controls, aka control that are obvious and normal (they stick out)-->

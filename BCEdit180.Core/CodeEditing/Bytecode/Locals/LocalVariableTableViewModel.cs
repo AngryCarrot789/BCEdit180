@@ -67,8 +67,6 @@ namespace BCEdit180.Core.CodeEditing.Bytecode.Locals {
                     Descriptor = vm.Descriptor,
                 });
             }
-
-            node.LocalVariableTable = node.LocalVariableTable.ToList();
         }
     }
 }

@@ -19,6 +19,28 @@ namespace JavaAsm.Helpers {
 
             return false;
         }
+
+        public static bool TryGetAt<T>(IList<T> list, int index, out T value) {
+            if (index < 0 || index >= list.Count) {
+                value = default;
+                return false;
+            }
+            else {
+                value = list[index];
+                return true;
+            }
+        }
+
+        public static bool TryGetAtNonNull<T>(IList<T> list, int index, out T value) where T : class {
+            if (index < 0 || index >= list.Count) {
+                value = default;
+                return false;
+            }
+            else {
+                value = list[index];
+                return value != null;
+            }
+        }
     }
 
     internal static class Extensions {
