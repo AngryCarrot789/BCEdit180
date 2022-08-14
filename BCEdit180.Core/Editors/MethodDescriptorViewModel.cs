@@ -5,7 +5,7 @@ using REghZy.MVVM.Commands;
 using REghZy.MVVM.ViewModels;
 
 namespace BCEdit180.Core.Editors {
-    public class MethodDescriptorWViewModel : BaseViewModel, IMethodDescriptable {
+    public class MethodDescriptorViewModel : BaseViewModel, IMethodDescriptable {
         private MethodDescriptor methodDescriptor;
         public MethodDescriptor MethodDescriptor {
             get => this.methodDescriptor;
@@ -14,7 +14,7 @@ namespace BCEdit180.Core.Editors {
 
         public ICommand EditMethodDescriptorCommand { get; }
 
-        public MethodDescriptorWViewModel() {
+        public MethodDescriptorViewModel() {
             this.EditMethodDescriptorCommand = new RelayCommand(EditDescriptor);
         }
 

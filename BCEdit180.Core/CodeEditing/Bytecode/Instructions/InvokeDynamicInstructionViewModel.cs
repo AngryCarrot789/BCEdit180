@@ -1,8 +1,11 @@
 using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
+using System.Diagnostics;
+using System.Linq;
 using System.Windows.Input;
 using BCEdit180.Core.Commands;
+using BCEdit180.Core.Editors;
 using BCEdit180.Core.Utils;
 using BCEdit180.Core.Window;
 using JavaAsm;
@@ -97,6 +100,50 @@ namespace BCEdit180.Core.CodeEditing.Bytecode.Instructions {
             }
         }
 
+        public static object WrapBoostrapArgument(object value) {
+            if (value is TypeDescriptor typeDesc) {
+                return new TypeDescriptorViewModel() {
+                    TypeDescriptor = typeDesc
+                };
+            }
+            else if (value is MethodDescriptor methodDesc) {
+                return new MethodDescriptorViewModel() {
+                    MethodDescriptor = methodDesc
+                };
+            }
+            else if (value is Handle handle) {
+                return new HandleViewModel() {
+                    Handle = handle
+                };
+            }
+            else if (value == null) {
+                return null;
+            }
+            else {
+                Debug.WriteLine("Cannot wrap invoke dynamic boostrap method argument: " + value.GetType() + " -> " + value);
+                return value;
+            }
+        }
+
+        public static object UnwrapBoostrapArgument(object value) {
+            if (value is TypeDescriptorViewModel typeDesc) {
+                return typeDesc.TypeDescriptor;
+            }
+            else if (value is MethodDescriptorViewModel methodDesc) {
+                return methodDesc.MethodDescriptor;
+            }
+            else if (value is HandleViewModel handle) {
+                return handle.Handle;
+            }
+            else if (value == null) {
+                return null;
+            }
+            else {
+                Debug.WriteLine("Cannot unwrap invoke dynamic boostrap method argument: " + value.GetType() + " -> " + value);
+                return value;
+            }
+        }
+
         public override void Load(Instruction instruction) {
             base.Load(instruction);
             InvokeDynamicInstruction insn = (InvokeDynamicInstruction) instruction;
@@ -111,7 +158,7 @@ namespace BCEdit180.Core.CodeEditing.Bytecode.Instructions {
             }
 
             if (insn.BootstrapMethodArgs != null) {
-                this.BootstrapMethodArgs.AddAll(insn.BootstrapMethodArgs);
+                this.BootstrapMethodArgs.AddAll(insn.BootstrapMethodArgs.Select(WrapBoostrapArgument));
             }
         }
 
@@ -128,6 +175,8 @@ namespace BCEdit180.Core.CodeEditing.Bytecode.Instructions {
             insn.BootstrapMethod.Owner = new ClassName(this.BootstrapMethodOwner);
             insn.BootstrapMethod.Name = this.BootstrapMethodName;
             insn.BootstrapMethod.Descriptor = this.BootstrapMethodDescriptor;
+            insn.BootstrapMethodArgs = this.BootstrapMethodArgs.Select(UnwrapBoostrapArgument).ToList();
+
             // switch (this.BootstrapReferenceType) {
             //     case ReferenceKindType.GetField:
             //     case ReferenceKindType.GetStatic:
@@ -144,8 +193,6 @@ namespace BCEdit180.Core.CodeEditing.Bytecode.Instructions {
             //         break;
             //     default: throw new Exception("Unknown bootstrap reference type: " + this.BootstrapReferenceType);
             // }
-
-            insn.BootstrapMethodArgs = new List<object>(this.BootstrapMethodArgs);
         }
     }
 }

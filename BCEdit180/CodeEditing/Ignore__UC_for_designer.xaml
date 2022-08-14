@@ -9,47 +9,11 @@
              xmlns:converters="clr-namespace:BCEdit180.Converters"
              xmlns:editors="clr-namespace:BCEdit180.CodeEditing.ListControls"
              xmlns:bytecode="clr-namespace:BCEdit180.Core.CodeEditing.Bytecode;assembly=BCEdit180.Core"
+             xmlns:javaAsm="clr-namespace:JavaAsm;assembly=JavaAsm"
+             xmlns:viewers="clr-namespace:BCEdit180.CodeEditing.Viewers"
+             xmlns:codeEditing="clr-namespace:BCEdit180.Core.CodeEditing;assembly=BCEdit180.Core"
+             xmlns:editors1="clr-namespace:BCEdit180.Core.Editors;assembly=BCEdit180.Core"
              mc:Ignorable="d" 
-             d:DesignHeight="250" d:DesignWidth="800">
-    <Grid d:DataContext="{d:DesignInstance vms:TableSwitchInstructionViewModel}">
-        <Grid.ColumnDefinitions>
-            <ColumnDefinition Width="2*"/>
-            <ColumnDefinition Width="1*"/>
-        </Grid.ColumnDefinitions>
-        <TextBlock Width="100" HorizontalAlignment="Left" TextWrapping="NoWrap" Text="Default Case" VerticalAlignment="Top" Padding="5"  FontWeight="Bold" Height="26" Margin="0,1,0,0"/>
-        <TextBlock Width="100" HorizontalAlignment="Left" TextWrapping="NoWrap" Text="Low Value" VerticalAlignment="Top" Padding="5"  FontWeight="Bold" Height="26" Margin="0,28,0,0"/>
-        <TextBlock Width="100" HorizontalAlignment="Left" TextWrapping="NoWrap" Text="High Value" VerticalAlignment="Top" Padding="5"  FontWeight="Bold" Height="26" Margin="0,54,0,0"/>
-        <local:MatchLabelControl Margin="100,0,120,0" Height="28" VerticalAlignment="Top"/>
-        <TextBox Foreground="{StaticResource ConstNumeric}" Text="{Binding LowValue, UpdateSourceTrigger=PropertyChanged}" Background="Transparent" HorizontalAlignment="Stretch" TextWrapping="NoWrap" VerticalAlignment="Top" Padding="5" Margin="100,28,0,0" BorderThickness="0"  FontWeight="Bold" FontStyle="Italic" />
-        <TextBox Foreground="{StaticResource ConstNumeric}" Text="{Binding HighValue, UpdateSourceTrigger=PropertyChanged}" Background="Transparent" HorizontalAlignment="Stretch" TextWrapping="NoWrap" VerticalAlignment="Top" Padding="5" Margin="100,54,0,0" BorderThickness="0"  FontWeight="Bold" FontStyle="Italic" />
-        <Button DataContext="{Binding DefaultLabel, UpdateSourceTrigger=PropertyChanged}" Command="{Binding EditTargetLabelCommand}" Content="Edit Target Label" ToolTip="Opens a window, which lets you select a new target label" HorizontalAlignment="Right" VerticalAlignment="Top" Padding="5" Width="120" Height="29" Margin="0,-1,0,0"/>
-        <TextBlock HorizontalAlignment="Center" TextWrapping="NoWrap" Text="Cases" VerticalAlignment="Top" Padding="5"  FontWeight="Bold" Height="26" Grid.Column="1" Margin="0,1,0,0"/>
-        <ListBox ItemsSource="{Binding MatchLabels}" SelectedItem="{Binding SelectedLabel, UpdateSourceTrigger=PropertyChanged}" Background="{DynamicResource AREghZyBrush.Deep.3.Background.Static}" BorderBrush="{DynamicResource AREghZyBrush.Primary.4.Border.Static}" Grid.Column="1" Margin="0,28,0,0" ScrollViewer.VerticalScrollBarVisibility="Visible" ScrollViewer.CanContentScroll="False">
-            <ListBox.ItemTemplate>
-                <DataTemplate>
-                    <StackPanel d:DataContext="{d:DesignInstance bytecode:MatchLabelViewModel}" Orientation="Horizontal">
-                        <StackPanel.ContextMenu>
-                            <ContextMenu>
-                                <MenuItem Header="Remove" Command="{Binding RemoveSelfCommand}"/>
-                            </ContextMenu>
-                        </StackPanel.ContextMenu>
-                        <TextBlock Text="Case " Foreground="{StaticResource Keyword}"/>
-                        <TextBox   Text="{Binding SwitchIndex, UpdateSourceTrigger=PropertyChanged}" Foreground="{StaticResource Keyword}" Background="Transparent" BorderThickness="0" Padding="1 0 2 0"/>
-                        <TextBlock Text="→"/>
-                        <TextBlock FontFamily="Consolas" VerticalAlignment="Center" Padding="2 0">
-                                            <Hyperlink Command="{Binding SelectJumpDestinationCommand}">
-                                                <TextBlock Text="{Binding LabelIndex, UpdateSourceTrigger=PropertyChanged}" Foreground="{DynamicResource ConstNumeric}" ToolTip="The target branch label (which is where this case branches to). Click to scroll to the label" ToolTipService.ShowDuration="30000" Padding="2 0">
-                                    <TextBlock.ContextMenu>
-                                        <ContextMenu>
-                                            <MenuItem Command="{Binding EditTargetLabelCommand}" Header="Edit target label" ToolTip="Edit the label which this case will branch to"/>
-                                        </ContextMenu>
-                                    </TextBlock.ContextMenu>
-                                                </TextBlock>
-                                            </Hyperlink>
-                                        </TextBlock>
-                    </StackPanel>
-                </DataTemplate>
-            </ListBox.ItemTemplate>
-        </ListBox>
-    </Grid>
+             d:DesignHeight="400" d:DesignWidth="800">
+
 </UserControl>

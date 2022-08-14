@@ -13,7 +13,7 @@ using REghZy.MVVM.Commands;
 using REghZy.MVVM.ViewModels;
 
 namespace BCEdit180.Core.ViewModels {
-    public class FieldInfoViewModel : BaseViewModel {
+    public class FieldInfoViewModel : BaseViewModel, IFieldDescriptable {
         private FieldAccessModifiers access;
         public FieldAccessModifiers Access {
             get => this.access;
@@ -26,11 +26,11 @@ namespace BCEdit180.Core.ViewModels {
             set => RaisePropertyChanged(ref this.fieldName, value);
         }
 
-        private TypeDescriptor descriptor;
-        public TypeDescriptor Descriptor {
-            get => this.descriptor;
+        private TypeDescriptor fieldDescriptor;
+        public TypeDescriptor FieldDescriptor {
+            get => this.fieldDescriptor;
             set {
-                RaisePropertyChanged(ref this.descriptor, value);
+                RaisePropertyChanged(ref this.fieldDescriptor, value);
                 MessageDispatcher.Publish(new CheckField(this));
             }
         }
@@ -72,7 +72,7 @@ namespace BCEdit180.Core.ViewModels {
 
         public AnnotationEditorViewModel InvisibleAnnotationEditor { get; }
 
-        public ICommand EditDescriptorCommand { get; }
+        public ICommand EditFieldDescriptorCommand { get; }
 
         public ICommand EditAccessCommand { get; }
 
@@ -88,7 +88,7 @@ namespace BCEdit180.Core.ViewModels {
             this.FieldList = list;
             this.Node = node;
             this.EditAccessCommand = new RelayCommand(EditAccessAction);
-            this.EditDescriptorCommand = new RelayCommand(EditDescriptorAction);
+            this.EditFieldDescriptorCommand = new RelayCommand(EditDescriptorAction);
             this.VisibleAnnotationEditor = new AnnotationEditorViewModel();
             this.InvisibleAnnotationEditor = new AnnotationEditorViewModel();
             this.EditConstValueCommand = new RelayCommand(EditConstValueAction);
@@ -103,8 +103,8 @@ namespace BCEdit180.Core.ViewModels {
         }
 
         public void EditDescriptorAction() {
-            if (Dialog.TypeEditor.EditTypeDescriptorDialog(this.Descriptor, out TypeDescriptor descriptor).Result) {
-                this.Descriptor = descriptor;
+            if (Dialog.TypeEditor.EditTypeDescriptorDialog(this.FieldDescriptor, out TypeDescriptor descriptor).Result) {
+                this.FieldDescriptor = descriptor;
             }
         }
 
@@ -116,7 +116,12 @@ namespace BCEdit180.Core.ViewModels {
 
             if (Dialog.TypeEditor.EditConstantDialog(vm, out ConstValueEditorViewModel editor).Result) {
                 if (editor.CheckEnabledStatesWithDialog()) {
-                    this.ConstantValue = editor.GetValue();
+                    if (editor.TryGetValue(out object value, out string error)) {
+                        this.ConstantValue = value;
+                    }
+                    else if (error != null) {
+                        Dialog.Message.ShowInformationDialog("Invalid value", error);
+                    }
                 }
             }
         }
@@ -125,7 +130,7 @@ namespace BCEdit180.Core.ViewModels {
             this.Node = node;
             this.FieldName = node.Name;
             this.Access = node.Access;
-            this.Descriptor = node.Descriptor;
+            this.FieldDescriptor = node.Descriptor;
             this.Attributes = node.Attributes;
             this.Signature = node.Signature;
             this.VisibleAnnotationEditor.Annotations.Clear();
@@ -138,7 +143,7 @@ namespace BCEdit180.Core.ViewModels {
         public void Save(FieldNode node) {
             node.Name = this.FieldName;
             node.Access = this.Access;
-            node.Descriptor = this.Descriptor;
+            node.Descriptor = this.FieldDescriptor;
             node.Attributes = this.Attributes;
             node.Signature = this.Signature;
             node.VisibleAnnotations = new List<AnnotationNode>(this.VisibleAnnotationEditor.Annotations.Select(a => a.Node));

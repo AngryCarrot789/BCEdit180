@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Collections.Specialized;
 using System.Linq;
+using System.Runtime.CompilerServices;
 using System.Windows.Input;
 using BCEdit180.Core.CodeEditing.Bytecode;
 using BCEdit180.Core.CodeEditing.Bytecode.Instructions;
@@ -36,6 +37,9 @@ namespace BCEdit180.Core.CodeEditing {
             get => this.selectedInstruction;
             set => RaisePropertyChanged(ref this.selectedInstruction, value);
         }
+
+        public RelayCommandParam<BaseInstructionViewModel> RemoveItemCommand { get; }
+        public RelayCommandParam<BaseInstructionViewModel> DuplicateItemCommand { get; }
 
         public ICommand DeleteSelectedInstructionsCommand { get; }
         public ICommand InsertInstructionCommand { get; }
@@ -80,24 +84,20 @@ namespace BCEdit180.Core.CodeEditing {
                 //     FieldName = "TestField101", Opcode = Opcode.GETFIELD, FieldOwner = "Joe", IsNewInstruction = true, FieldDescriptor = new TypeDescriptor(PrimitiveType.Boolean, 0)
                 // });
             });
+
             this.InsertInstructionCommand = new RelayCommand(InsertInstructionAction);
-
-
             this.MoveSelectedInstructionUpCommand = new RelayCommand(MoveSelectedInstructionUpAction);
             this.MoveSelectedInstructionDownCommand = new RelayCommand(MoveSelectedInstructionDownAction);
             this.InsertLabelCommand = new RelayCommand(InsertLabelAction);
             this.CopyCodeCommand = new RelayCommand(CopyCodeAction);
             this.PasteCodeAboveCommand = new RelayCommand(() => PasteCodeAction(false));
             this.PasteCodeBelowCommand = new RelayCommand(() => PasteCodeAction(true));
+            this.RemoveItemCommand = new RelayCommandParam<BaseInstructionViewModel>(this.RemoveSpecificInstruction);
+            this.DuplicateItemCommand = new RelayCommandParam<BaseInstructionViewModel>(this.DuplicateInstructionAbove);
         }
 
         private void PasteCodeAction(bool below) {
-            if (this.SelectedInstruction == null) {
-                Dialog.Message.ShowInformationDialog("Select an instruction", "Select an instruction to paste the code");
-                return;
-            }
-
-            int index = this.SelectedInstructionIndex;
+            int index = this.SelectedInstruction == null ? 0 : this.SelectedInstructionIndex;
             if (below && (index + 1) <= this.Instructions.Count) {
                 index++;
             }
@@ -106,6 +106,7 @@ namespace BCEdit180.Core.CodeEditing {
             if (list.Count > 0) {
                 foreach (BaseInstructionViewModel item in list) {
                     SetupCallbacks(item);
+                    item.IsNewInstruction = true;
                 }
 
                 this.Instructions.InsertRange(index, list.OrderBy(i => i.InstructionIndex));
@@ -216,7 +217,7 @@ namespace BCEdit180.Core.CodeEditing {
 
         public void EditBranchTargetAction(JumpInstructionViewModel jump) {
             if (EditBranchTargetActionWithDialog(out LabelViewModel label)) {
-                jump.JumpDestination = label;
+                jump.TargetLabel = label;
                 this.SelectedInstruction = label;
                 jump.JumpOffset = -1;
                 jump.LabelIndex = label.Index;
@@ -386,6 +387,21 @@ namespace BCEdit180.Core.CodeEditing {
             CalculateInstructionIndices();
         }
 
+        public void RemoveSpecificInstruction(BaseInstructionViewModel instruction) {
+            int index = this.SelectedInstructionIndex - 1;
+            if (index < 0) {
+                index = 0;
+            }
+
+            this.Instructions.Remove(instruction);
+
+            if (this.Instructions.Count > 0) {
+                this.SelectedInstructionIndex = index;
+            }
+
+            CalculateInstructionIndices();
+        }
+
         public void DuplicateInstructionAbove(BaseInstructionViewModel instruction) {
             int index = this.Instructions.IndexOf(instruction);
             if (index == -1 || instruction.Node == null) {
@@ -424,10 +440,10 @@ namespace BCEdit180.Core.CodeEditing {
             foreach(BaseInstructionViewModel instruction in this.Instructions) {
                 if (instruction is JumpInstructionViewModel jump) {
                     if (labelMap.TryGetValue(jump.LabelIndex, out LabelViewModel label)) {
-                        jump.JumpDestination = label;
+                        jump.TargetLabel = label;
                     }
                     else {
-                        jump.JumpDestination = null;
+                        jump.TargetLabel = null;
                         jump.LabelIndex = -1;
                     }
                 }
@@ -452,10 +468,10 @@ namespace BCEdit180.Core.CodeEditing {
             foreach(BaseInstructionViewModel instruction in instructions) {
                 if (instruction is JumpInstructionViewModel jump) {
                     if (labelMap.TryGetValue(jump.LabelIndex, out LabelViewModel label)) {
-                        jump.JumpDestination = label;
+                        jump.TargetLabel = label;
                     }
                     else {
-                        jump.JumpDestination = null;
+                        jump.TargetLabel = null;
                         jump.LabelIndex = -1;
                     }
                 }
@@ -477,16 +493,11 @@ namespace BCEdit180.Core.CodeEditing {
 
             // juuust in case...
             // CalculateInstructionIndices();
-            IEnumerable<BaseInstructionViewModel> instructions = this.Instructions;
             int lastIndex = -1;
             foreach (BaseInstructionViewModel viewModel in this.Instructions) {
                 if ((viewModel.InstructionIndex - 1) != lastIndex) {
-                    Dialog.Message.ShowInformationDialog(
-                        "Corrupt instruction order",
-                        "Bug: some of the instructions were out of order. Report this to REghZy :)\n" +
-                            string.Join("\n", this.Instructions.Select(i => i.Node?.ToString() ?? i.Opcode.ToString())));
+                    Dialog.Message.ShowInformationDialog("Corrupt instruction order","Bug: some of the instruction indices were out of order. This won't corrupt the class file or anything, as these indices are used for visual help");
                     CalculateInstructionIndices();
-                    instructions = this.Instructions.OrderBy(x => x.InstructionIndex);
                     break;
                 }
 
@@ -494,7 +505,7 @@ namespace BCEdit180.Core.CodeEditing {
             }
 
             // i trust the order will not be corrupt, because it can't get corrupt unless there's a binding failure...
-            foreach (BaseInstructionViewModel instruction in instructions) {
+            foreach (BaseInstructionViewModel instruction in this.Instructions) {
                 node.Instructions.Add(instruction.Node);
             }
         }
@@ -726,6 +737,17 @@ namespace BCEdit180.Core.CodeEditing {
 
         public void Dispose() {
             this.SearchInstruction.Dispose();
+        }
+
+        public void VerifyDuplicateLabelIndex(LabelViewModel label) {
+            foreach (BaseInstructionViewModel item in this.Instructions) {
+                if (item is LabelViewModel labelItem) {
+                    if (labelItem.Index == label.Index && labelItem != label) {
+                        Dialog.Message.ShowInformationDialog("Index already in use", $"The label at line {labelItem.InstructionIndex} is already using the label index {labelItem.Index}");
+                        return;
+                    }
+                }
+            }
         }
     }
 }

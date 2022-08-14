@@ -3,15 +3,20 @@ using JavaAsm.Instructions;
 using JavaAsm.Instructions.Types;
 
 namespace BCEdit180.Core.CodeEditing.Bytecode.Instructions {
-    public class LabelViewModel : BaseInstructionViewModel {
+    public class LabelViewModel : BaseInstructionViewModel, IBytecodeEditorAccess {
         public override IEnumerable<Opcode> AvailableOpCodes => new Opcode[] {Opcode.None};
 
         public override bool CanEditOpCode => false;
 
+        public BytecodeEditorViewModel BytecodeEditor { get; set; }
+
         private long index;
         public long Index {
             get => this.index;
-            set => RaisePropertyChanged(ref this.index, value);
+            set {
+                RaisePropertyChanged(ref this.index, value);
+                this.BytecodeEditor.VerifyDuplicateLabelIndex(this);
+            }
         }
 
         public Label Label => (Label) base.Node;

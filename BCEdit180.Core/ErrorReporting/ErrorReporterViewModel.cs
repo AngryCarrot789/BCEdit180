@@ -35,8 +35,8 @@ namespace BCEdit180.Core.ErrorReporting {
             if (field.ConstantValue == null) {
                 return;
             }
-            else if (field.Descriptor.PrimitiveType.HasValue) {
-                switch (field.Descriptor.PrimitiveType.Value) {
+            else if (field.FieldDescriptor.PrimitiveType.HasValue) {
+                switch (field.FieldDescriptor.PrimitiveType.Value) {
                     case PrimitiveType.Integer:
                         if (!(field.ConstantValue is int))
                             SetError($"Field {field.FieldName} has a constant {field.ConstantValue.GetType().Name} value of {field.ConstantValue}, but it's descriptor requires integer");
@@ -56,7 +56,7 @@ namespace BCEdit180.Core.ErrorReporting {
                     default: return;
                 }
             }
-            else if (field.Descriptor.ClassName != null && field.Descriptor.ClassName.Name == "java/lang/String") {
+            else if (field.FieldDescriptor.ClassName != null && field.FieldDescriptor.ClassName.Name == "java/lang/String") {
                 if (!(field.ConstantValue is string)) {
                     SetError($"Field {field.FieldName} has a constant {field.ConstantValue.GetType().Name} value of {field.ConstantValue}, but it's descriptor requires a string");
                 }

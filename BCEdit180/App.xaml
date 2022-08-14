@@ -16,6 +16,7 @@
                 <ResourceDictionary Source="Themes/BaseInstructionStyles.xaml"/>
                 <ResourceDictionary Source="LineNumbers/LineNumberListBox.xaml"/>
                 <ResourceDictionary Source="Controls/InfoControlStyle.xaml"/>
+                <ResourceDictionary Source="CodeEditing/Viewers/ViewerStyles.xaml"/>
                 <ResourceDictionary Source="CodeEditing/InnerControlStyles.xaml"/>
                 <ResourceDictionary Source="CodeEditing/ListControls/InstructionControlStyles.xaml"/>
                 <ResourceDictionary Source="CodeEditing/EditorControls/InstructionEditorStyles.xaml"/>

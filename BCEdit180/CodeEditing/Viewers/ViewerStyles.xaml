@@ -9,13 +9,73 @@
                     xmlns:bytecode="clr-namespace:BCEdit180.Core.CodeEditing.Bytecode;assembly=BCEdit180.Core"
                     xmlns:codeEditing="clr-namespace:BCEdit180.CodeEditing"
                     xmlns:local="clr-namespace:BCEdit180.CodeEditing.Viewers"
+                    xmlns:core="clr-namespace:BCEdit180.Core;assembly=BCEdit180.Core"
+                    xmlns:editors1="clr-namespace:BCEdit180.Core.Editors;assembly=BCEdit180.Core"
                     mc:Ignorable="d">
-    <Style TargetType="{x:Type local:MethodDescriptorViewer}">
+    <converters:TypeDescriptorToStringConverter x:Key="TypeConverter"/>
+
+    <Style TargetType="{x:Type local:MethodDescriptorControl}">
         <Setter Property="Template">
             <Setter.Value>
                 <ControlTemplate>
-                    <Grid d:DataContext="{d:DesignInstance vms:FieldInstructionViewModel}">
-                        <TextBox Foreground="{StaticResource MethodDescriptor}" Background="Transparent" VerticalContentAlignment="Center" Text="{Binding Descriptor, UpdateSourceTrigger=PropertyChanged, Converter={StaticResource TypeConverter}}" HorizontalAlignment="Stretch" TextWrapping="NoWrap" VerticalAlignment="Top" Padding="5" Margin="100,26,100,0" BorderThickness="0"  FontWeight="Bold" FontFamily="Consolas"  FontStyle="Italic" Height="26"/>
+                    <Grid d:DataContext="{d:DesignInstance editors1:MethodDescriptorViewModel}">
+                        <TextBox Foreground="{StaticResource MethodDescriptor}"
+                                 Text="{Binding MethodDescriptor, UpdateSourceTrigger=PropertyChanged, Converter={StaticResource TypeConverter}}"
+                                 VerticalContentAlignment="Center"
+                                 HorizontalAlignment="Stretch"
+                                 VerticalAlignment="Stretch"
+                                 Background="Transparent"
+                                 BorderThickness="0"
+                                 Padding="5"
+                                 TextWrapping="NoWrap"
+                                 FontWeight="Bold"
+                                 FontFamily="Consolas"
+                                 FontStyle="Italic" Margin="0,0,100,0" MinHeight="26"/>
+                        <Button Command="{Binding EditMethodDescriptorCommand,  UpdateSourceTrigger=PropertyChanged}" Content="Edit Descriptor" HorizontalAlignment="Right" Width="100"/>
+                    </Grid>
+                </ControlTemplate>
+            </Setter.Value>
+        </Setter>
+    </Style>
+
+    <Style TargetType="{x:Type local:TypeDescriptorControl}">
+        <Setter Property="Template">
+            <Setter.Value>
+                <ControlTemplate>
+                    <Grid d:DataContext="{d:DesignInstance editors1:TypeDescriptorViewModel}">
+                        <Label Margin="0,0,100,0" MinHeight="26" VerticalContentAlignment="Center" BorderThickness="0" Padding="5" HorizontalAlignment="Stretch" VerticalAlignment="Stretch">
+                            <TextBlock Foreground="{StaticResource FieldDescriptor}"
+                                       Text="{Binding TypeDescriptor, UpdateSourceTrigger=PropertyChanged, Converter={StaticResource TypeConverter}}"
+                                       Background="Transparent"
+                                       TextWrapping="NoWrap"
+                                       FontWeight="Bold"
+                                       FontFamily="Consolas"
+                                       FontStyle="Italic"/>
+                        </Label>
+                        <Button Command="{Binding EditFieldDescriptorCommand, UpdateSourceTrigger=PropertyChanged}" Content="Edit Descriptor" HorizontalAlignment="Right" Width="100"/>
+                    </Grid>
+                </ControlTemplate>
+            </Setter.Value>
+        </Setter>
+    </Style>
+
+    <Style TargetType="{x:Type local:HandleControl}">
+        <Setter Property="Template">
+            <Setter.Value>
+                <ControlTemplate>
+                    <Grid d:DataContext="{d:DesignInstance editors1:HandleViewModel}">
+                        <TextBox Text="{Binding Handle, UpdateSourceTrigger=PropertyChanged, Mode=OneWay}"
+                                 VerticalContentAlignment="Center"
+                                 HorizontalAlignment="Stretch"
+                                 VerticalAlignment="Stretch"
+                                 Background="Transparent"
+                                 BorderThickness="0"
+                                 Padding="5"
+                                 TextWrapping="NoWrap"
+                                 FontWeight="Bold"
+                                 FontFamily="Consolas"
+                                 FontStyle="Italic" Margin="0,0,100,0" MinHeight="26"/>
+                        <Button IsEnabled="False" Command="{Binding EditHandleCommand, UpdateSourceTrigger=PropertyChanged}" Content="Edit Handle" HorizontalAlignment="Right" Width="100"/>
                     </Grid>
                 </ControlTemplate>
             </Setter.Value>

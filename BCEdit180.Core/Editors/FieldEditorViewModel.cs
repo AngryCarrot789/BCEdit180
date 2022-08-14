@@ -66,7 +66,12 @@ namespace BCEdit180.Core.Editors {
 
             if (Dialog.TypeEditor.EditConstantDialog(vm, out ConstValueEditorViewModel editor).Result) {
                 if (editor.CheckEnabledStatesWithDialog()) {
-                    this.ConstantValue = editor.GetValue();
+                    if (editor.TryGetValue(out object value, out string error)) {
+                        this.ConstantValue = value;
+                    }
+                    else if (error != null) {
+                        Dialog.Message.ShowInformationDialog("Invalid value", error);
+                    }
                 }
             }
         }

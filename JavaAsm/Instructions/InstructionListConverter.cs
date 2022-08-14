@@ -1279,7 +1279,7 @@ namespace JavaAsm.Instructions {
                         }
 
                         if (position - previousStackMapFramePosition <= 0)
-                            throw new ArgumentOutOfRangeException(nameof(position), $"Wrong position delta: {position - previousStackMapFramePosition} <= 0");
+                            throw new ArgumentOutOfRangeException(nameof(position), $"Wrong stack frame position delta: position({position}) - previousStackMapFramePosition({previousStackMapFramePosition}) ({position - previousStackMapFramePosition}) <= 0");
 
                         stackMapTableEntry.OffsetDelta = (ushort) (position - previousStackMapFramePosition - 1);
                         stackMapFrames.Add(stackMapTableEntry);

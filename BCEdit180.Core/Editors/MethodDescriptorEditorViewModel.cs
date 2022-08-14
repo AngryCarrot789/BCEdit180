@@ -7,7 +7,7 @@ using REghZy.MVVM.Commands;
 using REghZy.MVVM.ViewModels;
 
 namespace BCEdit180.Core.Editors {
-    public class MethodDescriptorViewModel : BaseViewModel {
+    public class MethodDescriptorEditorViewModel : BaseViewModel {
         private TypeDescriptor returnType;
         public TypeDescriptor ReturnType {
             get => this.returnType;
@@ -30,7 +30,7 @@ namespace BCEdit180.Core.Editors {
 
         public ICommand EditReturnTypeCommand { get; }
 
-        public MethodDescriptorViewModel() {
+        public MethodDescriptorEditorViewModel() {
             this.Parameters = new ObservableCollection<TypeDescriptorViewModel>();
             this.ReturnType = new TypeDescriptor(PrimitiveType.Void, 0);
             this.AddNewParameterCommand = new RelayCommand(AddNewParameter);

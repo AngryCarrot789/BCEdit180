@@ -6,7 +6,7 @@ using JavaAsm.Instructions.Types;
 using REghZy.MVVM.Commands;
 
 namespace BCEdit180.Core.CodeEditing.Bytecode.Instructions {
-    public class JumpInstructionViewModel : BaseInstructionViewModel, IBytecodeEditorAccess {
+    public class JumpInstructionViewModel : BaseInstructionViewModel, IBytecodeEditorAccess, ILabelTargeter {
         public override IEnumerable<Opcode> AvailableOpCodes => new Opcode[] {Opcode.IFEQ, Opcode.IFNE, Opcode.IFLT, Opcode.IFGE, Opcode.IFGT, Opcode.IFLE, Opcode.IF_ICMPEQ, Opcode.IF_ICMPNE, Opcode.IF_ICMPLT, Opcode.IF_ICMPGE, Opcode.IF_ICMPGT, Opcode.IF_ICMPLE, Opcode.IF_ACMPEQ, Opcode.IF_ACMPNE, Opcode.GOTO, Opcode.JSR, Opcode.IFNULL, Opcode.IFNONNULL};
 
         private long labelIndex;
@@ -26,13 +26,12 @@ namespace BCEdit180.Core.CodeEditing.Bytecode.Instructions {
             }
         }
 
-        private LabelViewModel jumpDestination;
-        public LabelViewModel JumpDestination {
-            get => this.jumpDestination;
-            set => RaisePropertyChanged(ref this.jumpDestination, value);
+        private LabelViewModel targetLabel;
+        public LabelViewModel TargetLabel {
+            get => this.targetLabel;
+            set => RaisePropertyChanged(ref this.targetLabel, value);
         }
 
-        private int originalJumpOffset;
         private int jumpOffset;
         public int JumpOffset {
             get => this.jumpOffset;
@@ -53,8 +52,8 @@ namespace BCEdit180.Core.CodeEditing.Bytecode.Instructions {
         }
 
         public void SelectJumpDestinationAction() {
-            if (this.BytecodeEditor != null && this.JumpDestination != null) {
-                this.BytecodeEditor.SelectedInstruction = this.JumpDestination;
+            if (this.BytecodeEditor != null && this.TargetLabel != null) {
+                this.BytecodeEditor.SelectedInstruction = this.TargetLabel;
                 BytecodeEditorViewModel.BytecodeList.ScrollToSelectedItem();
             }
         }
@@ -70,19 +69,13 @@ namespace BCEdit180.Core.CodeEditing.Bytecode.Instructions {
             }
 
             this.JumpOffset = jump.JumpOffset;
-            this.originalJumpOffset = jump.JumpOffset;
         }
 
         public override void Save(Instruction instruction) {
             base.Save(instruction);
             JumpInstruction jump = (JumpInstruction) instruction;
-            if (this.JumpDestination != null && this.JumpDestination.Node != null) {
-                jump.Target = this.JumpDestination.Label;
-            }
-
-            // jump.Target = new Label();
-            if (this.JumpOffset != -1 && this.originalJumpOffset != this.JumpOffset) {
-                jump.JumpOffset = this.JumpOffset;
+            if (this.TargetLabel != null && this.TargetLabel.Node != null) {
+                jump.Target = this.TargetLabel.Label;
             }
         }
     }

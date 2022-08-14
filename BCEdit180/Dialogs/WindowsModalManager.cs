@@ -15,7 +15,7 @@ namespace BCEdit180.Dialogs {
         static WindowsModalManager() {
             RegisterType<ChangeInstructionViewModel, ChangeInstructionWindow>();
             RegisterType<FieldEditorViewModel,       FieldEditorWindow>();
-            RegisterType<MethodDescEditorViewModel,  MethodDescEditorWindow>();
+            RegisterType<MethodDescriptorEditorViewModel,  MethodDescEditorWindow>();
             RegisterType<MethodEditorViewModel,      MethodEditorWindow>();
             RegisterType<TypeEditorViewModel,        TypeEditorWindow>();
             RegisterType<ClassPathListViewModel,     ClassPathListWindow>();

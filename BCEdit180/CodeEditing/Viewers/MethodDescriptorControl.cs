@@ -7,10 +7,15 @@ using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Controls.Primitives;
 using System.Windows.Input;
+using BCEdit180.Core.CodeEditing;
+using BCEdit180.Core.Editors;
 using JavaAsm;
 
 namespace BCEdit180.CodeEditing.Viewers {
-    public class MethodDescriptorViewer : Control {
-
+    public class MethodDescriptorControl : Control {
+        public MethodDescriptorViewModel MethodDescriptor {
+            get => (MethodDescriptorViewModel) this.DataContext;
+            set => this.DataContext = value;
+        }
     }
 }

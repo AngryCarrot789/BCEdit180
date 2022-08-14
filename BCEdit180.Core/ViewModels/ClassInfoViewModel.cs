@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Linq;
 using System.Windows.Input;
@@ -56,12 +57,19 @@ namespace BCEdit180.Core.ViewModels {
         public ICommand AddInterfaceCommand { get; }
         public ICommand RemoveInterfaceCommand { get; }
 
+        public RelayCommandParam<ReferenceObjectViewModel<string>> RemoveItemCommand { get; }
+
         public ClassInfoViewModel(ClassViewModel classVM) {
             this.Class = classVM;
             this.Interfaces = new ObservableCollection<ReferenceObjectViewModel<string>>();
             this.EditAccessCommand = new RelayCommand(EditAccess);
             this.AddInterfaceCommand = new RelayCommand(AddInterfaceAction);
             this.RemoveInterfaceCommand = new RelayCommand(RemoveSelectedInterfaceAction);
+            this.RemoveItemCommand = new RelayCommandParam<ReferenceObjectViewModel<string>>(RemoveInterfaceAction);
+        }
+
+        public void RemoveInterfaceAction(ReferenceObjectViewModel<string> obj) {
+            this.Interfaces.Remove(obj);
         }
 
         public void AddInterfaceAction() {
@@ -76,10 +84,6 @@ namespace BCEdit180.Core.ViewModels {
             if (this.SelectedInterface != null) {
                 this.Interfaces.Remove(this.SelectedInterface);
             }
-        }
-
-        public void RemoveInterfaceAction() {
-
         }
 
         public void EditAccess() {

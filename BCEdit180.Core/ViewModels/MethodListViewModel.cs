@@ -59,7 +59,7 @@ namespace BCEdit180.Core.ViewModels {
             MethodNode method = new MethodNode() {
                 Owner = this.Class.Node,
                 Name = editor.MethodName,
-                Descriptor = new MethodDescriptor(editor.ReturnType, new List<TypeDescriptor>(editor.Parameters.Select(x => x.Descriptor))),
+                Descriptor = new MethodDescriptor(editor.ReturnType, new List<TypeDescriptor>(editor.Parameters.Select(x => x.TypeDescriptor))),
                 Access = editor.Access,
             };
 

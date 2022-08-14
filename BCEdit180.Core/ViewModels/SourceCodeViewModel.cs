@@ -59,7 +59,7 @@ namespace BCEdit180.Core.ViewModels {
             foreach (FieldInfoViewModel field in this.Class.FieldList.Fields) {
                 sb.Append("    ");
                 AppendAccessFlags(sb, field.Access);
-                sb.Append(GetTypeReadable(field.Descriptor)).Append(" ");
+                sb.Append(GetTypeReadable(field.FieldDescriptor)).Append(" ");
                 sb.Append(field.FieldName);
                 sb.Append(";\n");
             }
@@ -69,9 +69,9 @@ namespace BCEdit180.Core.ViewModels {
                 int param = (method.Access & MethodAccessModifiers.Static) != 0 ? 0 : 1;
                 sb.Append("    ");
                 AppendAccessFlags(sb, method.Access);
-                sb.Append(GetTypeReadable(method.Descriptor.ReturnType)).Append(" ");
+                sb.Append(GetTypeReadable(method.MethodDescriptor.ReturnType)).Append(" ");
                 sb.Append(method.MethodName).Append("(");
-                sb.Append(string.Join(", ", method.Descriptor.ArgumentTypes.Select(s => GetTypeReadable(s) + " p" + param++)));
+                sb.Append(string.Join(", ", method.MethodDescriptor.ArgumentTypes.Select(s => GetTypeReadable(s) + " p" + param++)));
                 sb.Append(")").Append(";\n");
             }
 

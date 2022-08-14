@@ -15,50 +15,19 @@ namespace BCEdit180.Core.Editors.Const {
             set => RaisePropertyChanged(ref this.type, value);
         }
 
-        private int valueInteger;
-
-        public int ValueInteger {
-            get => this.valueInteger;
-            set => RaisePropertyChanged(ref this.valueInteger, value);
-        }
-
-        private long valueLong;
-
-        public long ValueLong {
-            get => this.valueLong;
-            set => RaisePropertyChanged(ref this.valueLong, value);
-        }
-
-        private float valueFloat;
-
-        public float ValueFloat {
-            get => this.valueFloat;
-            set => RaisePropertyChanged(ref this.valueFloat, value);
-        }
-
-        private double valueDouble;
-
-        public double ValueDouble {
-            get => this.valueDouble;
-            set => RaisePropertyChanged(ref this.valueDouble, value);
-        }
-
         private string valueString;
-
         public string ValueString {
             get => this.valueString;
             set => RaisePropertyChanged(ref this.valueString, value);
         }
 
         private ClassName valueClass;
-
         public ClassName ValueClass {
             get => this.valueClass;
             set => RaisePropertyChanged(ref this.valueClass, value);
         }
 
         private Handle valueHandle;
-
         public Handle ValueHandle {
             get => this.valueHandle;
             set => RaisePropertyChanged(ref this.valueHandle, value);
@@ -153,20 +122,20 @@ namespace BCEdit180.Core.Editors.Const {
             if (defaultValue == null || defaultValue is byte || defaultValue is sbyte || defaultValue is ushort || defaultValue is short || defaultValue is uint || defaultValue is int) {
                 this.Type = ConstType.Integer;
                 if (defaultValue != null) {
-                    this.ValueInteger = (int) defaultValue;
+                    this.ValueString = defaultValue.ToString();
                 }
             }
             else if (defaultValue is long || defaultValue is ulong) {
                 this.Type = ConstType.Long;
-                this.ValueLong = (long) defaultValue;
+                this.ValueString = defaultValue.ToString();
             }
             else if (defaultValue is float) {
                 this.Type = ConstType.Float;
-                this.ValueFloat = (float) defaultValue;
+                this.ValueString = defaultValue.ToString();
             }
             else if (defaultValue is double) {
                 this.Type = ConstType.Double;
-                this.ValueDouble = (double) defaultValue;
+                this.ValueString = defaultValue.ToString();
             }
             else if (defaultValue is string) {
                 this.Type = ConstType.String;
@@ -212,16 +181,92 @@ namespace BCEdit180.Core.Editors.Const {
             return false;
         }
 
-        public object GetValue() {
+        public bool TryGetValue(out object value, out string error) {
+            error = null;
+            value = null;
             switch (this.Type) {
-                case ConstType.Integer: return this.ValueInteger;
-                case ConstType.Long: return this.ValueLong;
-                case ConstType.Float: return this.ValueFloat;
-                case ConstType.Double: return this.ValueDouble;
-                case ConstType.String: return this.ValueString;
-                case ConstType.Class: return this.ValueClass;
-                case ConstType.Handle: return this.ValueHandle;
-                case ConstType.MethodDescriptor: return this.ValueMethodDescriptor;
+                case ConstType.Integer: {
+                    if (int.TryParse(this.ValueString, out int val)) {
+                        value = val;
+                        return true;
+                    }
+                    else {
+                        error = "Value is not a valid integer number";
+                        return false;
+                    }
+                }
+
+                case ConstType.Long: {
+                    if (long.TryParse(this.ValueString, out long val)) {
+                        value = val;
+                        return true;
+                    }
+                    else {
+                        error = "Value is not a valid long number";
+                        return false;
+                    }
+                }
+
+                case ConstType.Float: {
+                    if (float.TryParse(this.ValueString, out float val)) {
+                        value = val;
+                        return true;
+                    }
+                    else {
+                        error = "Value is not a valid floating point number";
+                        return false;
+                    }
+                }
+
+                case ConstType.Double: {
+                    if (double.TryParse(this.ValueString, out double val)) {
+                        value = val;
+                        return true;
+                    }
+                    else {
+                        error = "Value is not a valid double-precision floating point number";
+                        return false;
+                    }
+                }
+
+                case ConstType.String: {
+                    value = this.ValueString ?? "";
+                    return true;
+                }
+
+                case ConstType.Class: {
+                    value = this.ValueClass;
+                    if (value != null) {
+                        return true;
+                    }
+                    else {
+                        error = "ClassName is invalid";
+                        return false;
+                    }
+                }
+
+                case ConstType.Handle: {
+                    value = this.ValueHandle;
+                    if (value != null) {
+                        return true;
+                    }
+                    else {
+                        error = "Method handle is invalid";
+                        return false;
+                    }
+                }
+
+                case ConstType.MethodDescriptor:{
+                    value = this.ValueMethodDescriptor;
+                    if (value != null) {
+                        return true;
+                    }
+                    else {
+                        error = "Method Descriptor is invalid";
+                        return false;
+                    }
+                }
+
                 default: throw new ArgumentOutOfRangeException();
             }
         }

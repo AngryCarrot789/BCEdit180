@@ -4,7 +4,7 @@ using JavaAsm;
 using REghZy.MVVM.Commands;
 
 namespace BCEdit180.Core.Editors {
-    public class MethodEditorViewModel : MethodDescEditorViewModel {
+    public class MethodEditorViewModel : MethodDescriptorEditorViewModel {
         private string methodName;
         public string MethodName {
             get => this.methodName;

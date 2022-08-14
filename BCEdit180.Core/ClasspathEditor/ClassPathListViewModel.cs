@@ -12,14 +12,10 @@ namespace BCEdit180.Core.ClasspathEditor {
             private set => ServiceManager.SetViewModel(value);
         }
 
-        public static ICommand ShowEditorCommand { get; }
+        public ICommand ShowEditorCommand { get; }
 
         static ClassPathListViewModel() {
             Instance = new ClassPathListViewModel();
-            ShowEditorCommand = new RelayCommand(()=> {
-                ClassPathListViewModel list = Instance;
-                ServiceManager.GetService<IModalManager>().ShowDialog(in list, out ClassPathListViewModel _);
-            });
         }
 
         public ObservableCollection<ClassPathItemViewModel> ClassPathItems { get; }
@@ -42,8 +38,9 @@ namespace BCEdit180.Core.ClasspathEditor {
             this.ClassPathItems = new ObservableCollection<ClassPathItemViewModel>();
             this.AddFileCommand = new RelayCommand(AddFileAction);
             this.AddFolderCommand = new RelayCommand(AddFolderAction);
-            this.GenerateListCommand = new RelayCommand(() => GenerateClasspathList());
-            this.GenerateStringCommand = new RelayCommand(() => GenerateClasspathString());
+            this.GenerateListCommand = new RelayCommand(GenerateClasspathList);
+            this.GenerateStringCommand = new RelayCommand(GenerateClasspathString);
+            this.ShowEditorCommand = new RelayCommand(() => ServiceManager.GetService<IModalManager>().ShowDialog(this, out ClassPathListViewModel _));
         }
 
         public void AddFileAction() {

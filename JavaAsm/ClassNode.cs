@@ -77,8 +77,9 @@ namespace JavaAsm {
             foreach (MethodNode method in this.Methods)
                 method.Parse(readerState);
 
-            foreach (FieldNode field in this.Fields)
+            foreach (FieldNode field in this.Fields) {
                 field.Parse(readerState);
+            }
         }
 
         internal void Save(ClassWriterState writerState) {

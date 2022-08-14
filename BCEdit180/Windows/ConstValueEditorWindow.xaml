@@ -5,11 +5,15 @@
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:windows="clr-namespace:BCEdit180.Windows"
         xmlns:const="clr-namespace:BCEdit180.Core.Editors.Const;assembly=BCEdit180.Core"
+        xmlns:converters="clr-namespace:BCEdit180.Converters"
         d:DataContext="{d:DesignInstance Type=const:ConstValueEditorViewModel}"
         mc:Ignorable="d"
         Title="Action" Height="357" Width="500"
         Style="{DynamicResource CustomWindowBaseStyle}" Background="{DynamicResource AREghZyBrush.Deep.3.Background.Static}">
     <Grid Margin="10">
+        <Grid.Resources>
+            <converters:ClassNameConverter x:Key="ClassNameConverter"/>
+        </Grid.Resources>
         <Label VerticalContentAlignment="Center" HorizontalContentAlignment="Center" Height="49" VerticalAlignment="Top">
             <TextBlock FontSize="14" TextAlignment="Center"><Run Text="Select a tab on the left, which represents the constant data type"/><LineBreak/><Run Text="Then on the right, enter the value"/></TextBlock>
         </Label>
@@ -17,25 +21,25 @@
             <TabItem Header="Integer" IsEnabled="{Binding IsEnabledInteger, UpdateSourceTrigger=PropertyChanged}" IsSelected="{Binding Type, Converter={StaticResource EnumConverter}, ConverterParameter={x:Static const:ConstType.Integer}, UpdateSourceTrigger=PropertyChanged}">
                 <Grid VerticalAlignment="Stretch">
                     <TextBlock Text="Edit the Integer value here" VerticalAlignment="Top" Padding="3"/>
-                    <TextBox x:Name="TextBox_I" FontFamily="Consolas" Text="{Binding ValueInteger, UpdateSourceTrigger=PropertyChanged}" Padding="3" Margin="0 24 0 0" Background="{DynamicResource AREghZyBrush.Deep.2.Background.Static}" BorderBrush="{DynamicResource AREghZyBrush.Primary.3.Border.Static}"/>
+                    <TextBox x:Name="TextBox_I" FontFamily="Consolas" Text="{Binding ValueString, UpdateSourceTrigger=PropertyChanged}" Padding="3" Margin="0 24 0 0" Background="{DynamicResource AREghZyBrush.Deep.2.Background.Static}" BorderBrush="{DynamicResource AREghZyBrush.Primary.3.Border.Static}"/>
                 </Grid>
             </TabItem>
             <TabItem Header="Long" IsEnabled="{Binding IsEnabledLong, UpdateSourceTrigger=PropertyChanged}" IsSelected="{Binding Type, Converter={StaticResource EnumConverter}, ConverterParameter={x:Static const:ConstType.Long}, UpdateSourceTrigger=PropertyChanged}">
                 <Grid VerticalAlignment="Stretch">
                     <TextBlock Text="Edit the Long value here" VerticalAlignment="Top" Padding="3"/>
-                    <TextBox x:Name="TextBox_L" FontFamily="Consolas" Text="{Binding ValueLong, UpdateSourceTrigger=PropertyChanged}" Padding="3" Margin="0 24 0 0" Background="{DynamicResource AREghZyBrush.Deep.2.Background.Static}" BorderBrush="{DynamicResource AREghZyBrush.Primary.3.Border.Static}"/>
+                    <TextBox x:Name="TextBox_L" FontFamily="Consolas" Text="{Binding ValueString, UpdateSourceTrigger=PropertyChanged}" Padding="3" Margin="0 24 0 0" Background="{DynamicResource AREghZyBrush.Deep.2.Background.Static}" BorderBrush="{DynamicResource AREghZyBrush.Primary.3.Border.Static}"/>
                 </Grid>
             </TabItem>
             <TabItem Header="Float" IsEnabled="{Binding IsEnabledFloat, UpdateSourceTrigger=PropertyChanged}" IsSelected="{Binding Type, Converter={StaticResource EnumConverter}, ConverterParameter={x:Static const:ConstType.Float}, UpdateSourceTrigger=PropertyChanged}">
                 <Grid VerticalAlignment="Stretch">
                     <TextBlock Text="Edit the Float value here" VerticalAlignment="Top" Padding="3"/>
-                    <TextBox x:Name="TextBox_F" FontFamily="Consolas" Text="{Binding ValueFloat, UpdateSourceTrigger=PropertyChanged}" Padding="3" Margin="0 24 0 0" Background="{DynamicResource AREghZyBrush.Deep.2.Background.Static}" BorderBrush="{DynamicResource AREghZyBrush.Primary.3.Border.Static}"/>
+                    <TextBox x:Name="TextBox_F" FontFamily="Consolas" Text="{Binding ValueString, UpdateSourceTrigger=PropertyChanged}" Padding="3" Margin="0 24 0 0" Background="{DynamicResource AREghZyBrush.Deep.2.Background.Static}" BorderBrush="{DynamicResource AREghZyBrush.Primary.3.Border.Static}"/>
                 </Grid>
             </TabItem>
             <TabItem Header="Double" IsEnabled="{Binding IsEnabledDouble, UpdateSourceTrigger=PropertyChanged}" IsSelected="{Binding Type, Converter={StaticResource EnumConverter}, ConverterParameter={x:Static const:ConstType.Double}, UpdateSourceTrigger=PropertyChanged}">
                 <Grid VerticalAlignment="Stretch">
                     <TextBlock Text="Edit the Double value here" VerticalAlignment="Top" Padding="3"/>
-                    <TextBox x:Name="TextBox_D" FontFamily="Consolas" Text="{Binding ValueDouble, UpdateSourceTrigger=PropertyChanged}" Padding="3" Margin="0 24 0 0" Background="{DynamicResource AREghZyBrush.Deep.2.Background.Static}" BorderBrush="{DynamicResource AREghZyBrush.Primary.3.Border.Static}"/>
+                    <TextBox x:Name="TextBox_D" FontFamily="Consolas" Text="{Binding ValueString, UpdateSourceTrigger=PropertyChanged}" Padding="3" Margin="0 24 0 0" Background="{DynamicResource AREghZyBrush.Deep.2.Background.Static}" BorderBrush="{DynamicResource AREghZyBrush.Primary.3.Border.Static}"/>
                 </Grid>
             </TabItem>
             <TabItem Header="String" IsEnabled="{Binding IsEnabledString, UpdateSourceTrigger=PropertyChanged}" IsSelected="{Binding Type, Converter={StaticResource EnumConverter}, ConverterParameter={x:Static const:ConstType.String}, UpdateSourceTrigger=PropertyChanged}">
@@ -47,7 +51,7 @@
             <TabItem Header="Class Name" IsEnabled="{Binding IsEnabledClass, UpdateSourceTrigger=PropertyChanged}" IsSelected="{Binding Type, Converter={StaticResource EnumConverter}, ConverterParameter={x:Static const:ConstType.Class}, UpdateSourceTrigger=PropertyChanged}">
                 <Grid VerticalAlignment="Stretch">
                     <TextBlock Text="Edit the Class Name here" VerticalAlignment="Top" Padding="3"/>
-                    <TextBox x:Name="TextBox_CN" FontFamily="Consolas" Text="{Binding ValueClass, UpdateSourceTrigger=PropertyChanged}" Padding="3" Margin="0,24" Background="{DynamicResource AREghZyBrush.Deep.2.Background.Static}" BorderBrush="{DynamicResource AREghZyBrush.Primary.3.Border.Static}"/>
+                    <TextBox x:Name="TextBox_CN" FontFamily="Consolas" Text="{Binding ValueClass, UpdateSourceTrigger=PropertyChanged, Converter={StaticResource ClassNameConverter}}" Padding="3" Margin="0,24" Background="{DynamicResource AREghZyBrush.Deep.2.Background.Static}" BorderBrush="{DynamicResource AREghZyBrush.Primary.3.Border.Static}"/>
                     <Button Command="{Binding EditClassNameCommand}" Content="Edit" BorderThickness="1 0 1 1" BorderBrush="{DynamicResource AREghZyBrush.Primary.3.Border.Static}" Background="{DynamicResource AREghZyBrush.Primary.2.Background.Static}" Height="24" VerticalAlignment="Bottom"/>
                 </Grid>
             </TabItem>

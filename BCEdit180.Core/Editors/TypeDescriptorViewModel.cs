@@ -6,26 +6,26 @@ using REghZy.MVVM.ViewModels;
 
 namespace BCEdit180.Core.Editors {
     public class TypeDescriptorViewModel : BaseViewModel {
-        private TypeDescriptor descriptor;
-        public TypeDescriptor Descriptor {
-            get => this.descriptor;
-            set => RaisePropertyChanged(ref this.descriptor, value);
+        private TypeDescriptor typeDescriptor;
+        public TypeDescriptor TypeDescriptor {
+            get => this.typeDescriptor;
+            set => RaisePropertyChanged(ref this.typeDescriptor, value);
         }
 
-        public ICommand EditCommand { get; }
+        public ICommand EditFieldDescriptorCommand { get; }
 
         public TypeDescriptorViewModel() : this(new TypeDescriptor(PrimitiveType.Integer, 0)) {
 
         }
 
-        public TypeDescriptorViewModel(TypeDescriptor descriptor) {
-            this.EditCommand = new RelayCommand(EditAction);
-            this.Descriptor = descriptor;
+        public TypeDescriptorViewModel(TypeDescriptor typeDescriptor) {
+            this.EditFieldDescriptorCommand = new RelayCommand(EditTypeDescriptorAction);
+            this.TypeDescriptor = typeDescriptor;
         }
 
-        public void EditAction() {
-            if (Dialog.TypeEditor.EditTypeDescriptorDialog(this.Descriptor, out TypeDescriptor descriptor).Result) {
-                this.Descriptor = descriptor;
+        public void EditTypeDescriptorAction() {
+            if (Dialog.TypeEditor.EditTypeDescriptorDialog(this.TypeDescriptor, out TypeDescriptor descriptor).Result) {
+                this.TypeDescriptor = descriptor;
             }
         }
     }

@@ -2,9 +2,9 @@
 using JavaAsm;
 
 namespace BCEdit180.Core {
-    public interface IMethodDescriptable {
-        MethodDescriptor MethodDescriptor { get; set; }
+    public interface IFieldDescriptable {
+        TypeDescriptor FieldDescriptor { get; set; }
 
-        ICommand EditMethodDescriptorCommand { get; }
+        ICommand EditFieldDescriptorCommand { get; }
     }
 }

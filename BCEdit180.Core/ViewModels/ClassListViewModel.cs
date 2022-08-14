@@ -29,12 +29,15 @@ namespace BCEdit180.Core.ViewModels {
 
         public ICommand OpenFileCommand { get; }
 
+        public RelayCommandParam<ClassViewModel> RemoveClassCommand { get; }
+
         public ClassListViewModel() {
             this.Classes = new ExtendedObservableCollection<ClassViewModel>();
             this.Clipboard = new InstructionClipboardViewModel();
             ServiceManager.SetService(this.Clipboard);
             this.OpenFileCommand = new RelayCommand(OpenFileAction);
             this.ErrorReporter = new ErrorReporterViewModel(this);
+            this.RemoveClassCommand = new RelayCommandParam<ClassViewModel>(this.RemoveClass);
         }
 
         public void CreateBalnkClass() {
@@ -172,7 +175,11 @@ namespace BCEdit180.Core.ViewModels {
             return File.Exists(path) ? path : null;
         }
 
-        public void RemoveClass(ClassViewModel classViewModel, bool dispose = true) {
+        public void RemoveClass(ClassViewModel classViewModel) {
+            RemoveClass(classViewModel, true);
+        }
+
+        public void RemoveClass(ClassViewModel classViewModel, bool dispose) {
             this.Classes.Remove(classViewModel);
             if (dispose) {
                 classViewModel.Dispose();

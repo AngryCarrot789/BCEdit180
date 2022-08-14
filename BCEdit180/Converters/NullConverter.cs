@@ -4,14 +4,15 @@ using System.Windows;
 using System.Windows.Data;
 
 namespace BCEdit180.Converters {
-    public class NullToBoolConverter : IValueConverter {
-        public bool NullValue { get; set; }
+    public class NullConverter : IValueConverter {
+        public object NullValue { get; set; }
+        public object NonNullValue { get; set; }
 
         public bool ReturnUnsetIfUnset { get; set; }
 
         public object UnsetValue { get; set; }
 
-        public NullToBoolConverter() {
+        public NullConverter() {
             this.ReturnUnsetIfUnset = true;
             this.UnsetValue = DependencyProperty.UnsetValue;
         }
@@ -21,12 +22,7 @@ namespace BCEdit180.Converters {
                 return this.UnsetValue;
             }
 
-            if (value == null) {
-                return this.NullValue;
-            }
-            else {
-                return this.NonNullValue;
-            }
+            return value == null ? this.NullValue : this.NonNullValue;
         }
 
         public object ConvertBack(object value, Type targetType, object parameter, CultureInfo culture) {

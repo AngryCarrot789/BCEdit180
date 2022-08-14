@@ -112,13 +112,13 @@ namespace JavaAsm {
         /// <summary>
         /// Parses method annotations to fill up information
         /// </summary>
-        /// <param name="readerState">Class reader state</param>
-        internal void Parse(ClassReaderState readerState) {
+        /// <param name="reader">Class reader state</param>
+        internal void Parse(ClassReaderState reader) {
             this.Signature = (GetAttribute(PredefinedAttributeNames.Signature)?.ParsedAttribute as SignatureAttribute)?.Value;
             {
                 AttributeNode attribute = GetAttribute(PredefinedAttributeNames.Code);
                 if (attribute?.ParsedAttribute is CodeAttribute codeAttribute)
-                    InstructionListConverter.ParseCodeAttribute(this, readerState, codeAttribute);
+                    InstructionListConverter.ParseCodeAttribute(this, reader, codeAttribute);
             }
             {
                 AttributeNode attribute = GetAttribute(PredefinedAttributeNames.RuntimeInvisibleAnnotations);
@@ -135,8 +135,7 @@ namespace JavaAsm {
                 if (attribute != null)
                     this.Throws = (attribute.ParsedAttribute as ExceptionsAttribute)?.ExceptionTable;
             }
-            this.AnnotationDefaultValue =
-                (GetAttribute(PredefinedAttributeNames.AnnotationDefault)?.ParsedAttribute as AnnotationDefaultAttribute)?.Value;
+            this.AnnotationDefaultValue = (GetAttribute(PredefinedAttributeNames.AnnotationDefault)?.ParsedAttribute as AnnotationDefaultAttribute)?.Value;
             this.IsDeprecated = GetAttribute(PredefinedAttributeNames.Deprecated)?.ParsedAttribute != null;
         }
 

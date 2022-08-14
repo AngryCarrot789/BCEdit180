@@ -100,12 +100,18 @@
     <Compile Include="CodeEditing\BaseInnerControl.cs" />
     <Compile Include="CodeEditing\EditorControls\BaseInstructionEditorControl.cs" />
     <Compile Include="CodeEditing\EditorControls\InstructionEditorControls.cs" />
+    <Compile Include="CodeEditing\Ignore_UC_for_designer_2.xaml.cs">
+      <DependentUpon>Ignore_UC_for_designer_2.xaml</DependentUpon>
+    </Compile>
     <Compile Include="CodeEditing\Ignore__UC_for_designer.xaml.cs">
       <DependentUpon>Ignore__UC_for_designer.xaml</DependentUpon>
     </Compile>
     <Compile Include="CodeEditing\InnerControlls.cs" />
     <Compile Include="CodeEditing\ListControls\BaseInstructionControl.cs" />
     <Compile Include="CodeEditing\ListControls\InstructionControls.cs" />
+    <Compile Include="CodeEditing\Viewers\HandleControl.cs" />
+    <Compile Include="CodeEditing\Viewers\TypeDescriptorControl.cs" />
+    <Compile Include="CodeEditing\Viewers\MethodDescriptorControl.cs" />
     <Compile Include="Controls\Bars\VerticalButtonBar.cs" />
     <Compile Include="Controls\Bars\VerticalButtonBarItem.cs" />
     <Compile Include="Controls\DoubleClickEditBox.xaml.cs">
@@ -114,11 +120,15 @@
     <Compile Include="Controls\InfoControls.cs" />
     <Compile Include="Converters\AnnontationEntryPrimitiveValueConverter.cs" />
     <Compile Include="Converters\BindLeftBorderToTabConverter.cs" />
+    <Compile Include="Converters\BooleanConverter.cs" />
     <Compile Include="Converters\BooleanToColourConverter.cs" />
+    <Compile Include="Converters\ClassNameConverter.cs" />
+    <Compile Include="Converters\ConstPreviewConverter.cs" />
     <Compile Include="Converters\ErrorColourConverter.cs" />
     <Compile Include="Converters\FilePathToWindowTitleConverter.cs" />
     <Compile Include="Converters\FQCNToWindowTitleConverter.cs" />
     <Compile Include="Converters\ItemNullToEnabledConverter.cs" />
+    <Compile Include="Converters\NullConverter.cs" />
     <Compile Include="Converters\NullToCollapsed.cs" />
     <Compile Include="Converters\OpCodeToSimpleDescriptionConverter.cs" />
     <Compile Include="Converters\PrimitiveConverter.cs" />
@@ -194,12 +204,20 @@
       <Generator>MSBuild:Compile</Generator>
     </Page>
     <Page Include="CodeEditing\EditorControls\InstructionEditorStyles.xaml" />
+    <Page Include="CodeEditing\Ignore_UC_for_designer_2.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
     <Page Include="CodeEditing\Ignore__UC_for_designer.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
     <Page Include="CodeEditing\InnerControlStyles.xaml" />
     <Page Include="CodeEditing\ListControls\InstructionControlStyles.xaml" />
+    <Page Include="CodeEditing\Viewers\ViewerStyles.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
     <Page Include="Controls\Bars\ButtonBarStyles.xaml" />
     <Page Include="Controls\DoubleClickEditBox.xaml">
       <Generator>MSBuild:Compile</Generator>

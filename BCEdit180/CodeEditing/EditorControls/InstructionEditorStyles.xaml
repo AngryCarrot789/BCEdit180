@@ -8,6 +8,10 @@
                     xmlns:converters="clr-namespace:BCEdit180.Converters"
                     xmlns:bytecode="clr-namespace:BCEdit180.Core.CodeEditing.Bytecode;assembly=BCEdit180.Core"
                     xmlns:codeEditing="clr-namespace:BCEdit180.CodeEditing"
+                    xmlns:codeEditing1="clr-namespace:BCEdit180.Core.CodeEditing;assembly=BCEdit180.Core"
+                    xmlns:viewers="clr-namespace:BCEdit180.CodeEditing.Viewers"
+                    xmlns:codeEdit="clr-namespace:BCEdit180.Core.Editors;assembly=BCEdit180.Core"
+                    xmlns:attachedProperties="clr-namespace:BCEdit180.AttachedProperties"
                     mc:Ignorable="d">
     <converters:TypeDescriptorToStringConverter x:Key="TypeDescriptorConverter"/>
     <!-- Visual studio might give some errors regarding d:DataContext, but i used
@@ -81,10 +85,32 @@
                         <TextBox Foreground="{StaticResource ConstEnum}" Text="{Binding BootstrapReferenceType, UpdateSourceTrigger=PropertyChanged}" Background="Transparent" HorizontalAlignment="Stretch" TextWrapping="NoWrap" VerticalAlignment="Top" Padding="5" Margin="145,104,75,0" BorderThickness="0"  FontWeight="Bold" FontStyle="Italic" />
                         <TextBox Foreground="{StaticResource ClassName}" Text="{Binding BootstrapMethodOwner, UpdateSourceTrigger=PropertyChanged}" Background="Transparent" HorizontalAlignment="Stretch" TextWrapping="NoWrap" VerticalAlignment="Top" Padding="5" Margin="145,130,0,0" BorderThickness="0"  FontWeight="Bold" FontStyle="Italic" />
                         <TextBox Foreground="{StaticResource Keyword}" Text="{Binding BootstrapMethodName, UpdateSourceTrigger=PropertyChanged}" Background="Transparent" HorizontalAlignment="Stretch" TextWrapping="NoWrap" VerticalAlignment="Top" Padding="5" Margin="145,156,0,0" BorderThickness="0"  FontWeight="Bold" FontStyle="Italic" />
-                        <TextBox Foreground="{StaticResource MethodDescriptor}" Text="{Binding BootstrapMethodDescriptor, UpdateSourceTrigger=PropertyChanged, Converter={StaticResource TypeDescriptorConverter}}" Background="Transparent" HorizontalAlignment="Stretch" TextWrapping="NoWrap" VerticalAlignment="Top" Padding="5" Margin="145,182,75,0" BorderThickness="0"  FontWeight="Bold" FontStyle="Italic" />
+                        <TextBox Foreground="{StaticResource MethodDescriptor}" Text="{Binding BootstrapMethodDescriptor, UpdateSourceTrigger=PropertyChanged, Converter={StaticResource TypeDescriptorConverter}}" TextWrapping="NoWrap" Background="Transparent" HorizontalAlignment="Stretch" VerticalAlignment="Top" Padding="5" Margin="145,182,75,0" BorderThickness="0"  FontWeight="Bold" FontStyle="Italic" MaxWidth="400"/>
                         <Button Command="{Binding EditDescriptorCommand}" Focusable="False" Margin="0,52,0,0" Content="Edit" Height="26" VerticalAlignment="Top" HorizontalAlignment="Right" Width="75"/>
                         <Button Command="{Binding EditBootstrapReferenceTypeCommand}" Focusable="False" Margin="0,104,0,0" Content="Edit" Height="26" VerticalAlignment="Top" HorizontalAlignment="Right" Width="75"/>
                         <Button Command="{Binding EditBootstrapDescriptorCommand}" Focusable="False" Margin="0,182,0,0" Content="Edit" Height="26" VerticalAlignment="Top" HorizontalAlignment="Right" Width="75"/>
+                        <TextBlock Width="152" HorizontalAlignment="Left" TextWrapping="NoWrap" VerticalAlignment="Top" Padding="5"  FontWeight="Bold" Margin="0,208,0,0"><Run Text="Bootstrap "/><Run Text="Method Arg"/><Run Text="s:"/></TextBlock>
+                        <ListBox ItemsSource="{Binding BootstrapMethodArgs}" 
+                                 Background="Transparent"
+                                 Margin="0,234,0,0"
+                                 Padding="1 1 1 1"
+                                 ScrollViewer.CanContentScroll="False"
+                                 attachedProperties:Scrolling.ScrollHorizontallyWithShiftWheel="True"
+                                 ScrollViewer.HorizontalScrollBarVisibility="Auto"
+                                 ScrollViewer.VerticalScrollBarVisibility="Auto"
+                                 HorizontalContentAlignment="Stretch">
+                            <ListBox.Resources>
+                                <DataTemplate DataType="{x:Type codeEdit:MethodDescriptorViewModel}">
+                                    <viewers:MethodDescriptorControl DataContext="{Binding}"/>
+                                </DataTemplate>
+                                <DataTemplate DataType="{x:Type codeEdit:TypeDescriptorViewModel}">
+                                    <viewers:TypeDescriptorControl DataContext="{Binding}"/>
+                                </DataTemplate>
+                                <DataTemplate DataType="{x:Type codeEdit:HandleViewModel}">
+                                    <viewers:HandleControl DataContext="{Binding}"/>
+                                </DataTemplate>
+                            </ListBox.Resources>
+                        </ListBox>
                     </Grid>
                 </ControlTemplate>
             </Setter.Value>
@@ -96,12 +122,12 @@
                 <ControlTemplate>
                     <Grid d:DataContext="{d:DesignInstance vms:JumpInstructionViewModel}">
                         <TextBlock Width="100" HorizontalAlignment="Left" TextWrapping="NoWrap" Text="Opcode" VerticalAlignment="Top" Padding="5"  FontWeight="Bold"/>
-                        <TextBlock Width="100" HorizontalAlignment="Left" TextWrapping="NoWrap" Text="Integer Value" VerticalAlignment="Top" Padding="5"  FontWeight="Bold" Margin="0,26,0,0"/>
-                        <TextBlock Width="100" HorizontalAlignment="Left" TextWrapping="NoWrap" Text="Integer Value" VerticalAlignment="Top" Padding="5"  FontWeight="Bold" Margin="0,52,0,0"/>
+                        <TextBlock Width="100" HorizontalAlignment="Left" TextWrapping="NoWrap" VerticalAlignment="Top" Padding="5"  FontWeight="Bold" Margin="0,26,0,0"><Run Text="Branch "/><Run Text="Target"/></TextBlock>
+                        <TextBlock Width="100" HorizontalAlignment="Left" TextWrapping="NoWrap" Text="Byte Offset" VerticalAlignment="Top" Padding="5"  FontWeight="Bold" Margin="0,52,0,0"/>
                         <TextBox Foreground="{StaticResource ConstEnum}" Text="{Binding Opcode, UpdateSourceTrigger=PropertyChanged}" Background="Transparent" HorizontalAlignment="Stretch" TextWrapping="NoWrap" VerticalAlignment="Top" Padding="5" Margin="100,0,0,0" BorderThickness="0"  FontWeight="Bold" FontStyle="Italic" />
-                        <TextBox Foreground="{StaticResource Keyword}" Text="{Binding JumpDestination.Index, UpdateSourceTrigger=PropertyChanged}" Background="Transparent" HorizontalAlignment="Stretch" TextWrapping="NoWrap" VerticalAlignment="Top" Padding="5" Margin="100,26,0,0" BorderThickness="0"  FontWeight="Bold" FontStyle="Italic" />
-                        <TextBox Foreground="{StaticResource ConstNumeric}" Text="{Binding JumpOffset, UpdateSourceTrigger=PropertyChanged}" Background="Transparent" HorizontalAlignment="Stretch" TextWrapping="NoWrap" VerticalAlignment="Top" Padding="5" Margin="100,52,0,0" BorderThickness="0"  FontWeight="Bold" FontStyle="Italic" />
-                        <Button Command="{Binding EditTargetLabelCommand}" Content="Edit Target Label" ToolTip="Opens a window, which lets you select a new target label" HorizontalAlignment="Left" VerticalAlignment="Top" Padding="5" Margin="0,78,0,0" Width="150"/>
+                        <TextBlock Foreground="{StaticResource Keyword}" Text="{Binding TargetLabel.Index, UpdateSourceTrigger=PropertyChanged}" Background="Transparent" HorizontalAlignment="Stretch" TextWrapping="NoWrap" VerticalAlignment="Top" Padding="5" Margin="100,26,150,0" FontWeight="Bold" FontStyle="Italic" />
+                        <TextBlock Foreground="{StaticResource ConstNumeric}" Text="{Binding JumpOffset, UpdateSourceTrigger=PropertyChanged}" Background="Transparent" HorizontalAlignment="Stretch" TextWrapping="NoWrap" VerticalAlignment="Top" Padding="5" Margin="100,52,0,0" FontWeight="Bold" FontStyle="Italic" />
+                        <Button Command="{Binding EditTargetLabelCommand}" Content="Edit Target Label" ToolTip="Opens a window, which lets you select a new target label" HorizontalAlignment="Right" VerticalAlignment="Top" Padding="5" Margin="0,25,0,0" Width="150"/>
                     </Grid>
                 </ControlTemplate>
             </Setter.Value>
@@ -113,7 +139,7 @@
                 <ControlTemplate>
                     <Grid d:DataContext="{d:DesignInstance vms:LabelViewModel}">
                         <TextBlock Width="100" HorizontalAlignment="Left" TextWrapping="NoWrap" Text="Index" VerticalAlignment="Top" Padding="5"  FontWeight="Bold"/>
-                        <TextBox Foreground="{StaticResource Keyword}" Text="{Binding Index, UpdateSourceTrigger=PropertyChanged}" Background="Transparent" HorizontalAlignment="Stretch" TextWrapping="NoWrap" VerticalAlignment="Top" Padding="5" Margin="100,0,0,0" BorderThickness="0"  FontWeight="Bold" FontStyle="Italic" />
+                        <controls:DoubleClickEditBox Foreground="{StaticResource Keyword}" Text="{Binding Index, UpdateSourceTrigger=PropertyChanged}" Background="Transparent" HorizontalAlignment="Stretch" TextWrapping="NoWrap" VerticalAlignment="Top" Padding="5" Margin="100,0,0,0" BorderThickness="0"  FontWeight="Bold" FontStyle="Italic" />
                     </Grid>
                 </ControlTemplate>
             </Setter.Value>
@@ -127,8 +153,8 @@
                         <TextBlock Width="100" HorizontalAlignment="Left" TextWrapping="NoWrap" VerticalAlignment="Top" Padding="5"  FontWeight="Bold" Text="Opcode"/>
                         <TextBlock Width="100" HorizontalAlignment="Left" TextWrapping="NoWrap" VerticalAlignment="Top" Padding="5"  FontWeight="Bold" Margin="0,26,0,0" Text="Value"/>
                         <TextBox Foreground="{StaticResource ConstEnum}" Text="{Binding Opcode, UpdateSourceTrigger=PropertyChanged}" Background="Transparent" HorizontalAlignment="Stretch" TextWrapping="NoWrap" VerticalAlignment="Top" Padding="5" Margin="100,0,0,0" BorderThickness="0"  FontWeight="Bold" FontStyle="Italic" />
-                        <TextBox Foreground="{StaticResource ConstNumeric}" Text="{Binding Value, UpdateSourceTrigger=PropertyChanged}" IsEnabled="{Binding IsEditable, UpdateSourceTrigger=PropertyChanged}" Background="Transparent" HorizontalAlignment="Stretch" TextWrapping="NoWrap" VerticalAlignment="Top" Padding="5" Margin="100,26,0,0" BorderThickness="0"  FontWeight="Bold" FontStyle="Italic" />
-                        <Button Command="{Binding EditValueCommand}" Focusable="False" Margin="0,57,0,0" Content="Edit Constant Value" Height="29" VerticalAlignment="Top"/>
+                        <TextBox Foreground="{StaticResource ConstNumeric}" Text="{Binding Value, UpdateSourceTrigger=PropertyChanged}" IsEnabled="{Binding IsEditable, UpdateSourceTrigger=PropertyChanged}" Background="Transparent" HorizontalAlignment="Stretch" TextWrapping="NoWrap" VerticalAlignment="Top" Padding="5" Margin="100,26,150,0" BorderThickness="0"  FontWeight="Bold" FontStyle="Italic" />
+                        <Button Command="{Binding EditValueCommand}" Focusable="False" Margin="650,26,0,0" Content="Edit Constant Value" Height="26" VerticalAlignment="Top"/>
                     </Grid>
                 </ControlTemplate>
             </Setter.Value>

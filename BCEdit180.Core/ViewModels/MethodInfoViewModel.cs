@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Collections.ObjectModel;
 using System.Linq;
 using System.Windows.Input;
 using BCEdit180.Core.Annotations;
@@ -12,7 +13,7 @@ using REghZy.MVVM.Commands;
 using REghZy.MVVM.ViewModels;
 
 namespace BCEdit180.Core.ViewModels {
-    public class MethodInfoViewModel : BaseViewModel, IDisposable, ISaveable<MethodNode> {
+    public class MethodInfoViewModel : BaseViewModel, IDisposable, ISaveable<MethodNode>, IMethodDescriptable {
         private MethodAccessModifiers access;
         public MethodAccessModifiers Access {
             get => this.access;
@@ -25,10 +26,10 @@ namespace BCEdit180.Core.ViewModels {
             set => RaisePropertyChanged(ref this.methodName, value);
         }
 
-        private MethodDescriptor descriptor;
-        public MethodDescriptor Descriptor {
-            get => this.descriptor;
-            set => RaisePropertyChanged(ref this.descriptor, value);
+        private MethodDescriptor methodDescriptor;
+        public MethodDescriptor MethodDescriptor {
+            get => this.methodDescriptor;
+            set => RaisePropertyChanged(ref this.methodDescriptor, value);
         }
 
         private List<AttributeNode> attributes;
@@ -67,11 +68,7 @@ namespace BCEdit180.Core.ViewModels {
             set => RaisePropertyChanged(ref this.isDeprecated, value);
         }
 
-        private List<ClassName> throws;
-        public List<ClassName> Throws {
-            get => this.throws;
-            set => RaisePropertyChanged(ref this.throws, value);
-        }
+        public ObservableCollection<ReferenceObjectViewModel<string>> Throws { get; }
 
         private ElementValue annotationDefaultValue;
         public ElementValue AnnotationDefaultValue {
@@ -91,7 +88,7 @@ namespace BCEdit180.Core.ViewModels {
 
         public CodeEditorViewModel CodeEditor { get; }
 
-        public ICommand EditDescriptorCommand { get; }
+        public ICommand EditMethodDescriptorCommand { get; }
 
         public ICommand EditAccessCommand { get; }
 
@@ -108,10 +105,11 @@ namespace BCEdit180.Core.ViewModels {
         public MethodInfoViewModel(MethodListViewModel methodList, MethodNode node) {
             this.MethodList = methodList;
             this.Node = node;
+            this.Throws = new ObservableCollection<ReferenceObjectViewModel<string>>();
             this.CalculateMaxStackCommand = new RelayCommand(CalculateMaxStackSize);
             this.CalculateMaxLocalsCommand = new RelayCommand(CalculateMaxLocalsSize);
             this.EditAccessCommand = new RelayCommand(EditAccess);
-            this.EditDescriptorCommand = new RelayCommand(EditDescriptor);
+            this.EditMethodDescriptorCommand = new RelayCommand(EditDescriptor);
             this.VisibleAnnotationEditor = new AnnotationEditorViewModel();
             this.InvisibleAnnotationEditor = new AnnotationEditorViewModel();
             this.CodeEditor = new CodeEditorViewModel(this);
@@ -125,8 +123,8 @@ namespace BCEdit180.Core.ViewModels {
         }
 
         public void EditDescriptor() {
-            if (Dialog.TypeEditor.EditMethodDescriptorDialog(this.Descriptor, out MethodDescriptor typeDesc).Result) {
-                this.Descriptor = typeDesc;
+            if (Dialog.TypeEditor.EditMethodDescriptorDialog(this.MethodDescriptor, out MethodDescriptor typeDesc).Result) {
+                this.MethodDescriptor = typeDesc;
             }
         }
 
@@ -143,7 +141,7 @@ namespace BCEdit180.Core.ViewModels {
             this.MethodName = node.Name;
             this.Access = node.Access;
             this.MethodName = node.Name;
-            this.Descriptor = node.Descriptor;
+            this.MethodDescriptor = node.Descriptor;
             this.Attributes = node.Attributes;
             this.Signature = node.Signature;
             this.MaxStack = node.MaxStack;
@@ -154,7 +152,8 @@ namespace BCEdit180.Core.ViewModels {
             this.InvisibleAnnotationEditor.Annotations.Clear();
             this.InvisibleAnnotationEditor.Annotations.AddAll(node.InvisibleAnnotations.Select(a => new AnnotationViewModel(a)));
             this.IsDeprecated = node.IsDeprecated;
-            this.Throws = node.Throws;
+            this.Throws.Clear();
+            this.Throws.AddAll(node.Throws.Select(a => new ReferenceObjectViewModel<string>(a.Name)));
             this.AnnotationDefaultValue = node.AnnotationDefaultValue;
             this.CodeEditor.Load(node);
         }
@@ -163,7 +162,7 @@ namespace BCEdit180.Core.ViewModels {
             node.Name = this.MethodName;
             node.Access = this.Access;
             node.Name = this.MethodName;
-            node.Descriptor = this.Descriptor;
+            node.Descriptor = this.MethodDescriptor;
             node.Attributes = this.Attributes;
             node.Signature = this.Signature;
             node.MaxStack = this.MaxStack;
@@ -172,7 +171,7 @@ namespace BCEdit180.Core.ViewModels {
             node.VisibleAnnotations = new List<AnnotationNode>(this.VisibleAnnotationEditor.Annotations.Select(a => a.Node));
             node.InvisibleAnnotations = new List<AnnotationNode>(this.InvisibleAnnotationEditor.Annotations.Select(a => a.Node));
             node.IsDeprecated = this.IsDeprecated;
-            node.Throws = this.Throws;
+            node.Throws = this.Throws.Select(a => new ClassName(a.Value)).ToList();
             node.AnnotationDefaultValue = this.AnnotationDefaultValue;
             this.CodeEditor.Save(node);
         }

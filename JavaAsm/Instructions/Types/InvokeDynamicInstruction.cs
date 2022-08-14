@@ -96,5 +96,22 @@ namespace JavaAsm.Instructions.Types {
                 Type = this.Type
             };
         }
+
+        public override string ToString() {
+            switch (this.Type) {
+                case ReferenceKindType.GetField:
+                case ReferenceKindType.GetStatic:
+                case ReferenceKindType.PutField:
+                case ReferenceKindType.PutStatic:
+                    return $"{this.Type} {this.Owner} {this.Name} {this.Descriptor}";
+                case ReferenceKindType.InvokeVirtual:
+                case ReferenceKindType.InvokeStatic:
+                case ReferenceKindType.InvokeSpecial:
+                case ReferenceKindType.NewInvokeSpecial:
+                case ReferenceKindType.InvokeReference:
+                    return $"{this.Type} {this.Owner}.{this.Name}{this.Descriptor}";
+                default: throw new ArgumentOutOfRangeException();
+            }
+        }
     }
 }

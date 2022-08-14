@@ -7,7 +7,7 @@ using JavaAsm.Instructions.Types;
 using REghZy.MVVM.Commands;
 
 namespace BCEdit180.Core.CodeEditing.Bytecode.Instructions {
-    public class MethodInstructionViewModel : BaseInstructionViewModel {
+    public class MethodInstructionViewModel : BaseInstructionViewModel, IMethodDescriptable {
         private string methodOwner;
         public string MethodOwner {
             get => this.methodOwner;
@@ -28,10 +28,10 @@ namespace BCEdit180.Core.CodeEditing.Bytecode.Instructions {
 
         public override IEnumerable<Opcode> AvailableOpCodes => new Opcode[] {Opcode.INVOKESTATIC, Opcode.INVOKEVIRTUAL, Opcode.INVOKEINTERFACE, Opcode.INVOKESPECIAL};
 
-        public ICommand EditDescriptorCommand { get; }
+        public ICommand EditMethodDescriptorCommand { get; }
 
         public MethodInstructionViewModel() {
-            this.EditDescriptorCommand = new RelayCommand(EditDescriptorAction);
+            this.EditMethodDescriptorCommand = new RelayCommand(EditDescriptorAction);
         }
 
         public void EditDescriptorAction() {

@@ -39,7 +39,12 @@ namespace BCEdit180.Core.CodeEditing.Bytecode.Instructions {
         public void EditValueAction() {
             if (Dialog.TypeEditor.EditConstantDialog(new ConstValueEditorViewModel(this.Value), out ConstValueEditorViewModel editor).Result) {
                 if (editor.CheckEnabledStatesWithDialog()) {
-                    this.Value = editor.GetValue();
+                    if (editor.TryGetValue(out object value, out string error)) {
+                        this.Value = value;
+                    }
+                    else if (error != null) {
+                        Dialog.Message.ShowInformationDialog("Invalid value", error);
+                    }
                 }
             }
         }

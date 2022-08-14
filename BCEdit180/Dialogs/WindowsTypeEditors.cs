@@ -13,6 +13,7 @@ using BCEdit180.Core.Window;
 using BCEdit180.Windows;
 using JavaAsm;
 using JavaAsm.Instructions;
+using TypeDescriptorViewModel = BCEdit180.Core.Editors.TypeDescriptorViewModel;
 
 namespace BCEdit180.Dialogs {
     public class WindowsTypeEditors : ITypeEditors {
@@ -78,7 +79,7 @@ namespace BCEdit180.Dialogs {
                 vm.ReturnType = template.ReturnType;
                 vm.Parameters.Clear();
                 if (template.ArgumentTypes != null) {
-                    vm.Parameters.AddAll(template.ArgumentTypes.Select(x => new TypeDescriptorViewModel() { Descriptor = x }));
+                    vm.Parameters.AddAll(template.ArgumentTypes.Select(x => new TypeDescriptorViewModel() { TypeDescriptor = x }));
                 }
             }
 
@@ -88,7 +89,7 @@ namespace BCEdit180.Dialogs {
                 return Task.FromResult(false);
             }
 
-            descriptor = new MethodDescriptor(vm.ReturnType ?? new TypeDescriptor(PrimitiveType.Void, 0), vm.Parameters.Select(x => x.Descriptor).ToList());
+            descriptor = new MethodDescriptor(vm.ReturnType ?? new TypeDescriptor(PrimitiveType.Void, 0), vm.Parameters.Select(x => x.TypeDescriptor).ToList());
             return Task.FromResult(true);
         }
 

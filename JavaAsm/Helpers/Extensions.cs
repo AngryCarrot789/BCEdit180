@@ -44,6 +44,13 @@ namespace JavaAsm.Helpers {
     }
 
     internal static class Extensions {
+        public static char[] Repeat(this char character, int count) {
+            char[] array = new char[count];
+            for (int i = 0; i < count; ++i)
+                array[i] = character;
+            return array;
+        }
+
         public static bool In<T>(this T value, params T[] values) {
             return values.Contains(value);
         }

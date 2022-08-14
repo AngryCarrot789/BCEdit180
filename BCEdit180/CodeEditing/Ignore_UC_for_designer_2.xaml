@@ -19,6 +19,7 @@
                  TextWrapping="NoWrap" 
                  FontWeight="Bold" 
                  FontFamily="Consolas"  
-                 FontStyle="Italic"/>
+                 FontStyle="Italic" Margin="0,0,100,0"/>
+        <Button Command="{Binding EditMethodDescriptorCommand}" Content="Edit Descriptor" HorizontalAlignment="Right" Width="100"/>
     </Grid>
 </UserControl>

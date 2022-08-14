@@ -46,13 +46,13 @@
             <ListBox ItemsSource="{Binding Parameters}" SelectedItem="{Binding SelectedParameter, UpdateSourceTrigger=PropertyChanged}" HorizontalContentAlignment="Stretch" ScrollViewer.CanContentScroll="True" Margin="-4,-3,-4,-5" Background="{DynamicResource AREghZyBrush.Deep.2.Background.Static}" BorderThickness="0">
                 <ListBox.ItemTemplate>
                     <DataTemplate>
-                        <TextBlock Margin="0 0" Text="{Binding Descriptor, UpdateSourceTrigger=PropertyChanged, Converter={StaticResource TypeConverter}}" Padding="0 2">
+                        <TextBlock Margin="0 0" Text="{Binding TypeDescriptor, UpdateSourceTrigger=PropertyChanged, Converter={StaticResource TypeConverter}}" Padding="0 2">
                             <TextBlock.InputBindings>
-                                <MouseBinding MouseAction="LeftDoubleClick" Command="{Binding EditCommand}"/>
+                                <MouseBinding MouseAction="LeftDoubleClick" Command="{Binding EditFieldDescriptorCommand}"/>
                             </TextBlock.InputBindings>
                             <TextBlock.ContextMenu>
                                 <ContextMenu>
-                                    <MenuItem Header="Edit" Command="{Binding EditCommand}"/>
+                                    <MenuItem Header="Edit" Command="{Binding EditFieldDescriptorCommand}"/>
                                 </ContextMenu>
                             </TextBlock.ContextMenu>
                         </TextBlock>
