@@ -7,7 +7,7 @@ using REghZy.MVVM.Commands;
 using REghZy.MVVM.ViewModels;
 
 namespace BCEdit180.Core.Editors {
-    public class MethodDescEditorViewModel : BaseViewModel {
+    public class MethodDescriptorViewModel : BaseViewModel {
         private TypeDescriptor returnType;
         public TypeDescriptor ReturnType {
             get => this.returnType;
@@ -20,7 +20,7 @@ namespace BCEdit180.Core.Editors {
             set => RaisePropertyChanged(ref this.selectedParameter, value);
         }
 
-        public MethodDescriptor Descriptor => new MethodDescriptor(this.ReturnType, this.Parameters.Select(a => a.Descriptor).ToList());
+        public MethodDescriptor Descriptor => new MethodDescriptor(this.ReturnType, this.Parameters.Select(a => a.TypeDescriptor).ToList());
 
         public ObservableCollection<TypeDescriptorViewModel> Parameters { get; }
 
@@ -30,7 +30,7 @@ namespace BCEdit180.Core.Editors {
 
         public ICommand EditReturnTypeCommand { get; }
 
-        public MethodDescEditorViewModel() {
+        public MethodDescriptorViewModel() {
             this.Parameters = new ObservableCollection<TypeDescriptorViewModel>();
             this.ReturnType = new TypeDescriptor(PrimitiveType.Void, 0);
             this.AddNewParameterCommand = new RelayCommand(AddNewParameter);
@@ -46,7 +46,7 @@ namespace BCEdit180.Core.Editors {
 
         public void AddNewParameter() {
             if (Dialog.TypeEditor.EditTypeDescriptorDialog(new TypeDescriptor(PrimitiveType.Integer, 0), out TypeDescriptor descriptor).Result) {
-                this.Parameters.Add(new TypeDescriptorViewModel() { Descriptor = descriptor });
+                this.Parameters.Add(new TypeDescriptorViewModel() { TypeDescriptor = descriptor });
             }
         }
 
