@@ -55,8 +55,8 @@
         </GroupBox>
         <TextBlock TextWrapping="Wrap" TextAlignment="Center" Padding="2 5" Height="42" VerticalAlignment="Top"><Run Text="Fill in the information below, regarding"/><LineBreak/><Run Text="the method"/><Run Text=" descriptor"/><Run Text=" to "/><Run Text="edit"/></TextBlock>
         <Grid Height="24" VerticalAlignment="Bottom">
-            <Button Command="{Binding ConfirmCommand, RelativeSource={RelativeSource FindAncestor, AncestorType={x:Type base:DialogBase}}}" Focusable="False" Content="Okay" HorizontalAlignment="Right" Margin="0,0,79,0" Width="74" Background="#FF79D43A"/>
-            <Button Command="{Binding CancelCommand, Mode=OneTime}" Focusable="False" Content="Cancel" HorizontalAlignment="Right" Width="74"/>
+            <Button Command="{Binding ConfirmCommand, RelativeSource={RelativeSource FindAncestor, AncestorType={x:Type base:DialogBase}}, Mode=OneTime}" Focusable="False" Content="Okay" HorizontalAlignment="Right" Margin="0,0,79,0" Width="74" Background="#FF79D43A"/>
+            <Button Command="{Binding CancelCommand, RelativeSource={RelativeSource FindAncestor, AncestorType={x:Type base:DialogBase}}, Mode=OneTime}" Focusable="False" Content="Cancel" HorizontalAlignment="Right" Width="74"/>
         </Grid>
     </Grid>
 </base:DialogBase>

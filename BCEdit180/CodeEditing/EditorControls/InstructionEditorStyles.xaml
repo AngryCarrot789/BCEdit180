@@ -12,6 +12,7 @@
                     xmlns:viewers="clr-namespace:BCEdit180.CodeEditing.Viewers"
                     xmlns:codeEdit="clr-namespace:BCEdit180.Core.Editors;assembly=BCEdit180.Core"
                     xmlns:attachedProperties="clr-namespace:BCEdit180.AttachedProperties"
+                    xmlns:desc="clr-namespace:BCEdit180.Core.CodeEditing.Descriptors;assembly=BCEdit180.Core"
                     mc:Ignorable="d">
     <converters:TypeDescriptorToStringConverter x:Key="TypeDescriptorConverter"/>
     <!-- Visual studio might give some errors regarding d:DataContext, but i used
@@ -103,7 +104,7 @@
                                 <DataTemplate DataType="{x:Type codeEdit:MethodDescriptorViewModel}">
                                     <viewers:MethodDescriptorControl DataContext="{Binding}"/>
                                 </DataTemplate>
-                                <DataTemplate DataType="{x:Type codeEdit:TypeDescriptorViewModel}">
+                                <DataTemplate DataType="{x:Type desc:TypeDescViewModel}">
                                     <viewers:TypeDescriptorControl DataContext="{Binding}"/>
                                 </DataTemplate>
                                 <DataTemplate DataType="{x:Type codeEdit:HandleViewModel}">

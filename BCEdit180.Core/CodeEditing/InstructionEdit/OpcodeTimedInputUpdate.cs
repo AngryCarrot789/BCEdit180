@@ -50,8 +50,8 @@ namespace BCEdit180.Core.CodeEditing.InstructionEdit {
             return (int) opcode == intSearch || opcode.ToString().ToLower().Contains(search);
         }
 
-        public override void OnSearchReset() {
-            base.OnSearchReset();
+        public override void OnInputReset() {
+            base.OnInputReset();
             this.ChangeInstruction.ActualOpcodeList.Clear();
             this.ChangeInstruction.ActualOpcodeList.AddRange(this.ChangeInstruction.AvailableOpCodes);
             this.ChangeInstruction.SelectedIndex = 0;

@@ -11,8 +11,8 @@ namespace BCEdit180.Converters {
                 return value;
             }
 
-            if (value is Enum) {
-                return new StringBuilder().Append("0x").Append(((Enum) value).ToString("X")).Append(" (").Append(value.ToString()).Append(")").ToString();
+            if (value is Enum e) {
+                return new StringBuilder().Append("0x").Append(e.ToString("X")).Append(" (").Append(e).Append(")").ToString();
             }
             else {
                 return "[Unknown type: " + value + "]";

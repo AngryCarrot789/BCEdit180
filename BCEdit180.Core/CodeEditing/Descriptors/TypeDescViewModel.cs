@@ -1,11 +1,10 @@
 using System.Windows.Input;
 using BCEdit180.Core.Dialog;
-using BCEdit180.Core.Window;
 using JavaAsm;
 using REghZy.MVVM.Commands;
 using REghZy.MVVM.ViewModels;
 
-namespace BCEdit180.Core.Editors {
+namespace BCEdit180.Core.CodeEditing.Descriptors {
     public class TypeDescViewModel : BaseViewModel {
         private TypeDescriptor typeDescriptor;
         public TypeDescriptor TypeDescriptor {

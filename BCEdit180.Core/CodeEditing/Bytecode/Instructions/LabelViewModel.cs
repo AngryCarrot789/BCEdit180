@@ -19,7 +19,7 @@ namespace BCEdit180.Core.CodeEditing.Bytecode.Instructions {
             }
         }
 
-        public Label Label => (Label) base.Node;
+        public Label Label => (Label) base.Instruction;
 
         public override void Load(Instruction instruction) {
             base.Load(instruction);

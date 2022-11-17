@@ -1,4 +1,4 @@
-﻿<windows:WindowModal x:Class="BCEdit180.Windows.ConstValueEditorWindow"
+﻿<base:DialogBase x:Class="BCEdit180.Windows.ConstValueEditorWindow"
         xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
         xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
@@ -6,6 +6,7 @@
         xmlns:windows="clr-namespace:BCEdit180.Windows"
         xmlns:const="clr-namespace:BCEdit180.Core.Editors.Const;assembly=BCEdit180.Core"
         xmlns:converters="clr-namespace:BCEdit180.Converters"
+        xmlns:base="clr-namespace:BCEdit180.Windows.Base"
         d:DataContext="{d:DesignInstance Type=const:ConstValueEditorViewModel}"
         mc:Ignorable="d"
         Title="Action" Height="357" Width="500"
@@ -67,8 +68,8 @@
             </TabItem>
         </TabControl>
         <Grid Height="24" VerticalAlignment="Bottom">
-            <Button Command="{Binding ConfirmCommand, RelativeSource={RelativeSource FindAncestor, AncestorType={x:Type windows:WindowModal}}}" Focusable="False" Content="Okay" HorizontalAlignment="Right" Margin="0,0,79,0" Width="74" Background="#FF79D43A"/>
-            <Button Command="{Binding CancelCommand, RelativeSource={RelativeSource FindAncestor, AncestorType={x:Type windows:WindowModal}}}" Focusable="False" Content="Cancel" HorizontalAlignment="Right" Width="74"/>
+            <Button Command="{Binding ConfirmCommand, RelativeSource={RelativeSource FindAncestor, AncestorType={x:Type base:DialogBase}}}" Focusable="False" Content="Okay" HorizontalAlignment="Right" Margin="0,0,79,0" Width="74" Background="#FF79D43A"/>
+            <Button Command="{Binding CancelCommand, RelativeSource={RelativeSource FindAncestor, AncestorType={x:Type base:DialogBase}}}" Focusable="False" Content="Cancel" HorizontalAlignment="Right" Width="74"/>
         </Grid>
     </Grid>
-</windows:WindowModal>
+</base:DialogBase>

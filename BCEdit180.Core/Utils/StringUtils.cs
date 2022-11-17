@@ -41,13 +41,11 @@ namespace BCEdit180.Core.Utils {
         }
 
         public static int CountCharsAtStart(this string str, char character, int startIndex = 0) {
-            for (int i = startIndex; i < str.Length; i++) {
-                if (str[i] != character) {
-                    return i;
-                }
+            int j = startIndex, len = str.Length;
+            while (j < len && str[j] == character) {
+                ++j;
             }
-
-            return str.Length - startIndex;
+            return j - startIndex;
         }
 
         public static string GetTypeName(string className) {

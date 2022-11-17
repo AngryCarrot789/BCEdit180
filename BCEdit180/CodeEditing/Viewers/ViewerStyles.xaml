@@ -11,6 +11,7 @@
                     xmlns:local="clr-namespace:BCEdit180.CodeEditing.Viewers"
                     xmlns:core="clr-namespace:BCEdit180.Core;assembly=BCEdit180.Core"
                     xmlns:editors1="clr-namespace:BCEdit180.Core.Editors;assembly=BCEdit180.Core"
+                    xmlns:desc="clr-namespace:BCEdit180.Core.CodeEditing.Descriptors;assembly=BCEdit180.Core"
                     mc:Ignorable="d">
     <converters:TypeDescriptorToStringConverter x:Key="TypeConverter"/>
 
@@ -42,7 +43,7 @@
         <Setter Property="Template">
             <Setter.Value>
                 <ControlTemplate>
-                    <Grid d:DataContext="{d:DesignInstance editors1:TypeDescriptorViewModel}">
+                    <Grid d:DataContext="{d:DesignInstance desc:TypeDescViewModel}">
                         <Label Margin="0,0,100,0" MinHeight="26" VerticalContentAlignment="Center" BorderThickness="0" Padding="5" HorizontalAlignment="Stretch" VerticalAlignment="Stretch">
                             <TextBlock Foreground="{StaticResource FieldDescriptor}"
                                        Text="{Binding TypeDescriptor, UpdateSourceTrigger=PropertyChanged, Converter={StaticResource TypeConverter}}"

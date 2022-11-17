@@ -1,5 +1,6 @@
 using System.Collections.Generic;
 using System.Windows.Input;
+using BCEdit180.Core.Dialog;
 using BCEdit180.Core.Window;
 using JavaAsm;
 using JavaAsm.Instructions;
@@ -35,7 +36,7 @@ namespace BCEdit180.Core.CodeEditing.Bytecode.Instructions {
         }
 
         public void EditDescriptorAction() {
-            if (Dialog.TypeEditor.EditTypeDescriptorDialog(this.FieldDescriptor, out TypeDescriptor descriptor).Result) {
+            if (DialogUtils.EditType(this.FieldDescriptor, out TypeDescriptor descriptor)) {
                 this.FieldDescriptor = descriptor;
             }
         }

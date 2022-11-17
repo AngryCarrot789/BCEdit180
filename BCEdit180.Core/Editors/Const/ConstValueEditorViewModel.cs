@@ -1,5 +1,6 @@
 using System;
 using System.Windows.Input;
+using BCEdit180.Core.Dialog;
 using BCEdit180.Core.Window;
 using JavaAsm;
 using JavaAsm.Instructions.Types;
@@ -7,9 +8,8 @@ using REghZy.MVVM.Commands;
 using REghZy.MVVM.ViewModels;
 
 namespace BCEdit180.Core.Editors.Const {
-    public class ConstValueEditorViewModel : BaseViewModel {
+    public class ConstValueEditorViewModel : BaseDialogViewModel {
         private ConstType type;
-
         public ConstType Type {
             get => this.type;
             set => RaisePropertyChanged(ref this.type, value);
@@ -107,13 +107,13 @@ namespace BCEdit180.Core.Editors.Const {
         }
 
         public void EditClassNameAction() {
-            if (Dialog.TypeEditor.EditTypeDescriptorDialog(new TypeDescriptor(this.ValueClass ?? new ClassName(""), 0), out TypeDescriptor descriptor, true, false).Result) {
+            if (DialogUtils.EditType(new TypeDescriptor(this.ValueClass ?? new ClassName(""), 0), out TypeDescriptor descriptor, true, false)) {
                 this.ValueClass = descriptor.ClassName;
             }
         }
 
         public void EditMethodDescriptorAction() {
-            if (Dialog.TypeEditor.EditMethodDescriptorDialog(this.ValueMethodDescriptor, out MethodDescriptor typeDesc).Result) {
+            if (DialogUtils.EditMethodDesc(this.ValueMethodDescriptor, out MethodDescriptor typeDesc)) {
                 this.ValueMethodDescriptor = typeDesc;
             }
         }
@@ -177,7 +177,7 @@ namespace BCEdit180.Core.Editors.Const {
                 return true;
             }
 
-            Dialog.Message.ShowInformationDialog("This const value type is disabled", $"A constant value of type {this.Type} cannot be used. You shouldn't have been able to select this, so this is a bug :(");
+            Dialogs.Message.ShowMessage("This const value type is disabled", $"A constant value of type {this.Type} cannot be used. You shouldn't have been able to select this, so this is a bug :(");
             return false;
         }
 

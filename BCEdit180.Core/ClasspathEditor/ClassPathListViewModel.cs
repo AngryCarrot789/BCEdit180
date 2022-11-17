@@ -40,7 +40,6 @@ namespace BCEdit180.Core.ClasspathEditor {
             this.AddFolderCommand = new RelayCommand(AddFolderAction);
             this.GenerateListCommand = new RelayCommand(GenerateClasspathList);
             this.GenerateStringCommand = new RelayCommand(GenerateClasspathString);
-            this.ShowEditorCommand = new RelayCommand(() => ServiceManager.GetService<IModalManager>().ShowDialog(this, out ClassPathListViewModel _));
         }
 
         public void AddFileAction() {

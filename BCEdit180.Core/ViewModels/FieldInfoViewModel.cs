@@ -2,6 +2,7 @@
 using System.Linq;
 using System.Windows.Input;
 using BCEdit180.Core.Annotations;
+using BCEdit180.Core.Dialog;
 using BCEdit180.Core.Editors.Const;
 using BCEdit180.Core.Messaging;
 using BCEdit180.Core.Messaging.Messages.ErrorReporting;
@@ -97,13 +98,13 @@ namespace BCEdit180.Core.ViewModels {
         }
 
         public void EditAccessAction() {
-            if (Dialog.AccessEditor.EditFieldAccess(this.Access, out FieldAccessModifiers access).Result) {
-                this.Access = access;
+            if (DialogUtils.ShowFieldAcccessDialog(this.Access, out FieldAccessModifiers modifiers)) {
+                this.Access = modifiers;
             }
         }
 
         public void EditDescriptorAction() {
-            if (Dialog.TypeEditor.EditTypeDescriptorDialog(this.FieldDescriptor, out TypeDescriptor descriptor).Result) {
+            if (DialogUtils.EditType(this.FieldDescriptor, out TypeDescriptor descriptor)) {
                 this.FieldDescriptor = descriptor;
             }
         }
@@ -114,13 +115,13 @@ namespace BCEdit180.Core.ViewModels {
             vm.IsEnabledHandle = false;
             vm.IsEnabledClass = false;
 
-            if (Dialog.TypeEditor.EditConstantDialog(vm, out ConstValueEditorViewModel editor).Result) {
+            if (DialogUtils.EditConstantDialog(vm, out ConstValueEditorViewModel editor)) {
                 if (editor.CheckEnabledStatesWithDialog()) {
                     if (editor.TryGetValue(out object value, out string error)) {
                         this.ConstantValue = value;
                     }
                     else if (error != null) {
-                        Dialog.Message.ShowInformationDialog("Invalid value", error);
+                        Dialogs.Message.ShowMessage("Invalid value", error);
                     }
                 }
             }

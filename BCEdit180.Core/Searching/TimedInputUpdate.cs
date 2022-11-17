@@ -5,7 +5,7 @@ using REghZy.MVVM.Commands;
 using REghZy.MVVM.ViewModels;
 
 namespace BCEdit180.Core.Searching {
-    public class SearchViewModel : BaseViewModel, IDisposable {
+    public class TimedInputUpdate : BaseViewModel, IDisposable {
         private string inputText;
         public string InputText {
             get => this.inputText;
@@ -15,23 +15,23 @@ namespace BCEdit180.Core.Searching {
                     this.IdleEventService.OnInput();
                 }
                 else {
-                    OnSearchReset();
+                    OnInputReset();
                 }
             }
         }
 
-        public ExtendedRelayCommand SearchCommand { get; }
+        public ExtendedRelayCommand TriggerCommand { get; }
 
-        public ICommand ClearSearchCommand { get; }
+        public ICommand ClearInputCommand { get; }
 
         public IdleEventService IdleEventService { get; }
 
         public bool WasLastSearchForced { get; private set; }
 
-        public SearchViewModel() {
+        public TimedInputUpdate() {
             this.IdleEventService = new IdleEventService();
-            this.SearchCommand = new ExtendedRelayCommand(ForceSearchAction, CanSearchForInput);
-            this.ClearSearchCommand = new RelayCommand(ClearSearchInputAction);
+            this.TriggerCommand = new ExtendedRelayCommand(ForceSearchAction, CanSearchForInput);
+            this.ClearInputCommand = new RelayCommand(ClearSearchInputAction);
         }
 
         public virtual void ForceSearchAction() {
@@ -55,9 +55,9 @@ namespace BCEdit180.Core.Searching {
         /// <summary>
         /// Called when the search is no longer active; reset everything to it's original state
         /// </summary>
-        public virtual void OnSearchReset() {
+        public virtual void OnInputReset() {
             this.IdleEventService.CanFireNextTick = false;
-            this.SearchCommand.RaiseCanExecuteChanged();
+            this.TriggerCommand.RaiseCanExecuteChanged();
         }
 
         public void Dispose() {

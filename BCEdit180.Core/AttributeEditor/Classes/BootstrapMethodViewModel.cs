@@ -1,6 +1,7 @@
 using System;
 using System.Collections.ObjectModel;
 using System.Windows.Input;
+using BCEdit180.Core.Dialog;
 using BCEdit180.Core.Window;
 using JavaAsm;
 using JavaAsm.Instructions.Types;
@@ -45,7 +46,7 @@ namespace BCEdit180.Core.AttributeEditor.Classes {
                     case ReferenceKindType.GetStatic: break;
                     case ReferenceKindType.PutField: break;
                     case ReferenceKindType.PutStatic:
-                        if (Dialog.TypeEditor.EditTypeDescriptorDialog(this.BootstrapMethodDescriptor as TypeDescriptor, out TypeDescriptor typeDesc).Result) {
+                        if (DialogUtils.EditType(this.BootstrapMethodDescriptor as TypeDescriptor, out TypeDescriptor typeDesc)) {
                             this.BootstrapMethodDescriptor = typeDesc;
                         }
                         break;
@@ -54,7 +55,7 @@ namespace BCEdit180.Core.AttributeEditor.Classes {
                     case ReferenceKindType.InvokeSpecial: break;
                     case ReferenceKindType.NewInvokeSpecial: break;
                     case ReferenceKindType.InvokeReference:
-                        if (Dialog.TypeEditor.EditMethodDescriptorDialog(this.BootstrapMethodDescriptor as MethodDescriptor, out MethodDescriptor methodDesc).Result) {
+                        if (DialogUtils.EditMethodDesc(this.BootstrapMethodDescriptor as MethodDescriptor, out MethodDescriptor methodDesc)) {
                             this.BootstrapMethodDescriptor = methodDesc;
                         }
                         break;

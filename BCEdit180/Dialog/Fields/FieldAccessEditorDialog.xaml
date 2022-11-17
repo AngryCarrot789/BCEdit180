@@ -1,12 +1,32 @@
-﻿<Window x:Class="BCEdit180.Dialog.Fields.FieldAccessEditorDialog"
-        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
-        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
-        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
-        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
-        xmlns:local="clr-namespace:BCEdit180.Dialog.Fields"
-        mc:Ignorable="d"
-        Title="FieldAccessEditorDialog" Height="450" Width="800">
-    <Grid>
-        
+﻿<base:DialogBase x:Class="BCEdit180.Dialog.Fields.FieldAccessEditorDialog"
+                 xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+                 xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+                 xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+                 xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+                 xmlns:base="clr-namespace:BCEdit180.Windows.Base"
+                 xmlns:fields="clr-namespace:BCEdit180.Core.Dialog.Fields;assembly=BCEdit180.Core"
+                 mc:Ignorable="d"
+                 Title="Edit Class Access" Height="410" Width="250"
+                 Style="{DynamicResource CustomWindowBaseStyle}"
+                 ResizeMode="NoResize"
+                 Background="{DynamicResource AREghZyBrush.Deep.3.Background.Static}"
+                 d:DataContext="{d:DesignInstance fields:FieldAccessEditorViewModel}">
+    <Grid Background="{DynamicResource AREghZyBrush.Deep.3.Background.Static}">
+        <Border Margin="10,10,10,44" BorderThickness="1" Background="{DynamicResource AREghZyBrush.Deep.2.Background.Static}" BorderBrush="{DynamicResource AREghZyBrush.Primary.1.Border.Static}">
+            <StackPanel Margin="5">
+                <CheckBox IsChecked="{Binding FlagPublic, UpdateSourceTrigger=PropertyChanged}" Content="Public" VerticalAlignment="Top" Margin="0 0 0 1" Height="20"/>
+                <CheckBox IsChecked="{Binding FlagProtected, UpdateSourceTrigger=PropertyChanged}" Content="Protected" VerticalAlignment="Top" Margin="0 0 0 1" Height="20"/>
+                <CheckBox IsChecked="{Binding FlagPrivate, UpdateSourceTrigger=PropertyChanged}" Content="Private" VerticalAlignment="Top" Margin="0 0 0 1" Height="20"/>
+                <Separator/>
+                <CheckBox IsChecked="{Binding FlagStatic, UpdateSourceTrigger=PropertyChanged}" Content="Static" VerticalAlignment="Top" Margin="0 0 0 1" Height="20"/>
+                <Separator/>
+                <CheckBox IsChecked="{Binding FlagTransient, UpdateSourceTrigger=PropertyChanged}"  Content="Transient" VerticalAlignment="Top" Margin="0 0 0 1" Height="20"/>
+                <CheckBox IsChecked="{Binding FlagVolatile, UpdateSourceTrigger=PropertyChanged}"   Content="Volatile" VerticalAlignment="Top" Margin="0 0 0 1" Height="20"/>
+                <CheckBox IsChecked="{Binding FlagFinal, UpdateSourceTrigger=PropertyChanged}"      Content="Final" VerticalAlignment="Top" Margin="0 0 0 1" Height="20"/>
+                <CheckBox IsChecked="{Binding FlagSynthetic, UpdateSourceTrigger=PropertyChanged}"  Content="Synthetic" VerticalAlignment="Top" Margin="0 0 0 1" Height="20"/>
+            </StackPanel>
+        </Border>
+        <Button Command="{Binding ConfirmCommand, RelativeSource={RelativeSource FindAncestor, AncestorType={x:Type base:DialogBase}}}" Focusable="False" Content="Okay" HorizontalAlignment="Right" Margin="0,0,89,10" VerticalAlignment="Bottom" Width="74" Background="#FF79D43A" Height="24"/>
+        <Button Command="{Binding CancelCommand, RelativeSource={RelativeSource FindAncestor, AncestorType={x:Type base:DialogBase}}}" Focusable="False" Content="Cancel" HorizontalAlignment="Right" Margin="0,0,10,10" VerticalAlignment="Bottom" Width="74" Height="24"/>
     </Grid>
-</Window>
+</base:DialogBase>

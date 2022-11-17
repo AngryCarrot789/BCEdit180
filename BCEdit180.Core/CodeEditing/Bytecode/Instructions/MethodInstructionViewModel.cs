@@ -1,5 +1,7 @@
 using System.Collections.Generic;
 using System.Windows.Input;
+using BCEdit180.Core.Dialog;
+using BCEdit180.Core.Editors;
 using BCEdit180.Core.Window;
 using JavaAsm;
 using JavaAsm.Instructions;
@@ -34,9 +36,9 @@ namespace BCEdit180.Core.CodeEditing.Bytecode.Instructions {
             this.EditMethodDescriptorCommand = new RelayCommand(EditDescriptorAction);
         }
 
-        public void EditDescriptorAction() {
-            if (Dialog.TypeEditor.EditMethodDescriptorDialog(this.MethodDescriptor, out MethodDescriptor descriptor).Result) {
-                this.MethodDescriptor = descriptor;
+        public async void EditDescriptorAction() {
+            if (DialogUtils.EditMethodDesc(this.MethodDescriptor, out MethodDescriptor desc)) {
+                this.MethodDescriptor = desc;
             }
         }
 

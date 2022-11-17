@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Linq;
 using System.Windows.Input;
+using BCEdit180.Core.Dialog;
 using BCEdit180.Core.Utils;
 using BCEdit180.Core.Window;
 using JavaAsm;
@@ -11,38 +12,48 @@ using REghZy.MVVM.ViewModels;
 
 namespace BCEdit180.Core.ViewModels {
     public class ClassInfoViewModel : BaseViewModel, ISaveable<ClassNode> {
-        private int minorVersion;
-        private ClassVersion majorVersion;
-        private ClassAccessModifiers accessFlags;
-        private string className;
-        private string superName;
-        private int attributeCount;
-
         public ClassViewModel Class { get; }
 
+        private int minorVersion;
         public int MinorVersion {
             get => this.minorVersion;
             set => RaisePropertyChanged(ref this.minorVersion, value);
         }
 
+        private ClassVersion majorVersion;
         public ClassVersion MajorVersion {
             get => this.majorVersion;
             set => RaisePropertyChanged(ref this.majorVersion, value);
         }
 
+        private ClassAccessModifiers accessFlags;
         public ClassAccessModifiers AccessFlags {
             get => this.accessFlags;
             set => RaisePropertyChanged(ref this.accessFlags, value);
         }
 
+        private string className;
         public string ClassName {
             get => this.className;
             set => RaisePropertyChanged(ref this.className, value);
         }
 
+        private string superName;
         public string SuperName {
             get => this.superName;
             set => RaisePropertyChanged(ref this.superName, value);
+        }
+
+        private string signature;
+        public string Signature {
+            get => this.signature;
+            set => RaisePropertyChanged(ref this.signature, value);
+        }
+        
+        private string sourceDebugInfo;
+        public string SourceDebugInfo {
+            get => this.sourceDebugInfo;
+            set => RaisePropertyChanged(ref this.sourceDebugInfo, value);
         }
 
         public ObservableCollection<ReferenceObjectViewModel<string>> Interfaces { get; }
@@ -65,7 +76,7 @@ namespace BCEdit180.Core.ViewModels {
             this.EditAccessCommand = new RelayCommand(EditAccess);
             this.AddInterfaceCommand = new RelayCommand(AddInterfaceAction);
             this.RemoveInterfaceCommand = new RelayCommand(RemoveSelectedInterfaceAction);
-            this.RemoveItemCommand = new RelayCommandParam<ReferenceObjectViewModel<string>>(RemoveInterfaceAction);
+            this.RemoveItemCommand = new RelayCommandParam<ReferenceObjectViewModel<string>>(this.RemoveInterfaceAction);
         }
 
         public void RemoveInterfaceAction(ReferenceObjectViewModel<string> obj) {
@@ -73,7 +84,7 @@ namespace BCEdit180.Core.ViewModels {
         }
 
         public void AddInterfaceAction() {
-            if (Dialog.TypeEditor.EditTypeDescriptorDialog(out TypeDescriptor desc, true, false).Result) {
+            if (DialogUtils.EditType(out TypeDescriptor desc, false, true)) {
                 if (desc.ClassName != null && desc.ClassName.Name != null) {
                     this.Interfaces.Add(new ReferenceObjectViewModel<string>(desc.ClassName.Name));
                 }
@@ -87,8 +98,8 @@ namespace BCEdit180.Core.ViewModels {
         }
 
         public void EditAccess() {
-            if (Dialog.AccessEditor.EditClassAccess(this.AccessFlags | ClassAccessModifiers.Super, out ClassAccessModifiers access).Result) {
-                this.AccessFlags = access;
+            if (DialogUtils.ShowClassAcccessDialog(this.AccessFlags | ClassAccessModifiers.Super, out ClassAccessModifiers modifiers)) {
+                this.AccessFlags = modifiers;
             }
         }
 
@@ -98,6 +109,8 @@ namespace BCEdit180.Core.ViewModels {
             this.AccessFlags = node.Access;
             this.ClassName = node.Name.Name;
             this.SuperName = node.SuperName.Name;
+            this.Signature = node.Signature;
+            this.SourceDebugInfo = node.SourceDebugExtension ?? "";
             this.Interfaces.Clear();
             this.Interfaces.AddAll(node.Interfaces.Select(c => new ReferenceObjectViewModel<string>(c.Name)));
         }
@@ -108,6 +121,8 @@ namespace BCEdit180.Core.ViewModels {
             node.Access = this.AccessFlags;
             node.Name = new ClassName(this.ClassName);
             node.SuperName = new ClassName(this.SuperName);
+            node.Signature = this.Signature;
+            node.SourceDebugExtension = string.IsNullOrWhiteSpace(this.SourceDebugInfo) ? null : this.SourceDebugInfo;
             node.Interfaces = new List<ClassName>(this.Interfaces.Select(c => new ClassName(c.Value)));
         }
     }

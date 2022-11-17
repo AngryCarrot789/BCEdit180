@@ -1,4 +1,5 @@
 using System.Windows.Input;
+using BCEdit180.Core.Dialog;
 using BCEdit180.Core.Editors.Const;
 using BCEdit180.Core.Window;
 using JavaAsm;
@@ -6,7 +7,7 @@ using REghZy.MVVM.Commands;
 using REghZy.MVVM.ViewModels;
 
 namespace BCEdit180.Core.Editors {
-    public class FieldEditorViewModel : BaseViewModel {
+    public class FieldEditorViewModel : BaseDialogViewModel {
         private string fieldName;
         public string FieldName {
             get => this.fieldName;
@@ -47,14 +48,14 @@ namespace BCEdit180.Core.Editors {
         }
 
         public void EditDescriptorAction() {
-            if (Dialog.TypeEditor.EditTypeDescriptorDialog(this.Descriptor, out TypeDescriptor descriptor).Result) {
+            if (DialogUtils.EditType(this.Descriptor, out TypeDescriptor descriptor)) {
                 this.Descriptor = descriptor;
             }
         }
 
         public void EditAccessAction() {
-            if (Dialog.AccessEditor.EditFieldAccess(this.Access, out FieldAccessModifiers access).Result) {
-                this.Access = access;
+            if (DialogUtils.ShowFieldAcccessDialog(this.Access, out FieldAccessModifiers modifiers)) {
+                this.Access = modifiers;
             }
         }
 
@@ -64,13 +65,13 @@ namespace BCEdit180.Core.Editors {
             vm.IsEnabledHandle = false;
             vm.IsEnabledClass = false;
 
-            if (Dialog.TypeEditor.EditConstantDialog(vm, out ConstValueEditorViewModel editor).Result) {
+            if (DialogUtils.EditConstantDialog(vm, out ConstValueEditorViewModel editor)) {
                 if (editor.CheckEnabledStatesWithDialog()) {
                     if (editor.TryGetValue(out object value, out string error)) {
                         this.ConstantValue = value;
                     }
                     else if (error != null) {
-                        Dialog.Message.ShowInformationDialog("Invalid value", error);
+                        Dialogs.Message.ShowMessage("Invalid value", error);
                     }
                 }
             }

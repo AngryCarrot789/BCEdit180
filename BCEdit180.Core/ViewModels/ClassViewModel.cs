@@ -124,7 +124,7 @@ namespace BCEdit180.Core.ViewModels {
                 ReadClassFileAndShowDialog(this.FilePath);
             }
             else if (this.FilePath != null) {
-                Dialog.Message.ShowInformationDialog("File no longer exists", "Cannot reload the file, because the file no longer exists: " + this.FilePath);
+                Dialogs.Message.ShowMessage("File no longer exists", "Cannot reload the file, because the file no longer exists: " + this.FilePath);
             }
         }
 
@@ -137,6 +137,7 @@ namespace BCEdit180.Core.ViewModels {
             MessageDispatcher.Publish(new AddMessage() { Message = "Reading file..."});
             using (BufferedStream input = new BufferedStream(File.OpenRead(path))) {
                 this.Node = ClassFile.ParseClass(input);
+                // Dialogs.Message.ShowMessage("Loaded", "Loaded file: " + this.FilePath);
             }
 
             this.FilePath = path;
@@ -146,66 +147,66 @@ namespace BCEdit180.Core.ViewModels {
 
             #else
 
-            try {
-                this.IsBusy = true;
-                if (showProgressDialog) {
-                    ActionProgressViewModel vm = actionProgress ?? Dialog.Message.ShowProgressWindow("Loading class file", "Reading file " + path);
-                    Task.Run(async () => {
-                        await Task.Delay(100);
-                        await AppProxy.Proxy.DispatchInvokeAsync(() => {
-                            if (File.Exists(path)) {
-                                try {
-                                    using (BufferedStream input = new BufferedStream(File.OpenRead(path), 8192)) {
-                                        this.Node = ClassFile.ParseClass(input);
-                                    }
+            this.IsBusy = true;
+            if (showProgressDialog) {
+                ActionProgressViewModel vm = actionProgress ?? Dialogs.Message.ShowProgressWindow("Loading class file", "Reading file " + path);
+                Task.Run(async () => {
+                    await Task.Delay(100);
+                    await AppProxy.Proxy.DispatchInvokeAsync(() => {
+                        if (File.Exists(path)) {
+                            try {
+                                using (BufferedStream input = new BufferedStream(File.OpenRead(path), 8192)) {
+                                    this.Node = ClassFile.ParseClass(input);
                                 }
-                                catch (Exception e) {
-                                    vm.Description = "Fail: " + e.Message;
-                                    Dialog.Message.ShowWarningDialog("Error reading classfile", "Error while parsing class from file: " + e.Message + "\n" + e);
+                            }
+                            catch (Exception e) {
+                                vm.Description = "Fail: " + e.Message;
+                                Dialogs.Message.ShowWarning("Error reading classfile", "Error while parsing class from file: " + e.Message + "\n" + e);
+                                if (closeDialog) {
+                                    vm.CloseDialog();
+                                }
+
+                                this.IsBusy = false;
+                                return;
+                            }
+
+                            vm.Description = "Parsing classfile... ";
+                            Task.Run(async () => {
+                                await Task.Delay(100);
+                                await AppProxy.Proxy.DispatchInvokeAsync(() => {
+                                    this.FilePath = path;
+                                    try {
+                                        Load(this.Node);
+                                    }
+                                    catch (Exception e) {
+                                        vm.Description = "Fail: " + e.Message;
+                                        Dialogs.Message.ShowWarning("Error loading class", "Error while loading class from ClassNode: " + e.Message + "\n" + e);
+                                        if (closeDialog) {
+                                            vm.CloseDialog();
+                                        }
+
+                                        this.IsBusy = false;
+                                        return;
+                                    }
+
                                     if (closeDialog) {
                                         vm.CloseDialog();
                                     }
 
-                                    return;
-                                }
-
-                                vm.Description = "Parsing classfile... ";
-                                Task.Run(async () => {
-                                    await Task.Delay(100);
-                                    await AppProxy.Proxy.DispatchInvokeAsync(() => {
-                                        this.FilePath = path;
-                                        try {
-                                            Load(this.Node);
-                                        }
-                                        catch (Exception e) {
-                                            vm.Description = "Fail: " + e.Message;
-                                            Dialog.Message.ShowWarningDialog("Error loading class", "Error while loading class from ClassNode: " + e.Message + "\n" + e);
-                                            if (closeDialog) {
-                                                vm.CloseDialog();
-                                            }
-                                            return;
-                                        }
-
-                                        if (closeDialog) {
-                                            vm.CloseDialog();
-                                        }
-                                    });
+                                    this.IsBusy = false;
                                 });
-                            }
-                        });
+                            });
+                        }
                     });
-                }
-                else {
-                    using (BufferedStream input = new BufferedStream(File.OpenRead(path))) {
-                        this.Node = ClassFile.ParseClass(input);
-                    }
-
-                    this.FilePath = path;
-                    Load(this.Node);
-                }
+                });
             }
-            finally {
-                this.IsBusy = false;
+            else {
+                using (BufferedStream input = new BufferedStream(File.OpenRead(path))) {
+                    this.Node = ClassFile.ParseClass(input);
+                }
+
+                this.FilePath = path;
+                Load(this.Node);
             }
 
             #endif
@@ -292,7 +293,7 @@ namespace BCEdit180.Core.ViewModels {
                 }
             }
             catch (Exception e) {
-                Dialog.Message.ShowWarningDialog("Failed to save", "Failed to save file: " + this.FilePath + "\n" + e);
+                Dialogs.Message.ShowWarning("Failed to save", "Failed to save file: " + this.FilePath + "\n" + e);
             }
             finally {
                 this.IsBusy = false;
@@ -305,8 +306,8 @@ namespace BCEdit180.Core.ViewModels {
             this.IsBusy = true;
             try {
                 MessageDispatcher.Publish(new AddMessage("Selecting file from dialog..."));
-                if (Dialog.File.OpenSaveDialog("Save a class file", "ClassFile|*.class|All|*.*", out string path).Result) {
-                    if (!File.Exists(path) || Dialog.Message.ConfirmOkCancel("Overwrite file", "File already exists. Overwrite " + path + "?", true).Result) {
+                if (Dialogs.File.OpenSaveDialog("Save a class file", "ClassFile|*.class|All|*.*", out string path).Result) {
+                    if (!File.Exists(path) || Dialogs.Message.ConfirmOkCancel("Overwrite file", "File already exists. Overwrite " + path + "?", true)) {
                         this.FilePath = path;
 
                         MessageDispatcher.Publish(new AddMessage("Saving file..."));
@@ -330,7 +331,7 @@ namespace BCEdit180.Core.ViewModels {
             }
             catch (Exception e) {
                 MessageDispatcher.Publish(new AddMessage("Failed to save file"));
-                Dialog.Message.ShowWarningDialog("Failed to save", "Failed to save file: " + e);
+                Dialogs.Message.ShowWarning("Failed to save", "Failed to save file: " + e);
             }
             finally {
                 this.IsBusy = false;
@@ -358,7 +359,7 @@ namespace BCEdit180.Core.ViewModels {
                 Save(this.Node);
             }
             catch (Exception e) {
-                Dialog.Message.ShowWarningDialog("Failed to process class", "Failed to process/save class before writing to file: " + this.FilePath + "\n" + e);
+                Dialogs.Message.ShowWarning("Failed to process class", "Failed to process/save class before writing to file: " + this.FilePath + "\n" + e);
                 return;
             }
 
@@ -368,7 +369,7 @@ namespace BCEdit180.Core.ViewModels {
                 }
             }
             catch (Exception e) {
-                Dialog.Message.ShowWarningDialog("Failed to write to file", "Failed to write class to file: " + this.FilePath + "\n" + e);
+                Dialogs.Message.ShowWarning("Failed to write to file", "Failed to write class to file: " + this.FilePath + "\n" + e);
             }
 
             #endif

@@ -54,5 +54,12 @@ namespace BCEdit180.Windows.Base {
 
             return tcs.Task;
         }
+
+        public bool ShowDialog<T>(T model) where T : BaseDialogViewModel {
+            this.Owner = Application.Current.MainWindow;
+            this.DataContext = model;
+            ShowDialog();
+            return this.DialogResult == true;
+        }
     }
 }

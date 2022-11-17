@@ -1,5 +1,4 @@
 using System;
-using System.Threading;
 using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Threading;
@@ -11,11 +10,32 @@ namespace BCEdit180 {
             Application.Current.Shutdown();
         }
 
+        public bool IsRunning() {
+            try {
+                Application app = Application.Current;
+                if (app != null) {
+                    app.ShutdownMode = app.ShutdownMode;
+                }
+
+                return false;
+            }
+            catch (Exception) {
+                return true;
+            }
+        }
+
         /// <summary>
         /// Runs the given action on the main thread. This method may return before the action is complete
         /// </summary>
         public void DispatchInvoke(Action action) {
-            Application.Current.Dispatcher.Invoke(action);
+            Application app = Application.Current;
+            if (app != null) {
+                app.Dispatcher.Invoke(action);
+            }
+            else {
+                Console.WriteLine("Warning! Failed to dispatch action to main thread. Is the app shutting down?");
+                Console.WriteLine(new Exception().ToString());
+            }
         }
 
         /// <summary>

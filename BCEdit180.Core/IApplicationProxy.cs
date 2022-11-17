@@ -6,8 +6,11 @@ namespace BCEdit180.Core {
         void Shutdown();
 
         void DispatchInvoke(Action action);
+
         Task DispatchInvokeAsync(Action action);
 
         void SyspendDispatcherForAction(Action action);
+
+        bool IsRunning();
     }
 }

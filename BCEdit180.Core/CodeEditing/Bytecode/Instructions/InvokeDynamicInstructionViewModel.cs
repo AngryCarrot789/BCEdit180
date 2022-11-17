@@ -4,7 +4,9 @@ using System.Collections.ObjectModel;
 using System.Diagnostics;
 using System.Linq;
 using System.Windows.Input;
+using BCEdit180.Core.CodeEditing.Descriptors;
 using BCEdit180.Core.Commands;
+using BCEdit180.Core.Dialog;
 using BCEdit180.Core.Editors;
 using BCEdit180.Core.Utils;
 using BCEdit180.Core.Window;
@@ -68,7 +70,7 @@ namespace BCEdit180.Core.CodeEditing.Bytecode.Instructions {
         }
 
         public void EditDescriptorAction() {
-            if (Dialog.TypeEditor.EditMethodDescriptorDialog(this.Descriptor, out MethodDescriptor descriptor).Result) {
+            if (DialogUtils.EditMethodDesc(this.Descriptor, out MethodDescriptor descriptor)) {
                 this.Descriptor = descriptor;
             }
         }
@@ -79,7 +81,7 @@ namespace BCEdit180.Core.CodeEditing.Bytecode.Instructions {
                 case ReferenceKindType.GetStatic:
                 case ReferenceKindType.PutField:
                 case ReferenceKindType.PutStatic:
-                    if (Dialog.TypeEditor.EditTypeDescriptorDialog(this.BootstrapMethodDescriptor as TypeDescriptor, out TypeDescriptor typeDesc).Result)
+                    if (DialogUtils.EditType(this.BootstrapMethodDescriptor as TypeDescriptor, out TypeDescriptor typeDesc))
                         this.BootstrapMethodDescriptor = typeDesc;
                     break;
                 case ReferenceKindType.InvokeVirtual:
@@ -87,7 +89,7 @@ namespace BCEdit180.Core.CodeEditing.Bytecode.Instructions {
                 case ReferenceKindType.InvokeSpecial:
                 case ReferenceKindType.NewInvokeSpecial:
                 case ReferenceKindType.InvokeReference:
-                    if (Dialog.TypeEditor.EditMethodDescriptorDialog(this.BootstrapMethodDescriptor as MethodDescriptor, out MethodDescriptor methodDesc).Result)
+                    if (DialogUtils.EditMethodDesc(this.BootstrapMethodDescriptor as MethodDescriptor, out MethodDescriptor methodDesc))
                         this.BootstrapMethodDescriptor = methodDesc;
                     break;
                 default: throw new ArgumentOutOfRangeException();
@@ -95,14 +97,14 @@ namespace BCEdit180.Core.CodeEditing.Bytecode.Instructions {
         }
 
         public void EditBootstrapReferenceTypeAction() {
-            if (Dialog.TypeEditor.EditEnumFlagDialog(this.BootstrapReferenceType, out ReferenceKindType type).Result) {
+            if (Dialogs.TypeEditor.EditEnumFlagDialog(this.BootstrapReferenceType, out ReferenceKindType type)) {
                 this.BootstrapReferenceType = type;
             }
         }
 
         public static object WrapBoostrapArgument(object value) {
             if (value is TypeDescriptor typeDesc) {
-                return new TypeDescriptorViewModel() {
+                return new TypeDescViewModel() {
                     TypeDescriptor = typeDesc
                 };
             }
@@ -126,7 +128,7 @@ namespace BCEdit180.Core.CodeEditing.Bytecode.Instructions {
         }
 
         public static object UnwrapBoostrapArgument(object value) {
-            if (value is TypeDescriptorViewModel typeDesc) {
+            if (value is TypeDescViewModel typeDesc) {
                 return typeDesc.TypeDescriptor;
             }
             else if (value is MethodDescriptorViewModel methodDesc) {

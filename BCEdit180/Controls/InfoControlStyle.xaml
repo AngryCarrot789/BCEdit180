@@ -2,7 +2,7 @@
                     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
                     xmlns:local="clr-namespace:BCEdit180.Controls" 
                     xmlns:converters="clr-namespace:BCEdit180.Converters">
-    <converters:BooleanToVisibilityConverter x:Key="VisibilityConverter"/>
+    <converters:BooleanToVisibilityConverter x:Key="VisibilityConverter" TrueValue="Visible" FalseValue="Collapsed"/>
     <Style TargetType="{x:Type local:MethodInfoControl}">
         <Setter Property="Background" Value="Transparent"/>
         <Setter Property="Template">

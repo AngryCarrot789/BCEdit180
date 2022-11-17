@@ -40,7 +40,7 @@ namespace BCEdit180.Core.CodeEditing.Splicing {
         private void DecompileAction() {
             string classFile = this.CodeEditor.MethodInfo.Class.FilePath;
             if (!File.Exists(classFile)) {
-                Dialog.Message.ShowInformationDialog("File not found", "The original class file does not exist: " + classFile);
+                Dialogs.Message.ShowMessage("File not found", "The original class file does not exist: " + classFile);
                 return;
             }
 
@@ -52,7 +52,7 @@ namespace BCEdit180.Core.CodeEditing.Splicing {
             process.StartInfo = info;
             process.Start();
             if (!process.WaitForExit(5000)) {
-                Dialog.Message.ShowInformationDialog("Decompiler froze", "The decompiler has not exited in the last 5000 milliseconds");
+                Dialogs.Message.ShowMessage("Decompiler froze", "The decompiler has not exited in the last 5000 milliseconds");
             }
 
             this.JavaCode = process.StandardOutput.ReadToEnd();
@@ -61,12 +61,12 @@ namespace BCEdit180.Core.CodeEditing.Splicing {
         private void CompileAction() {
             // Generate modified version of existing class; setting all fields and methods to public
             if (true) {
-                Dialog.Message.ShowInformationDialog("Coming soon", "This feature is coming soon");
+                Dialogs.Message.ShowMessage("Coming soon", "This feature is coming soon");
                 return;
             }
 
 
-            ActionProgressViewModel progress = Dialog.Message.ShowProgressWindow("Compiling", "Creating duplicate class for internal access edits");
+            ActionProgressViewModel progress = Dialogs.Message.ShowProgressWindow("Compiling", "Creating duplicate class for internal access edits");
             ClassViewModel clazz = this.CodeEditor.MethodInfo.Class;
             string javaCode = this.JavaCode;
             Task.Run(async () => {
@@ -76,7 +76,7 @@ namespace BCEdit180.Core.CodeEditing.Splicing {
 
                 clazz.SaveClassToFile(backupFile);
                 if (!File.Exists(clazz.FilePath)) {
-                    await Dialog.Message.ShowInformationDialog("File not found", "File no longer exists: " + clazz.FilePath);
+                    Dialogs.Message.ShowMessage("File not found", "File no longer exists: " + clazz.FilePath);
                     return;
                 }
 

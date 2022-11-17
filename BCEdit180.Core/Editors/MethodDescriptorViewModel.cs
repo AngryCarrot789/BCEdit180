@@ -1,11 +1,12 @@
 using System.Windows.Input;
+using BCEdit180.Core.Dialog;
 using BCEdit180.Core.Window;
 using JavaAsm;
 using REghZy.MVVM.Commands;
 using REghZy.MVVM.ViewModels;
 
 namespace BCEdit180.Core.Editors {
-    public class MethodDescriptorViewModel : BaseViewModel, IMethodDescriptable {
+    public class MethodDescriptorViewModel : BaseDialogViewModel, IMethodDescriptable {
         private MethodDescriptor methodDescriptor;
         public MethodDescriptor MethodDescriptor {
             get => this.methodDescriptor;
@@ -19,7 +20,7 @@ namespace BCEdit180.Core.Editors {
         }
 
         public void EditDescriptor() {
-            if (Dialog.TypeEditor.EditMethodDescriptorDialog(this.MethodDescriptor, out MethodDescriptor typeDesc).Result) {
+            if (DialogUtils.EditMethodDesc(this.MethodDescriptor, out MethodDescriptor typeDesc)) {
                 this.MethodDescriptor = typeDesc;
             }
         }

@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.ObjectModel;
 using System.Windows.Input;
+using BCEdit180.Core.Dialog;
 using BCEdit180.Core.Editors;
 using BCEdit180.Core.Searching;
 using BCEdit180.Core.Utils;
@@ -47,7 +48,7 @@ namespace BCEdit180.Core.ViewModels {
         }
 
         public void ShowCreateFieldDialog() {
-            if (Dialog.TypeEditor.EditFieldDialog(out FieldEditorViewModel editor, true).Result) {
+            if (Dialogs.TypeEditor.EditFieldDialog(out FieldEditorViewModel editor, true)) {
                 CreateField(editor);
             }
         }

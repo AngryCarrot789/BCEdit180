@@ -4,7 +4,7 @@ using BCEdit180.Core.ViewModels;
 using BCEdit180.Core.Window;
 
 namespace BCEdit180.Core.Searching {
-    public class SearchFieldNameViewModel : SearchViewModel {
+    public class SearchFieldNameViewModel : TimedInputUpdate {
         public FieldListViewModel FieldList { get; }
 
         public SearchFieldNameViewModel(FieldListViewModel fieldList) {
@@ -51,7 +51,7 @@ namespace BCEdit180.Core.Searching {
                 }
                 else {
                     if (this.WasLastSearchForced) {
-                        Dialog.Message.ShowInformationDialog("Nothing found", "No search results found for: " + search);
+                        Dialogs.Message.ShowMessage("Nothing found", "No search results found for: " + search);
                     }
 
                     break;

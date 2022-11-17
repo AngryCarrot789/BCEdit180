@@ -48,7 +48,7 @@ namespace BCEdit180.Core.Searching {
                             }
                             catch (Exception e) {
                                 #if DEBUG
-                                await Dialog.Message.ShowWarningDialog("Error processing search state", e.ToString());
+                                Dialogs.Message.ShowWarning("Error processing search state", e.ToString());
                                 // throw e;
                                 #else
                                 #endif

@@ -1,5 +1,7 @@
+using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
+using System.Diagnostics;
 using System.IO;
 using System.Threading.Tasks;
 using System.Windows.Input;
@@ -31,6 +33,22 @@ namespace BCEdit180.Core.ViewModels {
 
         public RelayCommandParam<ClassViewModel> RemoveClassCommand { get; }
 
+        private int memoryUsageMB;
+        public int MemoryUsageMB {
+            get => this.memoryUsageMB;
+            set => RaisePropertyChanged(ref this.memoryUsageMB, value);
+        }
+
+        private int maxMemoryMB;
+        public int MaxMemoryMB {
+            get => this.memoryUsageMB;
+            set => RaisePropertyChanged(ref this.memoryUsageMB, value);
+        }
+
+        private static int ByteToMB(long bytes) {
+            return (int) (bytes / 1024L / 1024L);
+        }
+
         public ClassListViewModel() {
             this.Classes = new ExtendedObservableCollection<ClassViewModel>();
             this.Clipboard = new InstructionClipboardViewModel();
@@ -38,6 +56,42 @@ namespace BCEdit180.Core.ViewModels {
             this.OpenFileCommand = new RelayCommand(OpenFileAction);
             this.ErrorReporter = new ErrorReporterViewModel(this);
             this.RemoveClassCommand = new RelayCommandParam<ClassViewModel>(this.RemoveClass);
+
+            Task.Run(async () => {
+                Process process = Process.GetCurrentProcess();
+                IApplicationProxy proxy = ServiceManager.GetService<IApplicationProxy>();
+
+                int refreshInterval = 0;
+
+                while (proxy.IsRunning()) {
+                    int memoryUsageMB = ByteToMB(GC.GetTotalMemory(false));
+                    bool updateUsage = memoryUsageMB != this.memoryUsageMB;
+                    if (refreshInterval++ % 20 == 0) {
+                        refreshInterval = 0;
+                        process.Refresh();
+                    }
+
+                    int maxMemoryMB = ByteToMB(process.PrivateMemorySize64);
+                    bool updateMaxMem = maxMemoryMB != this.maxMemoryMB;
+
+                    if (updateUsage || updateMaxMem) {
+                        proxy.DispatchInvoke(() => {
+                            if (updateUsage) {
+                                this.MemoryUsageMB = memoryUsageMB;
+                            }
+
+                            if (updateMaxMem) {
+                                this.MaxMemoryMB = maxMemoryMB;
+                            }
+                        });
+                    }
+
+                    await Task.Delay(100);
+
+                }
+
+                process.Dispose();
+            });
         }
 
         public void CreateBalnkClass() {
@@ -45,12 +99,12 @@ namespace BCEdit180.Core.ViewModels {
         }
 
         private void OpenFileAction() {
-            if (Dialog.File.OpenFileDialog("Select a class file to open", "ClassFile|*.class|All|*.*", out string path).Result) {
+            if (Dialogs.File.OpenFileDialog("Select a class file to open", "ClassFile|*.class|All|*.*", out string path).Result) {
                 if (File.Exists(path)) {
                     OpenAndReadClassFile(path);
                 }
                 else {
-                    Dialog.Message.ShowWarningDialog("No such file", "File does not exist: " + path);
+                    Dialogs.Message.ShowWarning("No such file", "File does not exist: " + path);
                 }
             }
         }
@@ -131,7 +185,7 @@ namespace BCEdit180.Core.ViewModels {
             if (showDialog) {
                 int i = 0;
                 Task[] tasks = new Task[classes.Count];
-                ActionProgressViewModel vm = Dialog.Message.ShowProgressWindow($"Loading {classes.Count} inner classes");
+                ActionProgressViewModel vm = Dialogs.Message.ShowProgressWindow($"Loading {classes.Count} inner classes");
                 foreach (string innerPath in classes) {
                     tasks[i++] = Task.Run(async () => {
                         ClassViewModel classViewModel = new ClassViewModel();

@@ -1,16 +1,17 @@
 ﻿using System;
 using System.Collections.Generic;
 using BCEdit180.Core.Collections;
+using BCEdit180.Core.Dialog;
 using JavaAsm.Instructions;
 using REghZy.MVVM.ViewModels;
 
 namespace BCEdit180.Core.CodeEditing.InstructionEdit {
-    public class ChangeInstructionViewModel : BaseViewModel, IDisposable {
+    public class ChangeInstructionViewModel : BaseDialogViewModel, IDisposable {
         public ExtendedObservableCollection<Opcode> AvailableOpCodes { get; }
 
         public ExtendedObservableCollection<Opcode> ActualOpcodeList { get; }
 
-        public OpcodeSearchViewModel Search { get; }
+        public OpcodeTimedInputUpdate Search { get; }
 
         private int selectedIndex;
         public int SelectedIndex{
@@ -27,7 +28,7 @@ namespace BCEdit180.Core.CodeEditing.InstructionEdit {
         public ChangeInstructionViewModel() {
             this.AvailableOpCodes = new ExtendedObservableCollection<Opcode>();
             this.ActualOpcodeList = new ExtendedObservableCollection<Opcode>();
-            this.Search = new OpcodeSearchViewModel(this);
+            this.Search = new OpcodeTimedInputUpdate(this);
         }
 
         public void SetAvailableInstructions(IEnumerable<Opcode> opcodes) {

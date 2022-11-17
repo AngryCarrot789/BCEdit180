@@ -498,6 +498,19 @@
                                 </Setter.Value>
                             </Setter>
                         </Trigger>
+                        <Trigger Property="WindowState" Value="Minimized">
+                            <Setter TargetName="btnRestore" Property="Content">
+                                <Setter.Value>
+                                    <Grid Width="14" Height="14">
+                                        <Rectangle StrokeThickness="2" Stroke="{DynamicResource AREghZyBrush.Glyph.Static}" Margin="3,0,0,3" />
+                                        <Rectangle StrokeThickness="2" Fill="{DynamicResource Window.Static.Border}" Stroke="{DynamicResource AREghZyBrush.Glyph.Static}" Margin="0,4,4,0" />
+                                    </Grid>
+                                </Setter.Value>
+                            </Setter>
+                        </Trigger>
+                        <Trigger Property="ResizeMode" Value="NoResize">
+                            <Setter TargetName="btnRestore" Property="Visibility" Value="Collapsed"/>
+                        </Trigger>
                     </ControlTemplate.Triggers>
                 </ControlTemplate>
             </Setter.Value>

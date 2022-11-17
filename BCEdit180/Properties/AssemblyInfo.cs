@@ -6,7 +6,7 @@ using System.Windows;
 // set of attributes. Change these attribute values to modify the information
 // associated with an assembly.
 [assembly: AssemblyTitle("BCEdit180")]
-[assembly: AssemblyDescription("")]
+[assembly: AssemblyDescription("A java bytecode viewer and editor")]
 [assembly: AssemblyConfiguration("")]
 [assembly: AssemblyCompany("")]
 [assembly: AssemblyProduct("BCEdit180")]

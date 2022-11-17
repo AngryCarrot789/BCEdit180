@@ -1,22 +1,37 @@
-﻿using BCEdit180.Core.Utils;
+﻿using System.Text;
+using BCEdit180.Core.Dialog;
+using BCEdit180.Core.Searching;
+using BCEdit180.Core.Utils;
 using JavaAsm;
 using REghZy.MVVM.ViewModels;
 
 namespace BCEdit180.Core.Editors {
-    public class TypeEditorViewModel : BaseViewModel {
-        private string className;
-        public string ClassName {
-            get => this.className;
+    public class TypeEditorViewModel : BaseDialogViewModel {
+        private string inputClassName;
+        public string InputClassName {
+            get => this.inputClassName;
             set {
-                RaisePropertyChanged(ref this.className, value);
+                RaisePropertyChanged(ref this.inputClassName, value);
                 UpdateClassName(true);
             }
         }
         
-        private string realClassName;
-        public string RealClassName {
-            get => this.realClassName;
-            set => RaisePropertyChanged(ref this.realClassName, value);
+        private string previewInternalName;
+        public string PreviewInternalName {
+            get => this.previewInternalName;
+            set => RaisePropertyChanged(ref this.previewInternalName, value);
+        }
+
+        private string previewDescriptor;
+        public string PreviewDescriptor {
+            get => this.previewDescriptor;
+            set => RaisePropertyChanged(ref this.previewDescriptor, value);
+        }
+
+        private string previewClassName;
+        public string PreviewClassName {
+            get => this.previewClassName;
+            set => RaisePropertyChanged(ref this.previewClassName, value);
         }
 
         private PrimitiveType selectedPrimitive;
@@ -49,6 +64,8 @@ namespace BCEdit180.Core.Editors {
             }
         }
 
+        public string ArrayPartString => '['.Repeat(this.ArrayDepth);
+
         private bool allowPrimitive;
         public bool AllowPrimitive {
             get => this.allowPrimitive;
@@ -76,31 +93,78 @@ namespace BCEdit180.Core.Editors {
             this.isUpdating = true;
 
             if (calculateArrayDepth) {
-                this.ArrayDepth = (ushort) (string.IsNullOrEmpty(this.ClassName) ? 0 : this.ClassName.CountCharsAtStart('['));
+                this.ArrayDepth = (ushort) (string.IsNullOrEmpty(this.InputClassName) ? 0 : this.InputClassName.CountCharsAtStart('['));
             }
 
-            string arrayParts = '['.Repeat(this.ArrayDepth);
-            if (string.IsNullOrEmpty(this.ClassName)) {
-                this.RealClassName = arrayParts;
+            string arrayParts = this.ArrayPartString;
+            if (string.IsNullOrEmpty(this.InputClassName)) {
+                this.PreviewInternalName = arrayParts;
+                this.PreviewClassName = "";
+                this.PreviewDescriptor = arrayParts;
             }
             else {
-                this.RealClassName = arrayParts + GetActualClassName(this.ClassName);
+                string strippedArray = StripArrayDepthPart(this.InputClassName);
+                this.PreviewInternalName = GetInternalName(strippedArray);
+                this.PreviewClassName = GetClassName(strippedArray);
+                this.PreviewDescriptor = arrayParts + GetDescriptor(strippedArray);
             }
 
             this.isUpdating = false;
         }
 
-        public string GetActualClassName(string clazz) {
-            clazz = clazz.Replace('.', '/');
-            if (clazz.Length > 0 && clazz[0] == 'L' && clazz[clazz.Length - 1] == ';') {
-                clazz = clazz.Substring(1, clazz.Length - 2);
+        private static string StripDescriptorElements(string input) {
+            if (input.Length > 0 && input[0] == 'L' && input[input.Length - 1] == ';') {
+                input = input.Substring(1, input.Length - 2);
             }
 
-            return clazz;
+            return input;
+        }
+
+        private static string StripArrayDepthPart(string input) {
+            int i = 0, len = input.Length;
+            while (i < len && input[i] == '[') { i++; }
+            return i == 0 ? input : input.Substring(i);
+        }
+
+        public string GetInternalName(string input) {
+            return StripDescriptorElements(StripArrayDepthPart(input.Replace('.', '/')));
+        }
+
+        public string GetClassName(string input) {
+            return StripDescriptorElements(StripArrayDepthPart(input.Replace('/', '.')));
+        }
+
+        public string GetDescriptor(string input) {
+            string name = StripArrayDepthPart(input).Replace('.', '/');
+            if (string.IsNullOrWhiteSpace(name)) {
+                return "";
+            }
+
+            if (name[0] != 'L') {
+                if (name[name.Length - 1] != ';') {
+                    name = ("L" + name + ";");
+                }
+                else {
+                    name = ("L" + name);
+                }
+            }
+            else if (name[name.Length - 1] != ';') {
+                name += ";";
+            }
+
+            return name;
+        }
+
+        public string GetInternalName() {
+            return GetInternalName(this.InputClassName);
         }
 
         public string GetClassName() {
-            return GetActualClassName(this.ClassName);
+            return GetClassName(this.InputClassName);
+        }
+
+        public string GetDescriptor() {
+            return GetDescriptor(this.InputClassName);
         }
     }
 }

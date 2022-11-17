@@ -11,12 +11,13 @@ using System.Windows.Input;
 using System.Windows.Media;
 using System.Windows.Media.Imaging;
 using System.Windows.Shapes;
+using BCEdit180.Windows.Base;
 
-namespace BCEdit180.Dialog {
+namespace BCEdit180.Dialog.Class {
     /// <summary>
     /// Interaction logic for ClassAccessEditorDialog.xaml
     /// </summary>
-    public partial class ClassAccessEditorDialog : Window {
+    public partial class ClassAccessEditorDialog : DialogBase {
         public ClassAccessEditorDialog() {
             InitializeComponent();
         }

@@ -1,4 +1,5 @@
 using System.Windows.Input;
+using BCEdit180.Core.Dialog;
 using BCEdit180.Core.Window;
 using JavaAsm;
 using JavaAsm.CustomAttributes;
@@ -33,7 +34,7 @@ namespace BCEdit180.Core.AttributeEditor.Classes {
         }
 
         public void EditMethodDesc() {
-            if (Dialog.TypeEditor.EditMethodDescriptorDialog(this.Descriptor, out MethodDescriptor descriptor).Result) {
+            if (DialogUtils.EditMethodDesc(this.Descriptor, out MethodDescriptor descriptor)) {
                 this.Descriptor = descriptor;
             }
         }

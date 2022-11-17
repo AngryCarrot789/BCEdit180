@@ -118,13 +118,10 @@
       <DependentUpon>DoubleClickEditBox.xaml</DependentUpon>
     </Compile>
     <Compile Include="Controls\InfoControls.cs" />
-    <Compile Include="Converters\AnnontationEntryPrimitiveValueConverter.cs" />
     <Compile Include="Converters\BindLeftBorderToTabConverter.cs" />
     <Compile Include="Converters\BooleanConverter.cs" />
-    <Compile Include="Converters\BooleanToColourConverter.cs" />
     <Compile Include="Converters\ClassNameConverter.cs" />
     <Compile Include="Converters\ConstPreviewConverter.cs" />
-    <Compile Include="Converters\ErrorColourConverter.cs" />
     <Compile Include="Converters\FilePathToWindowTitleConverter.cs" />
     <Compile Include="Converters\FQCNToWindowTitleConverter.cs" />
     <Compile Include="Converters\ItemNullToEnabledConverter.cs" />
@@ -134,11 +131,30 @@
     <Compile Include="Converters\PrimitiveConverter.cs" />
     <Compile Include="Converters\TypeDescriptorToReadableConverter.cs" />
     <Compile Include="Converters\TypeEqualityToTrueConverter.cs" />
+    <Compile Include="DebugUtils.cs" />
     <Compile Include="Dialogs\FolderPickerDialog.cs" />
-    <Compile Include="Dialogs\WindowsAccessEditor.cs" />
     <Compile Include="Dialogs\WindowsFileDialogs.cs" />
-    <Compile Include="Dialogs\WindowsModalManager.cs" />
+    <Compile Include="Dialog\Class\ClassAccessEditorDialog.xaml.cs">
+      <DependentUpon>ClassAccessEditorDialog.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Dialog\Fields\FieldAccessEditorDialog.xaml.cs">
+      <DependentUpon>FieldAccessEditorDialog.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Dialog\Methods\MethodAccessEditorDialog.xaml.cs">
+      <DependentUpon>MethodAccessEditorDialog.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Dialog\Methods\MethodDescEditorDialog.xaml.cs">
+      <DependentUpon>MethodDescEditorDialog.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Dialog\Methods\MethodEditorDialog.xaml.cs">
+      <DependentUpon>MethodEditorDialog.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Dialog\TypeEditorDialog.xaml.cs">
+      <DependentUpon>TypeEditorDialog.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Dialog\UIManager.cs" />
     <Compile Include="LineNumbers\LineNumberAdorder.cs" />
+    <Compile Include="Windows\Base\DialogBase.cs" />
     <Compile Include="Windows\ChangeInstructionWindow.xaml.cs">
       <DependentUpon>ChangeInstructionWindow.xaml</DependentUpon>
     </Compile>
@@ -173,22 +189,12 @@
     <Compile Include="Windows\LabelSelectorWindow.xaml.cs">
       <DependentUpon>LabelSelectorWindow.xaml</DependentUpon>
     </Compile>
-    <Compile Include="Windows\MethodDescEditorWindow.xaml.cs">
-      <DependentUpon>MethodDescEditorWindow.xaml</DependentUpon>
-    </Compile>
-    <Compile Include="Windows\MethodEditorWindow.xaml.cs">
-      <DependentUpon>MethodEditorWindow.xaml</DependentUpon>
-    </Compile>
     <Compile Include="Themes\Controls.xaml.cs">
       <DependentUpon>Controls.xaml</DependentUpon>
     </Compile>
     <Compile Include="Themes\ThemesController.cs" />
     <Compile Include="Themes\ThemeTypes.cs" />
-    <Compile Include="Windows\TypeEditorWindow.xaml.cs">
-      <DependentUpon>TypeEditorWindow.xaml</DependentUpon>
-    </Compile>
     <Compile Include="Windows\WindowBase.cs" />
-    <Compile Include="Windows\WindowModal.cs" />
     <Compile Include="WpfApplicationProxy.cs" />
     <Compile Include="WPFCommandManager.cs" />
     <Page Include="Annotations\AnnotationEditorControl.xaml">
@@ -224,6 +230,30 @@
       <SubType>Designer</SubType>
     </Page>
     <Page Include="Controls\InfoControlStyle.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Dialog\Class\ClassAccessEditorDialog.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Dialog\Fields\FieldAccessEditorDialog.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Dialog\Methods\MethodAccessEditorDialog.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Dialog\Methods\MethodDescEditorDialog.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Dialog\Methods\MethodEditorDialog.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Dialog\TypeEditorDialog.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
@@ -281,14 +311,6 @@
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
-    <Page Include="Windows\MethodDescEditorWindow.xaml">
-      <SubType>Designer</SubType>
-      <Generator>MSBuild:Compile</Generator>
-    </Page>
-    <Page Include="Windows\MethodEditorWindow.xaml">
-      <SubType>Designer</SubType>
-      <Generator>MSBuild:Compile</Generator>
-    </Page>
     <Page Include="Themes\ControlColours.xaml">
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
@@ -312,10 +334,6 @@
     <Page Include="Themes\VeryDarkTheme.xaml">
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
-    </Page>
-    <Page Include="Windows\TypeEditorWindow.xaml">
-      <SubType>Designer</SubType>
-      <Generator>MSBuild:Compile</Generator>
     </Page>
   </ItemGroup>
   <ItemGroup>

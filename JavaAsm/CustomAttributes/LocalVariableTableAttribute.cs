@@ -33,10 +33,8 @@ namespace JavaAsm.CustomAttributes {
             foreach (LocalVariableTableEntry localVariableTableEntry in this.LocalVariableTable) {
                 Binary.BigEndian.Write(attributeDataStream, localVariableTableEntry.StartPc);
                 Binary.BigEndian.Write(attributeDataStream, localVariableTableEntry.Length);
-                Binary.BigEndian.Write(attributeDataStream,
-                    writerState.ConstantPool.Find(new Utf8Entry(localVariableTableEntry.Name)));
-                Binary.BigEndian.Write(attributeDataStream,
-                    writerState.ConstantPool.Find(new Utf8Entry(localVariableTableEntry.Descriptor.ToString())));
+                Binary.BigEndian.Write(attributeDataStream, writerState.ConstantPool.Find(new Utf8Entry(localVariableTableEntry.Name)));
+                Binary.BigEndian.Write(attributeDataStream, writerState.ConstantPool.Find(new Utf8Entry(localVariableTableEntry.Descriptor.ToString())));
                 Binary.BigEndian.Write(attributeDataStream, localVariableTableEntry.Index);
             }
 

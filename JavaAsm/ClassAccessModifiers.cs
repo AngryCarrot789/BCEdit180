@@ -4,46 +4,46 @@ using System.Linq;
 namespace JavaAsm {
     [Flags]
     public enum ClassAccessModifiers : ushort {
-        Public = 0x0001,
-        Protected = 0x0004,
-        Private = 0x0002,
-        Static = 0x0008,
-        Abstract = 0x0400,
-        Final = 0x0010,
-        Strict = 0x0800,
-        Annotation = 0x2000,
-        Enum = 0x4000,
-        Interface = 0x0200,
-        Super = 0x0020,
-        Synthetic = 0x1000
+        Public = 1,
+        Protected = 4,
+        Private = 2,
+        Static = 8,
+        Abstract = 1024,
+        Final = 16,
+        Strict = 2048,
+        Annotation = 8192,
+        Enum = 16384,
+        Interface = 512,
+        Super = 32,
+        Synthetic = 4096
     }
 
     [Flags]
     public enum MethodAccessModifiers : ushort {
-        Public = 0x0001,
-        Protected = 0x0004,
-        Private = 0x0002,
-        Static = 0x0008,
-        Abstract = 0x0400,
-        Syncrionized = 0x0020,
-        Final = 0x0010,
-        Native = 0x0100,
-        Strict = 0x0800,
-        Bridge = 0x0040,
-        Synthetic = 0x1000,
-        Varargs = 0x0080
+        Public = 1,
+        Protected = 4,
+        Private = 2,
+        Static = 8,
+        Abstract = 1024,
+        Syncrionized = 32,
+        Final = 16,
+        Native = 256,
+        Strict = 2048,
+        Bridge = 64,
+        Synthetic = 4096,
+        Varargs = 128
     }
 
     [Flags]
     public enum FieldAccessModifiers : ushort {
-        Public = 0x0001,
-        Protected = 0x0004,
-        Private = 0x0002,
-        Static = 0x0008,
-        Transient = 0x0080,
-        Volatile = 0x0040,
-        Final = 0x0010,
-        Synthetic = 0x1000
+        Public = 1,
+        Protected = 4,
+        Private = 2,
+        Static = 8,
+        Transient = 128,
+        Volatile = 64,
+        Final = 16,
+        Synthetic = 4096
     }
 
     public static class AccessModifiersExtensions {

@@ -11,12 +11,13 @@ using System.Windows.Input;
 using System.Windows.Media;
 using System.Windows.Media.Imaging;
 using System.Windows.Shapes;
+using BCEdit180.Windows.Base;
 
 namespace BCEdit180.Dialog.Fields {
     /// <summary>
     /// Interaction logic for FieldAccessEditorDialog.xaml
     /// </summary>
-    public partial class FieldAccessEditorDialog : Window {
+    public partial class FieldAccessEditorDialog : DialogBase {
         public FieldAccessEditorDialog() {
             InitializeComponent();
         }

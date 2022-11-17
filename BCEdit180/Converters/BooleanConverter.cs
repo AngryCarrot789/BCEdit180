@@ -9,18 +9,18 @@ namespace BCEdit180.Converters {
 
         public object FalseValue { get; set; }
 
-        public bool ReturnUnsetIfUnset { get; set; }
+        public bool ReturnFalseIfUnset { get; set; }
 
         public object UnsetValue { get; set; }
 
         public BooleanConverter() {
-            this.ReturnUnsetIfUnset = true;
+            this.ReturnFalseIfUnset = false;
             this.UnsetValue = DependencyProperty.UnsetValue;
         }
 
         public object Convert(object value, Type targetType, object parameter, CultureInfo culture) {
             if (value == this.UnsetValue) {
-                return this.ReturnUnsetIfUnset ? this.UnsetValue : this.FalseValue;
+                return this.ReturnFalseIfUnset ? this.FalseValue : this.UnsetValue;
             }
             else if (value is bool state && state) {
                 return this.TrueValue;
@@ -32,7 +32,7 @@ namespace BCEdit180.Converters {
 
         public object ConvertBack(object value, Type targetType, object parameter, CultureInfo culture) {
             if (value == this.UnsetValue) {
-                return this.ReturnUnsetIfUnset ? this.UnsetValue : false;
+                return this.ReturnFalseIfUnset ? false : this.UnsetValue;
             }
             else if (value == this.TrueValue) {
                 return true;

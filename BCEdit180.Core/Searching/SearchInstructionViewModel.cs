@@ -5,7 +5,7 @@ using BCEdit180.Core.CodeEditing.Bytecode.Instructions;
 using BCEdit180.Core.Window;
 
 namespace BCEdit180.Core.Searching {
-    public class SearchInstructionViewModel : SearchViewModel {
+    public class SearchInstructionViewModel : TimedInputUpdate {
         public BytecodeEditorViewModel Editor { get; }
 
         public SearchInstructionViewModel(BytecodeEditorViewModel editor) {
@@ -46,7 +46,7 @@ namespace BCEdit180.Core.Searching {
                 }
                 else {
                     if (this.WasLastSearchForced) {
-                        Dialog.Message.ShowInformationDialog("Nothing found", "No search results found for: " + search);
+                        Dialogs.Message.ShowMessage("Nothing found", "No search results found for: " + search);
                     }
 
                     break;
@@ -55,7 +55,7 @@ namespace BCEdit180.Core.Searching {
         }
 
         public static bool MatchInstruction(BaseInstructionViewModel instruction, string search) {
-            string tostr = instruction.Node.ToString();
+            string tostr = instruction.Instruction.ToString();
             return tostr.ToLower().Contains(search.ToLower());
         }
     }

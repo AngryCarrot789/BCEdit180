@@ -9,16 +9,15 @@ using REghZy.MVVM.Commands;
 using REghZy.MVVM.ViewModels;
 
 namespace BCEdit180.Core.CodeEditing.Bytecode.Instructions {
-    // non-abstract, so that opcodes can fall back to the base class and get ToString()'d instead of custom layouts
     public abstract class BaseInstructionViewModel : BaseViewModel {
-        public Instruction Node { get; protected set; }
+        public Instruction Instruction { get; protected set; }
 
         public abstract IEnumerable<Opcode> AvailableOpCodes { get; }
 
-        private Opcode opCode;
+        private Opcode opcode;
         public Opcode Opcode {
-            get => this.opCode;
-            set => RaisePropertyChanged(ref this.opCode, value);
+            get => this.opcode;
+            set => RaisePropertyChanged(ref this.opcode, value);
         }
 
         private bool isNewInstruction;
@@ -66,7 +65,7 @@ namespace BCEdit180.Core.CodeEditing.Bytecode.Instructions {
 
         // Always check CanEditOpCode
         public void EditOpcode() {
-            if (this.CanEditOpCode && Dialog.TypeEditor.ChangeInstructionDialog(this.AvailableOpCodes, this.Opcode, out Opcode code).Result) {
+            if (this.CanEditOpCode && Dialogs.TypeEditor.ChangeInstructionDialog(this.AvailableOpCodes, this.Opcode, out Opcode code)) {
                 this.Opcode = code;
             }
         }
@@ -132,7 +131,7 @@ namespace BCEdit180.Core.CodeEditing.Bytecode.Instructions {
         }
 
         public virtual void Load(Instruction instruction) {
-            this.Node = instruction;
+            this.Instruction = instruction;
             this.Opcode = instruction.Opcode;
         }
 
@@ -143,7 +142,7 @@ namespace BCEdit180.Core.CodeEditing.Bytecode.Instructions {
         }
 
         public override string ToString() {
-            return this.Node?.ToString() ?? $"[Instruction handle unavailable. Opcode = {this.Opcode}]";
+            return this.Instruction?.ToString() ?? $"[Instruction handle unavailable. Opcode = {this.Opcode}]";
         }
 
         protected static T Require<T>(Instruction instruction) where T : Instruction {

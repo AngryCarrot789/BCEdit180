@@ -1,10 +1,11 @@
-﻿<windows:WindowModal x:Class="BCEdit180.Windows.ActionProgressWindow"
+﻿<base:DialogBase x:Class="BCEdit180.Windows.ActionProgressWindow"
              xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
              xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
              xmlns:window="clr-namespace:BCEdit180.Core.Window;assembly=BCEdit180.Core"
              xmlns:windows="clr-namespace:BCEdit180.Windows"
+             xmlns:base="clr-namespace:BCEdit180.Windows.Base"
              d:DataContext="{d:DesignInstance Type=window:ActionProgressViewModel}"
              mc:Ignorable="d"
              Title="Action" Height="225" Width="400"
@@ -26,4 +27,4 @@
             <ProgressBar IsIndeterminate="{Binding IsLoading, UpdateSourceTrigger=PropertyChanged}" Height="24" VerticalAlignment="Bottom"/>
         </Grid>
     </Grid>
-</windows:WindowModal>
+</base:DialogBase>

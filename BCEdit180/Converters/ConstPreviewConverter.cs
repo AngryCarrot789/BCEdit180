@@ -34,7 +34,7 @@ namespace BCEdit180.Converters {
                 return "MD: " + value;
             }
             else {
-                return "DEBUG_ERROR_UNKNOWN_TYPE: " + value;
+                return "DEBUG_ERROR_UNKNOWN_TYPE: " + DebugUtils.GetDebugString(value);
             }
         }
 

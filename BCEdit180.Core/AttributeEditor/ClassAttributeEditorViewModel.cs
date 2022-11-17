@@ -4,6 +4,7 @@ using BCEdit180.Core.AttributeEditor.Classes;
 using BCEdit180.Core.ViewModels;
 using JavaAsm;
 using JavaAsm.CustomAttributes;
+using REghZy.MVVM.Commands;
 using REghZy.MVVM.ViewModels;
 
 namespace BCEdit180.Core.AttributeEditor {
@@ -50,6 +51,8 @@ namespace BCEdit180.Core.AttributeEditor {
             set => RaisePropertyChanged(ref this.isEnabledBootstrapMethods, value);
         }
 
+        public RelayCommandParam<InnerClassViewModel> RemoveInnerClassCommand { get; }
+
         public ClassAttributeEditorViewModel(ClassViewModel classViewModel) {
             this.Class = classViewModel;
             this.SourceFile = new SourceFileViewModel();
@@ -57,6 +60,8 @@ namespace BCEdit180.Core.AttributeEditor {
             this.InnerClasses = new ObservableCollection<InnerClassViewModel>();
             this.EnclosingMethod = new EnclosingMethodViewModel();
             this.BootstrapMethods = new ObservableCollection<BootstrapMethodViewModel>();
+
+            this.RemoveInnerClassCommand = new RelayCommandParam<InnerClassViewModel>(x => this.InnerClasses.Remove(x));
         }
 
         public void Load(ClassNode node) {

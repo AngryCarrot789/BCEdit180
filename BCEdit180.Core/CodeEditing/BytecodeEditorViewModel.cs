@@ -8,6 +8,7 @@ using System.Windows.Input;
 using BCEdit180.Core.CodeEditing.Bytecode;
 using BCEdit180.Core.CodeEditing.Bytecode.Instructions;
 using BCEdit180.Core.Collections;
+using BCEdit180.Core.Dialog;
 using BCEdit180.Core.Searching;
 using BCEdit180.Core.Utils;
 using BCEdit180.Core.ViewModels;
@@ -126,7 +127,7 @@ namespace BCEdit180.Core.CodeEditing {
         private void InsertLabelAction() {
             bool insert = false;
             Label instruction = new Label();
-            if (this.SelectedInstruction != null && this.SelectedInstruction.Node != null) {
+            if (this.SelectedInstruction != null && this.SelectedInstruction.Instruction != null) {
                 insert = true;
             }
 
@@ -182,11 +183,11 @@ namespace BCEdit180.Core.CodeEditing {
                     return true;
                 }
                 else {
-                    Dialog.Message.ShowInformationDialog("Immovable instruction", $"The instruction ({(curIndex > newIndex ? "above" : "below")}) the selected instruction cannot be moved: " + newInsn.Opcode);
+                    Dialogs.Message.ShowMessage("Immovable instruction", $"The instruction ({(curIndex > newIndex ? "above" : "below")}) the selected instruction cannot be moved: " + newInsn.Opcode);
                 }
             }
             else {
-                Dialog.Message.ShowInformationDialog("Immovable instruction", "The selected instruction cannot be moved: " + curInsn.Opcode);
+                Dialogs.Message.ShowMessage("Immovable instruction", "The selected instruction cannot be moved: " + curInsn.Opcode);
             }
 
             return false;
@@ -234,12 +235,12 @@ namespace BCEdit180.Core.CodeEditing {
             }
 
             if (!anyLabels) {
-                Dialog.Message.ShowInformationDialog("No labels", "There are no labels to jump to");
+                Dialogs.Message.ShowMessage("No labels", "There are no labels to jump to");
                 targetLabel = null;
                 return false;
             }
 
-            return Dialog.TypeEditor.SelectLabelDialog(this, out targetLabel).Result;
+            return DialogUtils.SelectLabelDialog(this, out targetLabel);
         }
 
         public void OnSelectionChanged() {
@@ -251,11 +252,11 @@ namespace BCEdit180.Core.CodeEditing {
         }
 
         public void InsertInstructionAction() {
-            if (Dialog.TypeEditor.ChangeInstructionDialog(ALL_OPCODES, out Opcode opcode).Result) {
+            if (Dialogs.TypeEditor.ChangeInstructionDialog(ALL_OPCODES, out Opcode opcode)) {
                 Instruction instruction = null;
                 Type instructionType = GetInstructionTypeForOpCode(opcode);
                 if (instructionType == null) {
-                    Dialog.Message.ShowInformationDialog("Unknown instruction", $"The opcode '{opcode}' is unrecognised");
+                    Dialogs.Message.ShowMessage("Unknown instruction", $"The opcode '{opcode}' is unrecognised");
                     return;
                 }
 
@@ -327,14 +328,14 @@ namespace BCEdit180.Core.CodeEditing {
                     instruction = new VariableInstruction(opcode);
                 }
                 else {
-                    Dialog.Message.ShowInformationDialog("Failed to create instruction", "Failed to create instruction for opcode: " + opcode);
+                    Dialogs.Message.ShowMessage("Failed to create instruction", "Failed to create instruction for opcode: " + opcode);
                     return;
                 }
 
                 bool insert = false;
                 instruction.Opcode = opcode;
-                if (this.SelectedInstruction != null && this.SelectedInstruction.Node != null) {
-                    this.CodeEditor.MethodInfo.Node.Instructions.InsertBefore(this.SelectedInstruction.Node, instruction);
+                if (this.SelectedInstruction != null && this.SelectedInstruction.Instruction != null) {
+                    this.CodeEditor.MethodInfo.Node.Instructions.InsertBefore(this.SelectedInstruction.Instruction, instruction);
                     insert = true;
                 }
                 else {
@@ -404,11 +405,11 @@ namespace BCEdit180.Core.CodeEditing {
 
         public void DuplicateInstructionAbove(BaseInstructionViewModel instruction) {
             int index = this.Instructions.IndexOf(instruction);
-            if (index == -1 || instruction.Node == null) {
+            if (index == -1 || instruction.Instruction == null) {
                 return;
             }
 
-            Instruction instructionHandle = instruction.Node.Copy();
+            Instruction instructionHandle = instruction.Instruction.Copy();
             instruction.Save(instructionHandle);
             BaseInstructionViewModel copy = CreateInstructionForHandle(instructionHandle);
             copy.IsNewInstruction = true;
@@ -432,7 +433,7 @@ namespace BCEdit180.Core.CodeEditing {
         public void ResolveBranchLabels() {
             Dictionary<long, LabelViewModel> labelMap = new Dictionary<long, LabelViewModel>();
             foreach(BaseInstructionViewModel instruction in this.Instructions) {
-                if (instruction is LabelViewModel label && label.Node != null) {
+                if (instruction is LabelViewModel label && label.Instruction != null) {
                     labelMap[label.Index] = label;
                 }
             }
@@ -488,7 +489,7 @@ namespace BCEdit180.Core.CodeEditing {
             node.Instructions = new InstructionList();
             this.RemovedInstructions.Clear();
             foreach (BaseInstructionViewModel instruction in this.Instructions) {
-                instruction.Save(instruction.Node);
+                instruction.Save(instruction.Instruction);
             }
 
             // juuust in case...
@@ -496,7 +497,7 @@ namespace BCEdit180.Core.CodeEditing {
             int lastIndex = -1;
             foreach (BaseInstructionViewModel viewModel in this.Instructions) {
                 if ((viewModel.InstructionIndex - 1) != lastIndex) {
-                    Dialog.Message.ShowInformationDialog("Corrupt instruction order","Bug: some of the instruction indices were out of order. This won't corrupt the class file or anything, as these indices are used for visual help");
+                    Dialogs.Message.ShowMessage("Corrupt instruction order","Bug: some of the instruction indices were out of order. This won't corrupt the class file or anything, as these indices are used for visual help");
                     CalculateInstructionIndices();
                     break;
                 }
@@ -506,7 +507,7 @@ namespace BCEdit180.Core.CodeEditing {
 
             // i trust the order will not be corrupt, because it can't get corrupt unless there's a binding failure...
             foreach (BaseInstructionViewModel instruction in this.Instructions) {
-                node.Instructions.Add(instruction.Node);
+                node.Instructions.Add(instruction.Instruction);
             }
         }
 
@@ -743,7 +744,7 @@ namespace BCEdit180.Core.CodeEditing {
             foreach (BaseInstructionViewModel item in this.Instructions) {
                 if (item is LabelViewModel labelItem) {
                     if (labelItem.Index == label.Index && labelItem != label) {
-                        Dialog.Message.ShowInformationDialog("Index already in use", $"The label at line {labelItem.InstructionIndex} is already using the label index {labelItem.Index}");
+                        Dialogs.Message.ShowMessage("Index already in use", $"The label at line {labelItem.InstructionIndex} is already using the label index {labelItem.Index}");
                         return;
                     }
                 }

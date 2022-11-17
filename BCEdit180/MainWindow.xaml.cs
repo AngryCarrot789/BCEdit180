@@ -6,6 +6,7 @@ using System.Diagnostics;
 using System.IO;
 using System.Linq;
 using System.Windows;
+using System.Windows.Controls;
 using System.Windows.Input;
 using System.Xml;
 using System.Xml.Serialization;
@@ -20,6 +21,7 @@ using BCEdit180.Core.Modals;
 using BCEdit180.Core.Utils;
 using BCEdit180.Core.ViewModels;
 using BCEdit180.Core.Window;
+using BCEdit180.Dialog;
 using BCEdit180.Dialogs;
 using BCEdit180.Themes;
 using BCEdit180.Windows;
@@ -35,6 +37,8 @@ namespace BCEdit180 {
         private static readonly string ConfigFile = Path.Combine(ConfigFolder, "config.xml");
 
         static MainWindow() {
+            Dictionary<string, string> dict = new Dictionary<string, string>();
+            ListBox listBox;
         }
 
         public MainWindow() {
@@ -91,18 +95,12 @@ namespace BCEdit180 {
 
         private bool setup;
         public void SetupServices() {
+
             if (this.setup) {
                 throw new InvalidOperationException("Services already setup");
             }
 
             this.setup = true;
-            ServiceManager.SetService<IDialogManager>(new WindowsDialogs());
-            ServiceManager.SetService<ITypeEditors>(new WindowsTypeEditors());
-            ServiceManager.SetService<IAccessEditor>(new WindowsAccessEditor());
-            ServiceManager.SetService<IFileDialog>(new WindowsFileDialogs());
-            ServiceManager.SetService<IApplicationProxy>(new WpfApplicationProxy());
-            ServiceManager.SetService<IModalManager>(new WindowsModalManager());
-            ServiceManager.SetService<ICommandManager>(new WPFCommandManager());
             BytecodeEditorViewModel.BytecodeList = new BytecodeListImpl(this);
             MethodListViewModel.MethodList = new MethodListImpl(this);
             FieldListViewModel.FieldList = new FieldListImpl(this);
@@ -450,7 +448,7 @@ namespace BCEdit180 {
             // serializer.Formatting = Formatting.Indented;
             // serializer.Serialize(jsonWriter, instructionHandles);
             // 
-            // Dialog.Message.ShowWarningDialog("Tetx", writer.ToString());
+            // Dialogs.Message.ShowWarning("Tetx", writer.ToString());
         }
     }
 }

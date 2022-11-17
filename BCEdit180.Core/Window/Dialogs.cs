@@ -1,5 +1,5 @@
 namespace BCEdit180.Core.Window {
-    public static class Dialog {
+    public static class Dialogs {
         public static IDialogManager Message => ServiceManager.GetService<IDialogManager>();
 
         public static ITypeEditors TypeEditor => ServiceManager.GetService<ITypeEditors>();

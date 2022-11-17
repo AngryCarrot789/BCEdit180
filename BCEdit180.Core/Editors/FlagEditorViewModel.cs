@@ -1,10 +1,11 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
+using BCEdit180.Core.Dialog;
 using REghZy.MVVM.ViewModels;
 
 namespace BCEdit180.Core.Editors {
-    public class FlagEditorViewModel : BaseViewModel {
+    public class FlagEditorViewModel : BaseDialogViewModel {
         private bool ignoreFlagChanges;
 
         public ObservableCollection<FlagItemViewModel> FlagItems { get; }

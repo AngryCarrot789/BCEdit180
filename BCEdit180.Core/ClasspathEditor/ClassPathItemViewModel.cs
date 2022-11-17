@@ -22,13 +22,13 @@ namespace BCEdit180.Core.ClasspathEditor {
         }
 
         public void SelectFileDialogAction() {
-            if (Dialog.File.OpenFileDialog("Select a directory or file", "ClassFile|*.class|All|*.*", out string file).Result) {
+            if (Dialogs.File.OpenFileDialog("Select a directory or file", "ClassFile|*.class|All|*.*", out string file).Result) {
                 this.FilePath = file;
             }
         }
 
         public void SelectFolderDialogAction() {
-            if (Dialog.File.OpenFolderDialog("Select a directory or file", out string folder).Result) {
+            if (Dialogs.File.OpenFolderDialog("Select a directory or file", out string folder).Result) {
                 this.FilePath = folder;
             }
         }

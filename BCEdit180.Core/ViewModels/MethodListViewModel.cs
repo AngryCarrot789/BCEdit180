@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Linq;
 using System.Windows.Input;
+using BCEdit180.Core.Dialog;
 using BCEdit180.Core.Editors;
 using BCEdit180.Core.Searching;
 using BCEdit180.Core.Utils;
@@ -46,7 +47,7 @@ namespace BCEdit180.Core.ViewModels {
         }
 
         public void ShowCreateMethodDialog() {
-            if (Dialog.TypeEditor.EditMethodDialog(out MethodEditorViewModel editor, true).Result) {
+            if (DialogUtils.EditMethod(out MethodEditorViewModel editor, true)) {
                 CreateMethod(editor);
             }
         }

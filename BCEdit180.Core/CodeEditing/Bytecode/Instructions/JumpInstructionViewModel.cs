@@ -74,7 +74,7 @@ namespace BCEdit180.Core.CodeEditing.Bytecode.Instructions {
         public override void Save(Instruction instruction) {
             base.Save(instruction);
             JumpInstruction jump = (JumpInstruction) instruction;
-            if (this.TargetLabel != null && this.TargetLabel.Node != null) {
+            if (this.TargetLabel != null && this.TargetLabel.Instruction != null) {
                 jump.Target = this.TargetLabel.Label;
             }
         }

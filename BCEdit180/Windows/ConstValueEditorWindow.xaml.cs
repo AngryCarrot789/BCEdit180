@@ -2,12 +2,13 @@
 using System.Windows.Controls;
 using System.Windows.Threading;
 using BCEdit180.Core.Editors.Const;
+using BCEdit180.Windows.Base;
 
 namespace BCEdit180.Windows {
     /// <summary>
     /// Interaction logic for ConstValueEditorWindow.xaml
     /// </summary>
-    public partial class ConstValueEditorWindow : WindowModal {
+    public partial class ConstValueEditorWindow : DialogBase {
         public ConstValueEditorWindow() {
             InitializeComponent();
         }

@@ -1,5 +1,6 @@
 using System.Collections.Generic;
 using System.Windows.Input;
+using BCEdit180.Core.Dialog;
 using BCEdit180.Core.Editors.Const;
 using BCEdit180.Core.Window;
 using JavaAsm.Instructions;
@@ -22,8 +23,6 @@ namespace BCEdit180.Core.CodeEditing.Bytecode.Instructions {
 
         public override IEnumerable<Opcode> AvailableOpCodes => new Opcode[] {Opcode.LDC, Opcode.LDC_W, Opcode.LDC2_W};
 
-        public override bool CanEditOpCode => true;
-
         private bool isEditable;
         public bool IsEditable {
             get => this.isEditable;
@@ -37,13 +36,13 @@ namespace BCEdit180.Core.CodeEditing.Bytecode.Instructions {
         }
 
         public void EditValueAction() {
-            if (Dialog.TypeEditor.EditConstantDialog(new ConstValueEditorViewModel(this.Value), out ConstValueEditorViewModel editor).Result) {
+            if (DialogUtils.EditConstantDialog(new ConstValueEditorViewModel(this.Value), out ConstValueEditorViewModel editor)) {
                 if (editor.CheckEnabledStatesWithDialog()) {
                     if (editor.TryGetValue(out object value, out string error)) {
                         this.Value = value;
                     }
                     else if (error != null) {
-                        Dialog.Message.ShowInformationDialog("Invalid value", error);
+                        Dialogs.Message.ShowMessage("Invalid value", error);
                     }
                 }
             }

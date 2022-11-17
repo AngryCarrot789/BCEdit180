@@ -36,8 +36,8 @@ namespace BCEdit180.Core.CodeEditing.Bytecode.Instructions {
         }
 
         public void EditFrameTypeAction() {
-            if (Dialog.TypeEditor.EditEnumFlagDialog(this.FrameType, out FrameType frameType).Result) {
-                this.FrameType = frameType;
+            if (Dialogs.TypeEditor.EditEnumFlagDialog(this.FrameType, out FrameType type)) {
+                this.FrameType = type;
             }
         }
 

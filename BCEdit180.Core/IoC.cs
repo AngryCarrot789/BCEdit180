@@ -1,5 +1,5 @@
 namespace BCEdit180.Core {
-    public class IoC {
-        
+    public static class IoC {
+        public static IUIManager UI => ServiceManager.GetService<IUIManager>();
     }
 }
