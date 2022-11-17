@@ -1,13 +1,15 @@
 using System.Collections.ObjectModel;
 using System.Linq;
 using System.Windows.Input;
+using BCEdit180.Core.Dialog;
+using BCEdit180.Core.ViewModels;
 using BCEdit180.Core.Window;
 using JavaAsm;
 using REghZy.MVVM.Commands;
 using REghZy.MVVM.ViewModels;
 
 namespace BCEdit180.Core.Editors {
-    public class MethodDescriptorEditorViewModel : BaseViewModel {
+    public class MethodDescriptorEditorViewModel : BaseDialogViewModel {
         private TypeDescriptor returnType;
         public TypeDescriptor ReturnType {
             get => this.returnType;
@@ -39,13 +41,13 @@ namespace BCEdit180.Core.Editors {
         }
 
         public void EditReturnType() {
-            if (Dialog.TypeEditor.EditTypeDescriptorDialog(this.ReturnType, out TypeDescriptor descriptor).Result) {
+            if (Dialogs.TypeEditor.EditTypeDescriptorDialog(this.ReturnType, out TypeDescriptor descriptor).Result) {
                 this.ReturnType = descriptor;
             }
         }
 
         public void AddNewParameter() {
-            if (Dialog.TypeEditor.EditTypeDescriptorDialog(new TypeDescriptor(PrimitiveType.Integer, 0), out TypeDescriptor descriptor).Result) {
+            if (Dialogs.TypeEditor.EditTypeDescriptorDialog(new TypeDescriptor(PrimitiveType.Integer, 0), out TypeDescriptor descriptor).Result) {
                 this.Parameters.Add(new TypeDescriptorViewModel() { TypeDescriptor = descriptor });
             }
         }

@@ -1,11 +1,12 @@
 using System.Windows.Input;
+using BCEdit180.Core.Dialog;
 using BCEdit180.Core.Window;
 using JavaAsm;
 using REghZy.MVVM.Commands;
 using REghZy.MVVM.ViewModels;
 
 namespace BCEdit180.Core.Editors {
-    public class TypeDescriptorViewModel : BaseViewModel {
+    public class TypeDescViewModel : BaseViewModel {
         private TypeDescriptor typeDescriptor;
         public TypeDescriptor TypeDescriptor {
             get => this.typeDescriptor;
@@ -14,17 +15,17 @@ namespace BCEdit180.Core.Editors {
 
         public ICommand EditFieldDescriptorCommand { get; }
 
-        public TypeDescriptorViewModel() : this(new TypeDescriptor(PrimitiveType.Integer, 0)) {
+        public TypeDescViewModel() : this(new TypeDescriptor(PrimitiveType.Integer, 0)) {
 
         }
 
-        public TypeDescriptorViewModel(TypeDescriptor typeDescriptor) {
+        public TypeDescViewModel(TypeDescriptor typeDescriptor) {
             this.EditFieldDescriptorCommand = new RelayCommand(EditTypeDescriptorAction);
             this.TypeDescriptor = typeDescriptor;
         }
 
         public void EditTypeDescriptorAction() {
-            if (Dialog.TypeEditor.EditTypeDescriptorDialog(this.TypeDescriptor, out TypeDescriptor descriptor).Result) {
+            if (DialogUtils.EditType(this.TypeDescriptor, out TypeDescriptor descriptor)) {
                 this.TypeDescriptor = descriptor;
             }
         }

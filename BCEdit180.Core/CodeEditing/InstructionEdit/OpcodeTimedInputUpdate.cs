@@ -6,16 +6,16 @@ using BCEdit180.Core.Window;
 using JavaAsm.Instructions;
 
 namespace BCEdit180.Core.CodeEditing.InstructionEdit {
-    public class OpcodeSearchViewModel : SearchViewModel {
+    public class OpcodeTimedInputUpdate : TimedInputUpdate {
         public ChangeInstructionViewModel ChangeInstruction { get; }
 
-        public OpcodeSearchViewModel(ChangeInstructionViewModel changeInstruction) {
+        public OpcodeTimedInputUpdate(ChangeInstructionViewModel changeInstruction) {
             this.ChangeInstruction = changeInstruction;
             this.IdleEventService.OnIdle += FindNextInstruction;
             this.IdleEventService.MinimumTimeSinceInput = TimeSpan.FromMilliseconds(200);
         }
 
-        ~OpcodeSearchViewModel() {
+        ~OpcodeTimedInputUpdate() {
             // is this even necessary though?
             this.IdleEventService.OnIdle -= FindNextInstruction;
         }
@@ -42,7 +42,7 @@ namespace BCEdit180.Core.CodeEditing.InstructionEdit {
             }
 
             if (this.WasLastSearchForced) {
-                Dialog.Message.ShowInformationDialog("Nothing found", "No search results found for: " + search);
+                Dialogs.Message.ShowMessage("Nothing found", "No search results found for: " + search);
             }
         }
 
