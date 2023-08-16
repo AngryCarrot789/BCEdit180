@@ -1,4 +1,5 @@
-
+# Deprecated
+### I remade this in another repo: https://github.com/AngryCarrot789/JBCEditor180
 
 # BCEdit180
 A java classfile viewer and editor, written in C#. 
